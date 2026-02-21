@@ -55,6 +55,97 @@
 }
 
 /* Entity List Item */
+.users-list-page__item-content {
+  display: flex;
+  flex: 1;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: var(--space-2);
+  margin: calc(-1 * var(--space-2));
+  border-radius: var(--radius-md);
+}
+
+.users-list-page__item-content:hover {
+  background: var(--surface-subtle);
+}
+
+.users-list-page__item-main {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  width: 100%;
+}
+
+.users-list-page__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  color: white;
+  transition: transform 0.2s;
+}
+
+.users-list-page__item-content:hover .users-list-page__avatar {
+  transform: scale(1.05);
+}
+
+.users-list-page__avatar--active {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.users-list-page__avatar--inactive {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.users-list-page__item-info {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.users-list-page__item-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.users-list-page__item-title {
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0;
+  color: var(--text);
+}
+
+.users-list-page__item-badges {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.users-list-page__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+}
+
+.users-list-page__badge--inactive {
+  background: var(--danger);
+  color: white;
+}
+
+.users-list-page__badge--verified {
+  background: #10b981;
+  color: white;
+}
+
 .users-list-page__item-meta {
   display: flex;
   align-items: center;
@@ -62,7 +153,6 @@
   flex-wrap: wrap;
   font-size: 13px;
   color: var(--text-muted);
-  margin-top: var(--space-1);
 }
 
 .users-list-page__meta-item {
@@ -81,32 +171,6 @@
 
 .users-list-page__separator {
   color: var(--border-strong);
-}
-
-.users-list-page__item-badges {
-  display: flex;
-  gap: var(--space-2);
-  margin-top: var(--space-1);
-}
-
-.users-list-page__badge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding: 2px 8px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.users-list-page__badge--inactive {
-  background: var(--danger);
-  color: white;
-}
-
-.users-list-page__badge--verified {
-  background: #10b981;
-  color: white;
 }
 
 /* Item Actions */
@@ -145,4 +209,36 @@
   font-size: 13px;
   color: var(--text-muted);
   margin-top: var(--space-2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .users-list-page__header {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .users-list-page__controls {
+    justify-content: center;
+  }
+
+  .users-list-page__filters {
+    grid-template-columns: 1fr;
+  }
+
+  .users-list-page__filters-group {
+    justify-content: center;
+  }
+
+  .users-list-page__item-content {
+    flex-direction: column;
+  }
+
+  .users-list-page__item-actions {
+    justify-content: flex-end;
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--border);
+    margin-top: var(--space-2);
+  }
 }
