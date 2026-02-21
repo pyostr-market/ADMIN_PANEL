@@ -8,10 +8,16 @@ import { UsersListPage } from '../../pages/users/UsersListPage';
 import { UserDetailPage } from '../../pages/users/UserDetailPage';
 import { UserCreatePage } from '../../pages/users/UserCreatePage';
 import { SuppliersPage } from '../../pages/suppliers/SuppliersPage';
+import { SupplierFormPage } from '../../pages/suppliers/SupplierFormPage';
+import { SupplierDetailPage } from '../../pages/suppliers/SupplierDetailPage';
 import { CatalogPage } from '../../pages/catalog/CatalogPage';
 import { ManufacturersPage } from '../../pages/manufacturers/ManufacturersPage';
+import { ManufacturerFormPage } from '../../pages/manufacturers/ManufacturerFormPage';
+import { ManufacturerDetailPage } from '../../pages/manufacturers/ManufacturerDetailPage';
 import { ProductsPage } from '../../pages/products/ProductsPage';
 import { ProductTypesPage } from '../../pages/productTypes/ProductTypesPage';
+import { ProductTypeFormPage } from '../../pages/productTypes/ProductTypeFormPage';
+import { ProductTypeDetailPage } from '../../pages/productTypes/ProductTypeDetailPage';
 import { PermissionsGroupsPage } from '../../pages/permissionsGroups/PermissionsGroupsPage';
 import { PrivateRoute, PublicOnlyRoute } from './routeGuards';
 
@@ -46,6 +52,9 @@ export function AppRouter() {
 
           <Route element={<PrivateRoute permission={["supplier", "supplier:view"]} mode="any" />}>
             <Route path="/suppliers" element={<SuppliersPage />} />
+            <Route path="/suppliers/create" element={<SupplierFormPage />} />
+            <Route path="/suppliers/:supplierId/edit" element={<SupplierFormPage />} />
+            <Route path="/suppliers/:supplierId" element={<SupplierDetailPage />} />
           </Route>
 
           <Route element={<PrivateRoute permission={["product", "product:view", "manufacturer", "manufacturer:view", "device_type", "device-type:view", "product_type", "product_type:view"]} mode="any" />}>
@@ -58,10 +67,16 @@ export function AppRouter() {
 
           <Route element={<PrivateRoute permission={["manufacturer", "manufacturer:view"]} mode="any" />}>
             <Route path="/catalog/manufacturers" element={<ManufacturersPage />} />
+            <Route path="/catalog/manufacturers/create" element={<ManufacturerFormPage />} />
+            <Route path="/catalog/manufacturers/:manufacturerId/edit" element={<ManufacturerFormPage />} />
+            <Route path="/catalog/manufacturers/:manufacturerId" element={<ManufacturerDetailPage />} />
           </Route>
 
-          <Route element={<PrivateRoute permission={["device_type", "device_type:view", "product_type", "product-type:view"]} mode="any" />}>
+          <Route element={<PrivateRoute permission={["device_type", "device_type:view", "product_type", "product_type:view"]} mode="any" />}>
             <Route path="/catalog/device_type" element={<ProductTypesPage />} />
+            <Route path="/catalog/device_type/create" element={<ProductTypeFormPage />} />
+            <Route path="/catalog/device_type/:productTypeId/edit" element={<ProductTypeFormPage />} />
+            <Route path="/catalog/device_type/:productTypeId" element={<ProductTypeDetailPage />} />
           </Route>
         </Route>
       </Route>

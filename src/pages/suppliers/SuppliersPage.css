@@ -1,0 +1,144 @@
+.suppliers-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.suppliers-page__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.suppliers-page__title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.suppliers-page__controls {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.suppliers-page__filters {
+  display: flex;
+  gap: var(--space-3);
+  transition: opacity 0.2s ease;
+}
+
+.suppliers-page__filters--loading {
+  opacity: 0.6;
+}
+
+.suppliers-page__item-content {
+  flex: 1;
+  cursor: pointer;
+}
+
+.suppliers-page__item-main {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.suppliers-page__item-info {
+  flex: 1;
+}
+
+.suppliers-page__item-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.suppliers-page__item-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+.suppliers-page__item-badges {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.suppliers-page__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.suppliers-page__badge--verified {
+  background-color: var(--success-bg);
+  color: var(--accent-green);
+}
+
+.suppliers-page__item-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 14px;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+
+.suppliers-page__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.suppliers-page__meta-icon {
+  font-size: 14px;
+}
+
+.suppliers-page__meta-label {
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.suppliers-page__separator {
+  color: var(--border);
+}
+
+.suppliers-page__item-actions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.suppliers-page__item-actions .btn-delete {
+  color: var(--danger);
+}
+
+.suppliers-page__item-actions .btn-delete:hover {
+  background-color: var(--danger);
+  color: white;
+}
+
+.modal-confirm-text {
+  font-size: 15px;
+  color: var(--text);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.modal-confirm-text strong {
+  color: var(--text);
+}
+
+.modal-confirm-note {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0;
+}

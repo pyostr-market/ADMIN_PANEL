@@ -21,7 +21,8 @@ import { API_ENDPOINTS } from './env';
 // === Manufacturers / Производители ===
 export const manufacturersConfig = {
   fetchFn: async ({ page = 1, limit = 20, search } = {}) => {
-    const params = { limit, offset: (page - 1) * limit };
+    const offset = (page - 1) * limit;
+    const params = { limit, offset };
     if (search) params.name = search;
     const response = await productApi.get(API_ENDPOINTS.manufacturers, { params });
     const data = response.data?.data ?? response.data;
@@ -48,7 +49,7 @@ export const manufacturersConfig = {
 
   deleteFn: async (id) => {
     const response = await productApi.delete(`${API_ENDPOINTS.manufacturers}/${id}`);
-    return response.data?.data ?? response.data;
+    return (response.data?.data ?? response.data)?.deleted ?? true;
   },
 
   entityName: 'Производитель',
@@ -76,7 +77,8 @@ export const manufacturersConfig = {
 // === Suppliers / Поставщики ===
 export const suppliersConfig = {
   fetchFn: async ({ page = 1, limit = 20, search } = {}) => {
-    const params = { limit, offset: (page - 1) * limit };
+    const offset = (page - 1) * limit;
+    const params = { limit, offset };
     if (search) params.name = search;
     const response = await productApi.get(API_ENDPOINTS.suppliers, { params });
     const data = response.data?.data ?? response.data;
@@ -103,7 +105,7 @@ export const suppliersConfig = {
 
   deleteFn: async (id) => {
     const response = await productApi.delete(`${API_ENDPOINTS.suppliers}/${id}`);
-    return response.data?.data ?? response.data;
+    return (response.data?.data ?? response.data)?.deleted ?? true;
   },
 
   entityName: 'Поставщик',
@@ -119,11 +121,13 @@ export const suppliersConfig = {
   fields: {
     list: [
       { key: 'name', label: 'Название', render: (item) => <p className="crud-item__title">{item.name}</p> },
-      { key: 'description', label: 'Описание', render: (item) => <p className="crud-item__description">{item.description || 'Без описания'}</p> },
+      { key: 'contact_email', label: 'Email', render: (item) => <p className="crud-item__description">{item.contact_email || '—'}</p> },
+      { key: 'phone', label: 'Телефон', render: (item) => <p className="crud-item__description">{item.phone || '—'}</p> },
     ],
     form: [
       { key: 'name', label: 'Название', required: true, placeholder: 'Введите название поставщика' },
-      { key: 'description', label: 'Описание', type: 'textarea', placeholder: 'Введите описание поставщика' },
+      { key: 'contact_email', label: 'Email для связи', type: 'email', placeholder: 'supplier@example.com' },
+      { key: 'phone', label: 'Телефон', type: 'tel', placeholder: '+7 (999) 000-00-00' },
     ],
   },
 };
@@ -131,35 +135,42 @@ export const suppliersConfig = {
 // === Product Types / Типы продуктов ===
 export const productTypesConfig = {
   fetchFn: async ({ page = 1, limit = 20, search } = {}) => {
-    const params = { page, limit };
-    if (search) params.search = search;
-    const response = await authorizedApi.get(API_ENDPOINTS.productTypes, { params });
+    const offset = (page - 1) * limit;
+    const params = { limit, offset };
+    if (search) params.name = search;
+    const response = await productApi.get(API_ENDPOINTS.productTypes, { params });
     const data = response.data?.data ?? response.data;
     const items = Array.isArray(data?.items) ? data.items : [];
-    const pagination = data?.pagination ?? { page, limit, total: items.length, pages: 1 };
+    const total = data?.total ?? items.length;
+    const pagination = {
+      page,
+      limit,
+      total,
+      pages: Math.ceil(total / limit),
+    };
     return { items, pagination };
   },
 
   createFn: async (payload) => {
-    const response = await authorizedApi.post(API_ENDPOINTS.productTypes, payload);
+    const response = await productApi.post(API_ENDPOINTS.productTypes, payload);
     return response.data?.data ?? response.data;
   },
 
   updateFn: async (id, payload) => {
-    const response = await authorizedApi.patch(`${API_ENDPOINTS.productTypes}/${id}`, payload);
+    const response = await productApi.put(`${API_ENDPOINTS.productTypes}/${id}`, payload);
     return response.data?.data ?? response.data;
   },
 
   deleteFn: async (id) => {
-    const response = await authorizedApi.delete(`${API_ENDPOINTS.productTypes}/${id}`);
-    return response.data?.data ?? response.data;
+    const response = await productApi.delete(`${API_ENDPOINTS.productTypes}/${id}`);
+    return (response.data?.data ?? response.data)?.deleted ?? true;
   },
 
   entityName: 'Тип продукта',
   entityNamePlural: 'Типы продуктов',
 
   permissions: {
-    view: ['product_type', 'product_type:view', 'device_type', 'device_type:view'],
+    view: ['product_type', 'product_type:view'],
     create: ['product_type:create'],
     update: ['product_type:update'],
     delete: ['product_type:delete'],
@@ -168,11 +179,11 @@ export const productTypesConfig = {
   fields: {
     list: [
       { key: 'name', label: 'Название', render: (item) => <p className="crud-item__title">{item.name}</p> },
-      { key: 'description', label: 'Описание', render: (item) => <p className="crud-item__description">{item.description || 'Без описания'}</p> },
+      { key: 'parent_id', label: 'Родительский тип', render: (item) => <p className="crud-item__description">{item.parent_id ? `ID: ${item.parent_id}` : '—'}</p> },
     ],
     form: [
       { key: 'name', label: 'Название', required: true, placeholder: 'Введите название типа' },
-      { key: 'description', label: 'Описание', type: 'textarea', placeholder: 'Введите описание типа' },
+      { key: 'parent_id', label: 'Родительский тип', type: 'number', placeholder: 'ID родительского типа (необязательно)' },
     ],
   },
 };

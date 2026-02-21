@@ -36,7 +36,7 @@
 }
 
 .toast--info {
-  border-left: 3px solid #3b82f6;
+  border-left: 3px solid var(--info);
 }
 
 .toast--error {
@@ -44,7 +44,7 @@
 }
 
 .toast--warning {
-  border-left: 3px solid #f59e0b;
+  border-left: 3px solid var(--warning);
 }
 
 .toast--mail {
@@ -52,7 +52,7 @@
 }
 
 .toast--event {
-  border-left: 3px solid #10b981;
+  border-left: 3px solid var(--success);
 }
 
 .toast__content {
@@ -74,7 +74,7 @@
 }
 
 .toast--info .toast__icon {
-  color: #3b82f6;
+  color: var(--info);
 }
 
 .toast--error .toast__icon {
@@ -82,7 +82,7 @@
 }
 
 .toast--warning .toast__icon {
-  color: #f59e0b;
+  color: var(--warning);
 }
 
 .toast--mail .toast__icon {
@@ -90,7 +90,7 @@
 }
 
 .toast--event .toast__icon {
-  color: #10b981;
+  color: var(--success);
 }
 
 .toast__message {

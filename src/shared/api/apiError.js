@@ -52,6 +52,6 @@ export function getApiErrorMessage(error) {
   if (error?.code === 'ECONNABORTED') {
     return 'Превышено время ожидания ответа от API.';
   }
-
+  console.log(error)
   return 'Не удалось выполнить запрос к API.';
 }

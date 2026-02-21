@@ -1,0 +1,197 @@
+.product-type-form-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.product-type-form-page__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.product-type-form-page__header-left {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+.product-type-form-page__title-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.product-type-form-page__title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.product-type-form-page__subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.product-type-form-page__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: var(--space-4);
+  color: var(--text-muted);
+}
+
+.product-type-form-page__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.product-type-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.product-type-form__section {
+  background: var(--surface);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+}
+
+.product-type-form__section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.product-type-form__section-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: inherit;
+}
+
+.product-type-form__section-icon * {
+  color: inherit;
+}
+
+.product-type-form__section-icon--primary {
+  background-color: var(--accent-blue-bg);
+  color: var(--accent-blue);
+}
+
+.product-type-form__section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+.product-type-form__section-description {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: var(--space-1) 0 0 0;
+}
+
+.product-type-form__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-5);
+}
+
+.product-type-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.product-type-form__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.product-type-form__label .required {
+  color: var(--danger);
+}
+
+.product-type-form input,
+.product-type-form textarea {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  font-size: 15px;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.product-type-form input:focus,
+.product-type-form textarea:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15);
+}
+
+.product-type-form input.input-error,
+.product-type-form textarea.input-error {
+  border-color: var(--danger);
+}
+
+.product-type-form__error {
+  font-size: 13px;
+  color: var(--danger);
+  margin-top: -4px;
+}
+
+.product-type-form__hint {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: -4px;
+}
+
+.product-type-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.product-type-form-page__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent-blue);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

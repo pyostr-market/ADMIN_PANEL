@@ -1,0 +1,139 @@
+.manufacturers-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.manufacturers-page__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.manufacturers-page__title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.manufacturers-page__controls {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.manufacturers-page__filters {
+  display: flex;
+  gap: var(--space-3);
+  transition: opacity 0.2s ease;
+}
+
+.manufacturers-page__filters--loading {
+  opacity: 0.6;
+}
+
+.manufacturers-page__item-content {
+  flex: 1;
+  cursor: pointer;
+}
+
+.manufacturers-page__item-main {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.manufacturers-page__item-info {
+  flex: 1;
+}
+
+.manufacturers-page__item-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.manufacturers-page__item-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+.manufacturers-page__item-badges {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.manufacturers-page__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.manufacturers-page__badge--verified {
+  background-color: var(--success-bg);
+  color: var(--accent-green);
+}
+
+.manufacturers-page__item-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.manufacturers-page__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.manufacturers-page__meta-label {
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.manufacturers-page__separator {
+  color: var(--border);
+}
+
+.manufacturers-page__item-actions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.manufacturers-page__item-actions .btn-delete {
+  color: var(--danger);
+}
+
+.manufacturers-page__item-actions .btn-delete:hover {
+  background-color: var(--danger);
+  color: white;
+}
+
+.modal-confirm-text {
+  font-size: 15px;
+  color: var(--text);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.modal-confirm-text strong {
+  color: var(--text);
+}
+
+.modal-confirm-note {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0;
+}

@@ -1,0 +1,299 @@
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { FiEdit2, FiTrash2, FiBox } from 'react-icons/fi';
+import { Button } from '../../shared/ui/Button';
+import { Modal } from '../../shared/ui/Modal';
+import { PermissionGate } from '../../shared/ui/PermissionGate';
+import { getApiErrorMessage } from '../../shared/api/apiError';
+import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
+import {
+  getManufacturerByIdRequest,
+  updateManufacturerRequest,
+  deleteManufacturerRequest,
+} from './api/manufacturersApi';
+import './ManufacturerDetailPage.css';
+
+function EditManufacturerModal({ manufacturer, onClose, onSubmit, isSubmitting }) {
+  const [formData, setFormData] = useState({
+    name: manufacturer?.name || '',
+    description: manufacturer?.description || '',
+  });
+
+  useEffect(() => {
+    setFormData({
+      name: manufacturer?.name || '',
+      description: manufacturer?.description || '',
+    });
+  }, [manufacturer]);
+
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  return (
+    <Modal
+      isOpen
+      onClose={onClose}
+      title="Редактирование производителя"
+      size="md"
+      footer={(
+        <>
+          <Button variant="secondary" onClick={onClose}>Отмена</Button>
+          <Button
+            variant="primary"
+            onClick={() => onSubmit(formData)}
+            loading={isSubmitting}
+          >
+            Сохранить
+          </Button>
+        </>
+      )}
+    >
+      <div className="edit-manufacturer-form">
+        <label className="edit-manufacturer-form__field">
+          <span className="edit-manufacturer-form__label">Название</span>
+          <input
+            type="text"
+            value={formData.name}
+            onChange={(e) => handleChange('name', e.target.value)}
+            placeholder="Введите название"
+          />
+        </label>
+
+        <label className="edit-manufacturer-form__field">
+          <span className="edit-manufacturer-form__label">Описание</span>
+          <textarea
+            value={formData.description}
+            onChange={(e) => handleChange('description', e.target.value)}
+            placeholder="Введите описание"
+            rows={4}
+          />
+        </label>
+      </div>
+    </Modal>
+  );
+}
+
+function DeleteManufacturerModal({ manufacturer, onClose, onSubmit, isSubmitting }) {
+  if (!manufacturer) return null;
+
+  return (
+    <Modal
+      isOpen
+      onClose={onClose}
+      title="Удаление производителя"
+      size="sm"
+      footer={(
+        <>
+          <Button variant="secondary" onClick={onClose}>Отмена</Button>
+          <Button
+            variant="danger"
+            onClick={onSubmit}
+            loading={isSubmitting}
+          >
+            Удалить
+          </Button>
+        </>
+      )}
+    >
+      <p className="modal-confirm-text">
+        Вы уверены, что хотите удалить производителя{' '}
+        <strong>{manufacturer.name || `ID: ${manufacturer.id}`}</strong>?
+      </p>
+      <p className="modal-confirm-note">
+        Это действие нельзя отменить.
+      </p>
+    </Modal>
+  );
+}
+
+export function ManufacturerDetailPage() {
+  const { manufacturerId } = useParams();
+  const navigate = useNavigate();
+  const notifications = useNotifications();
+  const notificationsRef = useRef(notifications);
+
+  useEffect(() => {
+    notificationsRef.current = notifications;
+  }, [notifications]);
+
+  const [manufacturer, setManufacturer] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const loadManufacturer = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const data = await getManufacturerByIdRequest(manufacturerId);
+      setManufacturer(data);
+    } catch (error) {
+      const message = getApiErrorMessage(error);
+      notificationsRef.current?.error(message);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [manufacturerId]);
+
+  useEffect(() => {
+    loadManufacturer();
+  }, [loadManufacturer]);
+
+  const handleSaveManufacturer = async (payload) => {
+    setIsSaving(true);
+    try {
+      await updateManufacturerRequest(manufacturerId, payload);
+      await loadManufacturer();
+      notificationsRef.current?.info('Производитель обновлен');
+      setIsEditModalOpen(false);
+    } catch (error) {
+      const message = getApiErrorMessage(error);
+      notificationsRef.current?.error(message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDeleteManufacturer = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteManufacturerRequest(manufacturerId);
+      notificationsRef.current?.info('Производитель удален');
+      navigate('/catalog/manufacturers');
+    } catch (error) {
+      const message = getApiErrorMessage(error);
+      notificationsRef.current?.error(message);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <section className="manufacturer-detail-page">
+        <div className="manufacturer-detail-page__loading">
+          <div className="loading-spinner" />
+          <p>Загрузка данных производителя...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (!manufacturer) {
+    return (
+      <section className="manufacturer-detail-page">
+        <div className="manufacturer-detail-page__error">
+          <h2>Производитель не найден</h2>
+          <p>Запрошенный производитель не существует или был удален</p>
+          <Button variant="primary" onClick={() => navigate('/catalog/manufacturers')}>
+            К списку производителей
+          </Button>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="manufacturer-detail-page">
+      <header className="manufacturer-detail-page__header">
+        <div className="manufacturer-detail-page__header-left">
+          <Button variant="ghost" onClick={() => navigate('/catalog/manufacturers')} className="back-button">
+            ← Назад
+          </Button>
+          <div className="manufacturer-detail-page__user-info">
+            <div className="manufacturer-detail-page__avatar">
+              <FiBox />
+            </div>
+            <div className="manufacturer-detail-page__header-text">
+              <h1 className="manufacturer-detail-page__title">
+                {manufacturer.name || `Производитель #${manufacturer.id}`}
+              </h1>
+            </div>
+          </div>
+        </div>
+        <div className="manufacturer-detail-page__actions">
+          <PermissionGate permission={['manufacturer:update']} fallback={null}>
+            <Button
+              variant="secondary"
+              leftIcon={<FiEdit2 />}
+              onClick={() => setIsEditModalOpen(true)}
+            >
+              Редактировать
+            </Button>
+          </PermissionGate>
+          <PermissionGate permission={['manufacturer:delete']} fallback={null}>
+            <Button
+              variant="danger"
+              leftIcon={<FiTrash2 />}
+              onClick={() => setIsDeleteModalOpen(true)}
+            >
+              Удалить
+            </Button>
+          </PermissionGate>
+        </div>
+      </header>
+
+      <div className="manufacturer-detail-page__content">
+        <div className="manufacturer-detail-page__panel">
+          <div className="panel-header">
+            <h2 className="panel-title">Общая информация</h2>
+          </div>
+
+          <div className="manufacturer-info-grid">
+            <div className="info-card">
+              <div className="info-card__icon info-card__icon--primary">
+                <FiBox />
+              </div>
+              <div className="info-card__content">
+                <span className="info-card__label">ID производителя</span>
+                <span className="info-card__value">{manufacturer.id}</span>
+              </div>
+            </div>
+
+            <div className="info-card">
+              <div className="info-card__icon info-card__icon--secondary">
+                <span>🏭</span>
+              </div>
+              <div className="info-card__content">
+                <span className="info-card__label">Название</span>
+                <span className="info-card__value">{manufacturer.name || '—'}</span>
+              </div>
+            </div>
+
+            {manufacturer.description && (
+              <div className="info-card info-card--full">
+                <div className="info-card__icon info-card__icon--info">
+                  <span>📝</span>
+                </div>
+                <div className="info-card__content">
+                  <span className="info-card__label">Описание</span>
+                  <span className="info-card__value">{manufacturer.description}</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {isEditModalOpen && (
+        <EditManufacturerModal
+          manufacturer={manufacturer}
+          onClose={() => setIsEditModalOpen(false)}
+          onSubmit={handleSaveManufacturer}
+          isSubmitting={isSaving}
+        />
+      )}
+
+      {isDeleteModalOpen && (
+        <DeleteManufacturerModal
+          manufacturer={manufacturer}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onSubmit={handleDeleteManufacturer}
+          isSubmitting={isDeleting}
+        />
+      )}
+    </section>
+  );
+}
