@@ -6,6 +6,7 @@ export const API_ENDPOINTS = {
   myPermissions: '/permissions/me',
   permissions: '/permissions/',
   groups: '/users/admin/groups',
+  users: '/users/admin/users',
   manufacturers: '/manufacturers',
   suppliers: '/suppliers',
   productTypes: '/product-types',

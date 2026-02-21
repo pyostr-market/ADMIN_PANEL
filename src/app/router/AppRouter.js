@@ -4,7 +4,9 @@ import { LoginPage } from '../../pages/login/LoginPage';
 import { DashboardPage } from '../../pages/dashboard/DashboardPage';
 import { SupportPage } from '../../pages/support/SupportPage';
 import { ErrorPage } from '../../pages/errors/ErrorPage';
-import { UsersPage } from '../../pages/users/UsersPage';
+import { UsersListPage } from '../../pages/users/UsersListPage';
+import { UserDetailPage } from '../../pages/users/UserDetailPage';
+import { UserCreatePage } from '../../pages/users/UserCreatePage';
 import { SuppliersPage } from '../../pages/suppliers/SuppliersPage';
 import { CatalogPage } from '../../pages/catalog/CatalogPage';
 import { ManufacturersPage } from '../../pages/manufacturers/ManufacturersPage';
@@ -33,7 +35,9 @@ export function AppRouter() {
           <Route index element={<DashboardPage />} />
 
           <Route element={<PrivateRoute permission={["users", "users:view", "admin:user", "admin:user:view"]} mode="any" />}>
-            <Route path="/users" element={<UsersPage />} />
+            <Route path="/users" element={<UsersListPage />} />
+            <Route path="/users/create" element={<UserCreatePage />} />
+            <Route path="/users/:userId" element={<UserDetailPage />} />
           </Route>
 
           <Route element={<PrivateRoute permission={["permission:view", "permission:update", "admin:group:create", "admin:group:update", "admin:group:delete", "admin:group:view"]} mode="any" />}>

@@ -311,6 +311,71 @@ export const productsConfig = {
   },
 };
 
+// === Users / Пользователи ===
+export const usersConfig = {
+  fetchFn: async ({ page = 1, limit = 20, search, is_active, is_verified, group } = {}) => {
+    const params = { page, limit };
+    if (search) params.search = search;
+    if (is_active !== undefined) params.is_active = is_active;
+    if (is_verified !== undefined) params.is_verified = is_verified;
+    if (group) params.group = group;
+    
+    const response = await authorizedApi.get(API_ENDPOINTS.users, { params });
+    const data = response.data?.data ?? response.data;
+    const items = Array.isArray(data?.items) ? data.items : [];
+    const pagination = data?.pagination ?? { page, limit, total: items.length, pages: 1 };
+    return { items, pagination };
+  },
+
+  createFn: async (payload) => {
+    // TODO: Добавить API для создания пользователя
+    const response = await authorizedApi.post(API_ENDPOINTS.users, payload);
+    return response.data?.data ?? response.data;
+  },
+
+  updateFn: async (id, payload) => {
+    const response = await authorizedApi.patch(`${API_ENDPOINTS.users}/${id}`, payload);
+    return response.data?.data ?? response.data;
+  },
+
+  deleteFn: async (id) => {
+    const response = await authorizedApi.delete(`${API_ENDPOINTS.users}/${id}`);
+    return response.data?.data ?? response.data;
+  },
+
+  entityName: 'Пользователь',
+  entityNamePlural: 'Пользователи',
+
+  permissions: {
+    view: ['users', 'users:view', 'admin:user', 'admin:user:view'],
+    create: ['admin:user:create'],
+    update: ['admin:user:update'],
+    delete: ['admin:user:delete'],
+  },
+
+  fields: {
+    list: [
+      { key: 'primary_phone', label: 'Телефон', render: (item) => (
+        <p className="crud-item__title">{item.primary_phone?.phone_number || 'Без телефона'}</p>
+      ) },
+      { key: 'group', label: 'Группа', render: (item) => (
+        <p className="crud-item__description">{item.group?.name || 'Без группы'}</p>
+      ) },
+      { key: 'is_active', label: 'Статус', render: (item) => (
+        <p className="crud-item__meta">
+          <span>{item.is_active ? 'Активен' : 'Заблокирован'}</span>
+        </p>
+      ) },
+    ],
+    form: [
+      { key: 'phone_number', label: 'Номер телефона', required: true, placeholder: '+7 (999) 000-00-00' },
+      { key: 'password', label: 'Пароль', type: 'password', placeholder: 'Минимум 8 символов' },
+      { key: 'is_active', label: 'Активен', type: 'checkbox' },
+      { key: 'is_verified', label: 'Верифицирован', type: 'checkbox' },
+    ],
+  },
+};
+
 // Экспорт всех конфигураций
 export const CRUD_CONFIGS = {
   manufacturers: manufacturersConfig,
@@ -319,4 +384,5 @@ export const CRUD_CONFIGS = {
   permissions: permissionsConfig,
   groups: groupsConfig,
   products: productsConfig,
+  users: usersConfig,
 };
