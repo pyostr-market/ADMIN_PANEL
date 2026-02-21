@@ -28,7 +28,7 @@
 
 .auth-form button {
   background: var(--primary);
-  color: #fff;
+  color: var(--text);
   border-color: var(--primary);
   font-weight: 500;
 }

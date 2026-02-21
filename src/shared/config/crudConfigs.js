@@ -406,6 +406,68 @@ export const usersConfig = {
   },
 };
 
+// === Attributes / Атрибуты продуктов ===
+export const attributesConfig = {
+  fetchFn: async ({ page = 1, limit = 20, search } = {}) => {
+    const offset = (page - 1) * limit;
+    const params = { limit, offset };
+    if (search) params.name = search;
+    const response = await productApi.get(API_ENDPOINTS.attributes, { params });
+    const data = response.data?.data ?? response.data;
+    const items = Array.isArray(data?.items) ? data.items : [];
+    const total = data?.total ?? items.length;
+    const pagination = {
+      page,
+      limit,
+      total,
+      pages: Math.ceil(total / limit),
+    };
+    return { items, pagination };
+  },
+
+  createFn: async (payload) => {
+    const response = await productApi.post(API_ENDPOINTS.attributes, payload);
+    return response.data?.data ?? response.data;
+  },
+
+  updateFn: async (id, payload) => {
+    const response = await productApi.put(`${API_ENDPOINTS.attributes}/${id}`, payload);
+    return response.data?.data ?? response.data;
+  },
+
+  deleteFn: async (id) => {
+    const response = await productApi.delete(`${API_ENDPOINTS.attributes}/${id}`);
+    return (response.data?.data ?? response.data)?.deleted ?? true;
+  },
+
+  entityName: 'Атрибут',
+  entityNamePlural: 'Атрибуты продуктов',
+
+  permissions: {
+    view: ['product_attribute', 'product_attribute:view'],
+    create: ['product_attribute:create'],
+    update: ['product_attribute:update'],
+    delete: ['product_attribute:delete'],
+  },
+
+  fields: {
+    list: [
+      { key: 'name', label: 'Название', render: (item) => <p className="crud-item__title">{item.name}</p> },
+      { key: 'value', label: 'Значение', render: (item) => <p className="crud-item__description">{item.value}</p> },
+      { key: 'is_filterable', label: 'Фильтруемый', render: (item) => (
+        <p className="crud-item__meta">
+          <span>{item.is_filterable ? 'Да' : 'Нет'}</span>
+        </p>
+      ) },
+    ],
+    form: [
+      { key: 'name', label: 'Название', required: true, placeholder: 'Введите название атрибута' },
+      { key: 'value', label: 'Значение', required: true, placeholder: 'Введите значение атрибута' },
+      { key: 'is_filterable', label: 'Использовать для фильтрации', type: 'checkbox' },
+    ],
+  },
+};
+
 // Экспорт всех конфигураций
 export const CRUD_CONFIGS = {
   manufacturers: manufacturersConfig,
@@ -415,4 +477,5 @@ export const CRUD_CONFIGS = {
   groups: groupsConfig,
   products: productsConfig,
   users: usersConfig,
+  attributes: attributesConfig,
 };

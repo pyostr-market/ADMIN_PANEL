@@ -87,11 +87,11 @@
 }
 
 .user-detail-page__avatar--active {
-  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+  background: var(--gradient-success);
 }
 
 .user-detail-page__avatar--inactive {
-  background: linear-gradient(135deg, var(--danger) 0%, var(--danger-hover) 100%);
+  background: var(--gradient-danger);
 }
 
 .user-detail-page__header-text {
@@ -279,7 +279,7 @@
 .info-card__icon,
 .info-card__icon svg,
 .info-card__icon span {
-  color: white !important;
+  color: white;
 }
 
 .info-card__icon--primary {
@@ -287,15 +287,15 @@
 }
 
 .info-card__icon--secondary {
-  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  background: var(--gradient-secondary);
 }
 
 .info-card__icon--success {
-  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+  background: var(--gradient-success);
 }
 
 .info-card__icon--info {
-  background: linear-gradient(135deg, var(--info) 0%, #2563eb 100%);
+  background: var(--gradient-info);
 }
 
 .info-card__content {

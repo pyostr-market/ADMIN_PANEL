@@ -94,11 +94,11 @@
 }
 
 .users-list-page__avatar--active {
-  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+  background: var(--gradient-success);
 }
 
 .users-list-page__avatar--inactive {
-  background: linear-gradient(135deg, var(--danger) 0%, var(--danger-hover) 100%);
+  background: var(--gradient-danger);
 }
 
 .users-list-page__item-info {

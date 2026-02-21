@@ -1,3 +1,5 @@
+import './Tabs.css';
+
 export function Tabs({ children, className = '' }) {
   return <div className={`tabs ${className}`}>{children}</div>;
 }

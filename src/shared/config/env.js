@@ -29,4 +29,5 @@ export const API_ENDPOINTS = {
   categories: '/category',
   products: '/product',
   productTypes: '/product/type',
+  attributes: '/product/attribute',
 };

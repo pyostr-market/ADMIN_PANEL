@@ -22,6 +22,10 @@ import { ProductTypesPage } from '../../pages/productTypes/ProductTypesPage';
 import { ProductTypeFormPage } from '../../pages/productTypes/ProductTypeFormPage';
 import { ProductTypeDetailPage } from '../../pages/productTypes/ProductTypeDetailPage';
 import { ProductTypeAuditPage } from '../../pages/productTypes/ProductTypeAuditPage';
+import { AttributesPage } from '../../pages/attributes/AttributesPage';
+import { AttributeFormPage } from '../../pages/attributes/AttributeFormPage';
+import { AttributeDetailPage } from '../../pages/attributes/AttributeDetailPage';
+import { AttributeAuditPage } from '../../pages/attributes/AttributeAuditPage';
 import { PermissionsGroupsPage } from '../../pages/permissionsGroups/PermissionsGroupsPage';
 import { PrivateRoute, PublicOnlyRoute } from './routeGuards';
 
@@ -86,6 +90,14 @@ export function AppRouter() {
             <Route path="/catalog/device_type/:productTypeId/edit" element={<ProductTypeFormPage />} />
             <Route path="/catalog/device_type/:productTypeId" element={<ProductTypeDetailPage />} />
             <Route path="/catalog/device_type/:productTypeId/audit" element={<ProductTypeAuditPage />} />
+          </Route>
+
+          <Route element={<PrivateRoute permission={["product_attribute", "product_attribute:view"]} mode="any" />}>
+            <Route path="/catalog/attributes" element={<AttributesPage />} />
+            <Route path="/catalog/attributes/create" element={<AttributeFormPage />} />
+            <Route path="/catalog/attributes/:attributeId/edit" element={<AttributeFormPage />} />
+            <Route path="/catalog/attributes/:attributeId" element={<AttributeDetailPage />} />
+            <Route path="/catalog/attributes/:attributeId/audit" element={<AttributeAuditPage />} />
           </Route>
         </Route>
       </Route>

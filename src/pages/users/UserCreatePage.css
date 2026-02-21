@@ -101,11 +101,11 @@
 }
 
 .user-create-form__section-icon--success {
-  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+  background: var(--gradient-success);
 }
 
 .user-create-form__section-icon--info {
-  background: linear-gradient(135deg, var(--info) 0%, #2563eb 100%);
+  background: var(--gradient-info);
 }
 
 .user-create-form__section-title {

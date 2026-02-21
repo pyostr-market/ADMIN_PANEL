@@ -179,23 +179,23 @@
 .info-card__icon,
 .info-card__icon svg,
 .info-card__icon span {
-  color: white !important;
+  color: white;
 }
 
 .info-card__icon--primary {
-  background-color: var(--accent-blue-bg);
+  background: var(--gradient-avatar);
 }
 
 .info-card__icon--secondary {
-  background-color: var(--accent-purple-bg);
+  background: var(--gradient-secondary);
 }
 
 .info-card__icon--success {
-  background-color: var(--success-bg);
+  background: var(--gradient-success);
 }
 
 .info-card__icon--info {
-  background-color: var(--accent-orange-bg);
+  background: var(--gradient-info);
 }
 
 .info-card__content {

@@ -14,6 +14,7 @@ import {
   FiPackage,
   FiTag,
   FiUser,
+  FiLayers,
 } from 'react-icons/fi';
 import { useSession } from '../../entities/session/model/SessionProvider';
 import { hasPermission } from '../../shared/lib/permissions/permissions';
@@ -36,6 +37,7 @@ const PERMISSIONS = {
   suppliers: ['supplier', 'supplier:view'],
   manufacturers: ['manufacturer', 'manufacturer:view'],
   deviceTypes: ['device_type', 'device_type:view', 'product_type', 'product_type:view'],
+  attributes: ['product_attribute', 'product_attribute:view'],
 };
 
 const catalogItems = [
@@ -59,6 +61,13 @@ const catalogItems = [
     icon: FiTag,
     to: '/catalog/device_type',
     permission: PERMISSIONS.deviceTypes,
+  },
+  {
+    id: 'attributes',
+    label: 'Атрибуты',
+    icon: FiLayers,
+    to: '/catalog/attributes',
+    permission: PERMISSIONS.attributes,
   },
 ];
 
