@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { USER_SERVICE_BASE_URL, API_ENDPOINTS } from '../config/env';
+import { USER_SERVICE_BASE_URL, PRODUCT_SERVICE_BASE_URL, API_ENDPOINTS } from '../config/env';
 
 export const publicApi = axios.create({
   baseURL: USER_SERVICE_BASE_URL,
@@ -8,6 +8,11 @@ export const publicApi = axios.create({
 
 export const authorizedApi = axios.create({
   baseURL: USER_SERVICE_BASE_URL,
+  timeout: 15000,
+});
+
+export const productApi = axios.create({
+  baseURL: PRODUCT_SERVICE_BASE_URL,
   timeout: 15000,
 });
 
@@ -31,6 +36,7 @@ export function setupAuthorizedApiInterceptors({
 
   const publicRequestId = publicApi.interceptors.request.use(attachToken);
   const requestId = authorizedApi.interceptors.request.use(attachToken);
+  const productRequestId = productApi.interceptors.request.use(attachToken);
 
   const responseId = authorizedApi.interceptors.response.use(
     (response) => response,
@@ -73,9 +79,50 @@ export function setupAuthorizedApiInterceptors({
     },
   );
 
+  const productResponseId = productApi.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      const { response, config } = error;
+
+      if (!response || !config || response.status !== 401) {
+        return Promise.reject(error);
+      }
+
+      if (config._retry) {
+        onUnauthorized();
+        return Promise.reject(error);
+      }
+
+      const refreshToken = getRefreshToken();
+
+      if (!refreshToken) {
+        onUnauthorized();
+        return Promise.reject(error);
+      }
+
+      try {
+        if (!refreshPromise) {
+          refreshPromise = refreshAccessToken(refreshToken).finally(() => {
+            refreshPromise = null;
+          });
+        }
+
+        await refreshPromise;
+
+        config._retry = true;
+        return productApi(config);
+      } catch (refreshError) {
+        onUnauthorized();
+        return Promise.reject(refreshError);
+      }
+    },
+  );
+
   return () => {
     publicApi.interceptors.request.eject(publicRequestId);
     authorizedApi.interceptors.request.eject(requestId);
+    productApi.interceptors.request.eject(productRequestId);
     authorizedApi.interceptors.response.eject(responseId);
+    productApi.interceptors.response.eject(productResponseId);
   };
 }

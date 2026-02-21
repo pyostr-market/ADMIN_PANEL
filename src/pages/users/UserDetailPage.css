@@ -368,6 +368,29 @@
   font-size: 14px;
 }
 
+.session-card__status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.session-card__badge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.session-card__badge--active {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.session-card__badge--inactive {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
 .session-card__body {
   padding: var(--space-3);
   display: grid;

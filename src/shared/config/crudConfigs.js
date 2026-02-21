@@ -15,33 +15,39 @@
  * - filters: фильтры (опционально)
  */
 
-import { authorizedApi } from '../api/http';
+import { authorizedApi, productApi } from '../api/http';
 import { API_ENDPOINTS } from './env';
 
 // === Manufacturers / Производители ===
 export const manufacturersConfig = {
   fetchFn: async ({ page = 1, limit = 20, search } = {}) => {
-    const params = { page, limit };
-    if (search) params.search = search;
-    const response = await authorizedApi.get(API_ENDPOINTS.manufacturers, { params });
+    const params = { limit, offset: (page - 1) * limit };
+    if (search) params.name = search;
+    const response = await productApi.get(API_ENDPOINTS.manufacturers, { params });
     const data = response.data?.data ?? response.data;
     const items = Array.isArray(data?.items) ? data.items : [];
-    const pagination = data?.pagination ?? { page, limit, total: items.length, pages: 1 };
+    const total = data?.total ?? items.length;
+    const pagination = {
+      page,
+      limit,
+      total,
+      pages: Math.ceil(total / limit),
+    };
     return { items, pagination };
   },
 
   createFn: async (payload) => {
-    const response = await authorizedApi.post(API_ENDPOINTS.manufacturers, payload);
+    const response = await productApi.post(API_ENDPOINTS.manufacturers, payload);
     return response.data?.data ?? response.data;
   },
 
   updateFn: async (id, payload) => {
-    const response = await authorizedApi.patch(`${API_ENDPOINTS.manufacturers}/${id}`, payload);
+    const response = await productApi.put(`${API_ENDPOINTS.manufacturers}/${id}`, payload);
     return response.data?.data ?? response.data;
   },
 
   deleteFn: async (id) => {
-    const response = await authorizedApi.delete(`${API_ENDPOINTS.manufacturers}/${id}`);
+    const response = await productApi.delete(`${API_ENDPOINTS.manufacturers}/${id}`);
     return response.data?.data ?? response.data;
   },
 
@@ -70,27 +76,33 @@ export const manufacturersConfig = {
 // === Suppliers / Поставщики ===
 export const suppliersConfig = {
   fetchFn: async ({ page = 1, limit = 20, search } = {}) => {
-    const params = { page, limit };
-    if (search) params.search = search;
-    const response = await authorizedApi.get(API_ENDPOINTS.suppliers, { params });
+    const params = { limit, offset: (page - 1) * limit };
+    if (search) params.name = search;
+    const response = await productApi.get(API_ENDPOINTS.suppliers, { params });
     const data = response.data?.data ?? response.data;
     const items = Array.isArray(data?.items) ? data.items : [];
-    const pagination = data?.pagination ?? { page, limit, total: items.length, pages: 1 };
+    const total = data?.total ?? items.length;
+    const pagination = {
+      page,
+      limit,
+      total,
+      pages: Math.ceil(total / limit),
+    };
     return { items, pagination };
   },
 
   createFn: async (payload) => {
-    const response = await authorizedApi.post(API_ENDPOINTS.suppliers, payload);
+    const response = await productApi.post(API_ENDPOINTS.suppliers, payload);
     return response.data?.data ?? response.data;
   },
 
   updateFn: async (id, payload) => {
-    const response = await authorizedApi.patch(`${API_ENDPOINTS.suppliers}/${id}`, payload);
+    const response = await productApi.put(`${API_ENDPOINTS.suppliers}/${id}`, payload);
     return response.data?.data ?? response.data;
   },
 
   deleteFn: async (id) => {
-    const response = await authorizedApi.delete(`${API_ENDPOINTS.suppliers}/${id}`);
+    const response = await productApi.delete(`${API_ENDPOINTS.suppliers}/${id}`);
     return response.data?.data ?? response.data;
   },
 
@@ -265,27 +277,33 @@ export const groupsConfig = {
 // === Products / Продукты ===
 export const productsConfig = {
   fetchFn: async ({ page = 1, limit = 20, search } = {}) => {
-    const params = { page, limit };
-    if (search) params.search = search;
-    const response = await authorizedApi.get(API_ENDPOINTS.products, { params });
+    const params = { limit, offset: (page - 1) * limit };
+    if (search) params.name = search;
+    const response = await productApi.get(API_ENDPOINTS.products, { params });
     const data = response.data?.data ?? response.data;
     const items = Array.isArray(data?.items) ? data.items : [];
-    const pagination = data?.pagination ?? { page, limit, total: items.length, pages: 1 };
+    const total = data?.total ?? items.length;
+    const pagination = {
+      page,
+      limit,
+      total,
+      pages: Math.ceil(total / limit),
+    };
     return { items, pagination };
   },
 
   createFn: async (payload) => {
-    const response = await authorizedApi.post(API_ENDPOINTS.products, payload);
+    const response = await productApi.post(API_ENDPOINTS.products, payload);
     return response.data?.data ?? response.data;
   },
 
   updateFn: async (id, payload) => {
-    const response = await authorizedApi.patch(`${API_ENDPOINTS.products}/${id}`, payload);
+    const response = await productApi.put(`${API_ENDPOINTS.products}/${id}`, payload);
     return response.data?.data ?? response.data;
   },
 
   deleteFn: async (id) => {
-    const response = await authorizedApi.delete(`${API_ENDPOINTS.products}/${id}`);
+    const response = await productApi.delete(`${API_ENDPOINTS.products}/${id}`);
     return response.data?.data ?? response.data;
   },
 

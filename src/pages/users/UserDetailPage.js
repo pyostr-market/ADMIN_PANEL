@@ -33,6 +33,7 @@ import {
   assignGroupRequest,
   getAllPermissionsRequest,
   getAllGroupsRequest,
+  deleteSessionRequest,
 } from './api/usersApi';
 import './UserDetailPage.css';
 
@@ -407,7 +408,7 @@ export function UserDetailPage() {
 
   // Вычисляемые значения — до любых условных return
   const userPermissions = user?.permissions || [];
-  const userGroups = user?.groups || (user?.group ? [user.group] : []);
+  const userGroups = user?.group ? [user.group] : [];
   const userSessions = user?.sessions || [];
 
   const filteredPermissions = useMemo(() => {
@@ -534,9 +535,9 @@ export function UserDetailPage() {
     if (!selectedSession) return;
     setIsTerminating(true);
     try {
-      // TODO: Добавить API endpoint для завершения сессии
-      // await terminateSessionRequest(selectedSession.id);
-      notifications.info('Сессия будет завершена (API в разработке)');
+      await deleteSessionRequest(userId, selectedSession.id);
+      await loadUser();
+      notifications.info('Сессия завершена');
       setIsTerminateModalOpen(false);
       setSelectedSession(null);
     } catch (error) {
@@ -789,7 +790,7 @@ export function UserDetailPage() {
             <div className="panel-header">
               <h2 className="panel-title">Активные сессии</h2>
             </div>
-            
+
             {userSessions.length === 0 ? (
               <div className="empty-state">
                 <FiClock className="empty-state__icon" />
@@ -804,7 +805,14 @@ export function UserDetailPage() {
                         <FiClock />
                         <span>Сессия #{session.id}</span>
                       </div>
-                      <PermissionGate permission={['admin:session:terminate']} fallback={null}>
+                      <div className="session-card__status">
+                        {session.is_active ? (
+                          <span className="session-card__badge session-card__badge--active">Активна</span>
+                        ) : (
+                          <span className="session-card__badge session-card__badge--inactive">Неактивна</span>
+                        )}
+                      </div>
+                      <PermissionGate permission={['admin:user:update']} fallback={null}>
                         <Button
                           variant="ghost"
                           size="icon"
@@ -825,12 +833,24 @@ export function UserDetailPage() {
                           {session.created_at ? new Date(session.created_at).toLocaleString('ru-RU') : '—'}
                         </span>
                       </div>
-                      {session.last_active_at && (
+                      {session.last_activity && (
                         <div className="session-card__info">
                           <span className="session-card__label">Последняя активность:</span>
                           <span className="session-card__value">
-                            {new Date(session.last_active_at).toLocaleString('ru-RU')}
+                            {new Date(session.last_activity).toLocaleString('ru-RU')}
                           </span>
+                        </div>
+                      )}
+                      {session.device_info && (
+                        <div className="session-card__info">
+                          <span className="session-card__label">Устройство:</span>
+                          <span className="session-card__value">{session.device_info}</span>
+                        </div>
+                      )}
+                      {session.ip_address && (
+                        <div className="session-card__info">
+                          <span className="session-card__label">IP адрес:</span>
+                          <span className="session-card__value">{session.ip_address}</span>
                         </div>
                       )}
                     </div>

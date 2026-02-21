@@ -208,3 +208,17 @@ export async function getAllGroupsRequest(page = 1, limit = 100) {
 
   return items;
 }
+
+// ==================== Sessions ====================
+
+/**
+ * Удаление сессии пользователя
+ * @param {number} userId - ID пользователя
+ * @param {number} sessionId - ID сессии
+ */
+export async function deleteSessionRequest(userId, sessionId) {
+  const response = await authorizedApi.delete(
+    `${API_ENDPOINTS.users}/${userId}/sessions/${sessionId}`,
+  );
+  return unwrapResponse(response);
+}
