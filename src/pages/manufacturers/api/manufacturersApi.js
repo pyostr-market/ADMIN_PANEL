@@ -21,8 +21,11 @@ export async function getManufacturersRequest({
   const params = { limit, offset };
   if (name) params.name = name;
 
+  console.log('[Manufacturers API] Запрос:', { page, limit, offset, name, params });
   const response = await productApi.get(API_ENDPOINTS.manufacturers, { params });
+  console.log('[Manufacturers API] Ответ:', response);
   const data = unwrapResponse(response);
+  console.log('[Manufacturers API] Распакованные данные:', data);
   const items = Array.isArray(data?.items) ? data.items : [];
   const total = data?.total ?? items.length;
   const pagination = {
@@ -32,6 +35,7 @@ export async function getManufacturersRequest({
     pages: Math.ceil(total / limit),
   };
 
+  console.log('[Manufacturers API] Итог:', { items, pagination });
   return { items, pagination };
 }
 
