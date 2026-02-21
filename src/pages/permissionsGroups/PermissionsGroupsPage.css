@@ -73,19 +73,9 @@
   margin-bottom: var(--space-3);
 }
 
-.permissions-groups-page__filters--loading {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
 .permissions-groups-page__search {
   position: relative;
   min-width: 0;
-}
-
-.permissions-groups-page__search--loading {
-  opacity: 0.6;
-  pointer-events: none;
 }
 
 .permissions-groups-page__icon {

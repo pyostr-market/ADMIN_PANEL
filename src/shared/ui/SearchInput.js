@@ -23,9 +23,10 @@ export const SearchInput = forwardRef(function SearchInput(
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        disabled={disabled || loading}
+        disabled={disabled}
         leftIcon={<FiSearch />}
         wrapperClassName="search-input__wrapper"
+        rightIcon={loading ? <span className="search-input__loading-indicator" /> : null}
         {...props}
       />
     </div>

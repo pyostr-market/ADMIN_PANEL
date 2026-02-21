@@ -734,7 +734,7 @@ export function PermissionsGroupsPage() {
 
       {activeTab === TABS.permissions && (
         <>
-          <div className={`permissions-groups-page__filters${permissionsCrud.isLoading ? ' permissions-groups-page__filters--loading' : ''}`}>
+          <div className="permissions-groups-page__filters">
             <SearchInput
               value={permissionsCrud.search}
               onChange={(e) => permissionsCrud.setSearch(e.target.value)}
@@ -811,13 +811,12 @@ export function PermissionsGroupsPage() {
 
       {activeTab === TABS.groups && (
         <>
-          <div className={`permissions-groups-page__filters${groupsCrud.isLoading ? ' permissions-groups-page__filters--loading' : ''}`}>
+          <div className="permissions-groups-page__filters">
             <SearchInput
               value={groupsCrud.search}
               onChange={(e) => groupsCrud.setSearch(e.target.value)}
               placeholder="Поиск групп..."
               loading={groupsCrud.isLoading}
-              disabled={groupsCrud.isLoading}
             />
             <div className="permissions-groups-page__filters-actions permissions-groups-page__filters-actions--empty" />
           </div>

@@ -3,5 +3,28 @@
 }
 
 .search-input__wrapper {
+  position: relative;
   width: 100%;
+}
+
+.search-input__wrapper input {
+  padding-right: 36px;
+}
+
+.search-input__loading-indicator {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

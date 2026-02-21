@@ -82,16 +82,16 @@
   align-items: center;
   justify-content: center;
   font-size: 24px;
-  color: inherit;
 }
 
-.supplier-form__section-icon * {
-  color: inherit;
+.supplier-form__section-icon,
+.supplier-form__section-icon svg,
+.supplier-form__section-icon span {
+  color: white !important;
 }
 
 .supplier-form__section-icon--primary {
   background-color: var(--accent-blue-bg);
-  color: var(--accent-blue);
 }
 
 .supplier-form__section-title {

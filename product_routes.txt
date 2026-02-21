@@ -365,7 +365,14 @@
 
 ## Атрибуты продуктов
 
-### 34) POST `/product/attribute`
+### 34) GET `/product/attribute/{attribute_id}`
+- Метод: `GET`
+- Доступ: **не реализован**
+- Параметры:
+  - Path: `attribute_id: int` (обяз.)
+- Примечание: эндпоинт не реализован (доступны только POST/PUT/DELETE)
+
+### 35) POST `/product/attribute`
 - Метод: `POST`
 - Доступ: `Требуемое право` = `product_attribute:create`
 - Параметры:
@@ -375,7 +382,7 @@
     - `is_filterable: bool = false`
 - Успешный ответ (`200 OK`): `{ "success": true, "data": ProductAttributeReadSchema }`
 
-### 35) PUT `/product/attribute/{attribute_id}`
+### 36) PUT `/product/attribute/{attribute_id}`
 - Метод: `PUT`
 - Доступ: `Требуемое право` = `product_attribute:update`
 - Параметры:
@@ -386,7 +393,7 @@
     - `is_filterable: bool | null`
 - Успешный ответ (`200 OK`): `{ "success": true, "data": ProductAttributeReadSchema }`
 
-### 36) DELETE `/product/attribute/{attribute_id}`
+### 37) DELETE `/product/attribute/{attribute_id}`
 - Метод: `DELETE`
 - Доступ: `Требуемое право` = `product_attribute:delete`
 - Параметры:

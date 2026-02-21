@@ -1,20 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getApiErrorMessage } from '../../api/apiError';
 import { useNotifications } from '../notifications/NotificationProvider';
+import { PRODUCT_SERVICE_BASE_URL, USER_SERVICE_BASE_URL } from '../../config/env';
 
 const EMPTY_PAGINATION = { page: 1, limit: 20, total: 0, pages: 1 };
+const MAX_RETRY_ATTEMPTS = 3;
+const RETRY_DELAY_MS = 3000;
+
+// Статусы ошибок, при которых не нужно делать повторные попытки
+const NO_RETRY_STATUSES = [404, 405];
 
 /**
  * Хук для управления CRUD-списком
- * @param {Object} config - Конфигурация хука
- * @param {Function} config.fetchFn - Функция для получения данных (принимает { page, limit, search, filters })
- * @param {Function} config.createFn - Функция для создания записи
- * @param {Function} config.updateFn - Функция для обновления записи
- * @param {Function} config.deleteFn - Функция для удаления записи
- * @param {number} config.defaultLimit - Количество элементов на странице
- * @param {string} config.entityName - Название сущности (для уведомлений)
- * @param {Function} config.normalizeFn - Функция нормализации данных (опционально)
- * @returns {Object} - Методы и состояние для управления списком
  */
 export function useCrudList({
   fetchFn,
@@ -28,7 +25,6 @@ export function useCrudList({
   const notifications = useNotifications();
   const notificationsRef = useRef(notifications);
 
-  // Обновляем ref при изменении notifications
   useEffect(() => {
     notificationsRef.current = notifications;
   }, [notifications]);
@@ -44,14 +40,19 @@ export function useCrudList({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
+  // Refs для отслеживания состояния
   const hasLoadedRef = useRef(false);
+  const retryAttemptRef = useRef(0);
+  const isRequestInProgressRef = useRef(false);
 
-  // Refs для хранения актуальных значений без пересоздания refresh
+  // Refs для хранения актуальных значений
   const pageRef = useRef(page);
   const searchRef = useRef(search);
   const filtersRef = useRef(filters);
+  const fetchFnRef = useRef(fetchFn);
+  const limitRef = useRef(limit);
+  const normalizeFnRef = useRef(normalizeFn);
 
-  // Обновляем ref при изменении значений
   useEffect(() => {
     pageRef.current = page;
   }, [page]);
@@ -64,58 +65,134 @@ export function useCrudList({
     filtersRef.current = filters;
   }, [filters]);
 
-  const refresh = useCallback(
-    async (pageNum, searchValue, filterValues) => {
-      // Используем переданные значения или значения из ref
-      const actualPage = pageNum ?? pageRef.current;
-      const actualSearch = searchValue ?? searchRef.current;
-      const actualFilters = filterValues ?? filtersRef.current;
+  useEffect(() => {
+    fetchFnRef.current = fetchFn;
+  }, [fetchFn]);
 
-      setIsLoading(true);
-      setError(null);
+  useEffect(() => {
+    limitRef.current = limit;
+  }, [limit]);
 
-      try {
-        const data = await fetchFn({
-          page: actualPage,
-          limit,
-          search: actualSearch || undefined,
-          ...actualFilters,
-        });
+  useEffect(() => {
+    normalizeFnRef.current = normalizeFn;
+  }, [normalizeFn]);
 
-        const normalizedItems = Array.isArray(data.items)
-          ? data.items.map(normalizeFn)
-          : [];
+  const getServiceName = useCallback(() => {
+    try {
+      const fetchFnStr = fetchFn?.toString() || '';
+      if (fetchFnStr.includes(PRODUCT_SERVICE_BASE_URL)) {
+        return 'Product API';
+      }
+      if (fetchFnStr.includes(USER_SERVICE_BASE_URL)) {
+        return 'User API';
+      }
+    } catch (e) {
+      // ignore
+    }
+    return 'API';
+  }, [fetchFn]);
 
-        setItems(normalizedItems);
-        setPagination(data.pagination ?? {
-          page: actualPage,
-          limit,
-          total: normalizedItems.length,
-          pages: 1,
-        });
-        hasLoadedRef.current = true;
-      } catch (err) {
-        const message = getApiErrorMessage(err);
-        setError(message);
-        notificationsRef.current?.error(message);
+  // Основная функция выполнения запроса
+  const executeFetch = useCallback(async () => {
+    if (isRequestInProgressRef.current) {
+      return;
+    }
+
+    isRequestInProgressRef.current = true;
+    setIsLoading(true);
+    setError(null);
+
+    const actualPage = pageRef.current;
+    const actualSearch = searchRef.current;
+    const actualFilters = filtersRef.current;
+
+    try {
+      const data = await fetchFnRef.current({
+        page: actualPage,
+        limit: limitRef.current,
+        search: actualSearch || undefined,
+        ...actualFilters,
+      });
+
+      const normalizedItems = Array.isArray(data.items)
+        ? data.items.map(normalizeFnRef.current)
+        : [];
+
+      setItems(normalizedItems);
+      setPagination(data.pagination ?? {
+        page: actualPage,
+        limit: limitRef.current,
+        total: normalizedItems.length,
+        pages: 1,
+      });
+      hasLoadedRef.current = true;
+      retryAttemptRef.current = 0;
+    } catch (err) {
+      const status = err?.response?.status;
+      const code = status || err?.code || 'N/A';
+
+      // При 404/405 ошибках не делаем повторные попытки
+      if (status && NO_RETRY_STATUSES.includes(status)) {
+        const serviceName = getServiceName();
+        const finalMessage = `Сервис "${serviceName}" недоступен. Код ошибки: ${code}`;
+        setError(finalMessage);
+        notificationsRef.current?.error(finalMessage);
         setItems([]);
         setPagination(EMPTY_PAGINATION);
-      } finally {
+        retryAttemptRef.current = MAX_RETRY_ATTEMPTS;
         setIsLoading(false);
+        isRequestInProgressRef.current = false;
+        return;
       }
-    },
-    [fetchFn, limit, normalizeFn],
-  );
 
-  useEffect(() => {
-    if (!hasLoadedRef.current) {
-      refresh();
+      retryAttemptRef.current += 1;
+
+      if (retryAttemptRef.current >= MAX_RETRY_ATTEMPTS) {
+        const serviceName = getServiceName();
+        const finalMessage = `Сервис "${serviceName}" недоступен. Код ошибки: ${code}`;
+        setError(finalMessage);
+        notificationsRef.current?.error(finalMessage);
+        setItems([]);
+        setPagination(EMPTY_PAGINATION);
+        setIsLoading(false);
+        isRequestInProgressRef.current = false;
+        return;
+      } else {
+        const message = getApiErrorMessage(err);
+        setError(message);
+        notificationsRef.current?.error(`${message}. Попытка ${retryAttemptRef.current} из ${MAX_RETRY_ATTEMPTS}...`);
+        setItems([]);
+        setPagination(EMPTY_PAGINATION);
+
+        // Запускаем таймер для повторной попытки
+        setTimeout(() => {
+          isRequestInProgressRef.current = false;
+          executeFetch();
+        }, RETRY_DELAY_MS);
+        return;
+      }
     }
-  }, [refresh]);
 
+    setIsLoading(false);
+    isRequestInProgressRef.current = false;
+  }, [getServiceName]);
+
+  // Эффект для первоначальной загрузки
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    if (hasLoadedRef.current) {
-      refresh();
+    if (!hasLoadedRef.current && !isRequestInProgressRef.current) {
+      executeFetch();
+    }
+  }, []);
+
+  // Эффект для повторной загрузки при изменении параметров
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    // Сбрасываем счетчик попыток при изменении параметров
+    retryAttemptRef.current = 0;
+
+    if (hasLoadedRef.current && !isRequestInProgressRef.current) {
+      executeFetch();
     }
   }, [page, search, filters]);
 
@@ -144,7 +221,6 @@ export function useCrudList({
         setItems((prev) => [normalized, ...prev]);
         notificationsRef.current?.info(`${entityName} создана`);
 
-        await refresh();
         return normalized;
       } catch (err) {
         const message = getApiErrorMessage(err);
@@ -154,7 +230,7 @@ export function useCrudList({
         setIsSubmitting(false);
       }
     },
-    [createFn, normalizeFn, entityName, refresh],
+    [createFn, normalizeFn, entityName],
   );
 
   const handleUpdate = useCallback(
@@ -208,6 +284,20 @@ export function useCrudList({
     [deleteFn, entityName],
   );
 
+  const refresh = useCallback(() => {
+    if (!isRequestInProgressRef.current) {
+      retryAttemptRef.current = 0;
+      executeFetch();
+    }
+  }, [executeFetch]);
+
+  const retry = useCallback(() => {
+    if (!isRequestInProgressRef.current) {
+      retryAttemptRef.current = 0;
+      executeFetch();
+    }
+  }, [executeFetch]);
+
   return {
     items,
     page,
@@ -221,6 +311,7 @@ export function useCrudList({
     setSearch: handleSearch,
     setFilters: handleFilterChange,
     refresh,
+    retry,
     create: handleCreate,
     update: handleUpdate,
     delete: handleDelete,

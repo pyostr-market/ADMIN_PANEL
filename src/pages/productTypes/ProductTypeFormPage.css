@@ -82,16 +82,16 @@
   align-items: center;
   justify-content: center;
   font-size: 24px;
-  color: inherit;
 }
 
-.product-type-form__section-icon * {
-  color: inherit;
+.product-type-form__section-icon,
+.product-type-form__section-icon svg,
+.product-type-form__section-icon span {
+  color: white !important;
 }
 
 .product-type-form__section-icon--primary {
   background-color: var(--accent-blue-bg);
-  color: var(--accent-blue);
 }
 
 .product-type-form__section-title {
