@@ -1,12 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
-  FiBox,
   FiChevronDown,
   FiChevronLeft,
   FiChevronRight,
   FiGrid,
-  FiLayers,
   FiMoon,
   FiSettings,
   FiSun,
@@ -15,6 +13,7 @@ import {
   FiShoppingBag,
   FiPackage,
   FiTag,
+  FiUser,
 } from 'react-icons/fi';
 import { useSession } from '../../entities/session/model/SessionProvider';
 import { hasPermission } from '../../shared/lib/permissions/permissions';
@@ -184,6 +183,8 @@ export function AppSidebar({ collapsed, onCollapse }) {
       </div>
 
       <nav className="sidebar-panel__nav">
+        <SidebarItemLink to="/profile" label="Профиль" icon={FiUser} collapsed={collapsed} />
+
         {canSeeUsersGroup && (
           <div className="sidebar-group">
             <button

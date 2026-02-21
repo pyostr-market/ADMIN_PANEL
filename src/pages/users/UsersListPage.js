@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiCheck, FiPlus, FiSearch, FiTrash2, FiUser, FiUserCheck, FiUserX, FiEye } from 'react-icons/fi';
+import { FiCheck, FiPlus, FiTrash2, FiUser, FiUserCheck, FiUserX, FiEye } from 'react-icons/fi';
 import { useCrudList } from '../../shared/lib/crud';
 import { PermissionGate } from '../../shared/ui/PermissionGate';
 import { Button } from '../../shared/ui/Button';
@@ -284,6 +284,15 @@ export function UsersListPage() {
                     <span className="users-list-page__meta-item">
                       <span className="users-list-page__meta-label">ID:</span> {user.id}
                     </span>
+                    {user.fio && (
+                      <>
+                        <span className="users-list-page__separator">•</span>
+                        <span className="users-list-page__meta-item">
+                          <FiUser className="users-list-page__meta-icon" />
+                          {user.fio}
+                        </span>
+                      </>
+                    )}
                     {user.group && (
                       <>
                         <span className="users-list-page__separator">•</span>

@@ -7,10 +7,15 @@ import { Modal } from '../../shared/ui/Modal';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import { getManufacturerAuditRequest } from './api/manufacturersApi';
+import { getUsersInfo, formatUserDisplay } from '../../shared/lib/user/userInfo';
 import './ManufacturerAuditPage.css';
 
-function AuditDetailModal({ auditRecord, onClose }) {
+function AuditDetailModal({ auditRecord, onClose, userInfo }) {
   if (!auditRecord) return null;
+
+  const userDisplay = userInfo
+    ? formatUserDisplay(auditRecord.user_id, userInfo)
+    : `ID: ${auditRecord.user_id}`;
 
   const renderDataBlock = (data, title) => {
     if (!data || typeof data !== 'object') {
@@ -129,7 +134,7 @@ function AuditDetailModal({ auditRecord, onClose }) {
           </div>
           <div className="audit-detail-row">
             <span className="audit-detail-label">Пользователь:</span>
-            <span className="audit-detail-value">ID: {auditRecord.user_id}</span>
+            <span className="audit-detail-value">{userDisplay}</span>
           </div>
           <div className="audit-detail-row">
             <span className="audit-detail-label">Время:</span>
@@ -158,6 +163,7 @@ export function ManufacturerAuditPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [userCache, setUserCache] = useState(new Map());
 
   const limit = 20;
 
@@ -172,6 +178,13 @@ export function ManufacturerAuditPage() {
       });
       setAuditData(items);
       setTotal(totalItems);
+
+      // Загружаем информацию о пользователях
+      const userIds = items.map((item) => item.user_id).filter(Boolean);
+      if (userIds.length > 0) {
+        const usersInfo = await getUsersInfo(userIds);
+        setUserCache(usersInfo);
+      }
     } catch (error) {
       const message = getApiErrorMessage(error);
       notifications?.error(message);
@@ -243,33 +256,42 @@ export function ManufacturerAuditPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {auditData.map((record) => (
-                      <tr key={record.id} className="audit-table__row">
-                        <td className="audit-table__cell">
-                          <span className={`audit-action-badge audit-action-badge--${record.action}`}>
-                            {record.action}
-                          </span>
-                        </td>
-                        <td className="audit-table__cell">
-                          <span className="audit-user-id">ID: {record.user_id}</span>
-                        </td>
-                        <td className="audit-table__cell">
-                          <span className="audit-date">
-                            {new Date(record.created_at).toLocaleString('ru-RU')}
-                          </span>
-                        </td>
-                        <td className="audit-table__cell audit-table__cell--actions">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<FiEye />}
-                            onClick={() => handleViewDetails(record)}
-                          >
-                            Подробнее
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
+                    {auditData.map((record) => {
+                      const userInfo = userCache.get(record.user_id);
+                      const userDisplay = userInfo
+                        ? formatUserDisplay(record.user_id, userInfo)
+                        : `ID: ${record.user_id}`;
+
+                      return (
+                        <tr key={record.id} className="audit-table__row">
+                          <td className="audit-table__cell">
+                            <span className={`audit-action-badge audit-action-badge--${record.action}`}>
+                              {record.action}
+                            </span>
+                          </td>
+                          <td className="audit-table__cell">
+                            <span className="audit-user-info" title={userDisplay}>
+                              {userDisplay}
+                            </span>
+                          </td>
+                          <td className="audit-table__cell">
+                            <span className="audit-date">
+                              {new Date(record.created_at).toLocaleString('ru-RU')}
+                            </span>
+                          </td>
+                          <td className="audit-table__cell audit-table__cell--actions">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<FiEye />}
+                              onClick={() => handleViewDetails(record)}
+                            >
+                              Подробнее
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -292,6 +314,7 @@ export function ManufacturerAuditPage() {
       {selectedRecord && (
         <AuditDetailModal
           auditRecord={selectedRecord}
+          userInfo={userCache.get(selectedRecord.user_id)}
           onClose={handleCloseModal}
         />
       )}

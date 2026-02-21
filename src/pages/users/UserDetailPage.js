@@ -4,7 +4,6 @@ import {
   FiCheck,
   FiEdit2,
   FiLock,
-  FiSave,
   FiX,
   FiPlus,
   FiTrash2,
@@ -15,11 +14,11 @@ import {
   FiPhone,
   FiCalendar,
   FiActivity,
+  FiUser,
 } from 'react-icons/fi';
 import { Button } from '../../shared/ui/Button';
 import { Tabs, Tab } from '../../shared/ui/Tabs';
 import { Modal } from '../../shared/ui/Modal';
-import { Select } from '../../shared/ui/Select';
 import { PermissionGate } from '../../shared/ui/PermissionGate';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
@@ -27,7 +26,6 @@ import {
   getUserByIdRequest,
   updateUserRequest,
   banUserRequest,
-  assignPermissionRequest,
   revokePermissionRequest,
   assignPermissionsBulkRequest,
   assignGroupRequest,
@@ -256,6 +254,7 @@ function AssignModal({
 // Модальное окно редактирования пользователя
 function EditUserModal({ user, groups, onClose, onSubmit, isSubmitting }) {
   const [formData, setFormData] = useState({
+    fio: user?.fio ?? '',
     is_active: user?.is_active ?? true,
     is_verified: user?.is_verified ?? false,
     group_id: user?.group?.id ?? '',
@@ -263,6 +262,7 @@ function EditUserModal({ user, groups, onClose, onSubmit, isSubmitting }) {
 
   useEffect(() => {
     setFormData({
+      fio: user?.fio ?? '',
       is_active: user?.is_active ?? true,
       is_verified: user?.is_verified ?? false,
       group_id: user?.group?.id ?? '',
@@ -293,6 +293,17 @@ function EditUserModal({ user, groups, onClose, onSubmit, isSubmitting }) {
       )}
     >
       <div className="edit-user-form">
+        <label className="edit-user-form__field">
+          <span className="edit-user-form__label">ФИО</span>
+          <input
+            type="text"
+            value={formData.fio}
+            onChange={(e) => handleChange('fio', e.target.value)}
+            placeholder="Иванов Иван Иванович"
+            maxLength={255}
+          />
+        </label>
+
         <label className="edit-user-form__field">
           <span className="edit-user-form__label">Статус</span>
           <select
@@ -714,6 +725,16 @@ export function UserDetailPage() {
                 <div className="info-card__content">
                   <span className="info-card__label">Телефон</span>
                   <span className="info-card__value">{user.primary_phone?.phone_number || 'Не указан'}</span>
+                </div>
+              </div>
+
+              <div className="info-card">
+                <div className="info-card__icon info-card__icon--primary">
+                  <FiUser />
+                </div>
+                <div className="info-card__content">
+                  <span className="info-card__label">ФИО</span>
+                  <span className="info-card__value">{user.fio || 'Не указано'}</span>
                 </div>
               </div>
 

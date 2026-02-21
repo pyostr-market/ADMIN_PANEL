@@ -139,9 +139,18 @@
   color: var(--accent-red);
 }
 
-.audit-user-id {
+.audit-user-id,
+.audit-user-info {
   color: var(--text);
   font-weight: 500;
+}
+
+.audit-user-info {
+  display: inline-block;
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .audit-date {

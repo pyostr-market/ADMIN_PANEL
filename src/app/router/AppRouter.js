@@ -7,6 +7,7 @@ import { ErrorPage } from '../../pages/errors/ErrorPage';
 import { UsersListPage } from '../../pages/users/UsersListPage';
 import { UserDetailPage } from '../../pages/users/UserDetailPage';
 import { UserCreatePage } from '../../pages/users/UserCreatePage';
+import { ProfilePage } from '../../pages/profile/ProfilePage';
 import { SuppliersPage } from '../../pages/suppliers/SuppliersPage';
 import { SupplierFormPage } from '../../pages/suppliers/SupplierFormPage';
 import { SupplierDetailPage } from '../../pages/suppliers/SupplierDetailPage';
@@ -42,6 +43,8 @@ export function AppRouter() {
       <Route element={<PrivateRoute />}>
         <Route element={<AppLayout />}>
           <Route index element={<DashboardPage />} />
+
+          <Route path="/profile" element={<ProfilePage />} />
 
           <Route element={<PrivateRoute permission={["users", "users:view", "admin:user", "admin:user:view"]} mode="any" />}>
             <Route path="/users" element={<UsersListPage />} />

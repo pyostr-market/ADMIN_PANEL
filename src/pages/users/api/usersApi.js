@@ -222,3 +222,14 @@ export async function deleteSessionRequest(userId, sessionId) {
   );
   return unwrapResponse(response);
 }
+
+/**
+ * Получение списка сессий пользователя
+ * @param {number} userId - ID пользователя
+ */
+export async function getUserSessionsRequest(userId) {
+  const response = await authorizedApi.get(
+    `${API_ENDPOINTS.users}/${userId}/sessions`,
+  );
+  return unwrapResponse(response);
+}

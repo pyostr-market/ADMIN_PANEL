@@ -4,11 +4,13 @@ import {
   getAccessToken,
   getRefreshToken,
   setSessionTokens,
+  setFio,
 } from './sessionStore';
 import {
   loginRequest,
   myPermissionsRequest,
   refreshTokenRequest,
+  authMeRequest,
 } from '../api/authApi';
 import { setupAuthorizedApiInterceptors } from '../../../shared/api/http';
 import { useSocket } from '../../../shared/lib/socket/SocketProvider';
@@ -23,15 +25,46 @@ const AUTH_STATUS = {
 
 let refreshInFlightPromise = null;
 
+function decodeJwtPayload(token) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`)
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch (_error) {
+    return null;
+  }
+}
+
+function extractFioFromToken() {
+  const token = getAccessToken();
+  if (!token) return null;
+  const payload = decodeJwtPayload(token);
+  return payload?.fio ?? null;
+}
+
 export function SessionProvider({ children }) {
   const socket = useSocket();
   const [authStatus, setAuthStatus] = useState(AUTH_STATUS.loading);
   const [permissions, setPermissions] = useState([]);
+  const [fio, setFioState] = useState(null);
 
   const logout = useCallback(() => {
     clearSessionTokens();
     setPermissions([]);
+    setFioState(null);
     setAuthStatus(AUTH_STATUS.anonymous);
+  }, []);
+
+  const syncFio = useCallback(() => {
+    const fioFromToken = extractFioFromToken();
+    setFio(fioFromToken);
+    setFioState(fioFromToken);
   }, []);
 
   const refreshSession = useCallback(async (tokenFromArg) => {
@@ -55,8 +88,10 @@ export function SessionProvider({ children }) {
       expiresAt: data.expires_at,
     });
 
+    syncFio();
+
     return data.access_token;
-  }, []);
+  }, [syncFio]);
 
   const syncPermissions = useCallback(async () => {
     try {
@@ -77,11 +112,24 @@ export function SessionProvider({ children }) {
         expiresAt: data.expires_at,
       });
 
+      syncFio();
       await syncPermissions();
       setAuthStatus(AUTH_STATUS.authenticated);
     },
-    [syncPermissions],
+    [syncFio, syncPermissions],
   );
+
+  const fetchProfile = useCallback(async () => {
+    try {
+      const profileData = await authMeRequest();
+      if (profileData?.fio) {
+        setFio(profileData.fio);
+        setFioState(profileData.fio);
+      }
+    } catch (_error) {
+      // Игнорируем ошибки, fio уже может быть установлен из токена
+    }
+  }, []);
 
   useEffect(() => {
     const teardown = setupAuthorizedApiInterceptors({
@@ -106,6 +154,7 @@ export function SessionProvider({ children }) {
       try {
         await refreshSession(refreshToken);
         await syncPermissions();
+        await fetchProfile();
         setAuthStatus(AUTH_STATUS.authenticated);
       } catch (_error) {
         logout();
@@ -113,7 +162,7 @@ export function SessionProvider({ children }) {
     };
 
     bootstrap();
-  }, [logout, refreshSession, syncPermissions]);
+  }, [logout, refreshSession, syncPermissions, fetchProfile]);
 
   useEffect(() => {
     const unsubscribeBanned = socket.subscribe('user:banned', () => {
@@ -141,12 +190,14 @@ export function SessionProvider({ children }) {
       isAuthenticated: authStatus === AUTH_STATUS.authenticated,
       isLoading: authStatus === AUTH_STATUS.loading,
       permissions,
+      fio,
       login,
       logout,
       refreshSession,
       syncPermissions,
+      fetchProfile,
     }),
-    [authStatus, login, logout, permissions, refreshSession, syncPermissions],
+    [authStatus, fio, login, logout, permissions, refreshSession, syncPermissions, fetchProfile],
   );
 
   return <SessionContext.Provider value={contextValue}>{children}</SessionContext.Provider>;
