@@ -19,6 +19,17 @@ export function getApiErrorMessage(error) {
     return responseData.trim();
   }
 
+  // Вариант 4: error.response.data.data.error.message (вложенная структура)
+  const nestedMessage = responseData?.data?.error?.message;
+  if (typeof nestedMessage === 'string' && nestedMessage.trim()) {
+    return nestedMessage.trim();
+  }
+
+  // Вариант 5: error.message (если это не стандартная ошибка axios)
+  if (error?.message && !error?.response) {
+    return error.message;
+  }
+
   const status = error?.response?.status;
   const method = error?.config?.method?.toUpperCase();
   const url = error?.config?.url;

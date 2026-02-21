@@ -143,7 +143,7 @@ export function useCrudList({
       } catch (err) {
         const message = getApiErrorMessage(err);
         notifications.error(message);
-        throw err;
+        return null;
       } finally {
         setIsSubmitting(false);
       }
@@ -170,7 +170,7 @@ export function useCrudList({
       } catch (err) {
         const message = getApiErrorMessage(err);
         notifications.error(message);
-        throw err;
+        return null;
       } finally {
         setIsSubmitting(false);
       }
@@ -194,7 +194,7 @@ export function useCrudList({
       } catch (err) {
         const message = getApiErrorMessage(err);
         notifications.error(message);
-        throw err;
+        return false;
       } finally {
         setIsSubmitting(false);
       }

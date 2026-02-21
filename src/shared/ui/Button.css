@@ -66,9 +66,9 @@
 
 /* Variants */
 .btn--primary {
-  background: var(--primary);
+  background: var(--bg);
   border-color: var(--primary);
-  color: #fff;
+  color: var(--text);
 }
 
 .btn--primary:hover:not(:disabled) {

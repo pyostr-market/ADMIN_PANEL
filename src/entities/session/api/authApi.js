@@ -42,8 +42,7 @@ export async function refreshTokenRequest(refreshToken) {
 export async function myPermissionsRequest() {
   const response = await authorizedApi.get(API_ENDPOINTS.myPermissions);
   const payload = response.data?.data ?? response.data;
-  console.log(response)
-  console.log(payload)
+
   if (Array.isArray(payload)) {
     return payload;
   }

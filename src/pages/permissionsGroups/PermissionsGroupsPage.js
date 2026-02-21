@@ -474,23 +474,30 @@ export function PermissionsGroupsPage() {
   };
 
   const handlePermissionCreate = async (payload) => {
-    await permissionsCrud.create(payload);
-    permissionsModal.closeCreateModal();
+    const result = await permissionsCrud.create(payload);
+    if (result) {
+      permissionsModal.closeCreateModal();
+    }
   };
 
   const handlePermissionSave = async (payload) => {
     if (!permissionsCrud.editingItem) return;
-    await permissionsCrud.update(permissionsCrud.editingItem.id, payload);
-    permissionsModal.closeEditModal();
+    const result = await permissionsCrud.update(permissionsCrud.editingItem.id, payload);
+    if (result) {
+      permissionsModal.closeEditModal();
+    }
   };
 
   const handleGroupSave = async (payload) => {
+    let result;
     if (groupsModal.editingItem) {
-      await groupsCrud.update(groupsModal.editingItem.id, payload);
+      result = await groupsCrud.update(groupsModal.editingItem.id, payload);
     } else {
-      await groupsCrud.create(payload);
+      result = await groupsCrud.create(payload);
     }
-    groupsModal.closeModal();
+    if (result) {
+      groupsModal.closeModal();
+    }
   };
 
   const handleDeleteClick = (permission) => {
@@ -499,8 +506,10 @@ export function PermissionsGroupsPage() {
 
   const handleConfirmDelete = async () => {
     if (!permissionToDelete) return;
-    await permissionsCrud.delete(permissionToDelete.id);
-    setPermissionToDelete(null);
+    const result = await permissionsCrud.delete(permissionToDelete.id);
+    if (result) {
+      setPermissionToDelete(null);
+    }
   };
 
   const handleCancelDelete = () => {
