@@ -12,6 +12,9 @@ import {
   FiSun,
   FiTruck,
   FiUsers,
+  FiShoppingBag,
+  FiPackage,
+  FiTag,
 } from 'react-icons/fi';
 import { useSession } from '../../entities/session/model/SessionProvider';
 import { hasPermission } from '../../shared/lib/permissions/permissions';
@@ -40,21 +43,21 @@ const catalogItems = [
   {
     id: 'products',
     label: 'Товары',
-    icon: FiBox,
+    icon: FiShoppingBag,
     to: '/catalog/products',
     permission: PERMISSIONS.products,
   },
   {
     id: 'manufacturers',
     label: 'Производители',
-    icon: FiLayers,
+    icon: FiPackage,
     to: '/catalog/manufacturers',
     permission: PERMISSIONS.manufacturers,
   },
   {
     id: 'device_type',
     label: 'Типы устройств',
-    icon: FiSettings,
+    icon: FiTag,
     to: '/catalog/device_type',
     permission: PERMISSIONS.deviceTypes,
   },
@@ -188,6 +191,7 @@ export function AppSidebar({ collapsed, onCollapse }) {
               className="sidebar-group__trigger"
               title={collapsed ? 'Пользователи' : undefined}
               onClick={() => setUsersOpen((prev) => !prev)}
+              aria-expanded={isUsersOpen}
             >
               <span className="sidebar-link__icon" aria-hidden="true"><FiUsers /></span>
               {!collapsed && <span>Пользователи</span>}
@@ -222,6 +226,7 @@ export function AppSidebar({ collapsed, onCollapse }) {
               className="sidebar-group__trigger"
               title={collapsed ? 'Каталог' : undefined}
               onClick={() => setCatalogOpen((prev) => !prev)}
+              aria-expanded={isCatalogOpen}
             >
               <span className="sidebar-link__icon" aria-hidden="true"><FiGrid /></span>
               {!collapsed && <span>Каталог</span>}

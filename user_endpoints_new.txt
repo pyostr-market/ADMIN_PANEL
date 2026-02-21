@@ -1,0 +1,633 @@
+# Routes Rules: все роуты проекта
+
+Ниже перечислены все кастомные роуты проекта.
+
+Обозначения:
+- `Требуемое право`: конкретный permission для вызова.
+- `Только авторизация`: нужен Bearer access token, отдельный permission не требуется.
+- Для большинства методов успешный ответ имеет обертку:
+```json
+{ "success": true, "data": ... }
+```
+
+## Система
+
+### 1) GET `/system/health`
+- Метод: `GET`
+- Доступ: публичный (без токена)
+- Параметры: нет
+- Успешный ответ (`200 OK`):
+```json
+{ "status": "ok" }
+```
+
+### 2) GET `/system/docs`
+- Метод: `GET`
+- Доступ: публичный (без токена)
+- Параметры: нет
+- Успешный ответ (`200 OK`): HTML страница Swagger UI
+
+## Авторизация
+
+### 3) POST `/auth/register`
+- Метод: `POST`
+- Доступ: публичный (без токена)
+- Параметры:
+  - Body:
+    - `phone_number: str` (обяз.)
+    - `password: str` (обяз.)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": {
+    "access_token": "<jwt>",
+    "refresh_token": "<refresh>",
+    "expires_at": "2026-02-20T12:00:00Z",
+    "refresh_token_id": 10
+  }
+}
+```
+
+### 4) POST `/auth/refresh`
+- Метод: `POST`
+- Доступ: публичный (без токена)
+- Параметры:
+  - Query:
+    - `refresh_token: str` (обяз.)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": {
+    "access_token": "<jwt>",
+    "refresh_token": "<new_refresh>",
+    "expires_at": "2026-02-20T12:00:00Z"
+  }
+}
+```
+
+### 5) POST `/auth/login`
+- Метод: `POST`
+- Доступ: публичный (без токена)
+- Параметры:
+  - Form (`application/x-www-form-urlencoded`):
+    - `username: str` (обяз., телефон)
+    - `password: str` (обяз.)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "access_token": "<jwt>",
+  "refresh_token": "<refresh>",
+  "expires_at": "2026-02-20T12:00:00Z",
+  "session_id": 55
+}
+```
+
+### 6) POST `/auth/logout`
+- Метод: `POST`
+- Доступ: только авторизация
+- Параметры:
+  - Body:
+    - `session_id: int` (обяз.)
+- Успешный ответ (`200 OK`):
+```json
+{ "success": true, "data": true }
+```
+
+### 7) GET `/auth/me`
+- Метод: `GET`
+- Доступ: только авторизация
+- Параметры: нет
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": {
+    "id": 7,
+    "public_id": "2f4c6f64-6d0e-4f9e-8ca6-6f9972d2f0bb",
+    "is_active": true,
+    "created_at": "2026-02-20T10:00:00Z"
+  }
+}
+```
+
+## Пользователь
+
+### 8) GET `/users/profile`
+- Метод: `GET`
+- Доступ: только авторизация
+- Параметры: нет
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": {
+    "id": 7,
+    "public_id": "2f4c6f64-6d0e-4f9e-8ca6-6f9972d2f0bb",
+    "is_active": true,
+    "is_verified": true,
+    "fio": "Иванов Иван Иванович",
+    "created_at": "2026-02-20T10:00:00Z",
+    "updated_at": "2026-02-20T10:00:00Z",
+    "last_login_at": "2026-02-20T11:00:00Z",
+    "phones": [],
+    "social_accounts": [],
+    "sessions": []
+  }
+}
+```
+
+### 9) PATCH `/users/profile`
+- Метод: `PATCH`
+- Доступ: только авторизация
+- Параметры:
+  - Body:
+    - `fio: str | null` (опц., макс. 255 символов)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": {
+    "id": 7,
+    "public_id": "2f4c6f64-6d0e-4f9e-8ca6-6f9972d2f0bb",
+    "is_active": true,
+    "is_verified": true,
+    "fio": "Иванов Иван Иванович",
+    "created_at": "2026-02-20T10:00:00Z",
+    "updated_at": "2026-02-20T10:05:00Z",
+    "last_login_at": "2026-02-20T11:00:00Z",
+    "phones": [],
+    "social_accounts": [],
+    "sessions": []
+  }
+}
+```
+
+## Права (`/permissions`)
+
+### 10) POST `/permissions/`
+- Метод: `POST`
+- Требуемое право: `permission:create`
+- Параметры:
+  - Body:
+    - `name: str` (обяз.)
+    - `description: str | null` (опц.)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": { "id": 1, "name": "permission:create", "description": "Create permissions" }
+}
+```
+
+### 11) POST `/permissions/bulk`
+- Метод: `POST`
+- Требуемое право: `permission:create`
+- Параметры:
+  - Body:
+    - `permissions: Array<{ name: str, description?: str | null }>` (обяз.)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": {
+    "created": [{ "id": 1, "name": "permission:create", "description": "Create permissions" }],
+    "existing": [{ "id": 2, "name": "permission:view", "description": "View permissions" }],
+    "total_created": 1,
+    "total_existing": 1
+  }
+}
+```
+
+### 12) GET `/permissions/`
+- Метод: `GET`
+- Требуемое право: `permission:view`
+- Параметры:
+  - Query:
+    - `page: int` (опц., `>=1`, по умолчанию `1`)
+    - `limit: int` (опц., `1..100`, по умолчанию `20`)
+    - `search: str` (опц., фильтр по вхождению в `name` или `description`)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": {
+    "items": [
+      { "id": 2, "name": "permission:view", "description": "View permissions" },
+      { "id": 1, "name": "permission:create", "description": "Create permissions" }
+    ],
+    "pagination": { "page": 1, "limit": 20, "total": 2, "pages": 1 }
+  }
+}
+```
+
+### 13) GET `/permissions/me`
+- Метод: `GET`
+- Доступ: только авторизация
+- Параметры: нет
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": [
+    { "id": 1, "name": "permission:create", "description": "Create permissions" }
+  ]
+}
+```
+
+### 14) PATCH `/permissions/{permission_id}`
+- Метод: `PATCH`
+- Требуемое право: `permission:update`
+- Параметры:
+  - Path:
+    - `permission_id: int` (обяз.)
+  - Body:
+    - `name: str` (опц.)
+    - `description: str | null` (опц.)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": { "id": 1, "name": "permission:create", "description": "Updated" }
+}
+```
+
+### 15) DELETE `/permissions/{permission_id}`
+- Метод: `DELETE`
+- Требуемое право: `permission:delete`
+- Параметры:
+  - Path:
+    - `permission_id: int` (обяз.)
+- Успешный ответ (`200 OK`):
+```json
+{ "success": true, "data": true }
+```
+
+### 16) POST `/permissions/assign`
+- Метод: `POST`
+- Требуемое право: `permission:assign`
+- Параметры:
+  - Body:
+    - `user_id: int` (обяз.)
+    - `permission_id: int` (обяз.)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": { "id": 10, "user_id": 7, "permission_id": 1 }
+}
+```
+
+### 17) POST `/permissions/assign/bulk`
+- Метод: `POST`
+- Требуемое право: `permission:assign`
+- Параметры:
+  - Body:
+    - `user_id: int` (обяз.)
+    - `permission_ids: int[]` (обяз.)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": {
+    "user_id": 7,
+    "assigned_permission_ids": [1, 2],
+    "already_assigned_permission_ids": [3],
+    "missing_permission_ids": [999],
+    "total_assigned": 2
+  }
+}
+```
+
+### 18) POST `/permissions/revoke`
+- Метод: `POST`
+- Требуемое право: `permission:revoke`
+- Параметры:
+  - Body:
+    - `user_id: int` (обяз.)
+    - `permission_id: int` (обяз.)
+- Успешный ответ (`200 OK`):
+```json
+{ "success": true, "data": true }
+```
+
+## Админ: пользователи (`/users/admin/users`)
+
+### 19) GET `/users/admin/users`
+- Метод: `GET`
+- Требуемое право: `admin:user:view`
+- Параметры:
+  - Query:
+    - `page: int` (опц., `>=1`, по умолчанию `1`)
+    - `limit: int` (опц., `1..100`, по умолчанию `20`)
+    - `id: int` (опц., фильтр по `users.id`)
+    - `public_id: str(UUID)` (опц., точный фильтр по `users.public_id`)
+    - `is_active: bool` (опц.)
+    - `is_verified: bool` (опц.)
+    - `group: str` (опц., ID группы или вхождение в название группы)
+    - `phone_number: str` (опц., фильтр по вхождению в номер телефона)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": {
+    "items": [
+      {
+        "id": 7,
+        "public_id": "2f4c6f64-6d0e-4f9e-8ca6-6f9972d2f0bb",
+        "is_active": true,
+        "is_verified": true,
+        "fio": "Иванов Иван Иванович",
+        "created_at": "2026-02-20T10:00:00Z",
+        "updated_at": "2026-02-20T10:00:00Z",
+        "last_login_at": "2026-02-20T11:00:00Z",
+        "group": { "id": 1, "name": "base_user", "description": "Default group for registered users" },
+        "primary_phone": { "id": 1, "phone_number": "+79990001122", "is_verified": true }
+      }
+    ],
+    "pagination": { "page": 1, "limit": 20, "total": 1, "pages": 1 }
+  }
+}
+```
+
+### 20) GET `/users/admin/users/{user_id}`
+- Метод: `GET`
+- Требуемое право: `admin:user:view`
+- Параметры:
+  - Path:
+    - `user_id: int` (обяз.)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": {
+    "id": 7,
+    "public_id": "2f4c6f64-6d0e-4f9e-8ca6-6f9972d2f0bb",
+    "is_active": true,
+    "is_verified": true,
+    "fio": "Иванов Иван Иванович",
+    "created_at": "2026-02-20T10:00:00Z",
+    "updated_at": "2026-02-20T10:00:00Z",
+    "last_login_at": "2026-02-20T11:00:00Z",
+    "group": { "id": 1, "name": "base_user", "description": "Default group for registered users" },
+    "phones": [],
+    "social_accounts": [],
+    "sessions": [],
+    "permissions": []
+  }
+}
+```
+
+### 21) PATCH `/users/admin/users/{user_id}`
+- Метод: `PATCH`
+- Требуемое право: `admin:user:update`
+- Параметры:
+  - Path:
+    - `user_id: int` (обяз.)
+  - Body (любой набор полей):
+    - `phone_number: str` (опц.)
+    - `password: str` (опц.)
+    - `is_active: bool` (опц.)
+    - `is_verified: bool` (опц.)
+    - `group_id: int` (опц.)
+    - `fio: str | null` (опц., макс. 255 символов)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": {
+    "id": 7,
+    "public_id": "2f4c6f64-6d0e-4f9e-8ca6-6f9972d2f0bb",
+    "is_active": true,
+    "is_verified": true,
+    "fio": "Иванов Иван Иванович",
+    "created_at": "2026-02-20T10:00:00Z",
+    "updated_at": "2026-02-20T10:05:00Z",
+    "last_login_at": "2026-02-20T11:00:00Z",
+    "group": { "id": 2, "name": "ops_read", "description": "Read only" },
+    "phones": [],
+    "social_accounts": [],
+    "sessions": [],
+    "permissions": []
+  }
+}
+```
+
+### 22) PUT `/users/admin/users/{user_id}`
+- Метод: `PUT`
+- Требуемое право: `admin:user:full_update`
+- Параметры:
+  - Path:
+    - `user_id: int` (обяз.)
+  - Body (любой набор полей):
+    - `phone_number: str` (опц.)
+    - `password: str` (опц.)
+    - `is_active: bool` (опц.)
+    - `is_verified: bool` (опц.)
+    - `group_id: int` (опц.)
+    - `fio: str | null` (опц., макс. 255 символов)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": {
+    "id": 7,
+    "public_id": "2f4c6f64-6d0e-4f9e-8ca6-6f9972d2f0bb",
+    "is_active": true,
+    "is_verified": true,
+    "fio": "Иванов Иван Иванович",
+    "created_at": "2026-02-20T10:00:00Z",
+    "updated_at": "2026-02-20T10:06:00Z",
+    "last_login_at": "2026-02-20T11:00:00Z",
+    "group": { "id": 2, "name": "ops_read", "description": "Read only" },
+    "phones": [],
+    "social_accounts": [],
+    "sessions": [],
+    "permissions": []
+  }
+}
+```
+
+### 23) POST `/users/admin/users/{user_id}/ban`
+- Метод: `POST`
+- Требуемое право: `admin:user:ban`
+- Параметры:
+  - Path:
+    - `user_id: int` (обяз.)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": { "user_id": 7, "is_active": false }
+}
+```
+
+### 24) DELETE `/users/admin/users/{user_id}`
+- Метод: `DELETE`
+- Требуемое право: `admin:user:delete`
+- Параметры:
+  - Path:
+    - `user_id: int` (обяз.)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": { "deleted": true, "user_id": 7 }
+}
+```
+
+### 25) DELETE `/users/admin/users/{user_id}/sessions/{session_id}`
+- Метод: `DELETE`
+- Требуемое право: `admin:user:update`
+- Параметры:
+  - Path:
+    - `user_id: int` (обяз.)
+    - `session_id: int` (обяз.)
+- Успешный ответ (`200 OK`):
+```json
+{ "success": true, "data": true }
+```
+
+### 26) GET `/users/admin/users/{user_id}/sessions`
+- Метод: `GET`
+- Требуемое право: `admin:user:view`
+- Параметры:
+  - Path:
+    - `user_id: int` (обяз.)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 55,
+      "refresh_token_id": 10,
+      "user_agent": "Mozilla/5.0 ...",
+      "device_info": "Mozilla/5.0 ...",
+      "browser": "Chrome",
+      "os": "Windows",
+      "ip_address": "192.168.1.1",
+      "geo_info": null,
+      "created_at": "2026-02-20T10:00:00Z",
+      "last_activity": "2026-02-20T11:00:00Z",
+      "is_active": true
+    }
+  ]
+}
+```
+
+## Админ: группы
+
+### 27) POST `/users/admin/groups`
+- Метод: `POST`
+- Требуемое право: `admin:group:create`
+- Параметры:
+  - Body:
+    - `name: str` (обяз.)
+    - `description: str | null` (опц.)
+    - `permission_ids: int[]` (опц., по умолчанию `[]`)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": {
+    "id": 3,
+    "name": "ops_read",
+    "description": "Read only",
+    "permission_ids": [1, 2]
+  }
+}
+```
+
+### 28) GET `/users/admin/groups`
+- Метод: `GET`
+- Требуемое право: `admin:group:view`
+- Параметры:
+  - Query:
+    - `page: int` (опц., `>=1`, по умолчанию `1`)
+    - `limit: int` (опц., `1..100`, по умолчанию `20`)
+    - `id: int` (опц., фильтр по ID группы)
+    - `name: str` (опц., фильтр по вхождению в название группы)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": {
+    "items": [
+      {
+        "id": 3,
+        "name": "ops_read",
+        "description": "Read only",
+        "created_at": "2026-02-20T10:00:00Z",
+        "updated_at": "2026-02-20T10:00:00Z",
+        "permissions": [
+          { "id": 1, "name": "permission:view", "description": "View permissions" },
+          { "id": 2, "name": "permission:create", "description": "Create permissions" }
+        ]
+      }
+    ],
+    "pagination": { "page": 1, "limit": 20, "total": 1, "pages": 1 }
+  }
+}
+```
+
+### 29) PATCH `/users/admin/groups/{group_id}`
+- Метод: `PATCH`
+- Требуемое право: `admin:group:update`
+- Параметры:
+  - Path:
+    - `group_id: int` (обяз.)
+  - Body (любой набор полей):
+    - `name: str` (опц.)
+    - `description: str | null` (опц.)
+    - `permission_ids: int[]` (опц., полная замена permission группы)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": {
+    "id": 3,
+    "name": "ops_write",
+    "description": "Write only",
+    "permission_ids": [2, 3]
+  }
+}
+```
+
+### 30) POST `/users/admin/users/{user_id}/group`
+- Метод: `POST`
+- Требуемое право: `admin:user:assign_group`
+- Параметры:
+  - Path:
+    - `user_id: int` (обяз.)
+  - Body:
+    - `group_id: int` (обяз.)
+- Успешный ответ (`200 OK`):
+```json
+{
+  "success": true,
+  "data": {
+    "user_id": 7,
+    "group_id": 3,
+    "permission_ids": [1, 2],
+    "total_permissions": 2
+  }
+}
+```
+
+## JWT Токен
+
+Access token содержит следующие поля в payload:
+```json
+{
+  "sub": "7",
+  "permissions": ["permission:create", "permission:view"],
+  "fio": "Иванов Иван Иванович",
+  "exp": 1740123456,
+  "iat": 1740120000,
+  "type": "access"
+}
+```
+
+- `fio`: ФИО пользователя. Если не установлено — `"{user_id}NoSet"` (например, `"7NoSet"`)
