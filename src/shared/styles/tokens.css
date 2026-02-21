@@ -1,0 +1,166 @@
+:root {
+  color-scheme: light;
+  --font-family-base: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+  --font-family-mono: 'IBM Plex Mono', 'SFMono-Regular', ui-monospace, monospace;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+
+  --bg: #f5f5f5;
+  --surface: #ffffff;
+  --surface-subtle: #fafafa;
+  --surface-muted: #f0f0f0;
+  --text: #1a1a1a;
+  --text-muted: #737373;
+  --primary: #262626;
+  --primary-hover: #404040;
+  --danger: #dc2626;
+  --border: #d4d4d4;
+  --border-strong: #a3a3a3;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
+
+  --sidebar-width: 220px;
+  --sidebar-width-collapsed: 60px;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0a0a0a;
+  --surface: #171717;
+  --surface-subtle: #1f1f1f;
+  --surface-muted: #0f0f0f;
+  --text: #e5e5e5;
+  --text-muted: #a3a3a3;
+  --primary: #404040;
+  --primary-hover: #525252;
+  --danger: #ef4444;
+  --border: #404040;
+  --border-strong: #525252;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-base);
+  color: var(--text);
+  background: var(--bg);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  padding: var(--space-2) var(--space-3);
+  font-size: 13px;
+  font-weight: 500;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+button:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-subtle);
+}
+
+input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px var(--space-3);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: var(--surface);
+}
+
+input:disabled {
+  background: var(--surface-muted);
+  cursor: not-allowed;
+}
+
+select {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  padding: 7px var(--space-3);
+  cursor: pointer;
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* Base page typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: 20px;
+}
+
+h2 {
+  font-size: 18px;
+}
+
+h3 {
+  font-size: 16px;
+}
+
+h4 {
+  font-size: 14px;
+}
+
+p {
+  margin: 0 0 var(--space-3);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+section {
+  display: grid;
+  gap: var(--space-3);
+}
+
+section h1 {
+  margin-bottom: var(--space-1);
+}

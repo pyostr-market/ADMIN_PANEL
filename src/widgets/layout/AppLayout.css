@@ -1,0 +1,53 @@
+.app-shell {
+  min-height: 100vh;
+}
+
+.app-shell--collapsed {
+  --current-sidebar-width: var(--sidebar-width-collapsed);
+}
+
+.app-shell:not(.app-shell--collapsed) {
+  --current-sidebar-width: var(--sidebar-width);
+}
+
+.app-shell__main {
+  min-width: 0;
+  margin-left: var(--current-sidebar-width);
+  transition: margin-left 0.2s ease;
+}
+
+.app-shell__header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 96%, transparent);
+}
+
+.app-shell__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.app-shell__nav a {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+}
+
+.app-shell__nav a:hover {
+  color: var(--text);
+}
+
+.app-shell__content {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-4);
+}
