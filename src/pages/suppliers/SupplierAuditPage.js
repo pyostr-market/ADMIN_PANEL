@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FiEye } from 'react-icons/fi';
 import { Button } from '../../shared/ui/Button';
@@ -8,6 +8,7 @@ import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import { getSupplierAuditRequest } from './api/suppliersApi';
 import { getUsersInfo, formatUserDisplay } from '../../shared/lib/user/userInfo';
+import { withRetry } from '../../shared/lib/retry';
 import './SupplierAuditPage.css';
 
 function AuditDetailModal({ auditRecord, onClose, userInfo }) {
@@ -164,20 +165,29 @@ export function SupplierAuditPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [userCache, setUserCache] = useState(new Map());
+  const [hasShownError, setHasShownError] = useState(false);
+  const retryCountRef = useRef(0);
 
+  const maxRetries = 3;
   const limit = 20;
 
   const loadAudit = useCallback(async () => {
+    if (hasShownError) return;
+    
     setIsLoading(true);
     try {
       const offset = (currentPage - 1) * limit;
-      const { items, total: totalItems } = await getSupplierAuditRequest({
-        supplier_id: supplierId,
-        limit,
-        offset,
-      });
+      const { items, total: totalItems } = await withRetry(
+        () => getSupplierAuditRequest({
+          supplier_id: supplierId,
+          limit,
+          offset,
+        }),
+        maxRetries,
+      );
       setAuditData(items);
       setTotal(totalItems);
+      retryCountRef.current = 0;
 
       // Загружаем информацию о пользователях
       const userIds = items.map((item) => item.user_id).filter(Boolean);
@@ -186,12 +196,41 @@ export function SupplierAuditPage() {
         setUserCache(usersInfo);
       }
     } catch (error) {
-      const message = getApiErrorMessage(error);
-      notifications?.error(message);
+      const status = error?.response?.status;
+      
+      // При 404/405 не показываем ошибку сразу, пробуем до 3 раз
+      if (status === 404 || status === 405) {
+        retryCountRef.current += 1;
+        
+        if (retryCountRef.current < maxRetries) {
+          // Пробуем снова через небольшую задержку
+          setTimeout(() => {
+            loadAudit();
+          }, 500);
+          return;
+        }
+        
+        // После 3 попыток показываем ошибку и останавливаемся
+        if (!hasShownError) {
+          const message = getApiErrorMessage(error);
+          notifications?.error(message);
+          setHasShownError(true);
+        }
+        return;
+      }
+      
+      // Для других ошибок показываем сразу
+      if (!hasShownError) {
+        const message = getApiErrorMessage(error);
+        notifications?.error(message);
+        setHasShownError(true);
+      }
     } finally {
-      setIsLoading(false);
+      if (!hasShownError) {
+        setIsLoading(false);
+      }
     }
-  }, [supplierId, currentPage, notifications]);
+  }, [supplierId, currentPage, notifications, hasShownError]);
 
   useEffect(() => {
     loadAudit();
