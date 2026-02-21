@@ -1,0 +1,352 @@
+.product-type-audit-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.product-type-audit-page__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.product-type-audit-page__header-left {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.product-type-audit-page__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.product-type-audit-page__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.product-type-audit-page__panel {
+  background: var(--surface);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+}
+
+.product-type-audit-page__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: var(--space-4);
+}
+
+.product-type-audit-page__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.product-type-audit-page__pagination {
+  margin-top: var(--space-5);
+  display: flex;
+  justify-content: center;
+}
+
+/* Audit Table */
+.audit-table-wrapper {
+  overflow-x: auto;
+}
+
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.audit-table__header {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--border);
+}
+
+.audit-table__header--actions {
+  text-align: right;
+}
+
+.audit-table__row {
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.2s ease;
+}
+
+.audit-table__row:hover {
+  background-color: var(--card-bg);
+}
+
+.audit-table__row:last-child {
+  border-bottom: none;
+}
+
+.audit-table__cell {
+  padding: var(--space-4);
+  font-size: 14px;
+  color: var(--text);
+  vertical-align: middle;
+}
+
+.audit-table__cell--actions {
+  text-align: right;
+}
+
+/* Audit Action Badge */
+.audit-action-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.audit-action-badge--create {
+  background-color: var(--success-bg);
+  color: var(--accent-green);
+}
+
+.audit-action-badge--update {
+  background-color: var(--accent-blue-bg);
+  color: var(--accent-blue);
+}
+
+.audit-action-badge--delete {
+  background-color: var(--accent-red-bg);
+  color: var(--accent-red);
+}
+
+.audit-user-id {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.audit-date {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* Audit Detail Modal */
+.audit-detail-modal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.audit-detail-modal__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.audit-detail-row {
+  display: flex;
+  gap: var(--space-3);
+  align-items: baseline;
+}
+
+.audit-detail-label {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 500;
+  min-width: 120px;
+}
+
+.audit-detail-value {
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.audit-action-create {
+  color: var(--accent-green);
+}
+
+.audit-action-update {
+  color: var(--accent-blue);
+}
+
+.audit-action-delete {
+  color: var(--accent-red);
+}
+
+.audit-detail-modal__data {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Audit Data Block */
+.audit-data-block {
+  background-color: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+
+.audit-data-block__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 var(--space-3) 0;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.audit-data-block__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.audit-data-block__empty {
+  color: var(--text-muted);
+  font-size: 14px;
+  font-style: italic;
+}
+
+.audit-data-block__value {
+  background-color: var(--surface);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: var(--text);
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Audit Data Row */
+.audit-data-row {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.audit-data-row--nested {
+  padding-left: var(--space-4);
+}
+
+.audit-data-row__key {
+  font-weight: 600;
+  color: var(--accent-blue);
+  min-width: 150px;
+  flex-shrink: 0;
+}
+
+.audit-data-row__value {
+  color: var(--text);
+  word-break: break-word;
+}
+
+/* Value Types */
+.audit-value-null,
+.audit-value-empty {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.audit-value-true {
+  color: var(--accent-green);
+  font-weight: 600;
+}
+
+.audit-value-false {
+  color: var(--accent-red);
+  font-weight: 600;
+}
+
+.audit-value-number {
+  color: var(--accent-purple);
+  font-weight: 500;
+}
+
+.audit-value-string {
+  color: var(--text);
+}
+
+/* Array Value */
+.audit-value-array {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.audit-array-item {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--surface);
+  border-radius: var(--radius-md);
+}
+
+.audit-array-item__index {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.audit-array-item__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+}
+
+/* Object Value */
+.audit-value-object {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent-blue);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Back Button */
+.back-button {
+  padding: var(--space-2) var(--space-3);
+  font-size: 14px;
+}

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FiEdit2, FiTrash2, FiMail, FiPhone, FiBox } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiMail, FiPhone, FiBox, FiClock } from 'react-icons/fi';
 import { Button } from '../../shared/ui/Button';
 import { Modal } from '../../shared/ui/Modal';
 import { PermissionGate } from '../../shared/ui/PermissionGate';
@@ -250,7 +250,17 @@ export function SupplierDetailPage() {
       <div className="supplier-detail-page__content">
         <div className="supplier-detail-page__panel">
           <div className="panel-header">
-            <h2 className="panel-title">Общая информация</h2>
+            <div className="panel-header__content">
+              <h2 className="panel-title">Общая информация</h2>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<FiClock />}
+                onClick={() => navigate(`/suppliers/${supplier.id}/audit`)}
+              >
+                История
+              </Button>
+            </div>
           </div>
 
           <div className="supplier-info-grid">

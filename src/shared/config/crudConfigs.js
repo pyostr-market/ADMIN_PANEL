@@ -217,6 +217,7 @@ export const permissionsConfig = {
     view: ['permission', 'permission:view'],
     create: ['permission:create'],
     update: ['permission:update'],
+    delete: ['permission:delete'],
   },
 
   fields: {
