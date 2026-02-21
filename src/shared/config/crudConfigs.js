@@ -15,8 +15,8 @@
  * - filters: фильтры (опционально)
  */
 
-import { authorizedApi } from '../../../shared/api/http';
-import { API_ENDPOINTS } from '../../../shared/config/env';
+import { authorizedApi } from '../api/http';
+import { API_ENDPOINTS } from './env';
 
 // === Manufacturers / Производители ===
 export const manufacturersConfig = {

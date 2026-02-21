@@ -1,17 +1,26 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FiCheck, FiEdit2, FiPlus, FiTrash2, FiX, FiSearch } from 'react-icons/fi';
-import {
-  createGroupRequest,
-  createPermissionRequest,
-  deleteGroupRequest,
-  getGroupsRequest,
-  getPermissionsRequest,
-  updateGroupRequest,
-  updatePermissionRequest,
-} from './api/permissionsGroupsApi';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { FiCheck, FiEdit2, FiPlus, FiSearch, FiTrash2, FiX } from 'react-icons/fi';
+import { useCrudList, useCrudModal } from '../../shared/lib/crud';
+import { PermissionGate } from '../../shared/ui/PermissionGate';
+import { Button } from '../../shared/ui/Button';
+import { SearchInput } from '../../shared/ui/SearchInput';
+import { Select } from '../../shared/ui/Select';
+import { Pagination } from '../../shared/ui/Pagination';
+import { EntityList } from '../../shared/ui/EntityList';
+import { Modal } from '../../shared/ui/Modal';
+import { Tabs, Tab } from '../../shared/ui/Tabs';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
-import { PermissionGate } from '../../shared/ui/PermissionGate';
+import {
+  getPermissionsRequest,
+  createPermissionRequest,
+  updatePermissionRequest,
+  deletePermissionRequest,
+  getGroupsRequest,
+  createGroupRequest,
+  updateGroupRequest,
+  deleteGroupRequest,
+} from './api/permissionsGroupsApi';
 import './PermissionsGroupsPage.css';
 
 const TABS = {
@@ -20,7 +29,6 @@ const TABS = {
 };
 
 const PAGE_LIMIT = 20;
-const EMPTY_PAGINATION = { page: 1, limit: PAGE_LIMIT, total: 0, pages: 1 };
 
 function buildPermissionBuckets(permissions) {
   return permissions.reduce((acc, permission) => {
@@ -66,47 +74,48 @@ function PermissionEditModal({ permission, onClose, onSubmit, isSubmitting }) {
   }
 
   return (
-    <div className="entity-modal-overlay" role="presentation" onClick={onClose}>
-      <div className="entity-modal" role="dialog" aria-modal="true" aria-label="Редактирование права" onClick={(event) => event.stopPropagation()}>
-        <div className="entity-modal__header">
-          <h3>Редактирование права</h3>
-          <button type="button" className="entity-modal__icon-btn" onClick={onClose} aria-label="Закрыть окно">
-            <FiX />
-          </button>
-        </div>
-        <form
-          className="entity-modal__form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            onSubmit({
-              name: name.trim(),
-              description: description.trim() || null,
-            });
-          }}
-        >
-          <label className="entity-field">
-            <span>Ключ</span>
-            <input
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              required
-            />
-          </label>
-          <label className="entity-field">
-            <span>Описание</span>
-            <input
-              value={description}
-              onChange={(event) => setDescription(event.target.value)}
-              placeholder="Описание права"
-            />
-          </label>
-          <div className="entity-modal__actions">
-            <button type="button" onClick={onClose}>Отмена</button>
-            <button type="submit" disabled={isSubmitting || !name.trim()}>ОК</button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <Modal
+      isOpen
+      onClose={onClose}
+      title="Редактирование права"
+      size="md"
+      footer={(
+        <>
+          <Button variant="secondary" onClick={onClose}>Отмена</Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              onSubmit({
+                name: name.trim(),
+                description: description.trim() || null,
+              });
+            }}
+            disabled={isSubmitting || !name.trim()}
+          >
+            Сохранить
+          </Button>
+        </>
+      )}
+    >
+      <form className="crud-form">
+        <label className="crud-form__field">
+          <span className="crud-form__label">Ключ</span>
+          <input
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            required
+          />
+        </label>
+        <label className="crud-form__field">
+          <span className="crud-form__label">Описание</span>
+          <input
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+            placeholder="Описание права"
+          />
+        </label>
+      </form>
+    </Modal>
   );
 }
 
@@ -115,48 +124,49 @@ function PermissionCreateModal({ onClose, onSubmit, isSubmitting }) {
   const [description, setDescription] = useState('');
 
   return (
-    <div className="entity-modal-overlay" role="presentation" onClick={onClose}>
-      <div className="entity-modal" role="dialog" aria-modal="true" aria-label="Создание права" onClick={(event) => event.stopPropagation()}>
-        <div className="entity-modal__header">
-          <h3>Создание права</h3>
-          <button type="button" className="entity-modal__icon-btn" onClick={onClose} aria-label="Закрыть окно">
-            <FiX />
-          </button>
-        </div>
-        <form
-          className="entity-modal__form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            onSubmit({
-              name: name.trim(),
-              description: description.trim() || null,
-            });
-          }}
-        >
-          <label className="entity-field">
-            <span>Ключ</span>
-            <input
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              required
-              placeholder="Например: product:view"
-            />
-          </label>
-          <label className="entity-field">
-            <span>Описание</span>
-            <input
-              value={description}
-              onChange={(event) => setDescription(event.target.value)}
-              placeholder="Описание права"
-            />
-          </label>
-          <div className="entity-modal__actions">
-            <button type="button" onClick={onClose}>Отмена</button>
-            <button type="submit" disabled={isSubmitting || !name.trim()}>Создать</button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <Modal
+      isOpen
+      onClose={onClose}
+      title="Создание права"
+      size="md"
+      footer={(
+        <>
+          <Button variant="secondary" onClick={onClose}>Отмена</Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              onSubmit({
+                name: name.trim(),
+                description: description.trim() || null,
+              });
+            }}
+            disabled={isSubmitting || !name.trim()}
+          >
+            Создать
+          </Button>
+        </>
+      )}
+    >
+      <form className="crud-form">
+        <label className="crud-form__field">
+          <span className="crud-form__label">Ключ</span>
+          <input
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            required
+            placeholder="Например: product:view"
+          />
+        </label>
+        <label className="crud-form__field">
+          <span className="crud-form__label">Описание</span>
+          <input
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+            placeholder="Описание права"
+          />
+        </label>
+      </form>
+    </Modal>
   );
 }
 
@@ -262,202 +272,178 @@ function GroupModal({
   const filteredSectionKeys = Object.keys(filteredBuckets);
 
   return (
-    <div className="entity-modal-overlay" role="presentation" onClick={onClose}>
-      <div className="entity-modal entity-modal--wide" role="dialog" aria-modal="true" aria-label="Редактирование группы" onClick={(event) => event.stopPropagation()}>
-        <div className="entity-modal__header">
-          <h3>{group ? 'Редактирование группы' : 'Создание группы'}</h3>
-          <button type="button" className="entity-modal__icon-btn" onClick={onClose} aria-label="Закрыть окно">
-            <FiX />
-          </button>
-        </div>
-        <form
-          className="entity-modal__form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            onSubmit({
-              name: name.trim(),
-              description: description.trim() || null,
-              permission_ids: selectedPermissions.slice().sort((a, b) => a - b),
-            });
-          }}
-        >
-          <label className="entity-field">
-            <span>Название группы</span>
-            <input
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              required
-            />
-          </label>
-          <label className="entity-field">
-            <span>Описание</span>
-            <input
-              value={description}
-              onChange={(event) => setDescription(event.target.value)}
-              placeholder="Описание группы"
-            />
-          </label>
+    <Modal
+      isOpen
+      onClose={onClose}
+      title={group ? 'Редактирование группы' : 'Создание группы'}
+      size="xl"
+      footer={(
+        <>
+          <Button variant="secondary" onClick={onClose}>Отмена</Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              onSubmit({
+                name: name.trim(),
+                description: description.trim() || null,
+                permission_ids: selectedPermissions.slice().sort((a, b) => a - b),
+              });
+            }}
+            disabled={isSubmitting || !name.trim()}
+          >
+            Сохранить
+          </Button>
+        </>
+      )}
+    >
+      <div className="group-form">
+        <label className="crud-form__field">
+          <span className="crud-form__label">Название группы</span>
+          <input
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            required
+          />
+        </label>
+        <label className="crud-form__field">
+          <span className="crud-form__label">Описание</span>
+          <input
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+            placeholder="Описание группы"
+          />
+        </label>
 
-          <div className="group-permissions-picker">
-            <div className="group-permissions-picker__header">
-              <p className="group-permissions-picker__title">Права группы</p>
-              <div className="group-permissions-picker__actions">
-                <button type="button" onClick={expandAllSections} disabled={filteredSectionKeys.length === 0}>
-                  Развернуть все
-                </button>
-                <button type="button" onClick={collapseAllSections} disabled={filteredSectionKeys.length === 0}>
-                  Свернуть все
-                </button>
-              </div>
+        <div className="group-permissions-picker">
+          <div className="group-permissions-picker__header">
+            <p className="group-permissions-picker__title">Права группы</p>
+            <div className="group-permissions-picker__actions">
+              <Button variant="secondary" size="sm" onClick={expandAllSections} disabled={filteredSectionKeys.length === 0}>
+                Развернуть все
+              </Button>
+              <Button variant="secondary" size="sm" onClick={collapseAllSections} disabled={filteredSectionKeys.length === 0}>
+                Свернуть все
+              </Button>
             </div>
+          </div>
 
-            <div className="group-permissions-filters">
-              <div className="group-permissions-filters__search">
-                <FiSearch className="group-permissions-filters__icon" />
-                <input
-                  type="text"
-                  placeholder="Поиск прав..."
-                  value={searchQuery}
-                  onChange={(event) => setSearchQuery(event.target.value)}
-                />
-              </div>
-              <div className="group-permissions-filters__section">
-                <select
-                  value={selectedSectionFilter}
-                  onChange={(event) => setSelectedSectionFilter(event.target.value)}
+          <div className="group-permissions-filters">
+            <div className="group-permissions-filters__search">
+              <FiSearch className="group-permissions-filters__icon" />
+              <input
+                type="text"
+                placeholder="Поиск прав..."
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+              />
+            </div>
+            <div className="group-permissions-filters__section">
+              <Select
+                value={selectedSectionFilter}
+                onChange={(event) => setSelectedSectionFilter(event.target.value)}
+                options={[
+                  { value: 'all', label: 'Все разделы' },
+                  ...sectionKeys.map((section) => ({ value: section, label: section })),
+                ]}
+              />
+            </div>
+          </div>
+
+          {filteredSectionKeys.length === 0 && (
+            <p className="permissions-groups-page__empty">
+              {searchQuery || selectedSectionFilter !== 'all'
+                ? 'По вашему запросу ничего не найдено.'
+                : 'Список прав пуст.'}
+            </p>
+          )}
+
+          {filteredSectionKeys.map((section) => {
+            const sectionPermissions = filteredBuckets[section] ?? [];
+            const selectedInSection = sectionPermissions.filter((item) => selectedPermissions.includes(item.id)).length;
+
+            return (
+              <div key={section} className="group-permissions-section">
+                <button
+                  type="button"
+                  className="group-permissions-section__trigger"
+                  onClick={() => toggleSection(section)}
                 >
-                  <option value="all">Все разделы</option>
-                  {sectionKeys.map((section) => (
-                    <option key={section} value={section}>{section}</option>
-                  ))}
-                </select>
+                  <span>{section}</span>
+                  <span>{selectedInSection}/{sectionPermissions.length}</span>
+                </button>
+                {expandedSections[section] && (
+                  <div className="group-permissions-section__items">
+                    {sectionPermissions.map((permission) => (
+                      <label key={permission.id} className="group-permission-item">
+                        <input
+                          type="checkbox"
+                          checked={selectedPermissions.includes(permission.id)}
+                          onChange={() => togglePermission(permission.id)}
+                        />
+                        <span>
+                          <strong>{permission.name}</strong>
+                          {permission.description ? ` — ${permission.description}` : ''}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
-
-            {filteredSectionKeys.length === 0 && (
-              <p className="permissions-groups-page__empty">
-                {searchQuery || selectedSectionFilter !== 'all'
-                  ? 'По вашему запросу ничего не найдено.'
-                  : 'Список прав пуст.'}
-              </p>
-            )}
-
-            {filteredSectionKeys.map((section) => {
-              const sectionPermissions = filteredBuckets[section] ?? [];
-              const selectedInSection = sectionPermissions.filter((item) => selectedPermissions.includes(item.id)).length;
-
-              return (
-                <div key={section} className="group-permissions-section">
-                  <button
-                    type="button"
-                    className="group-permissions-section__trigger"
-                    onClick={() => toggleSection(section)}
-                  >
-                    <span>{section}</span>
-                    <span>{selectedInSection}/{sectionPermissions.length}</span>
-                  </button>
-                  {expandedSections[section] && (
-                    <div className="group-permissions-section__items">
-                      {sectionPermissions.map((permission) => (
-                        <label key={permission.id} className="group-permission-item">
-                          <input
-                            type="checkbox"
-                            checked={selectedPermissions.includes(permission.id)}
-                            onChange={() => togglePermission(permission.id)}
-                          />
-                          <span>
-                            <strong>{permission.name}</strong>
-                            {permission.description ? ` — ${permission.description}` : ''}
-                          </span>
-                        </label>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="entity-modal__actions">
-            <button type="button" onClick={onClose}>Отмена</button>
-            <button type="submit" disabled={isSubmitting || !name.trim()}>Сохранить</button>
-          </div>
-        </form>
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </Modal>
   );
 }
 
 export function PermissionsGroupsPage() {
   const [activeTab, setActiveTab] = useState(TABS.permissions);
-
-  const [permissions, setPermissions] = useState([]);
   const [permissionsForModal, setPermissionsForModal] = useState([]);
-  const [permissionsPage, setPermissionsPage] = useState(1);
-  const [permissionsPagination, setPermissionsPagination] = useState(EMPTY_PAGINATION);
-  const [permissionsSearch, setPermissionsSearch] = useState('');
+  const [isPermissionsModalLoading, setPermissionsModalLoading] = useState(false);
   const [permissionsSectionFilter, setPermissionsSectionFilter] = useState('all');
 
-  const [groups, setGroups] = useState([]);
-  const [groupsPage, setGroupsPage] = useState(1);
-  const [groupsPagination, setGroupsPagination] = useState(EMPTY_PAGINATION);
-  const [groupsSearch, setGroupsSearch] = useState('');
-
-  const [isPermissionsLoading, setPermissionsLoading] = useState(true);
-  const [isGroupsLoading, setGroupsLoading] = useState(false);
-  const [isGroupsApiUnsupported, setGroupsApiUnsupported] = useState(false);
-  const [isPermissionsModalLoading, setPermissionsModalLoading] = useState(false);
-  const [isSubmitting, setSubmitting] = useState(false);
-
-  const hasLoadedPermissionsRef = useRef(false);
-  const hasLoadedGroupsRef = useRef(false);
-  const hasLoadedPermissionsForModalRef = useRef(false);
-
-  const [editingPermission, setEditingPermission] = useState(null);
-  const [editingGroup, setEditingGroup] = useState(null);
-  const [isGroupModalOpen, setGroupModalOpen] = useState(false);
-  const [isPermissionModalOpen, setPermissionModalOpen] = useState(false);
   const notifications = useNotifications();
+  const permissionsModal = useCrudModal();
+  const groupsModal = useCrudModal();
 
-  const refreshPermissions = useCallback(async (page, search) => {
-    setPermissionsLoading(true);
+  const permissionsCrud = useCrudList({
+    fetchFn: async ({ page = 1, limit = PAGE_LIMIT, search } = {}) => {
+      const data = await getPermissionsRequest({ page, limit, search });
+      return data;
+    },
+    createFn: createPermissionRequest,
+    updateFn: updatePermissionRequest,
+    deleteFn: deletePermissionRequest,
+    entityName: 'Право',
+    entityNamePlural: 'Права',
+    defaultLimit: PAGE_LIMIT,
+  });
 
-    try {
-      const permissionsData = await getPermissionsRequest({ page, limit: PAGE_LIMIT, search: search || undefined });
-      setPermissions(permissionsData.items);
-      setPermissionsPagination(permissionsData.pagination ?? EMPTY_PAGINATION);
-      hasLoadedPermissionsRef.current = true;
-    } catch (error) {
-      const message = getApiErrorMessage(error);
-      notifications.error(message);
-    } finally {
-      setPermissionsLoading(false);
-    }
-  }, [notifications]);
-
-  const refreshGroups = useCallback(async (page, search) => {
-    setGroupsLoading(true);
-
-    try {
-      const groupsData = await getGroupsRequest({ page, limit: PAGE_LIMIT, search: search || undefined });
-      setGroups(groupsData.items.map(normalizeGroup));
-      setGroupsPagination(groupsData.pagination ?? EMPTY_PAGINATION);
-      setGroupsApiUnsupported(false);
-      hasLoadedGroupsRef.current = true;
-    } catch (error) {
-      const message = getApiErrorMessage(error);
-      if (error?.response?.status === 405 || error?.response?.status === 404) {
-        setGroupsApiUnsupported(true);
-        setGroups([]);
-        setGroupsPagination(EMPTY_PAGINATION);
-        notifications.warning(message);
-      } else {
-        notifications.error(message);
+  const groupsCrud = useCrudList({
+    fetchFn: async ({ page = 1, limit = PAGE_LIMIT, search } = {}) => {
+      try {
+        const data = await getGroupsRequest({ page, limit, search });
+        return {
+          ...data,
+          items: data.items.map(normalizeGroup),
+        };
+      } catch (error) {
+        if (error?.response?.status === 405 || error?.response?.status === 404) {
+          return { items: [], pagination: { page, limit, total: 0, pages: 1 } };
+        }
+        throw error;
       }
-    } finally {
-      setGroupsLoading(false);
-    }
-  }, [notifications]);
+    },
+    createFn: createGroupRequest,
+    updateFn: updateGroupRequest,
+    deleteFn: deleteGroupRequest,
+    entityName: 'Группа',
+    entityNamePlural: 'Группы',
+    defaultLimit: PAGE_LIMIT,
+  });
+
+  const hasLoadedPermissionsForModalRef = useRef(false);
 
   const loadAllPermissionsForGroupModal = async () => {
     if (permissionsForModal.length > 0 || hasLoadedPermissionsForModalRef.current) {
@@ -486,388 +472,258 @@ export function PermissionsGroupsPage() {
     }
   };
 
-  useEffect(() => {
-    if (activeTab === TABS.permissions && !hasLoadedPermissionsRef.current) {
-      refreshPermissions(permissionsPage, permissionsSearch);
-    }
-  }, [activeTab, refreshPermissions]);
-
-  useEffect(() => {
-    if (activeTab === TABS.permissions && hasLoadedPermissionsRef.current) {
-      refreshPermissions(permissionsPage, permissionsSearch);
-    }
-  }, [permissionsPage, permissionsSearch, refreshPermissions]);
-
-  useEffect(() => {
-    if (activeTab === TABS.groups && !isGroupsApiUnsupported && !hasLoadedGroupsRef.current) {
-      refreshGroups(groupsPage, groupsSearch);
-    }
-  }, [activeTab, isGroupsApiUnsupported, refreshGroups]);
-
-  useEffect(() => {
-    if (activeTab === TABS.groups && !isGroupsApiUnsupported && hasLoadedGroupsRef.current) {
-      refreshGroups(groupsPage, groupsSearch);
-    }
-  }, [groupsPage, groupsSearch, refreshGroups]);
-
-  const handlePermissionSave = async (payload) => {
-    if (!editingPermission) {
-      return;
-    }
-
-    setSubmitting(true);
-    try {
-      const updated = await updatePermissionRequest(editingPermission.id, payload);
-      setPermissions((prev) => prev.map((item) => (item.id === updated.id ? updated : item)));
-      setPermissionsForModal((prev) => prev.map((item) => (item.id === updated.id ? updated : item)));
-      setEditingPermission(null);
-      notifications.info(`Право "${updated.name}" обновлено`);
-    } catch (error) {
-      const message = getApiErrorMessage(error);
-      notifications.error(message);
-    } finally {
-      setSubmitting(false);
-    }
+  const handlePermissionCreate = async (payload) => {
+    await permissionsCrud.create(payload);
+    permissionsModal.closeCreateModal();
   };
 
-  const handlePermissionCreate = async (payload) => {
-    setSubmitting(true);
-    try {
-      const created = await createPermissionRequest(payload);
-      setPermissions((prev) => [created, ...prev]);
-      setPermissionsForModal((prev) => [created, ...prev]);
-      setPermissionModalOpen(false);
-      refreshPermissions(permissionsPage, permissionsSearch);
-      notifications.info(`Право "${created.name}" создано`);
-    } catch (error) {
-      const message = getApiErrorMessage(error);
-      notifications.error(message);
-    } finally {
-      setSubmitting(false);
-    }
+  const handlePermissionSave = async (payload) => {
+    if (!permissionsCrud.editingItem) return;
+    await permissionsCrud.update(permissionsCrud.editingItem.id, payload);
+    permissionsModal.closeEditModal();
   };
 
   const handleGroupSave = async (payload) => {
-    setSubmitting(true);
-
-    try {
-      if (editingGroup) {
-        await updateGroupRequest(editingGroup.id, payload);
-        notifications.info(`Группа "${payload.name}" обновлена`);
-      } else {
-        await createGroupRequest(payload);
-        notifications.info(`Группа "${payload.name}" создана`);
-      }
-
-      setGroupModalOpen(false);
-      setEditingGroup(null);
-      refreshGroups(groupsPage, groupsSearch);
-    } catch (error) {
-      const message = getApiErrorMessage(error);
-      notifications.error(message);
-    } finally {
-      setSubmitting(false);
+    if (groupsModal.editingItem) {
+      await groupsCrud.update(groupsModal.editingItem.id, payload);
+    } else {
+      await groupsCrud.create(payload);
     }
-  };
-
-  const handleGroupDelete = async (groupId) => {
-    const shouldDelete = window.confirm('Удалить группу?');
-    if (!shouldDelete) {
-      return;
-    }
-
-    setSubmitting(true);
-
-    try {
-      await deleteGroupRequest(groupId);
-      refreshGroups(groupsPage, groupsSearch);
-      notifications.info('Группа удалена');
-    } catch (error) {
-      const message = getApiErrorMessage(error);
-      notifications.error(message);
-    } finally {
-      setSubmitting(false);
-    }
+    groupsModal.closeModal();
   };
 
   const filteredPermissions = useMemo(() => {
     if (permissionsSectionFilter === 'all') {
-      return permissions;
+      return permissionsCrud.items;
     }
 
-    return permissions.filter((permission) => {
+    return permissionsCrud.items?.filter((permission) => {
       const permissionSection = permission.name.split(':')[0] || 'other';
       return permissionSection === permissionsSectionFilter;
-    });
-  }, [permissions, permissionsSectionFilter]);
+    }) || [];
+  }, [permissionsCrud.items, permissionsSectionFilter]);
 
-  const permissionBuckets = useMemo(() => buildPermissionBuckets(permissions), [permissions]);
+  const permissionBuckets = useMemo(() => buildPermissionBuckets(permissionsCrud.items || []), [permissionsCrud.items]);
   const permissionSectionKeys = useMemo(() => Object.keys(permissionBuckets).sort((a, b) => a.localeCompare(b)), [permissionBuckets]);
-
-  const filteredGroups = useMemo(() => {
-    return groups;
-  }, [groups]);
 
   return (
     <section className="permissions-groups-page">
-      {/* Фиксированный заголовок страницы */}
       <header className="permissions-groups-page__header">
         <h1 className="permissions-groups-page__title">Права и группы</h1>
         <div className="permissions-groups-page__controls">
           {activeTab === TABS.groups ? (
-            <button
-              type="button"
-              className="permissions-groups-page__create-btn"
+            <Button
+              variant="primary"
+              leftIcon={<FiPlus />}
               onClick={async () => {
                 await loadAllPermissionsForGroupModal();
-                setEditingGroup(null);
-                setGroupModalOpen(true);
+                groupsModal.openCreateModal();
               }}
               disabled={isPermissionsModalLoading}
             >
-              <FiPlus />
-              <span>{isPermissionsModalLoading ? 'Загрузка прав...' : 'Создать группу'}</span>
-            </button>
+              {isPermissionsModalLoading ? 'Загрузка прав...' : 'Создать группу'}
+            </Button>
           ) : (
             <PermissionGate permission="permission:create" fallback={null}>
-              <button
-                type="button"
-                className="permissions-groups-page__create-btn"
-                onClick={() => {
-                  setPermissionModalOpen(true);
-                }}
+              <Button
+                variant="primary"
+                leftIcon={<FiPlus />}
+                onClick={permissionsModal.openCreateModal}
               >
-                <FiPlus />
-                <span>Создать право</span>
-              </button>
+                Создать право
+              </Button>
             </PermissionGate>
           )}
         </div>
       </header>
 
-      {/* Вкладки навигации */}
-      <div className="permissions-groups-page__tabs" role="tablist" aria-label="Права и группы">
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === TABS.permissions}
-          className={`permissions-groups-page__tab${activeTab === TABS.permissions ? ' permissions-groups-page__tab--active' : ''}`}
+      <Tabs className="permissions-groups-page__tabs">
+        <Tab
+          active={activeTab === TABS.permissions}
           onClick={() => setActiveTab(TABS.permissions)}
         >
           Права
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === TABS.groups}
-          className={`permissions-groups-page__tab${activeTab === TABS.groups ? ' permissions-groups-page__tab--active' : ''}`}
+        </Tab>
+        <Tab
+          active={activeTab === TABS.groups}
           onClick={() => setActiveTab(TABS.groups)}
         >
           Группы
-        </button>
-      </div>
+        </Tab>
+      </Tabs>
 
-      {/* Контент вкладок */}
-      <div className="permissions-groups-page__content">
-        {/* Вкладка Права */}
-        {activeTab === TABS.permissions && (
-          <>
-            <div className={`permissions-groups-page__filters${isPermissionsLoading ? ' permissions-groups-page__filters--loading' : ''}`}>
-              <div className={`permissions-groups-page__search${isPermissionsLoading ? ' permissions-groups-page__search--loading' : ''}`}>
-                <FiSearch className="permissions-groups-page__icon" />
-                <input
-                  type="text"
-                  placeholder="Поиск прав..."
-                  value={permissionsSearch}
-                  onChange={(event) => setPermissionsSearch(event.target.value)}
-                />
-              </div>
-              <div className="permissions-groups-page__filters-actions">
-                <div className="permissions-groups-page__section-filter">
-                  <select
-                    value={permissionsSectionFilter}
-                    onChange={(event) => setPermissionsSectionFilter(event.target.value)}
-                    disabled={isPermissionsLoading}
-                  >
-                    <option value="all">Все разделы</option>
-                    {permissionSectionKeys.map((section) => (
-                      <option key={section} value={section}>{section}</option>
-                    ))}
-                  </select>
+      {activeTab === TABS.permissions && (
+        <>
+          <div className={`permissions-groups-page__filters${permissionsCrud.isLoading ? ' permissions-groups-page__filters--loading' : ''}`}>
+            <SearchInput
+              value={permissionsCrud.search}
+              onChange={(e) => permissionsCrud.setSearch(e.target.value)}
+              placeholder="Поиск прав..."
+              loading={permissionsCrud.isLoading}
+            />
+            <div className="permissions-groups-page__section-filter">
+              <Select
+                value={permissionsSectionFilter}
+                onChange={(e) => setPermissionsSectionFilter(e.target.value)}
+                options={[
+                  { value: 'all', label: 'Все разделы' },
+                  ...permissionSectionKeys.map((section) => ({ value: section, label: section })),
+                ]}
+                disabled={permissionsCrud.isLoading}
+              />
+            </div>
+          </div>
+
+          <EntityList
+            items={filteredPermissions}
+            renderItem={(permission) => (
+              <>
+                <div className="crud-item__content">
+                  <p className="crud-item__title">{permission.name}</p>
+                  <p className="crud-item__description">{permission.description || 'Без описания'}</p>
                 </div>
-              </div>
-            </div>
-
-            {isPermissionsLoading && (
-              <p className="permissions-groups-page__empty">Загрузка...</p>
-            )}
-
-            <div className="entity-list-table">
-              {filteredPermissions.length === 0 && permissions.length > 0 && (
-                <p className="permissions-groups-page__empty">По выбранному разделу ничего не найдено.</p>
-              )}
-
-              {filteredPermissions.length === 0 && permissions.length === 0 && (
-                <p className="permissions-groups-page__empty">Права не найдены.</p>
-              )}
-
-              {filteredPermissions.map((permission) => (
-                <article key={permission.id} className="entity-list-row">
-                  <div className="entity-list-row__content">
-                    <p className="entity-list-row__title">{permission.name}</p>
-                    <p className="entity-list-row__description">{permission.description || 'Без описания'}</p>
-                  </div>
-                  <div className="entity-list-row__actions">
-                    <button
-                      type="button"
-                      className="entity-icon-btn"
+                <div className="crud-item__actions">
+                  <PermissionGate permission="permission:update" fallback={null}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => permissionsModal.openEditModal(permission)}
                       aria-label={`Изменить право ${permission.name}`}
-                      onClick={() => setEditingPermission(permission)}
                     >
                       <FiEdit2 />
-                    </button>
-                  </div>
-                </article>
-              ))}
-            </div>
-
-            <div className="entity-pagination">
-              <button
-                type="button"
-                disabled={isPermissionsLoading || permissionsPagination.page <= 1}
-                onClick={() => setPermissionsPage((prev) => Math.max(prev - 1, 1))}
-              >
-                Назад
-              </button>
-              <span>
-                Страница {permissionsPagination.page} из {Math.max(permissionsPagination.pages ?? 1, 1)} · всего {permissionsPagination.total ?? 0}
-              </span>
-              <button
-                type="button"
-                disabled={isPermissionsLoading || permissionsPagination.page >= (permissionsPagination.pages ?? 1)}
-                onClick={() => setPermissionsPage((prev) => prev + 1)}
-              >
-                Вперед
-              </button>
-            </div>
-          </>
-        )}
-
-        {/* Вкладка Группы */}
-        {activeTab === TABS.groups && (
-          <>
-            <div className={`permissions-groups-page__filters${isGroupsLoading ? ' permissions-groups-page__filters--loading' : ''}`}>
-              <div className={`permissions-groups-page__search${isGroupsLoading ? ' permissions-groups-page__search--loading' : ''}`}>
-                <FiSearch className="permissions-groups-page__icon" />
-                <input
-                  type="text"
-                  placeholder="Поиск групп..."
-                  value={groupsSearch}
-                  onChange={(event) => setGroupsSearch(event.target.value)}
-                  disabled={isGroupsLoading}
-                />
-              </div>
-              <div className="permissions-groups-page__filters-actions permissions-groups-page__filters-actions--empty" />
-            </div>
-
-            <div className="entity-list-table">
-              {isGroupsLoading && (
-                <p className="permissions-groups-page__empty">Загрузка...</p>
-              )}
-
-              {isGroupsApiUnsupported && (
-                <p className="permissions-groups-page__error">API не поддерживает список групп.</p>
-              )}
-
-              {!isGroupsLoading && groups.length === 0 && !isGroupsApiUnsupported && (
-                <p className="permissions-groups-page__empty">Группы не найдены.</p>
-              )}
-
-              {groups.map((group) => (
-                <article key={group.id} className="entity-list-row">
-                  <div className="entity-list-row__content">
-                    <p className="entity-list-row__title">{group.name}</p>
-                    <p className="entity-list-row__description">{group.description || 'Без описания'}</p>
-                    <p className="entity-list-row__meta">
-                      <FiCheck aria-hidden="true" /> Прав: {group.permission_ids.length}
-                    </p>
-                  </div>
-                  <div className="entity-list-row__actions">
-                    <button
-                      type="button"
-                      className="entity-icon-btn"
-                      aria-label={`Изменить группу ${group.name}`}
-                      onClick={async () => {
-                        await loadAllPermissionsForGroupModal();
-                        setEditingGroup(group);
-                        setGroupModalOpen(true);
-                      }}
-                      disabled={isPermissionsModalLoading}
-                    >
-                      <FiEdit2 />
-                    </button>
-                    <button
-                      type="button"
-                      className="entity-icon-btn entity-icon-btn--danger"
-                      aria-label={`Удалить группу ${group.name}`}
-                      onClick={() => handleGroupDelete(group.id)}
-                      disabled={isSubmitting}
+                    </Button>
+                  </PermissionGate>
+                  <PermissionGate permission="permission" fallback={null}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => permissionsCrud.delete(permission.id)}
+                      disabled={permissionsCrud.isSubmitting}
+                      aria-label={`Удалить право ${permission.name}`}
                     >
                       <FiTrash2 />
-                    </button>
-                  </div>
-                </article>
-              ))}
-            </div>
+                    </Button>
+                  </PermissionGate>
+                </div>
+              </>
+            )}
+            emptyMessage={
+              permissionsCrud.isLoading
+                ? 'Загрузка...'
+                : filteredPermissions.length === 0 && permissionsCrud.items?.length > 0
+                  ? 'По выбранному разделу ничего не найдено.'
+                  : 'Права не найдены.'
+            }
+            loading={permissionsCrud.isLoading}
+          />
 
-            <div className="entity-pagination">
-              <button
-                type="button"
-                disabled={isGroupsLoading || groupsPagination.page <= 1}
-                onClick={() => setGroupsPage((prev) => Math.max(prev - 1, 1))}
-              >
-                Назад
-              </button>
-              <span>
-                Страница {groupsPagination.page} из {Math.max(groupsPagination.pages ?? 1, 1)} · всего {groupsPagination.total ?? 0}
-              </span>
-              <button
-                type="button"
-                disabled={isGroupsLoading || groupsPagination.page >= (groupsPagination.pages ?? 1)}
-                onClick={() => setGroupsPage((prev) => prev + 1)}
-              >
-                Вперед
-              </button>
-            </div>
-          </>
-        )}
-      </div>
+          {!permissionsCrud.isLoading && filteredPermissions.length > 0 && (
+            <Pagination
+              currentPage={permissionsCrud.page}
+              totalPages={permissionsCrud.pagination.pages}
+              totalItems={permissionsCrud.pagination.total}
+              onPageChange={permissionsCrud.setPage}
+              loading={permissionsCrud.isLoading}
+            />
+          )}
+        </>
+      )}
 
-      <PermissionEditModal
-        permission={editingPermission}
-        onClose={() => setEditingPermission(null)}
-        onSubmit={handlePermissionSave}
-        isSubmitting={isSubmitting}
-      />
+      {activeTab === TABS.groups && (
+        <>
+          <div className={`permissions-groups-page__filters${groupsCrud.isLoading ? ' permissions-groups-page__filters--loading' : ''}`}>
+            <SearchInput
+              value={groupsCrud.search}
+              onChange={(e) => groupsCrud.setSearch(e.target.value)}
+              placeholder="Поиск групп..."
+              loading={groupsCrud.isLoading}
+              disabled={groupsCrud.isLoading}
+            />
+            <div className="permissions-groups-page__filters-actions permissions-groups-page__filters-actions--empty" />
+          </div>
 
-      {isPermissionModalOpen && (
-        <PermissionCreateModal
-          onClose={() => setPermissionModalOpen(false)}
-          onSubmit={handlePermissionCreate}
-          isSubmitting={isSubmitting}
+          <EntityList
+            items={groupsCrud.items}
+            renderItem={(group) => (
+              <>
+                <div className="crud-item__content">
+                  <p className="crud-item__title">{group.name}</p>
+                  <p className="crud-item__description">{group.description || 'Без описания'}</p>
+                  <p className="crud-item__meta">
+                    <FiCheck aria-hidden="true" /> Прав: {group.permission_ids.length}
+                  </p>
+                </div>
+                <div className="crud-item__actions">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={async () => {
+                      await loadAllPermissionsForGroupModal();
+                      groupsModal.openEditModal(group);
+                    }}
+                    disabled={isPermissionsModalLoading}
+                    aria-label={`Изменить группу ${group.name}`}
+                  >
+                    <FiEdit2 />
+                  </Button>
+                  <PermissionGate permission="permissionGroup:delete" fallback={null}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => groupsCrud.delete(group.id)}
+                      disabled={groupsCrud.isSubmitting}
+                      aria-label={`Удалить группу ${group.name}`}
+                    >
+                      <FiTrash2 />
+                    </Button>
+                  </PermissionGate>
+                </div>
+              </>
+            )}
+            emptyMessage={
+              groupsCrud.isLoading
+                ? 'Загрузка...'
+                : 'Группы не найдены.'
+            }
+            loading={groupsCrud.isLoading}
+          />
+
+          {!groupsCrud.isLoading && groupsCrud.items && groupsCrud.items.length > 0 && (
+            <Pagination
+              currentPage={groupsCrud.page}
+              totalPages={groupsCrud.pagination.pages}
+              totalItems={groupsCrud.pagination.total}
+              onPageChange={groupsCrud.setPage}
+              loading={groupsCrud.isLoading}
+            />
+          )}
+        </>
+      )}
+
+      {permissionsModal.isOpen && activeTab === TABS.permissions && (
+        <PermissionEditModal
+          permission={permissionsModal.editingItem}
+          onClose={permissionsModal.closeEditModal}
+          onSubmit={handlePermissionSave}
+          isSubmitting={permissionsCrud.isSubmitting}
         />
       )}
 
-      {isGroupModalOpen && (
+      {permissionsModal.isCreateModalOpen && activeTab === TABS.permissions && (
+        <PermissionCreateModal
+          onClose={permissionsModal.closeCreateModal}
+          onSubmit={handlePermissionCreate}
+          isSubmitting={permissionsCrud.isSubmitting}
+        />
+      )}
+
+      {(groupsModal.isOpen || groupsModal.isCreateModalOpen) && activeTab === TABS.groups && (
         <GroupModal
-          group={editingGroup}
-          permissions={permissionsForModal.length > 0 ? permissionsForModal : permissions}
-          onClose={() => {
-            setGroupModalOpen(false);
-            setEditingGroup(null);
-          }}
+          group={groupsModal.editingItem}
+          permissions={permissionsForModal.length > 0 ? permissionsForModal : permissionsCrud.items || []}
+          onClose={groupsModal.closeModal}
           onSubmit={handleGroupSave}
-          isSubmitting={isSubmitting}
+          isSubmitting={groupsCrud.isSubmitting}
         />
       )}
     </section>

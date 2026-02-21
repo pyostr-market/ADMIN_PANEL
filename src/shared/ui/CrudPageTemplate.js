@@ -1,14 +1,14 @@
 import { useMemo, useState, useCallback } from 'react';
 import { FiPlus, FiSearch, FiEdit2, FiTrash2 } from 'react-icons/fi';
-import { useCrudList, useCrudModal } from '../../lib/crud';
-import { PermissionGate } from '../PermissionGate';
-import { Button } from '../ui/Button';
-import { SearchInput } from '../ui/SearchInput';
-import { Select } from '../ui/Select';
-import { Pagination } from '../ui/Pagination';
-import { EntityList } from '../ui/EntityList';
-import { Modal } from '../ui/Modal';
-import { Tabs, Tab } from '../ui/Tabs';
+import { useCrudList, useCrudModal } from '../lib/crud';
+import { PermissionGate } from './PermissionGate';
+import { Button } from './Button';
+import { SearchInput } from './SearchInput';
+import { Select } from './Select';
+import { Pagination } from './Pagination';
+import { EntityList } from './EntityList';
+import { Modal } from './Modal';
+import { Tabs, Tab } from './Tabs';
 import './CrudPageTemplate.css';
 
 /**

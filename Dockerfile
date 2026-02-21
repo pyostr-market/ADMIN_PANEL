@@ -1,0 +1,18 @@
+# 1️⃣ Stage build
+FROM node:25-alpine AS builder
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+RUN npm run build
+
+# 2️⃣ Stage production (nginx)
+FROM nginx:alpine
+
+COPY --from=builder /app/dist /usr/share/nginx/html
+# если CRA → /app/build вместо /app/dist
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

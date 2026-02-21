@@ -1,14 +1,27 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSocket } from './SocketProvider';
 
 export function useSocketCollectionUpdater({ entity, setItems, getId = (item) => item.id }) {
   const socket = useSocket();
+  
+  // Refs для хранения актуальных значений без пересоздания эффектов
+  const setItemsRef = useRef(setItems);
+  const getIdRef = useRef(getId);
+
+  // Обновляем ref при изменении значений
+  useEffect(() => {
+    setItemsRef.current = setItems;
+  }, [setItems]);
+
+  useEffect(() => {
+    getIdRef.current = getId;
+  }, [getId]);
 
   useEffect(() => {
     const unsubscribeCreate = socket.subscribe(`${entity}:create`, (createdItem) => {
-      setItems((prev) => {
-        const createdId = getId(createdItem);
-        const alreadyExists = prev.some((item) => getId(item) === createdId);
+      setItemsRef.current((prev) => {
+        const createdId = getIdRef.current(createdItem);
+        const alreadyExists = prev.some((item) => getIdRef.current(item) === createdId);
 
         if (alreadyExists) {
           return prev;
@@ -19,28 +32,28 @@ export function useSocketCollectionUpdater({ entity, setItems, getId = (item) =>
     });
 
     const unsubscribeUpdate = socket.subscribe(`${entity}:update`, (updatedItem) => {
-      setItems((prev) => {
-        const updatedId = getId(updatedItem);
-        const exists = prev.some((item) => getId(item) === updatedId);
+      setItemsRef.current((prev) => {
+        const updatedId = getIdRef.current(updatedItem);
+        const exists = prev.some((item) => getIdRef.current(item) === updatedId);
 
         if (!exists) {
           return prev;
         }
 
-        return prev.map((item) => (getId(item) === updatedId ? updatedItem : item));
+        return prev.map((item) => (getIdRef.current(item) === updatedId ? updatedItem : item));
       });
     });
 
     const unsubscribeDelete = socket.subscribe(`${entity}:delete`, (deletedItem) => {
-      setItems((prev) => {
-        const deletedId = getId(deletedItem);
-        const exists = prev.some((item) => getId(item) === deletedId);
+      setItemsRef.current((prev) => {
+        const deletedId = getIdRef.current(deletedItem);
+        const exists = prev.some((item) => getIdRef.current(item) === deletedId);
 
         if (!exists) {
           return prev;
         }
 
-        return prev.filter((item) => getId(item) !== deletedId);
+        return prev.filter((item) => getIdRef.current(item) !== deletedId);
       });
     });
 
@@ -49,5 +62,5 @@ export function useSocketCollectionUpdater({ entity, setItems, getId = (item) =>
       unsubscribeUpdate();
       unsubscribeDelete();
     };
-  }, [entity, getId, setItems, socket]);
+  }, [entity, socket]);
 }

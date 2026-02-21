@@ -1,5 +1,6 @@
 @import './shared/styles/tokens.css';
 @import './shared/ui/entityList.css';
+@import './shared/ui/CrudPageTemplate.css';
 
 /* Фиксация ширины скролл-бара для предотвращения сдвига контента */
 html {

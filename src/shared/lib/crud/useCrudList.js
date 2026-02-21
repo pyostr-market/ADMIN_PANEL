@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getApiErrorMessage } from '../../api/apiError';
-import { useNotifications } from '../../lib/notifications/NotificationProvider';
+import { useNotifications } from '../notifications/NotificationProvider';
 
 const EMPTY_PAGINATION = { page: 1, limit: 20, total: 0, pages: 1 };
 
@@ -40,17 +40,40 @@ export function useCrudList({
 
   const hasLoadedRef = useRef(false);
 
+  // Refs для хранения актуальных значений без пересоздания refresh
+  const pageRef = useRef(page);
+  const searchRef = useRef(search);
+  const filtersRef = useRef(filters);
+
+  // Обновляем ref при изменении значений
+  useEffect(() => {
+    pageRef.current = page;
+  }, [page]);
+
+  useEffect(() => {
+    searchRef.current = search;
+  }, [search]);
+
+  useEffect(() => {
+    filtersRef.current = filters;
+  }, [filters]);
+
   const refresh = useCallback(
-    async (pageNum = page, searchValue = search, filterValues = filters) => {
+    async (pageNum, searchValue, filterValues) => {
+      // Используем переданные значения или значения из ref
+      const actualPage = pageNum ?? pageRef.current;
+      const actualSearch = searchValue ?? searchRef.current;
+      const actualFilters = filterValues ?? filtersRef.current;
+
       setIsLoading(true);
       setError(null);
 
       try {
         const data = await fetchFn({
-          page: pageNum,
+          page: actualPage,
           limit,
-          search: searchValue || undefined,
-          ...filterValues,
+          search: actualSearch || undefined,
+          ...actualFilters,
         });
 
         const normalizedItems = Array.isArray(data.items)
@@ -59,7 +82,7 @@ export function useCrudList({
 
         setItems(normalizedItems);
         setPagination(data.pagination ?? {
-          page: pageNum,
+          page: actualPage,
           limit,
           total: normalizedItems.length,
           pages: 1,
@@ -75,7 +98,7 @@ export function useCrudList({
         setIsLoading(false);
       }
     },
-    [fetchFn, limit, page, search, filters, normalizeFn, notifications],
+    [fetchFn, limit, normalizeFn, notifications],
   );
 
   useEffect(() => {
@@ -86,9 +109,9 @@ export function useCrudList({
 
   useEffect(() => {
     if (hasLoadedRef.current) {
-      refresh(page, search, filters);
+      refresh();
     }
-  }, [page, search, filters, refresh]);
+  }, [page, search, filters]);
 
   const handleSearch = useCallback((value) => {
     setSearch(value);

@@ -34,6 +34,11 @@ export async function updatePermissionRequest(permissionId, payload) {
   return unwrapResponse(response);
 }
 
+export async function deletePermissionRequest(permissionId) {
+  const response = await authorizedApi.delete(`${API_ENDPOINTS.permissions}${permissionId}`);
+  return unwrapResponse(response);
+}
+
 export async function getGroupsRequest({ page = 1, limit = 20, search } = {}) {
   const params = { page, limit };
   if (search) {
