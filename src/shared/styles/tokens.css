@@ -56,14 +56,14 @@
   --card-bg: #f8f9fa;
   --gradient-avatar: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   
-  /* Gradient utilities for badges/icons */
-  --gradient-success: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-  --gradient-info: linear-gradient(135deg, var(--info) 0%, #2563eb 100%);
-  --gradient-danger: linear-gradient(135deg, var(--danger) 0%, var(--danger-hover) 100%);
+  /* Gradient utilities for badges/icons - solid gradients for white icons */
+  --gradient-success: linear-gradient(135deg, #16a34a 0%, #059669 100%);
+  --gradient-info: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  --gradient-danger: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
   --gradient-secondary: linear-gradient(135deg, #64748b 0%, #475569 100%);
-  --gradient-warning: linear-gradient(135deg, #fef3c7 0%, #f59e0b 100%);
-  --gradient-info-light: linear-gradient(135deg, #dbeafe 0%, #3b82f6 100%);
-  --gradient-success-light: linear-gradient(135deg, #d1fae5 0%, #10b981 100%);
+  --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --gradient-info-light: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  --gradient-success-light: linear-gradient(135deg, #10b981 0%, #059669 100%);
 }
 
 [data-theme='dark'] {

@@ -90,7 +90,7 @@
 .btn--danger {
   background: var(--danger);
   border-color: var(--danger);
-  color: var(--text);
+  color: white;
 }
 
 .btn--danger:hover:not(:disabled) {
