@@ -1,6 +1,6 @@
-import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiCheck, FiPlus, FiSearch, FiTrash2, FiUser, FiUserCheck, FiUserX, FiEye } from 'react-icons/fi';
+import { FiCheck, FiPlus, FiTrash2, FiUser, FiUserCheck, FiUserX } from 'react-icons/fi';
 import { useCrudList } from '../../shared/lib/crud';
 import { PermissionGate } from '../../shared/ui/PermissionGate';
 import { Button } from '../../shared/ui/Button';
@@ -96,10 +96,10 @@ export function UsersListPage() {
   const notifications = useNotifications();
   const notificationsRef = useRef(notifications);
 
-  // Обновляем ref при изменении notifications
   useEffect(() => {
     notificationsRef.current = notifications;
   }, [notifications]);
+
   const [userToBan, setUserToBan] = useState(null);
   const [userToDelete, setUserToDelete] = useState(null);
   const [filters, setFilters] = useState({
@@ -143,7 +143,7 @@ export function UsersListPage() {
   const handleFilterChange = (key, value) => {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
-    
+
     const apiFilters = {};
     if (newFilters.is_active !== 'all') {
       apiFilters.is_active = newFilters.is_active === 'true';
@@ -154,7 +154,7 @@ export function UsersListPage() {
     if (newFilters.group !== 'all') {
       apiFilters.group = newFilters.group;
     }
-    
+
     usersCrud.setFilters(apiFilters);
   };
 
@@ -178,7 +178,7 @@ export function UsersListPage() {
 
   const handleDeleteUser = async () => {
     if (!userToDelete) return;
-    
+
     const result = await usersCrud.delete(userToDelete.id);
     if (result) {
       setUserToDelete(null);
@@ -193,45 +193,32 @@ export function UsersListPage() {
     navigate('/users/create');
   };
 
+  const activeFiltersCount = Object.values(filters).filter((f) => f !== 'all').length;
+
   return (
     <section className="users-list-page">
-      {/* Header */}
       <header className="users-list-page__header">
-        <div className="users-list-page__header-content">
-          <h1 className="users-list-page__title">Пользователи</h1>
-          <p className="users-list-page__subtitle">
-            {usersCrud.pagination.total > 0
-              ? `Найдено ${usersCrud.pagination.total} пользователей`
-              : 'Список пользователей пуст'}
-          </p>
+        <h1 className="users-list-page__title">Пользователи</h1>
+        <div className="users-list-page__controls">
+          <PermissionGate permission={['admin:user:create']} fallback={null}>
+            <Button
+              variant="primary"
+              leftIcon={<FiPlus />}
+              onClick={handleCreateUser}
+            >
+              Создать пользователя
+            </Button>
+          </PermissionGate>
         </div>
-        <PermissionGate permission={['admin:user:create']} fallback={null}>
-          <Button
-            variant="primary"
-            leftIcon={<FiPlus />}
-            onClick={handleCreateUser}
-            size="lg"
-          >
-            Создать пользователя
-          </Button>
-        </PermissionGate>
       </header>
 
-      {/* Filters */}
       <div className={`users-list-page__filters${usersCrud.isLoading ? ' users-list-page__filters--loading' : ''}`}>
-        <div className="users-list-page__filters-main">
-          <div className="users-list-page__search-wrapper">
-            <FiSearch className="users-list-page__search-icon" />
-            <SearchInput
-              value={usersCrud.search}
-              onChange={(e) => usersCrud.setSearch(e.target.value)}
-              placeholder="Поиск по телефону или ID..."
-              loading={usersCrud.isLoading}
-              className="users-list-page__search"
-            />
-          </div>
-        </div>
-        
+        <SearchInput
+          value={usersCrud.search}
+          onChange={(e) => usersCrud.setSearch(e.target.value)}
+          placeholder="Поиск по телефону или ID..."
+          loading={usersCrud.isLoading}
+        />
         <div className="users-list-page__filters-group">
           <Select
             value={filters.is_active}
@@ -244,7 +231,7 @@ export function UsersListPage() {
             ]}
             disabled={usersCrud.isLoading}
           />
-          
+
           <Select
             value={filters.is_verified}
             onChange={(e) => handleFilterChange('is_verified', e.target.value)}
@@ -256,7 +243,7 @@ export function UsersListPage() {
             ]}
             disabled={usersCrud.isLoading}
           />
-          
+
           <Select
             value={filters.group}
             onChange={(e) => handleFilterChange('group', e.target.value)}
@@ -270,70 +257,56 @@ export function UsersListPage() {
         </div>
       </div>
 
-      {/* List */}
       <EntityList
         items={usersCrud.items}
         renderItem={(user) => (
           <>
-            <div className="users-list-page__item-content" onClick={() => handleViewUser(user)}>
-              <div className="users-list-page__item-main">
-                <div className={`users-list-page__avatar ${user.is_active ? 'users-list-page__avatar--active' : 'users-list-page__avatar--inactive'}`}>
-                  <FiUser />
-                </div>
-                <div className="users-list-page__item-info">
-                  <div className="users-list-page__item-header">
-                    <p className="users-list-page__item-title">
-                      {user.primary_phone?.phone_number || 'Без телефона'}
-                    </p>
-                    <div className="users-list-page__item-badges">
-                      {!user.is_active && (
-                        <span className="users-list-page__badge users-list-page__badge--inactive" title="Заблокирован">
-                          <FiUserX />
-                        </span>
-                      )}
-                      {user.is_verified && (
-                        <span className="users-list-page__badge users-list-page__badge--verified" title="Верифицирован">
-                          <FiCheck />
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="users-list-page__item-meta">
+            <div className="crud-item__content">
+              <p className="crud-item__title">{user.primary_phone?.phone_number || 'Без телефона'}</p>
+              <div className="users-list-page__item-meta">
+                <span className="users-list-page__meta-item">
+                  <span className="users-list-page__meta-label">ID:</span> {user.id}
+                </span>
+                {user.group && (
+                  <>
+                    <span className="users-list-page__separator">•</span>
                     <span className="users-list-page__meta-item">
-                      <span className="users-list-page__meta-label">ID:</span> {user.id}
+                      <FiUser className="users-list-page__meta-icon" />
+                      {user.group.name}
                     </span>
-                    {user.group && (
-                      <>
-                        <span className="users-list-page__separator">•</span>
-                        <span className="users-list-page__meta-item">
-                          <FiUser className="users-list-page__meta-icon" />
-                          {user.group.name}
-                        </span>
-                      </>
-                    )}
-                    {user.created_at && (
-                      <>
-                        <span className="users-list-page__separator">•</span>
-                        <span className="users-list-page__meta-item">
-                          {new Date(user.created_at).toLocaleDateString('ru-RU')}
-                        </span>
-                      </>
-                    )}
-                  </div>
-                </div>
+                  </>
+                )}
+                {user.created_at && (
+                  <>
+                    <span className="users-list-page__separator">•</span>
+                    <span className="users-list-page__meta-item">
+                      {new Date(user.created_at).toLocaleDateString('ru-RU')}
+                    </span>
+                  </>
+                )}
+              </div>
+              <div className="users-list-page__item-badges">
+                {!user.is_active && (
+                  <span className="users-list-page__badge users-list-page__badge--inactive" title="Заблокирован">
+                    <FiUserX />
+                  </span>
+                )}
+                {user.is_verified && (
+                  <span className="users-list-page__badge users-list-page__badge--verified" title="Верифицирован">
+                    <FiCheck />
+                  </span>
+                )}
               </div>
             </div>
-            <div className="users-list-page__item-actions">
+            <div className="crud-item__actions">
               <Button
                 variant="secondary"
                 size="sm"
-                leftIcon={<FiEye />}
                 onClick={() => handleViewUser(user)}
-                aria-label={`Просмотреть пользователя ${user.primary_phone?.phone_number || user.id}`}
               >
                 Просмотр
               </Button>
-              
+
               <PermissionGate permission={['admin:user:ban']} fallback={null}>
                 <Button
                   variant="ghost"
@@ -346,7 +319,7 @@ export function UsersListPage() {
                   {user.is_active ? <FiUserX /> : <FiUserCheck />}
                 </Button>
               </PermissionGate>
-              
+
               <PermissionGate permission={['admin:user:delete']} fallback={null}>
                 <Button
                   variant="ghost"
@@ -365,14 +338,13 @@ export function UsersListPage() {
         emptyMessage={
           usersCrud.isLoading
             ? 'Загрузка пользователей...'
-            : usersCrud.search || Object.values(filters).some((f) => f !== 'all')
+            : usersCrud.search || activeFiltersCount > 0
               ? 'По вашему запросу ничего не найдено.'
               : 'Пользователи не найдены.'
         }
         loading={usersCrud.isLoading}
       />
 
-      {/* Pagination */}
       {!usersCrud.isLoading && usersCrud.items && usersCrud.items.length > 0 && (
         <Pagination
           currentPage={usersCrud.page}
@@ -383,7 +355,6 @@ export function UsersListPage() {
         />
       )}
 
-      {/* Modals */}
       {userToBan && (
         <BanUserModal
           user={userToBan}
