@@ -283,3 +283,9 @@
   height: 16px;
   margin-top: 2px;
 }
+
+.permissions-groups-page__confirm-text {
+  margin-top: var(--space-2);
+  font-size: 13px;
+  color: var(--text-secondary);
+}

@@ -402,6 +402,7 @@ export function PermissionsGroupsPage() {
   const [permissionsForModal, setPermissionsForModal] = useState([]);
   const [isPermissionsModalLoading, setPermissionsModalLoading] = useState(false);
   const [permissionsSectionFilter, setPermissionsSectionFilter] = useState('all');
+  const [permissionToDelete, setPermissionToDelete] = useState(null);
 
   const notifications = useNotifications();
   const permissionsModal = useCrudModal();
@@ -490,6 +491,20 @@ export function PermissionsGroupsPage() {
       await groupsCrud.create(payload);
     }
     groupsModal.closeModal();
+  };
+
+  const handleDeleteClick = (permission) => {
+    setPermissionToDelete(permission);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!permissionToDelete) return;
+    await permissionsCrud.delete(permissionToDelete.id);
+    setPermissionToDelete(null);
+  };
+
+  const handleCancelDelete = () => {
+    setPermissionToDelete(null);
   };
 
   const filteredPermissions = useMemo(() => {
@@ -593,11 +608,11 @@ export function PermissionsGroupsPage() {
                       <FiEdit2 />
                     </Button>
                   </PermissionGate>
-                  <PermissionGate permission="permission" fallback={null}>
+                  <PermissionGate permission="permission:delete" fallback={null}>
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => permissionsCrud.delete(permission.id)}
+                      onClick={() => handleDeleteClick(permission)}
                       disabled={permissionsCrud.isSubmitting}
                       aria-label={`Удалить право ${permission.name}`}
                     >
@@ -725,6 +740,37 @@ export function PermissionsGroupsPage() {
           onSubmit={handleGroupSave}
           isSubmitting={groupsCrud.isSubmitting}
         />
+      )}
+
+      {permissionToDelete && (
+        <Modal
+          isOpen
+          onClose={handleCancelDelete}
+          title="Удаление права"
+          size="sm"
+          footer={(
+            <>
+              <Button variant="secondary" onClick={handleCancelDelete}>
+                Отмена
+              </Button>
+              <Button
+                variant="danger"
+                onClick={handleConfirmDelete}
+                loading={permissionsCrud.isSubmitting}
+              >
+                Удалить
+              </Button>
+            </>
+          )}
+        >
+          <p>
+            Вы уверены, что хотите удалить право{' '}
+            <strong>{permissionToDelete.name}</strong>?
+          </p>
+          <p className="permissions-groups-page__confirm-text">
+            Это действие нельзя отменить.
+          </p>
+        </Modal>
       )}
     </section>
   );

@@ -179,14 +179,9 @@ export function useCrudList({
   );
 
   const handleDelete = useCallback(
-    async (id, confirmMessage = `Удалить ${entityName.toLowerCase()}?`) => {
+    async (id) => {
       if (!deleteFn) {
         throw new Error('deleteFn is not provided');
-      }
-
-      const shouldDelete = window.confirm(confirmMessage);
-      if (!shouldDelete) {
-        return false;
       }
 
       setIsSubmitting(true);

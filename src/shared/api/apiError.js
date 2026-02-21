@@ -1,8 +1,22 @@
 export function getApiErrorMessage(error) {
-  const apiMessage = error?.response?.data?.error?.message;
-
+  // Пробуем разные варианты извлечения сообщения об ошибке
+  const responseData = error?.response?.data;
+  
+  // Вариант 1: error.response.data.error.message
+  const apiMessage = responseData?.error?.message;
   if (typeof apiMessage === 'string' && apiMessage.trim()) {
     return apiMessage.trim();
+  }
+
+  // Вариант 2: error.response.data.message
+  const directMessage = responseData?.message;
+  if (typeof directMessage === 'string' && directMessage.trim()) {
+    return directMessage.trim();
+  }
+
+  // Вариант 3: error.response.data (если это строка)
+  if (typeof responseData === 'string' && responseData.trim()) {
+    return responseData.trim();
   }
 
   const status = error?.response?.status;
@@ -14,6 +28,10 @@ export function getApiErrorMessage(error) {
       return `API не поддерживает эндпоинт: ${method} ${url}`;
     }
     return 'API не поддерживает запрошенный эндпоинт.';
+  }
+
+  if (status === 409) {
+    return 'Конфликт данных. Возможно, запись уже существует.';
   }
 
   if (status >= 500) {

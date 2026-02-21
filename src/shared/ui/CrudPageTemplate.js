@@ -96,9 +96,7 @@ export function CrudPageTemplate({ title, config }) {
   };
 
   const handleDelete = async (item) => {
-    const confirmMessage = currentTabConfig.confirmDeleteMessage
-      || `Удалить "${item.name || entityName.toLowerCase()}"?`;
-    await crud.delete(item.id, confirmMessage);
+    await crud.delete(item.id);
   };
 
   const renderListItem = useCallback(
