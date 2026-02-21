@@ -636,8 +636,9 @@ export function PermissionsGroupsPage() {
   };
 
   const handlePermissionSave = async (payload) => {
-    if (!permissionsCrud.editingItem) return;
-    const result = await permissionsCrud.update(permissionsCrud.editingItem.id, payload);
+    if (!permissionsModal.editingItem) return;
+
+    const result = await permissionsCrud.update(permissionsModal.editingItem.id, payload);
     if (result) {
       permissionsModal.closeEditModal();
     }
