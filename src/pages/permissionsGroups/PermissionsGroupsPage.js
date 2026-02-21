@@ -12,6 +12,13 @@ import { Tabs, Tab } from '../../shared/ui/Tabs';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import {
+  getGlobalPermissionEffect,
+  getViewPermissionEffect,
+  isGlobalPermission,
+  getPermissionSection,
+  isViewPermission,
+} from '../../shared/lib/permissions/permissions';
+import {
   getPermissionsRequest,
   createPermissionRequest,
   updatePermissionRequest,
@@ -213,11 +220,89 @@ function GroupModal({
   }, [sectionKeys]);
 
   const togglePermission = (permissionId) => {
-    setSelectedPermissions((prev) => (
-      prev.includes(permissionId)
-        ? prev.filter((id) => id !== permissionId)
-        : [...prev, permissionId]
-    ));
+    const permission = permissions.find(p => p.id === permissionId);
+    if (!permission) {
+      return;
+    }
+
+    const permissionName = permission.name;
+    const section = getPermissionSection(permissionName);
+    const isGlobal = isGlobalPermission(permissionName);
+    const isView = isViewPermission(permissionName);
+
+    setSelectedPermissions((prev) => {
+      const isSelected = prev.includes(permissionId);
+
+      // Если снимаем галочку с глобального права
+      if (isGlobal && isSelected) {
+        return prev.filter(id => id !== permissionId);
+      }
+
+      // Если ставим галочку на глобальное право
+      if (isGlobal && !isSelected) {
+        // Снимаем все остальные права в этой секции
+        const filtered = prev.filter(id => {
+          const otherPerm = permissions.find(p => p.id === id);
+          const otherSection = getPermissionSection(otherPerm?.name);
+          return otherSection !== section;
+        });
+        // Добавляем только глобальное право
+        return [...filtered, permissionId];
+      }
+
+      // Если ставим галочку на не-global право
+      if (!isGlobal && !isSelected) {
+        // Проверяем, есть ли глобальное право для этой секции
+        const hasGlobalInSection = prev.some(id => {
+          const otherPerm = permissions.find(p => p.id === id);
+          return isGlobalPermission(otherPerm?.name) && getPermissionSection(otherPerm?.name) === section;
+        });
+
+        // Если есть глобальное, сначала снимаем его
+        let newPermissions = prev;
+        if (hasGlobalInSection) {
+          const globalPerm = permissions.find(p =>
+            isGlobalPermission(p?.name) && getPermissionSection(p?.name) === section
+          );
+          if (globalPerm) {
+            newPermissions = prev.filter(id => id !== globalPerm.id);
+          }
+        }
+
+        // Добавляем выбранное право
+        newPermissions = [...newPermissions, permissionId];
+
+        // Авто-выбираем view, если это не view
+        if (!isView && section) {
+          const viewPermission = permissions.find(p => p.name === `${section}:view`);
+          if (viewPermission && !newPermissions.includes(viewPermission.id)) {
+            newPermissions.push(viewPermission.id);
+          }
+        }
+
+        return newPermissions;
+      }
+
+      // Если снимаем галочку с не-global права
+      if (!isGlobal && isSelected) {
+        // Если это view, проверяем, есть ли другие права в этой секции
+        if (isView) {
+          const otherInSection = permissions.filter(p => {
+            const pSection = getPermissionSection(p.name);
+            return pSection === section && !isViewPermission(p.name) && prev.includes(p.id);
+          });
+
+          // Если есть другие выбранные права в секции, нельзя снять view
+          if (otherInSection.length > 0) {
+            return prev;
+          }
+        }
+
+        return prev.filter(id => id !== permissionId);
+      }
+
+      return prev;
+    });
   };
 
   const toggleSection = (section) => {
@@ -237,6 +322,65 @@ function GroupModal({
 
   const collapseAllSections = () => {
     setExpandedSections({});
+  };
+
+  /**
+   * Определяет состояние чекбокса для права
+   * Возвращает { disabled: boolean, checked: boolean, locked: boolean }
+   */
+  const getPermissionCheckboxState = (permission) => {
+    const permissionName = permission.name;
+    const section = getPermissionSection(permissionName);
+    const isGlobal = isGlobalPermission(permissionName);
+    const isView = isViewPermission(permissionName);
+    const isChecked = selectedPermissions.includes(permission.id);
+
+    // Проверяем, есть ли глобальное право для этой секции среди выбранных
+    const hasGlobalInSection = selectedPermissions.some(id => {
+      const otherPerm = permissions.find(p => p.id === id);
+      return isGlobalPermission(otherPerm?.name) && getPermissionSection(otherPerm?.name) === section;
+    });
+
+    const globalPermInSection = hasGlobalInSection
+      ? permissions.find(p =>
+          isGlobalPermission(p?.name) && getPermissionSection(p?.name) === section
+        )
+      : null;
+
+    // Если есть глобальное право в секции и это не оно само
+    if (hasGlobalInSection && globalPermInSection && globalPermInSection.id !== permission.id) {
+      return {
+        disabled: true,
+        checked: true,
+        locked: true,
+        lockedBy: globalPermInSection,
+      };
+    }
+
+    // Если это view право, проверяем, есть ли другие права в секции
+    if (isView) {
+      const otherInSection = permissions.filter(p => {
+        const pSection = getPermissionSection(p.name);
+        return pSection === section && !isViewPermission(p.name) && selectedPermissions.includes(p.id);
+      });
+
+      if (otherInSection.length > 0) {
+        return {
+          disabled: true,
+          checked: true,
+          locked: true,
+          lockedBy: 'dependency',
+        };
+      }
+    }
+
+    // Обычное состояние
+    return {
+      disabled: false,
+      checked: isChecked,
+      locked: false,
+      lockedBy: null,
+    };
   };
 
   const filteredBuckets = useMemo(() => {
@@ -373,19 +517,30 @@ function GroupModal({
                 </button>
                 {expandedSections[section] && (
                   <div className="group-permissions-section__items">
-                    {sectionPermissions.map((permission) => (
-                      <label key={permission.id} className="group-permission-item">
-                        <input
-                          type="checkbox"
-                          checked={selectedPermissions.includes(permission.id)}
-                          onChange={() => togglePermission(permission.id)}
-                        />
-                        <span>
-                          <strong>{permission.name}</strong>
-                          {permission.description ? ` — ${permission.description}` : ''}
-                        </span>
-                      </label>
-                    ))}
+                    {sectionPermissions.map((permission) => {
+                      const checkboxState = getPermissionCheckboxState(permission);
+
+                      return (
+                        <label
+                          key={permission.id}
+                          className={`group-permission-item${checkboxState.locked ? ' group-permission-item--locked' : ''}`}
+                          title={checkboxState.lockedBy
+                            ? `Заблокировано: ${checkboxState.lockedBy === 'dependency' ? 'требуется для других прав' : checkboxState.lockedBy.name}`
+                            : ''}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={checkboxState.checked}
+                            onChange={() => togglePermission(permission.id)}
+                            disabled={checkboxState.disabled}
+                          />
+                          <span>
+                            <strong>{permission.name}</strong>
+                            {permission.description ? ` — ${permission.description}` : ''}
+                          </span>
+                        </label>
+                      );
+                    })}
                   </div>
                 )}
               </div>

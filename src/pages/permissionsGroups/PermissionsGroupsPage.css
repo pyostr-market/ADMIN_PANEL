@@ -284,6 +284,20 @@
   margin-top: 2px;
 }
 
+.group-permission-item--locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.group-permission-item--locked input {
+  cursor: not-allowed;
+  accent-color: var(--text-muted);
+}
+
+.group-permission-item--locked span {
+  color: var(--text-muted);
+}
+
 .permissions-groups-page__confirm-text {
   margin-top: var(--space-2);
   font-size: 13px;

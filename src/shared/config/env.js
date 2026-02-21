@@ -1,4 +1,5 @@
 export const USER_SERVICE_BASE_URL = 'https://market-user.open-gpt.ru';
+export const PRODUCT_SERVICE_BASE_URL = 'https://market-product.open-gpt.ru';
 
 export const API_ENDPOINTS = {
   login: '/auth/login',
@@ -7,6 +8,7 @@ export const API_ENDPOINTS = {
   permissions: '/permissions/',
   groups: '/users/admin/groups',
   users: '/users/admin/users',
+
   manufacturers: '/manufacturers',
   suppliers: '/suppliers',
   productTypes: '/product-types',
