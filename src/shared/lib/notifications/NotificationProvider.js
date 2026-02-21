@@ -17,6 +17,13 @@ export function NotificationProvider({ children }) {
   const [toasts, setToasts] = useState([]);
   const timersRef = useRef(new Map());
   const pushToastRef = useRef(null);
+  const removeToastRef = useRef(null);
+  const clearToastsRef = useRef(null);
+  const infoRef = useRef(null);
+  const errorRef = useRef(null);
+  const mailRef = useRef(null);
+  const eventRef = useRef(null);
+  const warningRef = useRef(null);
 
   const removeToast = useCallback((toastId) => {
     const timerId = timersRef.current.get(toastId);
@@ -43,12 +50,12 @@ export function NotificationProvider({ children }) {
     setToasts((prev) => [payload, ...prev].slice(0, 20));
 
     const timeoutId = window.setTimeout(() => {
-      removeToast(id);
+      removeToastRef.current?.(id);
     }, payload.lifetimeMs);
 
     timersRef.current.set(id, timeoutId);
     return id;
-  }, [removeToast]);
+  }, []);
 
   // Keep the ref updated with the latest pushToast function
   pushToastRef.current = pushToast;
@@ -59,21 +66,31 @@ export function NotificationProvider({ children }) {
     setToasts([]);
   }, []);
 
-  const info = useCallback((message, options = {}) => (
-    pushToast({ ...options, type: 'info', message })
-  ), [pushToast]);
-  const error = useCallback((message, options = {}) => (
-    pushToast({ ...options, type: 'error', message })
-  ), [pushToast]);
-  const mail = useCallback((message, options = {}) => (
-    pushToast({ ...options, type: 'mail', message })
-  ), [pushToast]);
-  const event = useCallback((message, options = {}) => (
-    pushToast({ ...options, type: 'event', message })
-  ), [pushToast]);
-  const warning = useCallback((message, options = {}) => (
-    pushToast({ ...options, type: 'warning', message })
-  ), [pushToast]);
+  // Stabilized notification methods using refs to avoid recreating functions
+  const info = useCallback((message, options = {}) => {
+    pushToastRef.current?.({ ...options, type: 'info', message });
+  }, []);
+  const error = useCallback((message, options = {}) => {
+    pushToastRef.current?.({ ...options, type: 'error', message });
+  }, []);
+  const mail = useCallback((message, options = {}) => {
+    pushToastRef.current?.({ ...options, type: 'mail', message });
+  }, []);
+  const event = useCallback((message, options = {}) => {
+    pushToastRef.current?.({ ...options, type: 'event', message });
+  }, []);
+  const warning = useCallback((message, options = {}) => {
+    pushToastRef.current?.({ ...options, type: 'warning', message });
+  }, []);
+
+  // Update refs to always point to the latest functions
+  removeToastRef.current = removeToast;
+  clearToastsRef.current = clearToasts;
+  infoRef.current = info;
+  errorRef.current = error;
+  mailRef.current = mail;
+  eventRef.current = event;
+  warningRef.current = warning;
 
   useEffect(() => {
     const unsubscribe = socket.subscribe('notification', (notification) => {
@@ -102,16 +119,16 @@ export function NotificationProvider({ children }) {
   const value = useMemo(
     () => ({
       toasts,
-      pushToast,
-      removeToast,
-      clearToasts,
-      info,
-      error,
-      mail,
-      event,
-      warning,
+      pushToast: pushToastRef.current,
+      removeToast: removeToastRef.current,
+      clearToasts: clearToastsRef.current,
+      info: infoRef.current,
+      error: errorRef.current,
+      mail: mailRef.current,
+      event: eventRef.current,
+      warning: warningRef.current,
     }),
-    [clearToasts, error, event, info, mail, pushToast, removeToast, toasts, warning],
+    [toasts],
   );
 
   return <NotificationContext.Provider value={value}>{children}</NotificationContext.Provider>;

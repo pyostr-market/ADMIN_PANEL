@@ -26,6 +26,12 @@ export function useCrudList({
   normalizeFn = (data) => data,
 }) {
   const notifications = useNotifications();
+  const notificationsRef = useRef(notifications);
+
+  // Обновляем ref при изменении notifications
+  useEffect(() => {
+    notificationsRef.current = notifications;
+  }, [notifications]);
 
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
@@ -91,14 +97,14 @@ export function useCrudList({
       } catch (err) {
         const message = getApiErrorMessage(err);
         setError(message);
-        notifications.error(message);
+        notificationsRef.current?.error(message);
         setItems([]);
         setPagination(EMPTY_PAGINATION);
       } finally {
         setIsLoading(false);
       }
     },
-    [fetchFn, limit, normalizeFn, notifications],
+    [fetchFn, limit, normalizeFn],
   );
 
   useEffect(() => {
@@ -136,19 +142,19 @@ export function useCrudList({
         const normalized = normalizeFn(created);
 
         setItems((prev) => [normalized, ...prev]);
-        notifications.info(`${entityName} создана`);
+        notificationsRef.current?.info(`${entityName} создана`);
 
         await refresh();
         return normalized;
       } catch (err) {
         const message = getApiErrorMessage(err);
-        notifications.error(message);
+        notificationsRef.current?.error(message);
         return null;
       } finally {
         setIsSubmitting(false);
       }
     },
-    [createFn, normalizeFn, entityName, notifications, refresh],
+    [createFn, normalizeFn, entityName, refresh],
   );
 
   const handleUpdate = useCallback(
@@ -164,18 +170,18 @@ export function useCrudList({
         const normalized = normalizeFn(updated);
 
         setItems((prev) => prev.map((item) => (item.id === id ? normalized : item)));
-        notifications.info(`${entityName} обновлена`);
+        notificationsRef.current?.info(`${entityName} обновлена`);
 
         return normalized;
       } catch (err) {
         const message = getApiErrorMessage(err);
-        notifications.error(message);
+        notificationsRef.current?.error(message);
         return null;
       } finally {
         setIsSubmitting(false);
       }
     },
-    [updateFn, normalizeFn, entityName, notifications],
+    [updateFn, normalizeFn, entityName],
   );
 
   const handleDelete = useCallback(
@@ -189,17 +195,17 @@ export function useCrudList({
       try {
         await deleteFn(id);
         setItems((prev) => prev.filter((item) => item.id !== id));
-        notifications.info(`${entityName} удалена`);
+        notificationsRef.current?.info(`${entityName} удалена`);
         return true;
       } catch (err) {
         const message = getApiErrorMessage(err);
-        notifications.error(message);
+        notificationsRef.current?.error(message);
         return false;
       } finally {
         setIsSubmitting(false);
       }
     },
-    [deleteFn, entityName, notifications],
+    [deleteFn, entityName],
   );
 
   return {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   FiCheck,
@@ -371,6 +371,12 @@ export function UserDetailPage() {
   const { userId } = useParams();
   const navigate = useNavigate();
   const notifications = useNotifications();
+  const notificationsRef = useRef(notifications);
+
+  // Обновляем ref при изменении notifications
+  useEffect(() => {
+    notificationsRef.current = notifications;
+  }, [notifications]);
 
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -396,11 +402,11 @@ export function UserDetailPage() {
       setUser(data);
     } catch (error) {
       const message = getApiErrorMessage(error);
-      notifications.error(message);
+      notificationsRef.current?.error(message);
     } finally {
       setIsLoading(false);
     }
-  }, [userId, notifications]);
+  }, [userId]);
 
   useEffect(() => {
     loadUser();
@@ -438,7 +444,7 @@ export function UserDetailPage() {
       setAllPermissions(permissions);
     } catch (error) {
       const message = getApiErrorMessage(error);
-      notifications.error(message);
+      notificationsRef.current?.error(message);
     } finally {
       setIsLoadingPermissions(false);
     }
@@ -452,7 +458,7 @@ export function UserDetailPage() {
       setAllGroups(groups);
     } catch (error) {
       const message = getApiErrorMessage(error);
-      notifications.error(message);
+      notificationsRef.current?.error(message);
     } finally {
       setIsLoadingGroups(false);
     }
@@ -463,11 +469,11 @@ export function UserDetailPage() {
     try {
       await updateUserRequest(userId, payload);
       await loadUser();
-      notifications.info('Пользователь обновлен');
+      notificationsRef.current?.info('Пользователь обновлен');
       setIsEditModalOpen(false);
     } catch (error) {
       const message = getApiErrorMessage(error);
-      notifications.error(message);
+      notificationsRef.current?.error(message);
     } finally {
       setIsSaving(false);
     }
@@ -477,13 +483,13 @@ export function UserDetailPage() {
     try {
       await banUserRequest(userId);
       await loadUser();
-      notifications.info(
+      notificationsRef.current?.info(
         user.is_active ? 'Пользователь заблокирован' : 'Пользователь разблокирован'
       );
       setIsBanModalOpen(false);
     } catch (error) {
       const message = getApiErrorMessage(error);
-      notifications.error(message);
+      notificationsRef.current?.error(message);
     }
   };
 
@@ -491,11 +497,11 @@ export function UserDetailPage() {
     try {
       await assignPermissionsBulkRequest(userId, permissionIds);
       await loadUser();
-      notifications.info(`Назначено прав: ${permissionIds.length}`);
+      notificationsRef.current?.info(`Назначено прав: ${permissionIds.length}`);
       setIsAssignModalOpen(false);
     } catch (error) {
       const message = getApiErrorMessage(error);
-      notifications.error(message);
+      notificationsRef.current?.error(message);
     }
   };
 
@@ -504,11 +510,11 @@ export function UserDetailPage() {
     try {
       await assignGroupRequest(userId, groupId);
       await loadUser();
-      notifications.info('Группа назначена');
+      notificationsRef.current?.info('Группа назначена');
       setIsAssignModalOpen(false);
     } catch (error) {
       const message = getApiErrorMessage(error);
-      notifications.error(message);
+      notificationsRef.current?.error(message);
     }
   };
 
@@ -517,10 +523,10 @@ export function UserDetailPage() {
     try {
       await revokePermissionRequest(userId, permissionId);
       await loadUser();
-      notifications.info('Право отозвано');
+      notificationsRef.current?.info('Право отозвано');
     } catch (error) {
       const message = getApiErrorMessage(error);
-      notifications.error(message);
+      notificationsRef.current?.error(message);
     } finally {
       setIsRevoking(false);
     }
@@ -528,7 +534,7 @@ export function UserDetailPage() {
 
   const handleLeaveGroup = async (groupId) => {
     // Пока заглушка - API для удаления из группы нет
-    notifications.info('Функция выхода из группы будет реализована позже');
+    notificationsRef.current?.info('Функция выхода из группы будет реализована позже');
   };
 
   const handleTerminateSession = async () => {
@@ -537,12 +543,12 @@ export function UserDetailPage() {
     try {
       await deleteSessionRequest(userId, selectedSession.id);
       await loadUser();
-      notifications.info('Сессия завершена');
+      notificationsRef.current?.info('Сессия завершена');
       setIsTerminateModalOpen(false);
       setSelectedSession(null);
     } catch (error) {
       const message = getApiErrorMessage(error);
-      notifications.error(message);
+      notificationsRef.current?.error(message);
     } finally {
       setIsTerminating(false);
     }

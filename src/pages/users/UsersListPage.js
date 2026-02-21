@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiCheck, FiPlus, FiSearch, FiTrash2, FiUser, FiUserCheck, FiUserX, FiEye } from 'react-icons/fi';
 import { useCrudList } from '../../shared/lib/crud';
@@ -94,6 +94,12 @@ function DeleteUserModal({ user, onClose, onSubmit, isSubmitting }) {
 export function UsersListPage() {
   const navigate = useNavigate();
   const notifications = useNotifications();
+  const notificationsRef = useRef(notifications);
+
+  // Обновляем ref при изменении notifications
+  useEffect(() => {
+    notificationsRef.current = notifications;
+  }, [notifications]);
   const [userToBan, setUserToBan] = useState(null);
   const [userToDelete, setUserToDelete] = useState(null);
   const [filters, setFilters] = useState({
@@ -121,18 +127,18 @@ export function UsersListPage() {
 
   const loadGroups = useCallback(async () => {
     if (groups.length > 0 || isLoadingGroups) return;
-    
+
     setIsLoadingGroups(true);
     try {
       const allGroups = await getAllGroupsRequest();
       setGroups(allGroups);
     } catch (error) {
       const message = getApiErrorMessage(error);
-      notifications.error(message);
+      notificationsRef.current?.error(message);
     } finally {
       setIsLoadingGroups(false);
     }
-  }, [groups.length, isLoadingGroups, notifications]);
+  }, [groups.length, isLoadingGroups]);
 
   const handleFilterChange = (key, value) => {
     const newFilters = { ...filters, [key]: value };
@@ -154,10 +160,10 @@ export function UsersListPage() {
 
   const handleBanUser = async () => {
     if (!userToBan) return;
-    
+
     try {
       await banUserRequest(userToBan.id);
-      notifications.info(
+      notificationsRef.current?.info(
         userToBan.is_active
           ? 'Пользователь заблокирован'
           : 'Пользователь разблокирован'
@@ -166,7 +172,7 @@ export function UsersListPage() {
       setUserToBan(null);
     } catch (error) {
       const message = getApiErrorMessage(error);
-      notifications.error(message);
+      notificationsRef.current?.error(message);
     }
   };
 

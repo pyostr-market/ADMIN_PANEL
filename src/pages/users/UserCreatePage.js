@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiSave, FiX, FiUser, FiLock, FiPhone, FiShield, FiCheckCircle } from 'react-icons/fi';
 import { Button } from '../../shared/ui/Button';
@@ -10,6 +10,12 @@ import './UserCreatePage.css';
 export function UserCreatePage() {
   const navigate = useNavigate();
   const notifications = useNotifications();
+  const notificationsRef = useRef(notifications);
+
+  // Обновляем ref при изменении notifications
+  useEffect(() => {
+    notificationsRef.current = notifications;
+  }, [notifications]);
 
   const [formData, setFormData] = useState({
     phone_number: '',
@@ -34,11 +40,11 @@ export function UserCreatePage() {
       setGroups(allGroups);
     } catch (error) {
       const message = getApiErrorMessage(error);
-      notifications.error(message);
+      notificationsRef.current?.error(message);
     } finally {
       setIsLoadingGroups(false);
     }
-  }, [groups.length, isLoadingGroups, notifications]);
+  }, [groups.length, isLoadingGroups]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -74,7 +80,7 @@ export function UserCreatePage() {
     e.preventDefault();
 
     if (!validateForm()) {
-      notifications.error('Исправьте ошибки в форме');
+      notificationsRef.current?.error('Исправьте ошибки в форме');
       return;
     }
 
@@ -82,8 +88,8 @@ export function UserCreatePage() {
 
     try {
       // Примечание: API создания пользователя должно быть добавлено на бэкенде
-      notifications.info('Функция создания пользователя будет доступна после добавления API endpoint');
-      
+      notificationsRef.current?.info('Функция создания пользователя будет доступна после добавления API endpoint');
+
       // Когда API будет готов, раскомментировать:
       // const payload = {
       //   phone_number: formData.phone_number,
@@ -95,10 +101,10 @@ export function UserCreatePage() {
       // await createUserRequest(payload);
       // notifications.info('Пользователь создан');
       // navigate('/users');
-      
+
     } catch (error) {
       const message = getApiErrorMessage(error);
-      notifications.error(message);
+      notificationsRef.current?.error(message);
     } finally {
       setIsSubmitting(false);
     }
