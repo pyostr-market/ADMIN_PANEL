@@ -5,20 +5,21 @@ import {
   FiEdit2,
   FiLock,
   FiSave,
-  FiShield,
-  FiUser,
-  FiUserCheck,
-  FiUserX,
   FiX,
   FiPlus,
   FiTrash2,
-  FiUsers, FiSearch,
+  FiUsers,
+  FiShield,
+  FiClock,
+  FiLogOut,
+  FiPhone,
+  FiCalendar,
+  FiActivity,
 } from 'react-icons/fi';
 import { Button } from '../../shared/ui/Button';
 import { Tabs, Tab } from '../../shared/ui/Tabs';
 import { Modal } from '../../shared/ui/Modal';
 import { Select } from '../../shared/ui/Select';
-import { SearchInput } from '../../shared/ui/SearchInput';
 import { PermissionGate } from '../../shared/ui/PermissionGate';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
@@ -39,8 +40,7 @@ const TABS = {
   general: 'general',
   sessions: 'sessions',
   permissions: 'permissions',
-  personal: 'personal',
-  social: 'social',
+  groups: 'groups',
 };
 
 function buildPermissionBuckets(permissions) {
@@ -58,14 +58,18 @@ function buildPermissionBuckets(permissions) {
   }, {});
 }
 
-function AssignPermissionModal({
+// Модальное окно назначения прав и групп
+function AssignModal({
   permissions,
   groups,
+  userPermissions,
   userGroups,
   onClose,
-  onSubmit,
+  onAssignPermissions,
+  onAssignGroup,
   isSubmitting,
 }) {
+  const [activeTab, setActiveTab] = useState('permissions');
   const [selectedPermissions, setSelectedPermissions] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -76,7 +80,6 @@ function AssignPermissionModal({
 
   useEffect(() => {
     if (sectionKeys.length === 0) return;
-
     setExpandedSections((prev) => {
       if (Object.keys(prev).length > 0) return prev;
       return sectionKeys.reduce((acc, key, index) => {
@@ -103,7 +106,6 @@ function AssignPermissionModal({
 
   const filteredBuckets = useMemo(() => {
     if (!searchQuery) return buckets;
-
     const result = {};
     const query = searchQuery.toLowerCase();
 
@@ -114,16 +116,14 @@ function AssignPermissionModal({
           permission.name.toLowerCase().includes(query) ||
           (permission.description && permission.description.toLowerCase().includes(query))
       );
-
-      if (filtered.length > 0) {
-        result[section] = filtered;
-      }
+      if (filtered.length > 0) result[section] = filtered;
     });
-
     return result;
   }, [buckets, sectionKeys, searchQuery]);
 
   const filteredSectionKeys = Object.keys(filteredBuckets);
+
+  const availableGroups = groups.filter((g) => !userGroups?.some((ug) => ug.id === g.id));
 
   return (
     <Modal
@@ -134,44 +134,39 @@ function AssignPermissionModal({
       footer={(
         <>
           <Button variant="secondary" onClick={onClose}>Отмена</Button>
-          <Button
-            variant="primary"
-            onClick={() => {
-              onSubmit({
-                permission_ids: selectedPermissions,
-                group_id: selectedGroup ? Number(selectedGroup) : null,
-              });
-            }}
-            disabled={isSubmitting || (selectedPermissions.length === 0 && !selectedGroup)}
-          >
-            Назначить
-          </Button>
+          {activeTab === 'permissions' ? (
+            <Button
+              variant="primary"
+              onClick={() => onAssignPermissions(selectedPermissions)}
+              disabled={isSubmitting || selectedPermissions.length === 0}
+            >
+              Назначить права
+            </Button>
+          ) : (
+            <Button
+              variant="primary"
+              onClick={() => onAssignGroup(selectedGroup ? Number(selectedGroup) : null)}
+              disabled={isSubmitting || !selectedGroup}
+            >
+              Добавить в группу
+            </Button>
+          )}
         </>
       )}
     >
-      <div className="user-detail-form">
-        {groups.length > 0 && (
-          <label className="crud-form__field">
-            <span className="crud-form__label">Группа</span>
-            <Select
-              value={selectedGroup}
-              onChange={(e) => setSelectedGroup(e.target.value)}
-              options={[
-                { value: '', label: 'Выберите группу (опционально)' },
-                ...groups
-                  .filter((g) => !userGroups?.some((ug) => ug.id === g.id))
-                  .map((group) => ({ value: String(group.id), label: group.name })),
-              ]}
-            />
-          </label>
-        )}
+      <Tabs className="assign-modal__tabs">
+        <Tab active={activeTab === 'permissions'} onClick={() => setActiveTab('permissions')}>
+          Права
+        </Tab>
+        <Tab active={activeTab === 'groups'} onClick={() => setActiveTab('groups')}>
+          Группы
+        </Tab>
+      </Tabs>
 
-        <div className="group-permissions-picker">
-          <p className="group-permissions-picker__title">Права</p>
-
-          <div className="group-permissions-filters">
-            <div className="group-permissions-filters__search">
-              <FiSearch className="group-permissions-filters__icon" />
+      <div className="assign-modal__content">
+        {activeTab === 'permissions' && (
+          <>
+            <div className="assign-modal__search">
               <input
                 type="text"
                 placeholder="Поиск прав..."
@@ -179,52 +174,194 @@ function AssignPermissionModal({
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-          </div>
 
-          {filteredSectionKeys.length === 0 && (
-            <p className="permissions-groups-page__empty">
-              {searchQuery ? 'По вашему запросу ничего не найдено.' : 'Список прав пуст.'}
-            </p>
-          )}
+            {filteredSectionKeys.length === 0 && (
+              <p className="assign-modal__empty">
+                {searchQuery ? 'По вашему запросу ничего не найдено.' : 'Список прав пуст.'}
+              </p>
+            )}
 
-          {filteredSectionKeys.map((section) => {
-            const sectionPermissions = filteredBuckets[section] ?? [];
-            const selectedInSection = sectionPermissions.filter((item) =>
-              selectedPermissions.includes(item.id)
-            ).length;
+            {filteredSectionKeys.map((section) => {
+              const sectionPermissions = filteredBuckets[section] ?? [];
+              const selectedInSection = sectionPermissions.filter((item) =>
+                selectedPermissions.includes(item.id)
+              ).length;
 
-            return (
-              <div key={section} className="group-permissions-section">
-                <button
-                  type="button"
-                  className="group-permissions-section__trigger"
-                  onClick={() => toggleSection(section)}
-                >
-                  <span>{section}</span>
-                  <span>{selectedInSection}/{sectionPermissions.length}</span>
-                </button>
-                {expandedSections[section] && (
-                  <div className="group-permissions-section__items">
-                    {sectionPermissions.map((permission) => (
-                      <label key={permission.id} className="group-permission-item">
-                        <input
-                          type="checkbox"
-                          checked={selectedPermissions.includes(permission.id)}
-                          onChange={() => togglePermission(permission.id)}
-                        />
-                        <span>
-                          <strong>{permission.name}</strong>
-                          {permission.description ? ` — ${permission.description}` : ''}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                )}
+              return (
+                <div key={section} className="assign-modal__section">
+                  <button
+                    type="button"
+                    className="assign-modal__section-header"
+                    onClick={() => toggleSection(section)}
+                  >
+                    <span className="assign-modal__section-title">{section}</span>
+                    <span className="assign-modal__section-count">
+                      {selectedInSection}/{sectionPermissions.length}
+                    </span>
+                  </button>
+                  {expandedSections[section] && (
+                    <div className="assign-modal__section-items">
+                      {sectionPermissions.map((permission) => (
+                        <label key={permission.id} className="assign-modal__permission-item">
+                          <input
+                            type="checkbox"
+                            checked={selectedPermissions.includes(permission.id)}
+                            onChange={() => togglePermission(permission.id)}
+                          />
+                          <span className="assign-modal__permission-name">{permission.name}</span>
+                          {permission.description && (
+                            <span className="assign-modal__permission-desc">{permission.description}</span>
+                          )}
+                        </label>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </>
+        )}
+
+        {activeTab === 'groups' && (
+          <>
+            {availableGroups.length === 0 ? (
+              <p className="assign-modal__empty">Все доступные группы уже назначены</p>
+            ) : (
+              <div className="assign-modal__groups">
+                {availableGroups.map((group) => (
+                  <label key={group.id} className="assign-modal__group-item">
+                    <input
+                      type="radio"
+                      name="group"
+                      value={group.id}
+                      checked={selectedGroup === String(group.id)}
+                      onChange={(e) => setSelectedGroup(e.target.value)}
+                    />
+                    <div className="assign-modal__group-info">
+                      <strong>{group.name}</strong>
+                      {group.description && <span>{group.description}</span>}
+                    </div>
+                  </label>
+                ))}
               </div>
-            );
-          })}
-        </div>
+            )}
+          </>
+        )}
       </div>
+    </Modal>
+  );
+}
+
+// Модальное окно редактирования пользователя
+function EditUserModal({ user, groups, onClose, onSubmit, isSubmitting }) {
+  const [formData, setFormData] = useState({
+    is_active: user?.is_active ?? true,
+    is_verified: user?.is_verified ?? false,
+    group_id: user?.group?.id ?? '',
+  });
+
+  useEffect(() => {
+    setFormData({
+      is_active: user?.is_active ?? true,
+      is_verified: user?.is_verified ?? false,
+      group_id: user?.group?.id ?? '',
+    });
+  }, [user]);
+
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  return (
+    <Modal
+      isOpen
+      onClose={onClose}
+      title="Редактирование пользователя"
+      size="md"
+      footer={(
+        <>
+          <Button variant="secondary" onClick={onClose}>Отмена</Button>
+          <Button
+            variant="primary"
+            onClick={() => onSubmit(formData)}
+            loading={isSubmitting}
+          >
+            Сохранить
+          </Button>
+        </>
+      )}
+    >
+      <div className="edit-user-form">
+        <label className="edit-user-form__field">
+          <span className="edit-user-form__label">Статус</span>
+          <select
+            value={formData.is_active ? 'true' : 'false'}
+            onChange={(e) => handleChange('is_active', e.target.value === 'true')}
+          >
+            <option value="true">Активен</option>
+            <option value="false">Заблокирован</option>
+          </select>
+        </label>
+
+        <label className="edit-user-form__field">
+          <span className="edit-user-form__label">Верификация</span>
+          <select
+            value={formData.is_verified ? 'true' : 'false'}
+            onChange={(e) => handleChange('is_verified', e.target.value === 'true')}
+          >
+            <option value="true">Верифицирован</option>
+            <option value="false">Не верифицирован</option>
+          </select>
+        </label>
+
+        <label className="edit-user-form__field">
+          <span className="edit-user-form__label">Группа</span>
+          <select
+            value={formData.group_id}
+            onChange={(e) => handleChange('group_id', e.target.value)}
+          >
+            <option value="">Без группы</option>
+            {groups.map((group) => (
+              <option key={group.id} value={group.id}>
+                {group.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+    </Modal>
+  );
+}
+
+// Модальное окно закрытия сессии
+function TerminateSessionModal({ session, onClose, onConfirm, isSubmitting }) {
+  if (!session) return null;
+
+  return (
+    <Modal
+      isOpen
+      onClose={onClose}
+      title="Завершение сессии"
+      size="sm"
+      footer={(
+        <>
+          <Button variant="secondary" onClick={onClose}>Отмена</Button>
+          <Button
+            variant="danger"
+            onClick={onConfirm}
+            loading={isSubmitting}
+          >
+            Завершить
+          </Button>
+        </>
+      )}
+    >
+      <p>
+        Вы уверены, что хотите завершить сессию #{session.id}?
+      </p>
+      <p className="terminate-session__note">
+        Пользователь будет разлогинен в этой сессии.
+      </p>
     </Modal>
   );
 }
@@ -239,13 +376,17 @@ export function UserDetailPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState(TABS.general);
   const [isBanModalOpen, setIsBanModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const [isTerminateModalOpen, setIsTerminateModalOpen] = useState(false);
+  const [selectedSession, setSelectedSession] = useState(null);
   const [allPermissions, setAllPermissions] = useState([]);
   const [allGroups, setAllGroups] = useState([]);
   const [isLoadingPermissions, setIsLoadingPermissions] = useState(false);
   const [isLoadingGroups, setIsLoadingGroups] = useState(false);
   const [permissionSearch, setPermissionSearch] = useState('');
   const [isRevoking, setIsRevoking] = useState(false);
+  const [isTerminating, setIsTerminating] = useState(false);
 
   const loadUser = useCallback(async () => {
     setIsLoading(true);
@@ -264,104 +405,7 @@ export function UserDetailPage() {
     loadUser();
   }, [loadUser]);
 
-  const handleSaveUser = async (payload) => {
-    setIsSaving(true);
-    try {
-      const updated = await updateUserRequest(userId, payload);
-      setUser(updated);
-      notifications.info('Пользователь обновлен');
-    } catch (error) {
-      const message = getApiErrorMessage(error);
-      notifications.error(message);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleBanUser = async () => {
-    try {
-      await banUserRequest(userId);
-      await loadUser();
-      notifications.info(
-        user.is_active ? 'Пользователь заблокирован' : 'Пользователь разблокирован'
-      );
-      setIsBanModalOpen(false);
-    } catch (error) {
-      const message = getApiErrorMessage(error);
-      notifications.error(message);
-    }
-  };
-
-  const loadAllPermissions = async () => {
-    if (allPermissions.length > 0 || isLoadingPermissions) return;
-    
-    setIsLoadingPermissions(true);
-    try {
-      const permissions = await getAllPermissionsRequest();
-      setAllPermissions(permissions);
-    } catch (error) {
-      const message = getApiErrorMessage(error);
-      notifications.error(message);
-    } finally {
-      setIsLoadingPermissions(false);
-    }
-  };
-
-  const loadAllGroups = async () => {
-    if (allGroups.length > 0 || isLoadingGroups) return;
-    
-    setIsLoadingGroups(true);
-    try {
-      const groups = await getAllGroupsRequest();
-      setAllGroups(groups);
-    } catch (error) {
-      const message = getApiErrorMessage(error);
-      notifications.error(message);
-    } finally {
-      setIsLoadingGroups(false);
-    }
-  };
-
-  const handleAssignPermissions = async ({ permission_ids, group_id }) => {
-    try {
-      if (permission_ids.length > 0) {
-        await assignPermissionsBulkRequest(userId, permission_ids);
-        notifications.info(`Назначено прав: ${permission_ids.length}`);
-      }
-      
-      if (group_id) {
-        await assignGroupRequest(userId, group_id);
-        notifications.info('Группа назначена');
-      }
-      
-      await loadUser();
-      setIsAssignModalOpen(false);
-    } catch (error) {
-      const message = getApiErrorMessage(error);
-      notifications.error(message);
-    }
-  };
-
-  const handleRevokePermission = async (permissionId) => {
-    setIsRevoking(true);
-    try {
-      await revokePermissionRequest(userId, permissionId);
-      await loadUser();
-      notifications.info('Право отозвано');
-    } catch (error) {
-      const message = getApiErrorMessage(error);
-      notifications.error(message);
-    } finally {
-      setIsRevoking(false);
-    }
-  };
-
-  const handleLeaveGroup = async (groupId) => {
-    // Для простоты просто уведомляем, что функционал будет позже
-    notifications.info('Функция выхода из группы будет реализована позже');
-  };
-
-  // Вычисляемые значения — должны быть до любых условных return
+  // Вычисляемые значения — до любых условных return
   const userPermissions = user?.permissions || [];
   const userGroups = user?.groups || (user?.group ? [user.group] : []);
   const userSessions = user?.sessions || [];
@@ -385,10 +429,131 @@ export function UserDetailPage() {
     [permissionBuckets]
   );
 
+  const loadAllPermissions = async () => {
+    if (allPermissions.length > 0 || isLoadingPermissions) return;
+    setIsLoadingPermissions(true);
+    try {
+      const permissions = await getAllPermissionsRequest();
+      setAllPermissions(permissions);
+    } catch (error) {
+      const message = getApiErrorMessage(error);
+      notifications.error(message);
+    } finally {
+      setIsLoadingPermissions(false);
+    }
+  };
+
+  const loadAllGroups = async () => {
+    if (allGroups.length > 0 || isLoadingGroups) return;
+    setIsLoadingGroups(true);
+    try {
+      const groups = await getAllGroupsRequest();
+      setAllGroups(groups);
+    } catch (error) {
+      const message = getApiErrorMessage(error);
+      notifications.error(message);
+    } finally {
+      setIsLoadingGroups(false);
+    }
+  };
+
+  const handleSaveUser = async (payload) => {
+    setIsSaving(true);
+    try {
+      await updateUserRequest(userId, payload);
+      await loadUser();
+      notifications.info('Пользователь обновлен');
+      setIsEditModalOpen(false);
+    } catch (error) {
+      const message = getApiErrorMessage(error);
+      notifications.error(message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleBanUser = async () => {
+    try {
+      await banUserRequest(userId);
+      await loadUser();
+      notifications.info(
+        user.is_active ? 'Пользователь заблокирован' : 'Пользователь разблокирован'
+      );
+      setIsBanModalOpen(false);
+    } catch (error) {
+      const message = getApiErrorMessage(error);
+      notifications.error(message);
+    }
+  };
+
+  const handleAssignPermissions = async (permissionIds) => {
+    try {
+      await assignPermissionsBulkRequest(userId, permissionIds);
+      await loadUser();
+      notifications.info(`Назначено прав: ${permissionIds.length}`);
+      setIsAssignModalOpen(false);
+    } catch (error) {
+      const message = getApiErrorMessage(error);
+      notifications.error(message);
+    }
+  };
+
+  const handleAssignGroup = async (groupId) => {
+    if (!groupId) return;
+    try {
+      await assignGroupRequest(userId, groupId);
+      await loadUser();
+      notifications.info('Группа назначена');
+      setIsAssignModalOpen(false);
+    } catch (error) {
+      const message = getApiErrorMessage(error);
+      notifications.error(message);
+    }
+  };
+
+  const handleRevokePermission = async (permissionId) => {
+    setIsRevoking(true);
+    try {
+      await revokePermissionRequest(userId, permissionId);
+      await loadUser();
+      notifications.info('Право отозвано');
+    } catch (error) {
+      const message = getApiErrorMessage(error);
+      notifications.error(message);
+    } finally {
+      setIsRevoking(false);
+    }
+  };
+
+  const handleLeaveGroup = async (groupId) => {
+    // Пока заглушка - API для удаления из группы нет
+    notifications.info('Функция выхода из группы будет реализована позже');
+  };
+
+  const handleTerminateSession = async () => {
+    if (!selectedSession) return;
+    setIsTerminating(true);
+    try {
+      // TODO: Добавить API endpoint для завершения сессии
+      // await terminateSessionRequest(selectedSession.id);
+      notifications.info('Сессия будет завершена (API в разработке)');
+      setIsTerminateModalOpen(false);
+      setSelectedSession(null);
+    } catch (error) {
+      const message = getApiErrorMessage(error);
+      notifications.error(message);
+    } finally {
+      setIsTerminating(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <section className="user-detail-page">
-        <div className="user-detail-page__loading">Загрузка...</div>
+        <div className="user-detail-page__loading">
+          <div className="loading-spinner" />
+          <p>Загрузка данных пользователя...</p>
+        </div>
       </section>
     );
   }
@@ -398,6 +563,7 @@ export function UserDetailPage() {
       <section className="user-detail-page">
         <div className="user-detail-page__error">
           <h2>Пользователь не найден</h2>
+          <p>Запрошенный пользователь не существует или был удалён</p>
           <Button variant="primary" onClick={() => navigate('/users')}>
             К списку пользователей
           </Button>
@@ -408,30 +574,45 @@ export function UserDetailPage() {
 
   return (
     <section className="user-detail-page">
+      {/* Header */}
       <header className="user-detail-page__header">
         <div className="user-detail-page__header-left">
-          <Button variant="ghost" onClick={() => navigate('/users')}>
+          <Button variant="ghost" onClick={() => navigate('/users')} className="back-button">
             ← Назад
           </Button>
-          <h1 className="user-detail-page__title">
-            {user.primary_phone?.phone_number || `Пользователь #${user.id}`}
-          </h1>
-          {!user.is_active && (
-            <span className="user-detail-page__badge user-detail-page__badge--inactive">
-              Заблокирован
-            </span>
-          )}
-          {user.is_verified && (
-            <span className="user-detail-page__badge user-detail-page__badge--verified">
-              <FiCheck />
-            </span>
-          )}
+          <div className="user-detail-page__user-info">
+            <div className={`user-detail-page__avatar ${user.is_active ? 'user-detail-page__avatar--active' : 'user-detail-page__avatar--inactive'}`}>
+              <FiUsers />
+            </div>
+            <div className="user-detail-page__header-text">
+              <h1 className="user-detail-page__title">
+                {user.primary_phone?.phone_number || `Пользователь #${user.id}`}
+              </h1>
+              <div className="user-detail-page__badges">
+                {!user.is_active && (
+                  <span className="user-detail-page__badge user-detail-page__badge--inactive">
+                    <FiLock /> Заблокирован
+                  </span>
+                )}
+                {user.is_verified && (
+                  <span className="user-detail-page__badge user-detail-page__badge--verified">
+                    <FiCheck /> Верифицирован
+                  </span>
+                )}
+                {user.group && (
+                  <span className="user-detail-page__badge user-detail-page__badge--group">
+                    <FiShield /> {user.group.name}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
         <div className="user-detail-page__actions">
           <PermissionGate permission={['admin:user:ban']} fallback={null}>
             <Button
-              variant={user.is_active ? 'danger' : 'primary'}
-              leftIcon={user.is_active ? <FiLock /> : <FiUserCheck />}
+              variant={user.is_active ? 'danger' : 'success'}
+              leftIcon={user.is_active ? <FiLock /> : <FiCheck />}
               onClick={() => setIsBanModalOpen(true)}
             >
               {user.is_active ? 'Заблокировать' : 'Разблокировать'}
@@ -439,192 +620,218 @@ export function UserDetailPage() {
           </PermissionGate>
           <PermissionGate permission={['admin:user:update']} fallback={null}>
             <Button
-              variant="primary"
-              leftIcon={<FiSave />}
+              variant="secondary"
+              leftIcon={<FiEdit2 />}
               onClick={() => {
-                // Быстрое сохранение текущих изменений (если есть форма)
-                notifications.info('Изменения сохранены');
+                loadAllGroups();
+                setIsEditModalOpen(true);
               }}
-              loading={isSaving}
             >
-              Сохранить
+              Редактировать
             </Button>
           </PermissionGate>
         </div>
       </header>
 
+      {/* Tabs */}
       <Tabs className="user-detail-page__tabs">
         <Tab
           active={activeTab === TABS.general}
           onClick={() => setActiveTab(TABS.general)}
         >
-          Общая информация
+          <FiCalendar /> Общая информация
         </Tab>
         <Tab
           active={activeTab === TABS.sessions}
           onClick={() => setActiveTab(TABS.sessions)}
         >
-          Сессии
+          <FiClock /> Сессии
+          {userSessions.length > 0 && (
+            <span className="tab-badge">{userSessions.length}</span>
+          )}
         </Tab>
         <Tab
           active={activeTab === TABS.permissions}
           onClick={() => setActiveTab(TABS.permissions)}
         >
-          Права
+          <FiShield /> Права
+          {userPermissions.length > 0 && (
+            <span className="tab-badge">{userPermissions.length}</span>
+          )}
         </Tab>
         <Tab
-          active={activeTab === TABS.personal}
-          onClick={() => setActiveTab(TABS.personal)}
-          disabled
+          active={activeTab === TABS.groups}
+          onClick={() => setActiveTab(TABS.groups)}
         >
-          Персональные данные
-        </Tab>
-        <Tab
-          active={activeTab === TABS.social}
-          onClick={() => setActiveTab(TABS.social)}
-          disabled
-        >
-          Социальные сети
+          <FiUsers /> Группы
+          {userGroups.length > 0 && (
+            <span className="tab-badge">{userGroups.length}</span>
+          )}
         </Tab>
       </Tabs>
 
+      {/* Content */}
       <div className="user-detail-page__content">
+        {/* General Tab */}
         {activeTab === TABS.general && (
-          <div className="user-detail-page__panel">
-            <h2 className="user-detail-page__panel-title">Общие данные</h2>
+          <div className="user-detail-page__panel user-detail-page__panel--large">
+            <div className="panel-header">
+              <h2 className="panel-title">Общие данные</h2>
+            </div>
             
-            <div className="user-detail-form">
-              <div className="user-detail-form__row">
-                <label className="user-detail-form__field">
-                  <span className="user-detail-form__label">ID</span>
-                  <input type="text" value={user.id} disabled />
-                </label>
-                <label className="user-detail-form__field">
-                  <span className="user-detail-form__label">Публичный ID</span>
-                  <input type="text" value={user.public_id || '—'} disabled />
-                </label>
+            <div className="user-info-grid">
+              <div className="info-card">
+                <div className="info-card__icon info-card__icon--primary">
+                  <FiUsers />
+                </div>
+                <div className="info-card__content">
+                  <span className="info-card__label">ID пользователя</span>
+                  <span className="info-card__value">{user.id}</span>
+                </div>
               </div>
 
-              <div className="user-detail-form__row">
-                <label className="user-detail-form__field">
-                  <span className="user-detail-form__label">Телефон</span>
-                  <input
-                    type="text"
-                    value={user.primary_phone?.phone_number || 'Не указан'}
-                    disabled
-                  />
-                </label>
-                <label className="user-detail-form__field">
-                  <span className="user-detail-form__label">Группа</span>
-                  <input
-                    type="text"
-                    value={user.group?.name || 'Не назначена'}
-                    disabled
-                  />
-                </label>
+              <div className="info-card">
+                <div className="info-card__icon info-card__icon--secondary">
+                  <FiShield />
+                </div>
+                <div className="info-card__content">
+                  <span className="info-card__label">Публичный ID</span>
+                  <span className="info-card__value code">{user.public_id || '—'}</span>
+                </div>
               </div>
 
-              <div className="user-detail-form__row">
-                <label className="user-detail-form__field">
-                  <span className="user-detail-form__label">Статус</span>
-                  <div className="user-detail-form__status">
-                    {user.is_active ? (
-                      <span className="status-active">
-                        <FiCheck /> Активен
-                      </span>
-                    ) : (
-                      <span className="status-inactive">
-                        <FiX /> Заблокирован
-                      </span>
-                    )}
-                  </div>
-                </label>
-                <label className="user-detail-form__field">
-                  <span className="user-detail-form__label">Верификация</span>
-                  <div className="user-detail-form__status">
-                    {user.is_verified ? (
-                      <span className="status-active">
-                        <FiCheck /> Верифицирован
-                      </span>
-                    ) : (
-                      <span className="status-inactive">
-                        <FiX /> Не верифицирован
-                      </span>
-                    )}
-                  </div>
-                </label>
+              <div className="info-card">
+                <div className="info-card__icon info-card__icon--success">
+                  <FiPhone />
+                </div>
+                <div className="info-card__content">
+                  <span className="info-card__label">Телефон</span>
+                  <span className="info-card__value">{user.primary_phone?.phone_number || 'Не указан'}</span>
+                </div>
               </div>
 
-              <div className="user-detail-form__row">
-                <label className="user-detail-form__field">
-                  <span className="user-detail-form__label">Создан</span>
-                  <input
-                    type="text"
-                    value={
-                      user.created_at
-                        ? new Date(user.created_at).toLocaleString('ru-RU')
-                        : '—'
-                    }
-                    disabled
-                  />
-                </label>
-                <label className="user-detail-form__field">
-                  <span className="user-detail-form__label">Обновлен</span>
-                  <input
-                    type="text"
-                    value={
-                      user.updated_at
-                        ? new Date(user.updated_at).toLocaleString('ru-RU')
-                        : '—'
-                    }
-                    disabled
-                  />
-                </label>
+              <div className="info-card">
+                <div className="info-card__icon info-card__icon--info">
+                  <FiUsers />
+                </div>
+                <div className="info-card__content">
+                  <span className="info-card__label">Группа</span>
+                  <span className="info-card__value">{user.group?.name || 'Не назначена'}</span>
+                </div>
               </div>
 
-              <div className="user-detail-form__row">
-                <label className="user-detail-form__field">
-                  <span className="user-detail-form__label">Последний вход</span>
-                  <input
-                    type="text"
-                    value={
-                      user.last_login_at
-                        ? new Date(user.last_login_at).toLocaleString('ru-RU')
-                        : '—'
-                    }
-                    disabled
-                  />
-                </label>
+              <div className="info-card">
+                <div className="info-card__icon info-card__icon--success">
+                  <FiCheck />
+                </div>
+                <div className="info-card__content">
+                  <span className="info-card__label">Статус</span>
+                  <span className={`info-card__status ${user.is_active ? 'status-active' : 'status-inactive'}`}>
+                    {user.is_active ? 'Активен' : 'Заблокирован'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="info-card">
+                <div className="info-card__icon info-card__icon--success">
+                  <FiCheck />
+                </div>
+                <div className="info-card__content">
+                  <span className="info-card__label">Верификация</span>
+                  <span className={`info-card__status ${user.is_verified ? 'status-active' : 'status-inactive'}`}>
+                    {user.is_verified ? 'Верифицирован' : 'Не верифицирован'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="info-card info-card--full">
+                <div className="info-card__icon info-card__icon--primary">
+                  <FiCalendar />
+                </div>
+                <div className="info-card__content">
+                  <span className="info-card__label">Создан</span>
+                  <span className="info-card__value">
+                    {user.created_at ? new Date(user.created_at).toLocaleString('ru-RU') : '—'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="info-card info-card--full">
+                <div className="info-card__icon info-card__icon--secondary">
+                  <FiEdit2 />
+                </div>
+                <div className="info-card__content">
+                  <span className="info-card__label">Обновлён</span>
+                  <span className="info-card__value">
+                    {user.updated_at ? new Date(user.updated_at).toLocaleString('ru-RU') : '—'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="info-card info-card--full">
+                <div className="info-card__icon info-card__icon--info">
+                  <FiActivity />
+                </div>
+                <div className="info-card__content">
+                  <span className="info-card__label">Последний вход</span>
+                  <span className="info-card__value">
+                    {user.last_login_at ? new Date(user.last_login_at).toLocaleString('ru-RU') : '—'}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         )}
 
+        {/* Sessions Tab */}
         {activeTab === TABS.sessions && (
           <div className="user-detail-page__panel">
-            <h2 className="user-detail-page__panel-title">Сессии пользователя</h2>
+            <div className="panel-header">
+              <h2 className="panel-title">Активные сессии</h2>
+            </div>
             
             {userSessions.length === 0 ? (
-              <p className="user-detail-page__empty">У пользователя нет активных сессий</p>
+              <div className="empty-state">
+                <FiClock className="empty-state__icon" />
+                <p>У пользователя нет активных сессий</p>
+              </div>
             ) : (
               <div className="sessions-list">
                 {userSessions.map((session) => (
-                  <div key={session.id} className="session-item">
-                    <div className="session-item__info">
-                      <p className="session-item__title">
-                        Сессия #{session.id}
-                      </p>
-                      <p className="session-item__meta">
-                        Создана:{' '}
-                        {session.created_at
-                          ? new Date(session.created_at).toLocaleString('ru-RU')
-                          : '—'}
-                      </p>
+                  <div key={session.id} className="session-card">
+                    <div className="session-card__header">
+                      <div className="session-card__title">
+                        <FiClock />
+                        <span>Сессия #{session.id}</span>
+                      </div>
+                      <PermissionGate permission={['admin:session:terminate']} fallback={null}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            setSelectedSession(session);
+                            setIsTerminateModalOpen(true);
+                          }}
+                          aria-label="Завершить сессию"
+                        >
+                          <FiLogOut />
+                        </Button>
+                      </PermissionGate>
+                    </div>
+                    <div className="session-card__body">
+                      <div className="session-card__info">
+                        <span className="session-card__label">Создана:</span>
+                        <span className="session-card__value">
+                          {session.created_at ? new Date(session.created_at).toLocaleString('ru-RU') : '—'}
+                        </span>
+                      </div>
                       {session.last_active_at && (
-                        <p className="session-item__meta">
-                          Активна:{' '}
-                          {new Date(session.last_active_at).toLocaleString('ru-RU')}
-                        </p>
+                        <div className="session-card__info">
+                          <span className="session-card__label">Последняя активность:</span>
+                          <span className="session-card__value">
+                            {new Date(session.last_active_at).toLocaleString('ru-RU')}
+                          </span>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -634,10 +841,11 @@ export function UserDetailPage() {
           </div>
         )}
 
+        {/* Permissions Tab */}
         {activeTab === TABS.permissions && (
           <div className="user-detail-page__panel">
-            <div className="user-detail-page__panel-header">
-              <h2 className="user-detail-page__panel-title">Права пользователя</h2>
+            <div className="panel-header">
+              <h2 className="panel-title">Права пользователя</h2>
               <PermissionGate permission={['admin:user:assign']} fallback={null}>
                 <Button
                   variant="primary"
@@ -649,15 +857,12 @@ export function UserDetailPage() {
                   }}
                   disabled={isLoadingPermissions || isLoadingGroups}
                 >
-                  {isLoadingPermissions || isLoadingGroups
-                    ? 'Загрузка...'
-                    : 'Назначить'}
+                  {isLoadingPermissions || isLoadingGroups ? 'Загрузка...' : 'Назначить'}
                 </Button>
               </PermissionGate>
             </div>
 
-            <div className="user-permissions-search">
-              <FiSearch className="user-permissions-search__icon" />
+            <div className="permissions-search">
               <input
                 type="text"
                 placeholder="Поиск прав..."
@@ -667,42 +872,39 @@ export function UserDetailPage() {
             </div>
 
             {userPermissions.length === 0 ? (
-              <p className="user-detail-page__empty">
-                У пользователя нет прав
-              </p>
+              <div className="empty-state">
+                <FiShield className="empty-state__icon" />
+                <p>У пользователя нет прав</p>
+              </div>
             ) : permissionSectionKeys.length === 0 ? (
-              <p className="user-detail-page__empty">
-                По вашему запросу ничего не найдено
-              </p>
+              <div className="empty-state">
+                <FiShield className="empty-state__icon" />
+                <p>По вашему запросу ничего не найдено</p>
+              </div>
             ) : (
-              <div className="user-permissions-list">
+              <div className="permissions-list">
                 {permissionSectionKeys.map((section) => {
                   const sectionPermissions = permissionBuckets[section] ?? [];
                   return (
-                    <div key={section} className="user-permissions-section">
-                      <h3 className="user-permissions-section__title">{section}</h3>
-                      <div className="user-permissions-section__items">
+                    <div key={section} className="permissions-section">
+                      <h3 className="permissions-section__title">{section}</h3>
+                      <div className="permissions-section__items">
                         {sectionPermissions.map((permission) => (
-                          <div
-                            key={permission.id}
-                            className="user-permission-item"
-                          >
-                            <div className="user-permission-item__info">
-                              <strong>{permission.name}</strong>
+                          <div key={permission.id} className="permission-card">
+                            <div className="permission-card__content">
+                              <strong className="permission-card__name">{permission.name}</strong>
                               {permission.description && (
-                                <span>{permission.description}</span>
+                                <span className="permission-card__description">{permission.description}</span>
                               )}
                             </div>
-                            <PermissionGate
-                              permission={['admin:user:revoke']}
-                              fallback={null}
-                            >
+                            <PermissionGate permission={['admin:user:revoke']} fallback={null}>
                               <Button
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => handleRevokePermission(permission.id)}
                                 disabled={isRevoking}
                                 aria-label="Отозвать право"
+                                className="permission-card__action"
                               >
                                 <FiTrash2 />
                               </Button>
@@ -715,58 +917,71 @@ export function UserDetailPage() {
                 })}
               </div>
             )}
+          </div>
+        )}
 
-            {userGroups.length > 0 && (
-              <div className="user-groups-section">
-                <h3 className="user-permissions-section__title">Группы пользователя</h3>
-                <div className="user-groups-list">
-                  {userGroups.map((group) => (
-                    <div key={group.id} className="user-group-item">
-                      <div className="user-group-item__info">
-                        <FiUsers className="user-group-item__icon" />
-                        <div>
-                          <strong>{group.name}</strong>
-                          {group.description && (
-                            <span>{group.description}</span>
-                          )}
-                        </div>
-                      </div>
+        {/* Groups Tab */}
+        {activeTab === TABS.groups && (
+          <div className="user-detail-page__panel">
+            <div className="panel-header">
+              <h2 className="panel-title">Группы пользователя</h2>
+              <PermissionGate permission={['admin:user:assign']} fallback={null}>
+                <Button
+                  variant="primary"
+                  leftIcon={<FiPlus />}
+                  onClick={() => {
+                    loadAllGroups();
+                    setIsAssignModalOpen(true);
+                  }}
+                  disabled={isLoadingGroups}
+                >
+                  {isLoadingGroups ? 'Загрузка...' : 'Добавить в группу'}
+                </Button>
+              </PermissionGate>
+            </div>
+
+            {userGroups.length === 0 ? (
+              <div className="empty-state">
+                <FiUsers className="empty-state__icon" />
+                <p>Пользователь не состоит в группах</p>
+              </div>
+            ) : (
+              <div className="groups-list">
+                {userGroups.map((group) => (
+                  <div key={group.id} className="group-card">
+                    <div className="group-card__icon">
+                      <FiUsers />
+                    </div>
+                    <div className="group-card__content">
+                      <strong className="group-card__name">{group.name}</strong>
+                      {group.description && (
+                        <span className="group-card__description">{group.description}</span>
+                      )}
+                      {group.permissions && (
+                        <span className="group-card__meta">
+                          Прав: {group.permissions.length}
+                        </span>
+                      )}
+                    </div>
+                    <div className="group-card__actions">
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => handleLeaveGroup(group.id)}
-                        aria-label="Покинуть группу"
+                        aria-label="Удалить из группы"
                       >
                         <FiX />
                       </Button>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>
         )}
-
-        {activeTab === TABS.personal && (
-          <div className="user-detail-page__panel">
-            <h2 className="user-detail-page__panel-title">Персональные данные</h2>
-            <p className="user-detail-page__empty">
-              Эта вкладка будет заполнена в будущем
-            </p>
-          </div>
-        )}
-
-        {activeTab === TABS.social && (
-          <div className="user-detail-page__panel">
-            <h2 className="user-detail-page__panel-title">Социальные сети</h2>
-            <p className="user-detail-page__empty">
-              Эта вкладка будет заполнена в будущем
-            </p>
-          </div>
-        )}
       </div>
 
-      {/* Модальное окно бана */}
+      {/* Modals */}
       {isBanModalOpen && (
         <Modal
           isOpen
@@ -775,11 +990,9 @@ export function UserDetailPage() {
           size="sm"
           footer={(
             <>
-              <Button variant="secondary" onClick={() => setIsBanModalOpen(false)}>
-                Отмена
-              </Button>
+              <Button variant="secondary" onClick={() => setIsBanModalOpen(false)}>Отмена</Button>
               <Button
-                variant={user.is_active ? 'danger' : 'primary'}
+                variant={user.is_active ? 'danger' : 'success'}
                 onClick={handleBanUser}
               >
                 {user.is_active ? 'Заблокировать' : 'Разблокировать'}
@@ -787,23 +1000,46 @@ export function UserDetailPage() {
             </>
           )}
         >
-          <p>
+          <p className="modal-text">
             {user.is_active
-              ? 'Вы уверены, что хотите заблокировать этого пользователя?'
+              ? 'Вы уверены, что хотите заблокировать этого пользователя? Он потеряет доступ к системе.'
               : 'Вы уверены, что хотите разблокировать этого пользователя?'}
           </p>
         </Modal>
       )}
 
-      {/* Модальное окно назначения прав */}
+      {isEditModalOpen && (
+        <EditUserModal
+          user={user}
+          groups={allGroups}
+          onClose={() => setIsEditModalOpen(false)}
+          onSubmit={handleSaveUser}
+          isSubmitting={isSaving}
+        />
+      )}
+
       {isAssignModalOpen && (
-        <AssignPermissionModal
+        <AssignModal
           permissions={allPermissions}
           groups={allGroups}
+          userPermissions={userPermissions}
           userGroups={userGroups}
           onClose={() => setIsAssignModalOpen(false)}
-          onSubmit={handleAssignPermissions}
+          onAssignPermissions={handleAssignPermissions}
+          onAssignGroup={handleAssignGroup}
           isSubmitting={isRevoking}
+        />
+      )}
+
+      {isTerminateModalOpen && selectedSession && (
+        <TerminateSessionModal
+          session={selectedSession}
+          onClose={() => {
+            setIsTerminateModalOpen(false);
+            setSelectedSession(null);
+          }}
+          onConfirm={handleTerminateSession}
+          isSubmitting={isTerminating}
         />
       )}
     </section>

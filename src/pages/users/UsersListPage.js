@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiCheck, FiEdit2, FiPlus, FiSearch, FiTrash2, FiUser, FiUserCheck, FiUserX } from 'react-icons/fi';
+import { FiCheck, FiPlus, FiSearch, FiTrash2, FiUser, FiUserCheck, FiUserX, FiEye } from 'react-icons/fi';
 import { useCrudList } from '../../shared/lib/crud';
 import { PermissionGate } from '../../shared/ui/PermissionGate';
 import { Button } from '../../shared/ui/Button';
@@ -22,9 +22,7 @@ import './UsersListPage.css';
 const PAGE_LIMIT = 20;
 
 function BanUserModal({ user, onClose, onSubmit, isSubmitting }) {
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
   return (
     <Modal
@@ -36,7 +34,7 @@ function BanUserModal({ user, onClose, onSubmit, isSubmitting }) {
         <>
           <Button variant="secondary" onClick={onClose}>Отмена</Button>
           <Button
-            variant={user.is_active ? 'danger' : 'primary'}
+            variant={user.is_active ? 'danger' : 'success'}
             onClick={onSubmit}
             loading={isSubmitting}
           >
@@ -45,14 +43,14 @@ function BanUserModal({ user, onClose, onSubmit, isSubmitting }) {
         </>
       )}
     >
-      <p>
+      <p className="modal-confirm-text">
         {user.is_active
           ? `Вы уверены, что хотите заблокировать пользователя `
           : `Вы уверены, что хотите разблокировать пользователя `}
         <strong>{user.primary_phone?.phone_number || `ID: ${user.id}`}</strong>?
       </p>
       {user.is_active && (
-        <p className="users-page__confirm-text">
+        <p className="modal-confirm-note">
           Пользователь потеряет доступ к системе.
         </p>
       )}
@@ -61,9 +59,7 @@ function BanUserModal({ user, onClose, onSubmit, isSubmitting }) {
 }
 
 function DeleteUserModal({ user, onClose, onSubmit, isSubmitting }) {
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
   return (
     <Modal
@@ -84,11 +80,11 @@ function DeleteUserModal({ user, onClose, onSubmit, isSubmitting }) {
         </>
       )}
     >
-      <p>
+      <p className="modal-confirm-text">
         Вы уверены, что хотите удалить пользователя{' '}
         <strong>{user.primary_phone?.phone_number || `ID: ${user.id}`}</strong>?
       </p>
-      <p className="users-page__confirm-text">
+      <p className="modal-confirm-note">
         Это действие нельзя отменить.
       </p>
     </Modal>
@@ -123,7 +119,6 @@ export function UsersListPage() {
     defaultLimit: PAGE_LIMIT,
   });
 
-  // Загрузка групп для фильтра
   const loadGroups = useCallback(async () => {
     if (groups.length > 0 || isLoadingGroups) return;
     
@@ -143,7 +138,6 @@ export function UsersListPage() {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
     
-    // Преобразуем фильтры для API
     const apiFilters = {};
     if (newFilters.is_active !== 'all') {
       apiFilters.is_active = newFilters.is_active === 'true';
@@ -165,8 +159,8 @@ export function UsersListPage() {
       await banUserRequest(userToBan.id);
       notifications.info(
         userToBan.is_active
-          ? `Пользователь заблокирован`
-          : `Пользователь разблокирован`
+          ? 'Пользователь заблокирован'
+          : 'Пользователь разблокирован'
       );
       await usersCrud.refresh();
       setUserToBan(null);
@@ -194,30 +188,45 @@ export function UsersListPage() {
   };
 
   return (
-    <section className="users-page">
-      <header className="users-page__header">
-        <h1 className="users-page__title">Пользователи</h1>
+    <section className="users-list-page">
+      {/* Header */}
+      <header className="users-list-page__header">
+        <div className="users-list-page__header-content">
+          <h1 className="users-list-page__title">Пользователи</h1>
+          <p className="users-list-page__subtitle">
+            {usersCrud.pagination.total > 0
+              ? `Найдено ${usersCrud.pagination.total} пользователей`
+              : 'Список пользователей пуст'}
+          </p>
+        </div>
         <PermissionGate permission={['admin:user:create']} fallback={null}>
           <Button
             variant="primary"
             leftIcon={<FiPlus />}
             onClick={handleCreateUser}
+            size="lg"
           >
             Создать пользователя
           </Button>
         </PermissionGate>
       </header>
 
-      <div className={`users-page__filters${usersCrud.isLoading ? ' users-page__filters--loading' : ''}`}>
-        <SearchInput
-          value={usersCrud.search}
-          onChange={(e) => usersCrud.setSearch(e.target.value)}
-          placeholder="Поиск пользователей..."
-          loading={usersCrud.isLoading}
-          className="users-page__search"
-        />
+      {/* Filters */}
+      <div className={`users-list-page__filters${usersCrud.isLoading ? ' users-list-page__filters--loading' : ''}`}>
+        <div className="users-list-page__filters-main">
+          <div className="users-list-page__search-wrapper">
+            <FiSearch className="users-list-page__search-icon" />
+            <SearchInput
+              value={usersCrud.search}
+              onChange={(e) => usersCrud.setSearch(e.target.value)}
+              placeholder="Поиск по телефону или ID..."
+              loading={usersCrud.isLoading}
+              className="users-list-page__search"
+            />
+          </div>
+        </div>
         
-        <div className="users-page__filters-group">
+        <div className="users-list-page__filters-group">
           <Select
             value={filters.is_active}
             onChange={(e) => handleFilterChange('is_active', e.target.value)}
@@ -255,55 +264,68 @@ export function UsersListPage() {
         </div>
       </div>
 
+      {/* List */}
       <EntityList
         items={usersCrud.items}
         renderItem={(user) => (
           <>
-            <div className="users-page__item-content">
-              <div className="users-page__item-main">
-                <div className={`users-page__avatar ${user.is_active ? 'users-page__avatar--active' : 'users-page__avatar--inactive'}`}>
+            <div className="users-list-page__item-content" onClick={() => handleViewUser(user)}>
+              <div className="users-list-page__item-main">
+                <div className={`users-list-page__avatar ${user.is_active ? 'users-list-page__avatar--active' : 'users-list-page__avatar--inactive'}`}>
                   <FiUser />
                 </div>
-                <div className="users-page__item-info">
-                  <p className="users-page__item-title">
-                    {user.primary_phone?.phone_number || 'Без телефона'}
-                    {!user.is_active && (
-                      <span className="users-page__badge users-page__badge--inactive">
-                        Заблокирован
-                      </span>
-                    )}
-                    {user.is_verified && (
-                      <span className="users-page__badge users-page__badge--verified">
-                        <FiCheck />
-                      </span>
-                    )}
-                  </p>
-                  <p className="users-page__item-meta">
-                    <span>ID: {user.id}</span>
+                <div className="users-list-page__item-info">
+                  <div className="users-list-page__item-header">
+                    <p className="users-list-page__item-title">
+                      {user.primary_phone?.phone_number || 'Без телефона'}
+                    </p>
+                    <div className="users-list-page__item-badges">
+                      {!user.is_active && (
+                        <span className="users-list-page__badge users-list-page__badge--inactive" title="Заблокирован">
+                          <FiUserX />
+                        </span>
+                      )}
+                      {user.is_verified && (
+                        <span className="users-list-page__badge users-list-page__badge--verified" title="Верифицирован">
+                          <FiCheck />
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="users-list-page__item-meta">
+                    <span className="users-list-page__meta-item">
+                      <span className="users-list-page__meta-label">ID:</span> {user.id}
+                    </span>
                     {user.group && (
                       <>
-                        <span className="users-page__separator">•</span>
-                        <span>Группа: {user.group.name}</span>
+                        <span className="users-list-page__separator">•</span>
+                        <span className="users-list-page__meta-item">
+                          <FiUser className="users-list-page__meta-icon" />
+                          {user.group.name}
+                        </span>
                       </>
                     )}
                     {user.created_at && (
                       <>
-                        <span className="users-page__separator">•</span>
-                        <span>Создан: {new Date(user.created_at).toLocaleDateString('ru-RU')}</span>
+                        <span className="users-list-page__separator">•</span>
+                        <span className="users-list-page__meta-item">
+                          {new Date(user.created_at).toLocaleDateString('ru-RU')}
+                        </span>
                       </>
                     )}
-                  </p>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="users-page__item-actions">
+            <div className="users-list-page__item-actions">
               <Button
-                variant="ghost"
-                size="icon"
+                variant="secondary"
+                size="sm"
+                leftIcon={<FiEye />}
                 onClick={() => handleViewUser(user)}
                 aria-label={`Просмотреть пользователя ${user.primary_phone?.phone_number || user.id}`}
               >
-                <FiEdit2 />
+                Просмотр
               </Button>
               
               <PermissionGate permission={['admin:user:ban']} fallback={null}>
@@ -313,6 +335,7 @@ export function UsersListPage() {
                   onClick={() => setUserToBan(user)}
                   disabled={usersCrud.isSubmitting}
                   aria-label={user.is_active ? 'Заблокировать пользователя' : 'Разблокировать пользователя'}
+                  className={user.is_active ? 'btn-ban' : 'btn-unban'}
                 >
                   {user.is_active ? <FiUserX /> : <FiUserCheck />}
                 </Button>
@@ -325,6 +348,7 @@ export function UsersListPage() {
                   onClick={() => setUserToDelete(user)}
                   disabled={usersCrud.isSubmitting}
                   aria-label="Удалить пользователя"
+                  className="btn-delete"
                 >
                   <FiTrash2 />
                 </Button>
@@ -334,7 +358,7 @@ export function UsersListPage() {
         )}
         emptyMessage={
           usersCrud.isLoading
-            ? 'Загрузка...'
+            ? 'Загрузка пользователей...'
             : usersCrud.search || Object.values(filters).some((f) => f !== 'all')
               ? 'По вашему запросу ничего не найдено.'
               : 'Пользователи не найдены.'
@@ -342,6 +366,7 @@ export function UsersListPage() {
         loading={usersCrud.isLoading}
       />
 
+      {/* Pagination */}
       {!usersCrud.isLoading && usersCrud.items && usersCrud.items.length > 0 && (
         <Pagination
           currentPage={usersCrud.page}
@@ -352,6 +377,7 @@ export function UsersListPage() {
         />
       )}
 
+      {/* Modals */}
       {userToBan && (
         <BanUserModal
           user={userToBan}
