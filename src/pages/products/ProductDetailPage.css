@@ -140,7 +140,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--modal-overlay);
   color: white;
   border: none;
   cursor: pointer;
@@ -152,7 +152,8 @@
 }
 
 .product-images__nav:hover {
-  background: rgba(0, 0, 0, 0.7);
+  background: var(--modal-overlay);
+  opacity: 0.8;
 }
 
 .product-images__nav--prev {
@@ -483,8 +484,8 @@
 
 .edit-product-form__field input:focus,
 .edit-product-form__field textarea:focus {
-  border-color: var(--color-primary, #2196f3);
-  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+  border-color: var(--color-primary, var(--primary));
+  box-shadow: 0 0 0 3px var(--focus-ring-primary);
 }
 
 .edit-product-form__field textarea {

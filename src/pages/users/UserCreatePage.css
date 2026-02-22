@@ -173,7 +173,7 @@
 .user-create-form__field select:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 0 3px var(--focus-ring-indigo);
 }
 
 .user-create-form__field input.input-error {
@@ -182,7 +182,7 @@
 
 .user-create-form__field input.input-error:focus {
   border-color: var(--danger);
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+  box-shadow: 0 0 0 3px var(--focus-ring-danger);
 }
 
 .user-create-form__error {

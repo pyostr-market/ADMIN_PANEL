@@ -27,6 +27,7 @@
   --primary-hover: #404040;
   --danger: #dc2626;
   --danger-hover: #b91c1c;
+  --danger-bg: #fee2e2;
   --success: #16a34a;
   --success-bg: #dcfce7;
   --warning: #ca8a04;
@@ -64,6 +65,45 @@
   --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   --gradient-info-light: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   --gradient-success-light: linear-gradient(135deg, #10b981 0%, #059669 100%);
+
+  /* Focus ring colors */
+  --focus-ring-primary: rgba(38, 38, 38, 0.15);
+  --focus-ring-danger: rgba(220, 38, 38, 0.1);
+  --focus-ring-blue: rgba(25, 118, 210, 0.15);
+  --focus-ring-indigo: rgba(99, 102, 241, 0.1);
+
+  /* Legacy color aliases for backward compatibility */
+  --color-text: var(--text);
+  --color-text-secondary: var(--text-secondary);
+  --color-background: var(--surface);
+  --color-background-secondary: var(--surface-subtle);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-light: var(--accent-blue-bg);
+  --color-success: var(--success);
+  --color-success-light: var(--success-bg);
+  --color-info: var(--info);
+  --color-info-light: var(--info-bg);
+  --color-error: var(--danger);
+  --color-error-light: var(--danger-bg);
+  --color-accent: var(--accent-red);
+  --color-accent-light: var(--accent-red-bg);
+
+  /* Additional semantic aliases for attribute pages and other components */
+  --text-primary: var(--text);
+  --text-tertiary: var(--text-muted);
+  --bg-card: var(--card-bg);
+  --bg-secondary: var(--surface-subtle);
+  --bg-input: var(--surface);
+  --border-default: var(--border);
+  --primary-default: var(--primary);
+  --primary-light: var(--accent-blue-bg);
+  --primary-dark: var(--accent-blue);
+  --error-default: var(--danger);
+  --error-light: var(--danger-bg);
+  --success-default: var(--success);
+  --success-light: var(--success-bg);
+  --gradient-warning: var(--gradient-warning);
 }
 
 [data-theme='dark'] {
@@ -75,10 +115,11 @@
   --text: #e5e5e5;
   --text-muted: #a3a3a3;
   --text-secondary: #999999;
-  --primary: #404040;
+  --primary: #d5d5d5;
   --primary-hover: #525252;
   --danger: #ef4444;
   --danger-hover: #dc2626;
+  --danger-bg: #7f1d1d;
   --success: #22c55e;
   --success-bg: #14532d;
   --warning: #eab308;
@@ -112,6 +153,45 @@
   --gradient-warning: linear-gradient(135deg, #713f12 0%, #a16207 100%);
   --gradient-info-light: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
   --gradient-success-light: linear-gradient(135deg, #14532d 0%, #16a34a 100%);
+
+  /* Focus ring colors (dark theme) */
+  --focus-ring-primary: rgba(96, 165, 250, 0.2);
+  --focus-ring-danger: rgba(239, 68, 68, 0.15);
+  --focus-ring-blue: rgba(96, 165, 250, 0.2);
+  --focus-ring-indigo: rgba(99, 102, 241, 0.15);
+
+  /* Legacy color aliases for backward compatibility (dark theme) */
+  --color-text: var(--text);
+  --color-text-secondary: var(--text-secondary);
+  --color-background: var(--surface);
+  --color-background-secondary: var(--surface-subtle);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-light: var(--accent-blue-bg);
+  --color-success: var(--success);
+  --color-success-light: var(--success-bg);
+  --color-info: var(--info);
+  --color-info-light: var(--info-bg);
+  --color-error: var(--danger);
+  --color-error-light: var(--danger-bg);
+  --color-accent: var(--accent-red);
+  --color-accent-light: var(--accent-red-bg);
+
+  /* Additional semantic aliases for attribute pages and other components (dark theme) */
+  --text-primary: var(--text);
+  --text-tertiary: var(--text-muted);
+  --bg-card: var(--card-bg);
+  --bg-secondary: var(--surface-subtle);
+  --bg-input: var(--surface);
+  --border-default: var(--border);
+  --primary-default: var(--primary);
+  --primary-light: var(--accent-blue-bg);
+  --primary-dark: var(--accent-blue);
+  --error-default: var(--danger);
+  --error-light: var(--danger-bg);
+  --success-default: var(--success);
+  --success-light: var(--success-bg);
+  --gradient-warning: var(--gradient-warning);
 }
 
 * {

@@ -28,8 +28,8 @@
 }
 
 .image-carousel__item--main {
-  border-color: var(--color-primary, #2196f3);
-  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+  border-color: var(--color-primary, var(--primary));
+  box-shadow: 0 0 0 2px var(--focus-ring-primary);
 }
 
 .image-carousel__item--dragging {
@@ -48,8 +48,8 @@
 }
 
 .image-carousel__item--drag-over {
-  border-color: var(--color-primary, #2196f3);
-  background: rgba(33, 150, 243, 0.1);
+  border-color: var(--color-primary, var(--primary));
+  background: var(--accent-blue-bg);
 }
 
 .image-carousel__image-wrapper {
@@ -113,7 +113,7 @@
   display: flex;
   justify-content: center;
   padding: 8px;
-  background: rgba(0, 0, 0, 0.7);
+  background: var(--modal-overlay);
 }
 
 .image-carousel__controls {
@@ -124,7 +124,7 @@
   display: flex;
   gap: 8px;
   padding: 8px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  background: linear-gradient(to top, var(--modal-overlay), transparent);
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -149,7 +149,7 @@
   top: 8px;
   right: 8px;
   padding: 4px 8px;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--modal-overlay);
   color: white;
   border-radius: 4px;
   font-size: 14px;
@@ -177,13 +177,13 @@
 }
 
 .image-carousel__empty:hover {
-  border-color: var(--color-primary, #2196f3);
-  background: rgba(33, 150, 243, 0.05);
+  border-color: var(--color-primary, var(--primary));
+  background: var(--accent-blue-bg);
 }
 
 .image-carousel__empty--drag-over {
-  border-color: var(--color-primary, #2196f3);
-  background: rgba(33, 150, 243, 0.1);
+  border-color: var(--color-primary, var(--primary));
+  background: var(--accent-blue-bg);
   border-style: solid;
   transform: scale(1.02);
 }

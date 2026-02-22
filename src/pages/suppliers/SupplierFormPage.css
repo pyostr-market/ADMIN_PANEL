@@ -151,7 +151,7 @@
 .supplier-form textarea:focus {
   outline: none;
   border-color: var(--accent-blue);
-  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15);
+  box-shadow: 0 0 0 3px var(--focus-ring-blue);
 }
 
 .supplier-form input.input-error,

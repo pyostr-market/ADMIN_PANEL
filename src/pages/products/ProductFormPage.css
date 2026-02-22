@@ -181,14 +181,14 @@
 .product-form input[type="text"]:focus,
 .product-form input[type="number"]:focus,
 .product-form textarea:focus {
-  border-color: var(--color-primary, #2196f3);
-  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+  border-color: var(--color-primary, var(--primary));
+  box-shadow: 0 0 0 3px var(--focus-ring-primary);
 }
 
 .product-form input[type="text"].input-error,
 .product-form input[type="number"].input-error,
 .product-form textarea.input-error {
-  border-color: var(--color-error, #f44336);
+  border-color: var(--color-error, var(--danger));
 }
 
 .product-form textarea {
@@ -231,8 +231,8 @@
 }
 
 .attributes-form__input:focus {
-  border-color: var(--color-primary, #2196f3);
-  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+  border-color: var(--color-primary, var(--primary));
+  box-shadow: 0 0 0 3px var(--focus-ring-primary);
 }
 
 .attributes-form__checkbox {
@@ -314,8 +314,8 @@
 }
 
 .attributes-list__input:focus {
-  border-color: var(--color-primary, #2196f3);
-  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+  border-color: var(--color-primary, var(--primary));
+  box-shadow: 0 0 0 2px var(--focus-ring-primary);
 }
 
 .attributes-list__checkbox {

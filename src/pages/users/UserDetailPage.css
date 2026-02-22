@@ -168,7 +168,7 @@
 }
 
 .tab-badge {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--surface-muted);
   padding: 2px 8px;
   border-radius: var(--radius-sm);
   font-size: 11px;
@@ -176,7 +176,7 @@
 }
 
 .user-detail-page__tabs .tab--active .tab-badge {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--surface-subtle);
 }
 
 /* Content */
