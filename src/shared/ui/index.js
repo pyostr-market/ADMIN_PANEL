@@ -10,6 +10,8 @@ export { Tabs, Tab } from './Tabs';
 export { Pagination } from './Pagination';
 export { SearchInput } from './SearchInput';
 export { EntityList } from './EntityList';
+export { ImageCarousel } from './ImageCarousel';
+export { AutocompleteInput } from './AutocompleteInput';
 
 // Permissions
 export { PermissionGate } from './PermissionGate';

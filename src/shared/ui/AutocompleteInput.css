@@ -1,0 +1,190 @@
+.autocomplete-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.autocomplete-input-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text, #333);
+}
+
+.autocomplete-input {
+  position: relative;
+  width: 100%;
+}
+
+.autocomplete-input__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.autocomplete-input__icon {
+  position: absolute;
+  left: 12px;
+  color: var(--color-text-secondary, #9e9e9e);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.autocomplete-input__field-input {
+  width: 100%;
+  padding: 10px 40px 10px 36px;
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--color-text, #333);
+  background: var(--color-background, #fff);
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.autocomplete-input__field-input:focus {
+  border-color: var(--color-primary, #2196f3);
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
+.autocomplete-input__field-input--error {
+  border-color: var(--color-error, #f44336);
+}
+
+.autocomplete-input__field-input:disabled {
+  background: var(--color-background-secondary, #f5f5f5);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.autocomplete-input__clear {
+  position: absolute;
+  right: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary, #9e9e9e);
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.autocomplete-input__clear:hover {
+  background: var(--color-background-secondary, #f5f5f5);
+  color: var(--color-text, #333);
+}
+
+.autocomplete-input__clear:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.autocomplete-input__toggle {
+  position: absolute;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary, #9e9e9e);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.autocomplete-input__toggle:hover {
+  background: var(--color-background-secondary, #f5f5f5);
+}
+
+.autocomplete-input__toggle--open {
+  transform: rotate(180deg);
+}
+
+.autocomplete-input__toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.autocomplete-input-error {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--color-error, #f44336);
+}
+
+.autocomplete-input__dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  background: var(--color-background, #fff);
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.autocomplete-input__option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.autocomplete-input__option:hover,
+.autocomplete-input__option--highlighted {
+  background: var(--color-primary, #2196f3);
+  color: white;
+}
+
+.autocomplete-input__option--selected {
+  background: var(--color-primary-dark, #1976d2);
+  color: white;
+}
+
+.autocomplete-input__option--loading,
+.autocomplete-input__option--empty {
+  justify-content: center;
+  color: var(--color-text-secondary, #9e9e9e);
+  cursor: default;
+}
+
+.autocomplete-input__option--loading:hover,
+.autocomplete-input__option--empty:hover {
+  background: transparent;
+  color: var(--color-text-secondary, #9e9e9e);
+}
+
+.autocomplete-input__option-label {
+  flex: 1;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 12px;
+}
+
+.autocomplete-input__option-value {
+  font-size: 12px;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+.autocomplete-input__option--selected .autocomplete-input__option-value,
+.autocomplete-input__option--highlighted .autocomplete-input__option-value {
+  opacity: 0.9;
+}

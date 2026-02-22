@@ -18,6 +18,9 @@ import { ManufacturerFormPage } from '../../pages/manufacturers/ManufacturerForm
 import { ManufacturerDetailPage } from '../../pages/manufacturers/ManufacturerDetailPage';
 import { ManufacturerAuditPage } from '../../pages/manufacturers/ManufacturerAuditPage';
 import { ProductsPage } from '../../pages/products/ProductsPage';
+import { ProductFormPage } from '../../pages/products/ProductFormPage';
+import { ProductDetailPage } from '../../pages/products/ProductDetailPage';
+import { ProductAuditPage } from '../../pages/products/ProductAuditPage';
 import { ProductTypesPage } from '../../pages/productTypes/ProductTypesPage';
 import { ProductTypeFormPage } from '../../pages/productTypes/ProductTypeFormPage';
 import { ProductTypeDetailPage } from '../../pages/productTypes/ProductTypeDetailPage';
@@ -74,6 +77,10 @@ export function AppRouter() {
 
           <Route element={<PrivateRoute permission={["product", "product:view"]} mode="any" />}>
             <Route path="/catalog/products" element={<ProductsPage />} />
+            <Route path="/catalog/products/create" element={<ProductFormPage />} />
+            <Route path="/catalog/products/:productId/edit" element={<ProductFormPage />} />
+            <Route path="/catalog/products/:productId" element={<ProductDetailPage />} />
+            <Route path="/catalog/products/:productId/audit" element={<ProductAuditPage />} />
           </Route>
 
           <Route element={<PrivateRoute permission={["manufacturer", "manufacturer:view"]} mode="any" />}>
