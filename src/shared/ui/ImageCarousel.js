@@ -34,6 +34,8 @@ export function ImageCarousel({
     if (fileArray.length === 0) return;
 
     const currentImages = imagesRef.current;
+    const startOrdering = currentImages.length;
+    
     const newImages = fileArray.map((file, index) => ({
       file,
       image_url: URL.createObjectURL(file),
@@ -42,6 +44,7 @@ export function ImageCarousel({
       image_id: null,
       image_key: null,
       toDelete: false,
+      ordering: startOrdering + index, // Порядковый номер для новых изображений
     }));
 
     const updatedImages = multiple
@@ -124,17 +127,27 @@ export function ImageCarousel({
   const handleSetMainImage = useCallback((index) => {
     const updatedImages = images.map((img, i) => ({
       ...img,
-      is_main: i === index,
+      is_main: i === index, // Только выбранное изображение будет главным
     }));
+    
+    // Проверка: убеждаемся, что только одно изображение главное
+    const mainCount = updatedImages.filter(img => img.is_main).length;
     console.log('[ImageCarousel] Смена главного изображения:', {
       newIndex: index,
+      mainImagesCount: mainCount,
       updatedImages: updatedImages.map(i => ({ 
         image_id: i.image_id, 
         image_key: i.image_key, 
         is_main: i.is_main,
+        ordering: i.ordering,
         isNew: i.isNew 
       })),
     });
+    
+    if (mainCount !== 1) {
+      console.error('[ImageCarousel] ОШИБКА: Должно быть только одно главное изображение!');
+    }
+    
     onImagesChange(updatedImages);
   }, [images, onImagesChange]);
 
@@ -174,6 +187,21 @@ export function ImageCarousel({
     const updatedImages = [...images];
     const [draggedItem] = updatedImages.splice(draggedIndex, 1);
     updatedImages.splice(dropIndex, 0, draggedItem);
+    
+    // Пересчитываем ordering для всех изображений
+    updatedImages.forEach((img, idx) => {
+      img.ordering = idx;
+    });
+
+    console.log('[ImageCarousel] Изменение порядка:', {
+      from: draggedIndex,
+      to: dropIndex,
+      newOrdering: updatedImages.map(i => ({ 
+        image_id: i.image_id, 
+        image_key: i.image_key,
+        ordering: i.ordering 
+      })),
+    });
 
     onImagesChange(updatedImages);
     setDraggedIndex(null);

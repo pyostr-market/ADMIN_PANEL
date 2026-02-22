@@ -68,19 +68,36 @@ export function ProductFormPage() {
         supplier_id: data.supplier_id?.toString() || '',
         product_type_id: data.product_type_id?.toString() || '',
       });
-      // Сохраняем все данные изображения: image_id, image_key (путь), image_url (полный URL)
-      const processedImages = data.images?.map((img) => {
+      // Сохраняем все данные изображения
+      // API возвращает: image_id, image_key (путь к файлу), image_url (полный URL), ordering
+      const processedImages = data.images?.map((img, index) => {
         console.log('[ProductForm] Обработка изображения:', img);
         return {
           image_id: img.image_id,
-          image_key: img.image_key || img.image_url, // image_key - это путь к файлу
+          image_key: img.image_key, // путь к файлу в S3
           image_url: img.image_url, // полный URL для отображения
-          is_main: img.is_main,
+          is_main: img.is_main === true,
+          ordering: img.ordering ?? index, // порядок из API или по индексу
           isNew: false,
           toDelete: false,
         };
       }) || [];
+      
+      // Проверка: сколько главных изображений вернул сервер
+      const mainCount = processedImages.filter(img => img.is_main).length;
       console.log('[ProductForm] Обработанные изображения:', processedImages);
+      console.log('[ProductForm] Главных изображений из API:', mainCount);
+      
+      if (mainCount > 1) {
+        console.warn('[ProductForm] СЕРВЕР вернул несколько главных изображений! Устанавливаем только первое.');
+        processedImages.forEach((img, idx) => {
+          img.is_main = idx === 0;
+        });
+      } else if (mainCount === 0 && processedImages.length > 0) {
+        console.warn('[ProductForm] СЕРВЕР не вернул главное изображение! Устанавливаем первое.');
+        processedImages[0].is_main = true;
+      }
+      
       setImages(processedImages);
       setAttributes(data.attributes?.map(attr => ({
         id: attr.id,
@@ -204,27 +221,32 @@ export function ProductFormPage() {
       // Изображения
       if (isEditMode) {
         // Для редактирования используем images_json
-        // Важно: отправляем ВСЕ изображения в правильном порядке
-        const imagesJson = images
-          .filter(img => !img.toDelete) // Исключаем помеченные на удаление
-          .map((image) => {
-            if (image.isNew) {
-              // Новое изображение - будет загружено
-              return {
-                action: 'to_create',
-                is_main: image.is_main,
-              };
-            } else {
-              // Существующее изображение - сохраняем
-              // Используем image_id если есть, иначе image_key
-              return {
-                action: 'pass',
-                image_id: image.image_id,
-                image_key: image.image_key,
-                is_main: image.is_main,
-              };
-            }
-          });
+        // Важно: отправляем ВСЕ изображения в правильном порядке с ordering
+        // Находим индекс главного изображения
+        const mainImageIndex = images.findIndex(img => img.is_main && !img.toDelete);
+
+        // Фильтруем изображения для отправки (исключаем to_delete из основного списка)
+        const imagesToSend = images.filter(img => !img.toDelete);
+        
+        const imagesJson = imagesToSend.map((image, idx) => {
+          if (image.isNew) {
+            // Новое изображение - будет загружено
+            return {
+              action: 'to_create',
+              is_main: image.is_main,
+              ordering: idx, // Порядок в массиве
+            };
+          } else {
+            // Существующее изображение - сохраняем
+            // Отправляем image_key (путь к файлу), как требует API
+            return {
+              action: 'pass',
+              image_key: image.image_key,
+              is_main: image.is_main === true, // Гарантируем boolean
+              ordering: idx, // Порядок в массиве
+            };
+          }
+        });
 
         // Добавляем операции to_delete для удалённых изображений
         images
@@ -232,23 +254,41 @@ export function ProductFormPage() {
           .forEach((image) => {
             imagesJson.push({
               action: 'to_delete',
-              image_id: image.image_id,
               image_key: image.image_key,
             });
           });
 
-        // Находим главное изображение для отладки
-        const mainImage = imagesJson.find(img => img.is_main);
+        // Проверка: только одно изображение должно быть главным
+        const mainImages = imagesJson.filter(img => img.is_main === true);
+        if (mainImages.length > 1) {
+          console.warn('[ProductForm] ВНИМАНИЕ: Несколько главных изображений!', mainImages.length);
+          // Исправляем: оставляем только первое главное
+          let foundMain = false;
+          imagesJson.forEach(img => {
+            if (img.is_main === true) {
+              if (foundMain) {
+                img.is_main = false;
+              }
+              foundMain = true;
+            }
+          });
+        }
+        if (mainImages.length === 0 && imagesJson.filter(img => img.action !== 'to_delete').length > 0) {
+          console.warn('[ProductForm] ВНИМАНИЕ: Нет главного изображения!');
+        }
+        
         console.log('[ProductForm] Отправка изображений:', {
           total: images.length,
           toCreate: images.filter(i => i.isNew).length,
           toDelete: images.filter(i => i.toDelete).length,
           pass: images.filter(i => !i.isNew && !i.toDelete).length,
-          mainImageInfo: mainImage,
+          mainImageIndex,
+          mainImagesCount: mainImages.length,
           allImages: images.map(i => ({ 
             image_id: i.image_id, 
             image_key: i.image_key, 
             is_main: i.is_main, 
+            ordering: i.ordering,
             isNew: i.isNew,
             toDelete: i.toDelete 
           })),
@@ -278,10 +318,14 @@ export function ProductFormPage() {
       }
 
       if (isEditMode) {
-        await updateProductRequest(productId, formDataToSend);
+        const responseData = await updateProductRequest(productId, formDataToSend);
+        console.log('[ProductForm] Ответ от updateProductRequest:', responseData);
+        handleApiResponse(responseData);
         notificationsRef.current?.info('Товар обновлен');
       } else {
-        await createProductRequest(formDataToSend);
+        const responseData = await createProductRequest(formDataToSend);
+        console.log('[ProductForm] Ответ от createProductRequest:', responseData);
+        handleApiResponse(responseData);
         notificationsRef.current?.info('Товар создан');
       }
 
@@ -293,6 +337,25 @@ export function ProductFormPage() {
       setIsSubmitting(false);
     }
   };
+
+  // Обработка ответа от сервера после обновления
+  const handleApiResponse = useCallback((responseData) => {
+    console.log('[ProductForm] Ответ от сервера:', responseData);
+    if (responseData.images) {
+      // Обновляем изображения с новыми данными от сервера (image_id, image_key, ordering)
+      const updatedImages = responseData.images.map((apiImg) => ({
+        image_id: apiImg.image_id,
+        image_key: apiImg.image_key,
+        image_url: apiImg.image_url,
+        is_main: apiImg.is_main,
+        ordering: apiImg.ordering,
+        isNew: false, // Теперь это не новые изображения
+        toDelete: false,
+      }));
+      console.log('[ProductForm] Обновлённые изображения:', updatedImages);
+      setImages(updatedImages);
+    }
+  }, []);
 
   if (isLoading) {
     return (
