@@ -1,0 +1,14 @@
+/* DashboardPage - Mobile styles */
+@media (max-width: 768px) {
+  .dashboard-page {
+    padding: var(--space-4);
+  }
+
+  .dashboard-page h1 {
+    font-size: 20px;
+  }
+
+  .dashboard-page p {
+    font-size: 14px;
+  }
+}

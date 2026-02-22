@@ -1,14 +1,16 @@
 import { useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useSession } from '../../entities/session/model/SessionProvider';
 import { NotificationsPanel } from './NotificationsPanel';
 import { AppSidebar } from '../sidebar/AppSidebar';
+import { BottomNav } from './BottomNav';
 import './AppLayout.css';
 
 const SIDEBAR_COLLAPSED_STORAGE_KEY = 'market-admin:sidebar-collapsed';
 
 export function AppLayout() {
   const { logout } = useSession();
+  const location = useLocation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     if (typeof window === 'undefined') {
       return false;
@@ -21,6 +23,7 @@ export function AppLayout() {
       <AppSidebar collapsed={sidebarCollapsed} onCollapse={setSidebarCollapsed} />
 
       <div className="app-shell__main">
+        {/* Десктопная шапка */}
         <header className="app-shell__header">
           <nav className="app-shell__nav">
             <Link to="/">Главная</Link>
@@ -30,10 +33,21 @@ export function AppLayout() {
             Выйти
           </button>
         </header>
+
+        {/* Мобильная шапка */}
+        <div className="mobile-header">
+          <div className="mobile-header__content">
+            <h1 className="mobile-header__title">Market Admin</h1>
+          </div>
+        </div>
+
         <main className="app-shell__content">
           <NotificationsPanel />
           <Outlet />
         </main>
+
+        {/* Нижняя навигация для мобильных */}
+        <BottomNav currentPath={location.pathname} />
       </div>
     </div>
   );

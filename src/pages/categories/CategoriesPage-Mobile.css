@@ -1,0 +1,14 @@
+/* CategoriesPage - Mobile styles */
+@media (max-width: 768px) {
+  .categories-page {
+    padding: var(--space-4);
+  }
+
+  .categories-page h1 {
+    font-size: 20px;
+  }
+
+  .categories-page p {
+    font-size: 14px;
+  }
+}

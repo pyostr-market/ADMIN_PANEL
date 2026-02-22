@@ -1,0 +1,32 @@
+/* AppLayout - Mobile styles */
+@media (max-width: 768px) {
+  .app-shell {
+    min-height: 100vh;
+  }
+
+  .app-shell--collapsed {
+    --current-sidebar-width: 0;
+  }
+
+  .app-shell:not(.app-shell--collapsed) {
+    --current-sidebar-width: 0;
+  }
+
+  .app-shell__main {
+    margin-left: 0 !important;
+    padding-bottom: 60px !important;
+  }
+
+  .app-shell__header {
+    display: none !important;
+  }
+
+  .app-shell__nav {
+    display: none !important;
+  }
+
+  .app-shell__content {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+}

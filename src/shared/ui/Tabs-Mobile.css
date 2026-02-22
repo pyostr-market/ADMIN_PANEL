@@ -1,0 +1,31 @@
+/* Tabs - Mobile styles */
+@media (max-width: 768px) {
+  .tabs {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab {
+    min-width: fit-content;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tab:last-child {
+    border-right: 1px solid var(--border);
+  }
+
+  .tab:active:not(.tab--active) {
+    background: var(--surface-muted);
+  }
+}

@@ -1,0 +1,69 @@
+/* ImageCarousel - Mobile styles */
+@media (max-width: 768px) {
+  .image-carousel__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .image-carousel__item {
+    border-width: 2px;
+    border-radius: var(--radius-md);
+  }
+
+  .image-carousel__empty {
+    padding: 40px 20px;
+    min-height: 200px;
+  }
+
+  .image-carousel__empty p {
+    font-size: 14px;
+  }
+
+  .image-carousel__empty-hint {
+    font-size: 13px;
+  }
+
+  .image-carousel__actions {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .image-carousel__actions button {
+    width: 100%;
+    height: 48px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .image-carousel__controls {
+    flex-direction: row;
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .image-carousel__control-btn {
+    font-size: 12px;
+    padding: 8px 10px;
+    height: 36px;
+    min-height: 36px;
+  }
+
+  .image-carousel__drag-handle {
+    padding: 6px 10px;
+    font-size: 16px;
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  .image-carousel__main-badge {
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .image-carousel__delete-badge {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+}

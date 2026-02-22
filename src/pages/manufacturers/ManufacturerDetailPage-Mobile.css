@@ -1,0 +1,122 @@
+/* ManufacturerDetailPage - Mobile styles */
+@media (max-width: 768px) {
+  .manufacturer-detail-page {
+    padding: 0 !important;
+    gap: 0;
+  }
+
+  .manufacturer-detail-page__header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .manufacturer-detail-page__header-left {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  .manufacturer-detail-page__user-info {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .manufacturer-detail-page__avatar {
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+  }
+
+  .manufacturer-detail-page__title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .manufacturer-detail-page__badges {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .manufacturer-detail-page__badge {
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .manufacturer-detail-page__actions {
+    width: 100%;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .manufacturer-detail-page__actions button {
+    flex: 1;
+    min-width: 100px;
+    height: 38px;
+    font-size: 13px;
+  }
+
+  .manufacturer-detail-page__content {
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .manufacturer-detail-page__panel {
+    padding: 16px;
+    border-radius: 8px;
+  }
+
+  .manufacturer-info-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .info-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .info-card__icon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    border-radius: 8px;
+  }
+
+  .info-card__label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .info-card__value {
+    font-size: 14px;
+  }
+
+  .edit-manufacturer-form {
+    gap: 12px;
+  }
+
+  .edit-manufacturer-form__field input,
+  .edit-manufacturer-form__field textarea {
+    height: 40px;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .edit-manufacturer-form__field textarea {
+    min-height: 100px;
+  }
+}

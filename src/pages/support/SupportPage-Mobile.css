@@ -1,0 +1,14 @@
+/* SupportPage - Mobile styles */
+@media (max-width: 768px) {
+  .support-page {
+    padding: var(--space-4);
+  }
+
+  .support-page h1 {
+    font-size: 20px;
+  }
+
+  .support-page p {
+    font-size: 14px;
+  }
+}

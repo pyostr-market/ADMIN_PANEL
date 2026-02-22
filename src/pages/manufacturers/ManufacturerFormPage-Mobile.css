@@ -1,0 +1,40 @@
+/* ManufacturerFormPage - Mobile styles */
+@media (max-width: 768px) {
+  .manufacturer-form {
+    padding: 16px;
+  }
+
+  .manufacturer-form__field {
+    gap: 6px;
+  }
+
+  .manufacturer-form__field input,
+  .manufacturer-form__field textarea,
+  .manufacturer-form__field select {
+    height: 40px;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .manufacturer-form__field textarea {
+    min-height: 100px;
+  }
+
+  .manufacturer-form__label {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .manufacturer-form__actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .manufacturer-form__actions button {
+    width: 100%;
+    height: 42px;
+    font-size: 14px;
+  }
+}

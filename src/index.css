@@ -1,6 +1,7 @@
 @import './shared/styles/tokens.css';
 @import './shared/ui/EntityList.css';
 @import './shared/ui/CrudPageTemplate.css';
+@import './shared/styles/BottomNav.css';
 
 /* Фиксация ширины скролл-бара для предотвращения сдвига контента */
 html {
@@ -53,71 +54,59 @@ html {
   font-size: 13px;
 }
 
-/* Responsive styles */
-@media (max-width: 820px) {
-  .app-shell__main {
-    margin-left: var(--sidebar-width-collapsed);
-  }
+/* Mobile styles imports */
+@import './widgets/layout/AppLayout-Mobile.css';
+@import './widgets/layout/NotificationsPanel-Mobile.css';
+@import './widgets/sidebar/AppSidebar-Mobile.css';
 
-  .app-shell__content {
-    padding: var(--space-3);
-  }
+/* Page Mobile styles */
+@import './pages/manufacturers/ManufacturersPage-Mobile.css';
+@import './pages/manufacturers/ManufacturerDetailPage-Mobile.css';
+@import './pages/manufacturers/ManufacturerFormPage-Mobile.css';
+@import './pages/manufacturers/ManufacturerAuditPage-Mobile.css';
 
-  .sidebar-panel {
-    width: var(--sidebar-width-collapsed);
-    padding-left: var(--space-2);
-    padding-right: var(--space-2);
-  }
+@import './pages/suppliers/SuppliersPage-Mobile.css';
+@import './pages/suppliers/SupplierDetailPage-Mobile.css';
+@import './pages/suppliers/SupplierFormPage-Mobile.css';
+@import './pages/suppliers/SupplierAuditPage-Mobile.css';
 
-  .sidebar-panel__header h2 {
-    display: none;
-  }
+@import './pages/productTypes/ProductTypesPage-Mobile.css';
+@import './pages/productTypes/ProductTypeDetailPage-Mobile.css';
+@import './pages/productTypes/ProductTypeFormPage-Mobile.css';
+@import './pages/productTypes/ProductTypeAuditPage-Mobile.css';
 
-  .sidebar-panel__footer {
-    justify-content: center;
-  }
+@import './pages/attributes/AttributesPage-Mobile.css';
+@import './pages/attributes/AttributeDetailPage-Mobile.css';
+@import './pages/attributes/AttributeFormPage-Mobile.css';
+@import './pages/attributes/AttributeAuditPage-Mobile.css';
 
-  .sidebar-group__trigger span:not(.sidebar-link__icon):not(.sidebar-group__chevron) {
-    display: none;
-  }
+@import './pages/products/ProductsPage-Mobile.css';
+@import './pages/products/ProductDetailPage-Mobile.css';
+@import './pages/products/ProductFormPage-Mobile.css';
+@import './pages/products/ProductAuditPage-Mobile.css';
 
-  .entity-list-row {
-    flex-direction: column;
-    align-items: stretch;
-  }
+@import './pages/users/UsersListPage-Mobile.css';
+@import './pages/users/UserDetailPage-Mobile.css';
+@import './pages/users/UserCreatePage-Mobile.css';
 
-  .entity-list-row__actions {
-    justify-content: flex-end;
-  }
+@import './pages/profile/ProfilePage-Mobile.css';
+@import './pages/login/LoginPage-Mobile.css';
+@import './pages/permissionsGroups/PermissionsGroupsPage-Mobile.css';
+@import './pages/catalog/CatalogPage-Mobile.css';
+@import './pages/categories/CategoriesPage-Mobile.css';
+@import './pages/support/SupportPage-Mobile.css';
+@import './pages/dashboard/DashboardPage-Mobile.css';
+@import './pages/errors/ErrorPage-Mobile.css';
 
-  .entity-pagination {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .permissions-groups-page__filters {
-    flex-direction: column;
-  }
-
-  .permissions-groups-page__search,
-  .permissions-groups-page__section-filter {
-    width: 100%;
-  }
-
-  .group-permissions-filters {
-    flex-direction: column;
-  }
-
-  .group-permissions-filters__section select {
-    width: 100%;
-  }
-
-  .toast-stack {
-    top: auto;
-    bottom: var(--space-3);
-    right: var(--space-3);
-    left: var(--space-3);
-    max-width: none;
-    width: auto;
-  }
-}
+/* UI Component Mobile styles */
+@import './shared/ui/CrudPageTemplate-Mobile.css';
+@import './shared/ui/Modal-Mobile.css';
+@import './shared/ui/Pagination-Mobile.css';
+@import './shared/ui/EntityList-Mobile.css';
+@import './shared/ui/Button-Mobile.css';
+@import './shared/ui/Input-Mobile.css';
+@import './shared/ui/Select-Mobile.css';
+@import './shared/ui/Tabs-Mobile.css';
+@import './shared/ui/SearchInput-Mobile.css';
+@import './shared/ui/AutocompleteInput-Mobile.css';
+@import './shared/ui/ImageCarousel-Mobile.css';

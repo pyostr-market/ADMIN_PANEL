@@ -1,0 +1,336 @@
+/* Bottom Navigation - мобильное меню */
+.bottom-nav {
+  display: none;
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  z-index: 99999 !important;
+  padding: 0;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.bottom-nav__list {
+  display: flex;
+  height: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.bottom-nav__item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.bottom-nav__button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: 100%;
+  height: 100%;
+  padding: 6px 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bottom-nav__button svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.bottom-nav__button:active {
+  background: var(--surface-subtle);
+}
+
+.bottom-nav__button--active {
+  color: var(--info);
+}
+
+.bottom-nav__button--active svg {
+  color: var(--info);
+}
+
+.bottom-nav__label {
+  white-space: nowrap;
+}
+
+/* Mobile Sidebar */
+.mobile-sidebar {
+  display: none;
+  position: fixed;
+  bottom: 60px;
+  left: 0;
+  width: 280px;
+  max-width: 85vw;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+  border-radius: 0 12px 0 0;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+  z-index: 99998;
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-sidebar--open {
+  transform: translateX(0);
+}
+
+.mobile-sidebar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  z-index: 1;
+}
+
+.mobile-sidebar__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.mobile-sidebar__close {
+  width: 36px;
+  height: 36px;
+  display: inline-grid;
+  place-items: center;
+  background: var(--surface-subtle);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.15s ease;
+}
+
+.mobile-sidebar__close:active {
+  background: var(--surface-muted);
+}
+
+.mobile-sidebar__close:hover {
+  background: var(--surface-muted);
+  color: var(--text);
+}
+
+.mobile-sidebar__close svg {
+  width: 18px;
+  height: 18px;
+}
+
+.mobile-sidebar__nav {
+  padding: 8px;
+}
+
+.mobile-sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-sidebar__link:active {
+  background: var(--surface-subtle);
+}
+
+.mobile-sidebar__link:hover {
+  background: var(--surface-subtle);
+}
+
+.mobile-sidebar__link--active {
+  background: var(--info-bg);
+  color: var(--info);
+}
+
+.mobile-sidebar__link svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.mobile-sidebar__link--active svg {
+  color: var(--info);
+}
+
+.mobile-sidebar__footer {
+  border-top: 1px solid var(--border);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: auto;
+}
+
+.mobile-sidebar__footer-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-sidebar__footer-btn:active {
+  background: var(--surface-subtle);
+}
+
+.mobile-sidebar__footer-btn:hover {
+  background: var(--surface-subtle);
+}
+
+.mobile-sidebar__footer-btn svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Mobile Overlay */
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 60px;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99997;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-overlay--visible {
+  opacity: 1;
+}
+
+/* Mobile Header */
+.mobile-header {
+  display: none;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+}
+
+.mobile-header__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mobile-header__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  flex: 1;
+  text-align: center;
+}
+
+.mobile-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Responsive - показываем мобильные элементы на экранах <= 768px */
+@media (max-width: 768px) {
+  .bottom-nav,
+  .mobile-sidebar,
+  .mobile-overlay,
+  .mobile-header {
+    display: block;
+  }
+
+  /* Скрываем десктопную шапку на мобильных */
+  .app-shell__header {
+    display: none !important;
+  }
+
+  /* Скрываем десктопный сайдбар на мобильных */
+  .sidebar-panel {
+    display: none !important;
+  }
+
+  /* Убираем отступ для контента */
+  .app-shell__main {
+    margin-left: 0 !important;
+    padding-bottom: 60px !important;
+  }
+
+  /* Контент на всю ширину */
+  .app-shell__content {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+}
+
+/* Стили для уведомлений на мобильных */
+@media (max-width: 768px) {
+  .toast-stack {
+    top: auto;
+    bottom: 68px;
+    right: 12px;
+    left: 12px;
+    max-width: none;
+    width: calc(100% - 24px);
+    z-index: 100000;
+  }
+
+  .toast {
+    padding: 12px;
+  }
+
+  .toast__message {
+    font-size: 13px;
+  }
+
+  .toast__close {
+    width: 22px;
+    height: 22px;
+    font-size: 16px;
+  }
+}

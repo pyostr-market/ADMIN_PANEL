@@ -1,0 +1,52 @@
+/* Input - Mobile styles */
+@media (max-width: 768px) {
+  .input {
+    height: 40px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+  }
+
+  .input:hover:not(:disabled) {
+    border-color: var(--border-strong);
+  }
+
+  .input:focus {
+    border-color: var(--primary);
+  }
+
+  .input-icon--left + .input {
+    padding-left: 36px;
+  }
+
+  .input-icon--right + .input {
+    padding-right: 36px;
+  }
+
+  .input-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .input-icon--left {
+    left: 10px;
+  }
+
+  .input-icon--right {
+    right: 10px;
+  }
+
+  .input-wrapper {
+    gap: 6px;
+  }
+
+  .input-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .input-error {
+    font-size: 11px;
+  }
+}

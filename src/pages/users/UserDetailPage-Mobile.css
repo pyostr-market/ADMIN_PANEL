@@ -1,0 +1,152 @@
+/* UserDetailPage - Mobile styles */
+@media (max-width: 768px) {
+  .user-detail-page {
+    padding: 0 !important;
+    gap: 0;
+  }
+
+  .user-detail-page__header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .user-detail-page__header-left {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .user-detail-page__user-info {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .user-detail-page__avatar {
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+  }
+
+  .user-detail-page__title {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .user-detail-page__badges {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .user-detail-page__actions {
+    width: 100%;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .user-detail-page__actions button {
+    flex: 1;
+    min-width: 100px;
+    height: 38px;
+    font-size: 13px;
+  }
+
+  .user-detail-page__tabs {
+    width: 100%;
+    overflow-x: auto;
+    padding: 0;
+  }
+
+  .user-detail-page__tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .user-detail-page__tabs .tab {
+    height: 42px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .user-detail-page__content {
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .user-detail-page__panel {
+    padding: 16px;
+    border-radius: 8px;
+  }
+
+  .user-info-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .info-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .info-card__icon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    border-radius: 8px;
+  }
+
+  .info-card__value {
+    font-size: 14px;
+  }
+
+  .permissions-search input {
+    height: 40px;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .permission-card {
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .permission-card__name {
+    font-size: 13px;
+  }
+
+  .permission-card__description {
+    font-size: 11px;
+  }
+
+  .permission-card__action button {
+    height: 34px;
+    min-width: 34px;
+    font-size: 12px;
+  }
+
+  .group-card {
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .group-card__icon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    border-radius: 8px;
+  }
+
+  .edit-user-form__field select {
+    height: 40px;
+    font-size: 14px;
+  }
+}

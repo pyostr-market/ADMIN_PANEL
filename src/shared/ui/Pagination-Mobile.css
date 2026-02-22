@@ -1,0 +1,26 @@
+/* Pagination - Mobile styles */
+@media (max-width: 768px) {
+  .pagination {
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .pagination__info {
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .pagination__controls {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .pagination button {
+    flex: 1;
+    height: 38px;
+    min-width: 38px;
+    font-size: 13px;
+  }
+}

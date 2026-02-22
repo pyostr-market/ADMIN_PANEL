@@ -1,0 +1,14 @@
+/* ErrorPage - Mobile styles */
+@media (max-width: 768px) {
+  .error-page {
+    padding: var(--space-4);
+  }
+
+  .error-page h1 {
+    font-size: 20px;
+  }
+
+  .error-page p {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,9 @@
+/* AppSidebar - Mobile styles */
+/* Мобильный сайдбар реализуется через BottomNav.css */
+/* Этот файл остаётся для десктопной версии */
+
+@media (max-width: 768px) {
+  .sidebar-panel {
+    display: none; /* Скрываем десктопный сайдбар на мобильных */
+  }
+}

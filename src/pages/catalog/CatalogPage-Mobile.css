@@ -1,0 +1,43 @@
+/* CatalogPage, CategoriesPage, SupportPage, DashboardPage, ErrorPage - Mobile styles */
+@media (max-width: 768px) {
+  .catalog-page,
+  .categories-page,
+  .support-page,
+  .dashboard-page,
+  .error-page {
+    padding: var(--space-4);
+  }
+
+  .catalog-page h1,
+  .categories-page h1,
+  .support-page h1,
+  .dashboard-page h1,
+  .error-page h1 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-3);
+  }
+
+  .catalog-page p,
+  .categories-page p,
+  .support-page p,
+  .dashboard-page p,
+  .error-page p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  /* Секции */
+  .catalog-page section,
+  .categories-page section,
+  .support-page section,
+  .dashboard-page section,
+  .error-page section {
+    padding: var(--space-4);
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+  }
+}

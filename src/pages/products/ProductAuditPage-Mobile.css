@@ -1,0 +1,118 @@
+/* ProductAuditPage, SupplierAuditPage, ProductTypeAuditPage, AttributeAuditPage - Mobile styles */
+@media (max-width: 768px) {
+  .product-audit-page,
+  .supplier-audit-page,
+  .product-type-audit-page,
+  .attribute-audit-page {
+    padding: 0 !important;
+    gap: 0;
+  }
+
+  .product-audit-page__header,
+  .supplier-audit-page__header,
+  .product-type-audit-page__header,
+  .attribute-audit-page__header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .product-audit-page__header-left,
+  .supplier-audit-page__header-left,
+  .product-type-audit-page__header-left,
+  .attribute-audit-page__header-left {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .product-audit-page__title,
+  .supplier-audit-page__title,
+  .product-type-audit-page__title,
+  .attribute-audit-page__title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .product-audit-page__content,
+  .supplier-audit-page__content,
+  .product-type-audit-page__content,
+  .attribute-audit-page__content {
+    padding: 12px 16px;
+  }
+
+  .product-audit-page__panel,
+  .supplier-audit-page__panel,
+  .product-type-audit-page__panel,
+  .attribute-audit-page__panel {
+    padding: 16px;
+    border-radius: 8px;
+  }
+
+  .audit-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .audit-table {
+    min-width: 600px;
+  }
+
+  .audit-table__header,
+  .audit-table__cell {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .audit-action-badge {
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .audit-detail-modal__header {
+    gap: 8px;
+  }
+
+  .audit-detail-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .audit-detail-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .audit-detail-value {
+    font-size: 13px;
+  }
+
+  .audit-data-block {
+    padding: 12px;
+    border-radius: 6px;
+  }
+
+  .audit-data-block__title {
+    font-size: 12px;
+  }
+
+  .audit-data-block__value {
+    font-size: 11px;
+    padding: 8px;
+  }
+
+  .back-button {
+    width: 100%;
+    height: 38px;
+    font-size: 13px;
+    justify-content: center;
+  }
+}
