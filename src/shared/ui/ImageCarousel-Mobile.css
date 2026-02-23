@@ -2,8 +2,8 @@
 @media (max-width: 768px) {
   .image-carousel__grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-bottom: 12px;
+    gap: var(--space-4);
+    margin-bottom: var(--space-3);
   }
 
   .image-carousel__item {
@@ -12,7 +12,7 @@
   }
 
   .image-carousel__empty {
-    padding: 40px 20px;
+    padding: var(--space-6) var(--space-5);
     min-height: 200px;
   }
 
@@ -38,32 +38,32 @@
 
   .image-carousel__controls {
     flex-direction: row;
-    gap: 6px;
-    padding: 8px;
+    gap: var(--space-2);
+    padding: var(--space-2);
   }
 
   .image-carousel__control-btn {
     font-size: 12px;
-    padding: 8px 10px;
+    padding: var(--space-2) var(--space-3);
     height: 36px;
     min-height: 36px;
   }
 
   .image-carousel__drag-handle {
-    padding: 6px 10px;
+    padding: var(--space-2) var(--space-3);
     font-size: 16px;
     min-width: 36px;
     min-height: 36px;
   }
 
   .image-carousel__main-badge {
-    padding: 6px 10px;
+    padding: var(--space-2) var(--space-3);
     font-size: 11px;
     font-weight: 600;
   }
 
   .image-carousel__delete-badge {
-    padding: 10px 14px;
+    padding: var(--space-3) var(--space-4);
     font-size: 14px;
   }
 }

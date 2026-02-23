@@ -476,8 +476,10 @@
         "images": [
           {
             "image_id": int,
+            "image_key": str,
             "image_url": str,
-            "is_main": bool
+            "is_main": bool,
+            "ordering": int
           }
         ],
         "attributes": [
@@ -514,8 +516,10 @@
     "images": [
       {
         "image_id": int,
+        "image_key": str,
         "image_url": str,
-        "is_main": bool
+        "is_main": bool,
+        "ordering": int
       }
     ],
     "attributes": [
@@ -558,8 +562,10 @@
         "images": [
           {
             "image_id": int,
+            "image_key": str,
             "image_url": str,
-            "is_main": bool
+            "is_main": bool,
+            "ordering": int
           }
         ],
         "attributes": [
@@ -590,6 +596,7 @@
     - `attributes_json: str | null` (JSON-массив атрибутов)
     - `images: UploadFile[] | null`
     - `image_is_main: str[] | null` (`true/false/1/0/...`)
+    - `image_ordering: int[] | null` (порядок сортировки для каждого изображения)
 - Успешный ответ (`200 OK`):
 ```json
 {
@@ -607,7 +614,8 @@
         "image_id": int,
         "image_key": str,
         "image_url": str,
-        "is_main": bool
+        "is_main": bool,
+        "ordering": int
       }
     ],
     "attributes": [
@@ -638,26 +646,28 @@
     - `images_json: str | null` (JSON-массив операций с изображениями)
     - `images: UploadFile[] | null` (файлы для операций `to_create`)
     - `image_is_main: str[] | null` (`true/false/1/0/...` для новых изображений)
+    - `image_ordering: int[] | null` (порядок сортировки для новых изображений)
 
   **Формат `images_json`** (массив операций):
   ```json
   [
-    {"action": "pass", "image_id": 123, "is_main": true},
-    {"action": "pass", "image_url": "products/55f1d02c-fcea-4020-b533-56bbe41f638a.jpg", "is_main": true},
+    {"action": "pass", "image_id": 123, "is_main": true, "ordering": 0},
+    {"action": "pass", "image_key": "products/55f1d02c-fcea-4020-b533-56bbe41f638a.jpg", "is_main": true, "ordering": 1},
     {"action": "to_delete", "image_id": 456},
-    {"action": "to_delete", "image_url": "products/old-image.jpg"},
-    {"action": "to_create", "is_main": false}
+    {"action": "to_delete", "image_key": "products/old-image.jpg"},
+    {"action": "to_create", "is_main": false, "ordering": 2}
   ]
   ```
 
   **Действия:**
   - `to_create` — загрузить новое изображение (требуется файл в `images` для каждой операции `to_create`)
-  - `to_delete` — удалить существующее изображение (требуется `image_id` или `image_url`/`image_key`)
-  - `pass` — сохранить существующее изображение (требуется `image_id` или `image_url`/`image_key`, можно обновить `is_main`)
+  - `to_delete` — удалить существующее изображение (требуется `image_id` или `image_key`/`image_url`)
+  - `pass` — сохранить существующее изображение (требуется `image_id` или `image_key`/`image_url`, можно обновить `is_main` и `ordering`)
 
   **Примечание:**
-  - `image_url` в операции — это значение поля `image_key` из ответа GET (путь к файлу, а не полный URL).
-  - Если `pass` указан без `image_id` и `image_url`, все существующие изображения сохраняются.
+  - Можно использовать `image_key` или `image_url` (это одно и то же поле — путь к файлу в S3).
+  - Если `pass` указан без `image_id` и `image_key`/`image_url`, все существующие изображения сохраняются.
+  - Поле `ordering` является опциональным. Если не указано, существующий порядок сортировки сохраняется.
 
 - Успешный ответ (`200 OK`):
 ```json
@@ -674,8 +684,10 @@
     "images": [
       {
         "image_id": int,
+        "image_key": str,
         "image_url": str,
-        "is_main": bool
+        "is_main": bool,
+        "ordering": int
       }
     ],
     "attributes": [

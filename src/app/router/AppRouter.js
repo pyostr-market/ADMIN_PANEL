@@ -29,6 +29,7 @@ import { AttributesPage } from '../../pages/attributes/AttributesPage';
 import { AttributeFormPage } from '../../pages/attributes/AttributeFormPage';
 import { AttributeDetailPage } from '../../pages/attributes/AttributeDetailPage';
 import { AttributeAuditPage } from '../../pages/attributes/AttributeAuditPage';
+import { CategoriesPage } from '../../pages/categories/CategoriesPage';
 import { PermissionsGroupsPage } from '../../pages/permissionsGroups/PermissionsGroupsPage';
 import { PrivateRoute, PublicOnlyRoute } from './routeGuards';
 
@@ -73,6 +74,10 @@ export function AppRouter() {
 
           <Route element={<PrivateRoute permission={["product", "product:view", "manufacturer", "manufacturer:view", "device_type", "device-type:view", "product_type", "product_type:view"]} mode="any" />}>
             <Route path="/catalog" element={<CatalogPage />} />
+          </Route>
+
+          <Route element={<PrivateRoute permission={["product", "product:view"]} mode="any" />}>
+            <Route path="/categories" element={<CategoriesPage />} />
           </Route>
 
           <Route element={<PrivateRoute permission={["product", "product:view"]} mode="any" />}>

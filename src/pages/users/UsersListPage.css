@@ -130,8 +130,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 15px;
+  height: 15px;
   border-radius: var(--radius-sm);
   font-size: 12px;
 }

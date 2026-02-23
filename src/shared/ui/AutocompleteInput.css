@@ -5,7 +5,7 @@
 
 .autocomplete-input-label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
   font-size: 14px;
   font-weight: 500;
   color: var(--color-text, var(--text));
@@ -25,7 +25,7 @@
 
 .autocomplete-input__icon {
   position: absolute;
-  left: 12px;
+  left: var(--space-4);
   color: var(--color-text-secondary, var(--text-secondary));
   pointer-events: none;
   z-index: 1;
@@ -33,9 +33,9 @@
 
 .autocomplete-input__field-input {
   width: 100%;
-  padding: 10px 40px 10px 36px;
+  padding: var(--space-3) 40px var(--space-3) 36px;
   border: 1px solid var(--color-border, var(--border));
-  border-radius: 6px;
+  border-radius: var(--radius-lg);
   font-size: 14px;
   color: var(--color-text, var(--text));
   background: var(--color-background, var(--surface));
@@ -71,7 +71,7 @@
   background: transparent;
   color: var(--color-text-secondary, var(--text-secondary));
   cursor: pointer;
-  border-radius: 50%;
+  border-radius: var(--radius-md);
   transition: all 0.2s ease;
 }
 
@@ -87,7 +87,7 @@
 
 .autocomplete-input__toggle {
   position: absolute;
-  right: 8px;
+  right: var(--space-2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -98,7 +98,7 @@
   background: transparent;
   color: var(--color-text-secondary, var(--text-secondary));
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   transition: all 0.2s ease;
 }
 
@@ -117,7 +117,7 @@
 
 .autocomplete-input-error {
   display: block;
-  margin-top: 6px;
+  margin-top: var(--space-2);
   font-size: 12px;
   color: var(--color-error, var(--danger));
 }
@@ -131,7 +131,7 @@
   overflow-y: auto;
   background: var(--color-background, var(--surface));
   border: 1px solid var(--color-border, var(--border));
-  border-radius: 6px;
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   z-index: 1000;
 }
@@ -140,7 +140,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 12px;
+  padding: var(--space-3) var(--space-4);
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -175,7 +175,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-right: 12px;
+  margin-right: var(--space-4);
 }
 
 .autocomplete-input__option-value {

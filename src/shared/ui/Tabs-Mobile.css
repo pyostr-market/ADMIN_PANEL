@@ -13,7 +13,7 @@
 
   .tab {
     min-width: fit-content;
-    padding: 8px 12px;
+    padding: var(--space-2) var(--space-4);
     font-size: 12px;
     font-weight: 600;
     height: 38px;

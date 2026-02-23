@@ -19,7 +19,7 @@
 .input {
   width: 100%;
   height: 36px;
-  padding: 8px 12px;
+  padding: var(--space-2) var(--space-4);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--surface);
@@ -58,11 +58,11 @@
 }
 
 .input-icon--left {
-  left: 10px;
+  left: var(--space-3);
 }
 
 .input-icon--right {
-  right: 10px;
+  right: var(--space-3);
 }
 
 .input-icon--left + .input {

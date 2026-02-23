@@ -132,7 +132,7 @@
 }
 
 .user-detail-page__badge--group {
-  background: var(--primary);
+  background: #4c4c4c;
   color: white;
 }
 
@@ -163,7 +163,7 @@
 }
 
 .user-detail-page__tabs .tab--active {
-  background: var(--primary);
+  background: var(--bg-active-tab);
   color: white;
 }
 
