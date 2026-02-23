@@ -119,19 +119,12 @@ export function ProductTypeFormPage() {
   return (
     <section className="product-type-form-page">
       <header className="product-type-form-page__header">
-        <div className="product-type-form-page__header-left">
-          <Button variant="ghost" onClick={() => navigate('/catalog/device_type')} className="back-button">
-            ← Назад
-          </Button>
-          <div className="product-type-form-page__title-wrapper">
-            <h1 className="product-type-form-page__title">
-              {isEditMode ? 'Редактирование типа продукта' : 'Создание типа продукта'}
-            </h1>
-            <p className="product-type-form-page__subtitle">
-              {isEditMode ? 'Внесите изменения в данные типа продукта' : 'Заполните форму для добавления нового типа продукта'}
-            </p>
-          </div>
-        </div>
+        <Button variant="ghost" onClick={() => navigate(isEditMode ? `/catalog/device_type/${productTypeId}` : '/catalog/device_type')} className="back-button">
+          ← Назад
+        </Button>
+        <h1 className="product-type-form-page__title">
+          {isEditMode ? 'Редактирование типа продукта' : 'Создание типа продукта'}
+        </h1>
       </header>
 
       <form className="product-type-form-page__form" onSubmit={handleSubmit}>

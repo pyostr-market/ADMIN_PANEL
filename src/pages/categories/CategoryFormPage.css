@@ -6,51 +6,23 @@
 
 .category-form-page__header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: var(--space-4);
   margin-bottom: var(--space-8);
-  gap: var(--space-4);
-  position: relative;
-}
-
-.category-form-page__header-left {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  flex: 1;
-  min-width: 0;
-  position: relative;
 }
 
 .category-form-page__header .back-button {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  flex-shrink: 0;
   height: 40px;
   padding: var(--space-2) var(--space-3);
   font-size: 14px;
   white-space: nowrap;
-  z-index: 1;
-}
-
-.category-form-page__title-wrapper {
-  flex: 1;
-  min-width: 0;
-  padding-right: 100px;
-  text-align: left;
 }
 
 .category-form-page__title {
   font-size: 28px;
   font-weight: 600;
   color: var(--text);
-  margin: 0 0 var(--space-2) 0;
-}
-
-.category-form-page__subtitle {
-  font-size: 15px;
-  color: var(--text-muted);
   margin: 0;
 }
 

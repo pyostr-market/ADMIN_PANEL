@@ -12,7 +12,7 @@
 
 ## Загрузка файлов
 
-### 0) POST `/upload`
+### 0) POST `/upload/`
 - Метод: `POST`
 - Доступ: Только авторизация (Bearer token)
 - Параметры (`multipart/form-data`):
@@ -27,9 +27,9 @@
     "upload_id": int,
     "file_path": str,
     "public_url": str,
-    "original_filename": str | null,
-    "content_type": str | null,
-    "file_size": int | null
+    "original_filename": str,
+    "content_type": str,
+    "file_size": int
   }
 }
 ```
@@ -58,7 +58,7 @@
 
 ## Система
 
-### 1) GET `/system/health`
+### 1) GET `/health`
 - Метод: `GET`
 - Доступ: публичный (без токена)
 - Параметры: нет
@@ -67,7 +67,7 @@
 { "status": "ok" }
 ```
 
-### 2) GET `/system/docs`
+### 2) GET `/docs`
 - Метод: `GET`
 - Доступ: публичный (без токена)
 - Параметры: нет
@@ -97,7 +97,7 @@
 - Доступ: публичный (без токена)
 - Параметры:
   - Query:
-    - `name: str | null`
+    - `name: str | null` — поиск по имени (частичное совпадение, case-insensitive, LIKE)
     - `limit: int = 10` (max 100)
     - `offset: int = 0`
 - Успешный ответ (`200 OK`):
@@ -166,7 +166,7 @@
 { "success": true, "data": { "deleted": true } }
 ```
 
-### 8) GET `/manufacturer/admin/audit`
+### 8) GET `/manufacturer/audit`
 - Метод: `GET`
 - Доступ: `Требуемое право` = `manufacturer:audit`
 - Параметры:
@@ -223,7 +223,7 @@
 - Доступ: `Требуемое право` = `supplier:view`
 - Параметры:
   - Query:
-    - `name: str | null`
+    - `name: str | null` — поиск по имени (частичное совпадение, case-insensitive, LIKE)
     - `limit: int = 10` (max 100)
     - `offset: int = 0`
 - Успешный ответ (`200 OK`):
@@ -297,7 +297,7 @@
 { "success": true, "data": { "deleted": true } }
 ```
 
-### 14) GET `/supplier/admin/audit`
+### 14) GET `/supplier/audit`
 - Метод: `GET`
 - Доступ: `Требуемое право` = `supplier:audit`
 - Параметры:
@@ -372,7 +372,7 @@
 - Доступ: публичный (без токена)
 - Параметры:
   - Query:
-    - `name: str | null`
+    - `name: str | null` — поиск по имени (частичное совпадение, case-insensitive, LIKE)
     - `limit: int = 10` (max 100)
     - `offset: int = 0`
 - Успешный ответ (`200 OK`):
@@ -420,9 +420,9 @@
     - `description: str | null`
     - `parent_id: int | null`
     - `manufacturer_id: int | null`
-    - `images: UploadFile[] | null` — файлы изображений
-    - `orderings: int[] | null` — порядковые номера для изображений
-- Примечание: если передан `images`, то `orderings` обязателен, и наоборот.
+    - `images: UploadFile[]` (обяз.) — файлы изображений
+    - `orderings: int[]` (обяз.) — порядковые номера для изображений
+- Примечание: количество `images` и `orderings` должно совпадать.
 - Успешный ответ (`200 OK`):
 ```json
 {
@@ -488,7 +488,7 @@
 { "success": true, "data": { "deleted": true } }
 ```
 
-### 20) GET `/category/admin/audit`
+### 20) GET `/category/audit`
 - Метод: `GET`
 - Доступ: `Требуемое право` = `category:audit`
 - Параметры:
@@ -644,7 +644,7 @@
 - Доступ: публичный (без токена)
 - Параметры:
   - Query:
-    - `name: str | null`
+    - `name: str | null` — поиск по имени (частичное совпадение, case-insensitive, LIKE)
     - `category_id: int | null`
     - `product_type_id: int | null`
     - `attributes: str | null` — JSON-объект для фильтрации по атрибутам:
@@ -867,7 +867,7 @@
 { "success": true, "data": { "deleted": true } }
 ```
 
-### 27) GET `/product/admin/audit`
+### 27) GET `/product/audit`
 - Метод: `GET`
 - Доступ: `Требуемое право` = `product:audit`
 - Параметры:
@@ -923,7 +923,7 @@
 - Доступ: публичный (без токена)
 - Параметры:
   - Query:
-    - `name: str | null`
+    - `name: str | null` — поиск по имени (частичное совпадение, case-insensitive, LIKE)
     - `limit: int = 10` (max 100)
     - `offset: int = 0`
 - Успешный ответ (`200 OK`):
@@ -992,7 +992,7 @@
 { "success": true, "data": { "deleted": true } }
 ```
 
-### 33) GET `/product/admin/type/audit`
+### 33) GET `/product/type/audit`
 - Метод: `GET`
 - Доступ: `Требуемое право` = `product_type:audit`
 - Параметры:
@@ -1110,6 +1110,29 @@ GET /product?attributes={"RAM": "8 GB", "Color": "Black"}
     ]
   }
 }
+```
+
+## Примечание по поиску (LIKE)
+
+Все методы `GET /<resource>` поддерживают поиск по полю `name` через параметр `name`:
+
+- **Производители**: `GET /manufacturer?name=Apple`
+- **Поставщики**: `GET /supplier?name=Поставка`
+- **Категории**: `GET /category?name=Смарт`
+- **Товары**: `GET /product?name=iPhone`
+- **Типы продуктов**: `GET /product/type?name=Smart`
+
+Поиск реализован через SQL `ILIKE '%значение%'` и поддерживает:
+- Регистронезависимый поиск (case-insensitive)
+- Поиск по части слова (начало, середина, конец)
+- Кириллические и латинские символы
+- Специальные символы (пробелы, дефисы, цифры)
+
+Примеры:
+```
+GET /manufacturer?name=app      # Найдёт: "Apple", "Application Corp"
+GET /product?name=фон           # Найдёт: "Смартфон", "Телефон"
+GET /category?name=book         # Найдёт: "MacBook", "Notebook"
 ```
 
 ## Примечание по авторизации

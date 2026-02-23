@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FiEdit, FiClock, FiArrowLeft } from 'react-icons/fi';
+import { FiEdit, FiClock, FiArrowLeft, FiTag, FiFileText, FiBox, FiImage } from 'react-icons/fi';
 import { PermissionGate } from '../../shared/ui/PermissionGate';
 import { Button } from '../../shared/ui/Button';
 import { getApiErrorMessage } from '../../shared/api/apiError';
@@ -77,7 +77,7 @@ export function CategoryDetailPage() {
         <div className="category-detail-page__actions">
           <PermissionGate permission={['category:update']} fallback={null}>
             <Button
-              variant="primary"
+              variant="secondary"
               leftIcon={<FiEdit />}
               onClick={handleEdit}
             >
@@ -90,78 +90,102 @@ export function CategoryDetailPage() {
               leftIcon={<FiClock />}
               onClick={handleViewAudit}
             >
-              История изменений
+              История
             </Button>
           </PermissionGate>
         </div>
       </header>
 
       <div className="category-detail-page__content">
-        <div className="category-detail-page__main">
-          <div className="category-detail-card">
-            <div className="category-detail-card__header">
-              <h2 className="category-detail-card__title">Основная информация</h2>
-            </div>
-            <div className="category-detail-card__body">
-              <div className="category-detail-row">
-                <span className="category-detail-row__label">ID:</span>
-                <span className="category-detail-row__value">{category.id}</span>
-              </div>
-              <div className="category-detail-row">
-                <span className="category-detail-row__label">Название:</span>
-                <span className="category-detail-row__value">{category.name || '—'}</span>
-              </div>
-              <div className="category-detail-row">
-                <span className="category-detail-row__label">Описание:</span>
-                <span className="category-detail-row__value">
-                  {category.description || '—'}
-                </span>
-              </div>
-              <div className="category-detail-row">
-                <span className="category-detail-row__label">Родительская категория:</span>
-                <span className="category-detail-row__value">
-                  {category.parent?.name ? `${category.parent.name} (ID: ${category.parent.id})` : 
-                   category.parent_id ? `ID: ${category.parent_id}` : '—'}
-                </span>
-              </div>
-              <div className="category-detail-row">
-                <span className="category-detail-row__label">Производитель:</span>
-                <span className="category-detail-row__value">
-                  {category.manufacturer?.name ? `${category.manufacturer.name} (ID: ${category.manufacturer.id})` : 
-                   category.manufacturer_id ? `ID: ${category.manufacturer_id}` : '—'}
-                </span>
-              </div>
+        <div className="category-detail-page__panel">
+          <div className="panel-header">
+            <div className="panel-header__content">
+              <h2 className="panel-title">Информация</h2>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<FiClock />}
+                onClick={handleViewAudit}
+              >
+                История
+              </Button>
             </div>
           </div>
 
-          {category.images && category.images.length > 0 && (
-            <div className="category-detail-card">
-              <div className="category-detail-card__header">
-                <h2 className="category-detail-card__title">Изображения</h2>
+          <div className="category-info-grid">
+            <div className="info-card">
+              <div className="info-card__icon info-card__icon--primary">
+                <FiTag />
               </div>
-              <div className="category-detail-card__body">
-                <div className="category-images-grid">
-                  {category.images
-                    .sort((a, b) => a.ordering - b.ordering)
-                    .map((image, index) => (
-                      <div key={index} className="category-image-card">
-                        <img
-                          src={image.image_url}
-                          alt={`Изображение ${index + 1}`}
-                          className="category-image-card__image"
-                        />
-                        <div className="category-image-card__info">
-                          <span className="category-image-card__order">
-                            Порядок: {image.ordering}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                </div>
+              <div className="info-card__content">
+                <span className="info-card__label">Название</span>
+                <span className="info-card__value">{category.name || '—'}</span>
               </div>
             </div>
-          )}
+
+            <div className="info-card">
+              <div className="info-card__icon info-card__icon--secondary">
+                <FiBox />
+              </div>
+              <div className="info-card__content">
+                <span className="info-card__label">Родительская категория</span>
+                <span className="info-card__value">{category.parent?.name || '—'}</span>
+              </div>
+            </div>
+
+            <div className="info-card">
+              <div className="info-card__icon info-card__icon--accent">
+                <FiImage />
+              </div>
+              <div className="info-card__content">
+                <span className="info-card__label">Производитель</span>
+                <span className="info-card__value">{category.manufacturer?.name || '—'}</span>
+              </div>
+            </div>
+
+            {category.description && (
+              <div className="info-card info-card--full">
+                <div className="info-card__icon info-card__icon--info">
+                  <FiFileText />
+                </div>
+                <div className="info-card__content">
+                  <span className="info-card__label">Описание</span>
+                  <span className="info-card__value">{category.description}</span>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
+
+        {category.images && category.images.length > 0 && (
+          <div className="category-detail-page__panel">
+            <div className="panel-header">
+              <div className="panel-header__content">
+                <h2 className="panel-title">Изображения</h2>
+              </div>
+            </div>
+            <div className="panel-content">
+              <div className="category-images-grid">
+                {category.images
+                  .sort((a, b) => a.ordering - b.ordering)
+                  .map((image, index) => (
+                    <div key={index} className="category-image-card">
+                      <img
+                        src={image.image_url}
+                        alt={`Изображение ${index + 1}`}
+                        className="category-image-card__image"
+                      />
+                      <div className="category-image-card__info">
+                        <span className="category-image-card__order">
+                          Порядок: {image.ordering}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

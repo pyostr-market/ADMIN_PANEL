@@ -350,19 +350,12 @@ export function ProductFormPage() {
   return (
     <section className="product-form-page">
       <header className="product-form-page__header">
-        <div className="product-form-page__header-left">
-          <Button variant="ghost" onClick={() => navigate('/catalog/products')} className="back-button">
-            ← Назад
-          </Button>
-          <div className="product-form-page__title-wrapper">
-            <h1 className="product-form-page__title">
-              {isEditMode ? 'Редактирование товара' : 'Создание товара'}
-            </h1>
-            <p className="product-form-page__subtitle">
-              {isEditMode ? 'Внесите изменения в данные товара' : 'Заполните форму для добавления нового товара'}
-            </p>
-          </div>
-        </div>
+        <Button variant="ghost" onClick={() => navigate(isEditMode ? `/catalog/products/${productId}` : '/catalog/products')} className="back-button">
+          ← Назад
+        </Button>
+        <h1 className="product-form-page__title">
+          {isEditMode ? 'Редактирование товара' : 'Создание товара'}
+        </h1>
       </header>
 
       <div className="product-form-page__tabs">

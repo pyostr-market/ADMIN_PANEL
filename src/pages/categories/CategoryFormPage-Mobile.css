@@ -12,8 +12,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    gap: 8px;
+    gap: 12px;
     padding: 8px 12px;
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -33,6 +32,15 @@
     min-width: auto;
   }
 
+  .category-form-page__title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .category-form-page__header .category-form-page__actions {
     display: flex;
     gap: 4px;
@@ -44,10 +52,6 @@
     padding: 6px 8px;
     font-size: 11px;
     white-space: nowrap;
-  }
-
-  .category-form-page__title-wrapper {
-    display: none;
   }
 
   .category-form-page__form {

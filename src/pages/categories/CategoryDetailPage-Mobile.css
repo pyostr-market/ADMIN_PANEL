@@ -54,9 +54,26 @@
     box-sizing: border-box;
   }
 
+  .category-detail-page__panel {
+    border-radius: 8px;
+  }
+
+  .panel-header {
+    padding: 12px;
+  }
+
+  .panel-title {
+    font-size: 14px;
+  }
+
+  .panel-content {
+    padding: 12px;
+  }
+
   .category-info-grid {
     grid-template-columns: 1fr;
     gap: 8px;
+    padding: 0;
   }
 
   .info-card {
@@ -84,11 +101,15 @@
   }
 
   .category-images-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
 
-  .category-image-item {
-    width: 100%;
+  .category-image-card {
+    border-radius: 8px;
+  }
+
+  .category-image-card__order {
+    font-size: 11px;
   }
 }

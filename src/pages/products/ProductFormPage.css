@@ -9,41 +9,17 @@
 
 .product-form-page__header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: 16px;
-  position: relative;
-}
-
-.product-form-page__header-left {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  flex: 1;
-  min-width: 0;
   position: relative;
 }
 
 .product-form-page__header .back-button {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  flex-shrink: 0;
   height: 40px;
   padding: 8px 12px;
   font-size: 14px;
   white-space: nowrap;
-  z-index: 1;
-}
-
-.product-form-page__title-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1;
-  min-width: 0;
-  padding-right: 100px;
-  text-align: left;
 }
 
 .product-form-page__title {
@@ -51,12 +27,6 @@
   font-size: 28px;
   font-weight: 600;
   color: var(--color-text, #333);
-}
-
-.product-form-page__subtitle {
-  margin: 0;
-  font-size: 14px;
-  color: var(--color-text-secondary, #666);
 }
 
 .product-form-page__tabs {

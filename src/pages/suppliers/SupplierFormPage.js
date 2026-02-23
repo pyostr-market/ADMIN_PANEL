@@ -130,19 +130,12 @@ export function SupplierFormPage() {
   return (
     <section className="supplier-form-page">
       <header className="supplier-form-page__header">
-        <div className="supplier-form-page__header-left">
-          <Button variant="ghost" onClick={() => navigate('/suppliers')} className="back-button">
-            ← Назад
-          </Button>
-          <div className="supplier-form-page__title-wrapper">
-            <h1 className="supplier-form-page__title">
-              {isEditMode ? 'Редактирование поставщика' : 'Создание поставщика'}
-            </h1>
-            <p className="supplier-form-page__subtitle">
-              {isEditMode ? 'Внесите изменения в данные поставщика' : 'Заполните форму для добавления нового поставщика'}
-            </p>
-          </div>
-        </div>
+        <Button variant="ghost" onClick={() => navigate(isEditMode ? `/suppliers/${supplierId}` : '/suppliers')} className="back-button">
+          ← Назад
+        </Button>
+        <h1 className="supplier-form-page__title">
+          {isEditMode ? 'Редактирование поставщика' : 'Создание поставщика'}
+        </h1>
       </header>
 
       <form className="supplier-form-page__form" onSubmit={handleSubmit}>

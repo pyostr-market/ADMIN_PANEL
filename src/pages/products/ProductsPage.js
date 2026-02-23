@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiPackage, FiPlus, FiTrash2, FiEye, FiEdit2, FiDollarSign, FiTag } from 'react-icons/fi';
+import { FiPackage, FiPlus, FiTrash2, FiEye, FiEdit2, FiTag } from 'react-icons/fi';
 import { PermissionGate } from '../../shared/ui/PermissionGate';
 import { Button } from '../../shared/ui/Button';
 import { SearchInput } from '../../shared/ui/SearchInput';
@@ -12,6 +12,8 @@ import { useCrudList } from '../../shared/lib/crud';
 import {
   getProductsRequest,
   deleteProductRequest,
+  getCategoriesForAutocompleteRequest,
+  getProductTypesForAutocompleteRequest,
 } from './api/productsApi';
 import './ProductsPage.css';
 
@@ -65,7 +67,7 @@ export function ProductsPage() {
         page,
         limit,
         name: search,
-        category_id: filters.category_id || null,
+        category_id: filters.name || null,
         product_type_id: filters.product_type_id || null,
       });
       return data;
@@ -101,7 +103,7 @@ export function ProductsPage() {
     productsCrud.setPage(1);
   };
 
-  // Опции для селектов
+  // Опции для селектов (загружаются из API продуктов)
   const categoryOptions = [
     { value: '', label: 'Все категории' },
   ];
@@ -192,42 +194,34 @@ export function ProductsPage() {
                     <p className="products-page__item-title">
                       {product.name || 'Без названия'}
                     </p>
-                    {product.images?.some(img => img.is_main) && (
-                      <span className="products-page__main-badge">Главное фото</span>
-                    )}
                   </div>
                   <div className="products-page__item-meta">
-                    <span className="products-page__meta-item">
-                      <span className="products-page__meta-label">ID:</span> {product.id}
-                    </span>
-                    <span className="products-page__separator">•</span>
                     <span className="products-page__meta-item products-page__meta-item--price">
-                      <FiDollarSign className="products-page__meta-icon" />
                       {product.price?.toLocaleString('ru-RU')} ₽
                     </span>
-                    {product.category_id && (
+                    {product.category && (
                       <>
                         <span className="products-page__separator">•</span>
                         <span className="products-page__meta-item">
                           <FiTag className="products-page__meta-icon" />
-                          Категория: {product.category_id}
+                          Категория: {product.category.name}
                         </span>
                       </>
                     )}
-                    {product.product_type_id && (
+                    {product.product_type && (
                       <>
                         <span className="products-page__separator">•</span>
                         <span className="products-page__meta-item">
                           <FiPackage className="products-page__meta-icon" />
-                          Тип: {product.product_type_id}
+                          Тип: {product.product_type.name}
                         </span>
                       </>
                     )}
-                    {product.supplier_id && (
+                    {product.supplier && (
                       <>
                         <span className="products-page__separator">•</span>
                         <span className="products-page__meta-item">
-                          Поставщик: {product.supplier_id}
+                          Поставщик: {product.supplier.name}
                         </span>
                       </>
                     )}
@@ -238,20 +232,6 @@ export function ProductsPage() {
                         ? `${product.description.substring(0, 150)}...`
                         : product.description}
                     </p>
-                  )}
-                  {product.attributes && product.attributes.length > 0 && (
-                    <div className="products-page__item-attributes">
-                      {product.attributes.slice(0, 3).map((attr, index) => (
-                        <span key={index} className="products-page__attribute-tag">
-                          {attr.name}: {attr.value}
-                        </span>
-                      ))}
-                      {product.attributes.length > 3 && (
-                        <span className="products-page__attribute-more">
-                          +{product.attributes.length - 3}
-                        </span>
-                      )}
-                    </div>
                   )}
                 </div>
               </div>

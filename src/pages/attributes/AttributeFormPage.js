@@ -133,19 +133,12 @@ export function AttributeFormPage() {
   return (
     <section className="attribute-form-page">
       <header className="attribute-form-page__header">
-        <div className="attribute-form-page__header-left">
-          <Button variant="ghost" onClick={() => navigate('/catalog/attributes')} className="back-button">
-            ← Назад
-          </Button>
-          <div className="attribute-form-page__title-wrapper">
-            <h1 className="attribute-form-page__title">
-              {isEditMode ? 'Редактирование атрибута' : 'Создание атрибута'}
-            </h1>
-            <p className="attribute-form-page__subtitle">
-              {isEditMode ? 'Внесите изменения в данные атрибута' : 'Заполните форму для добавления нового атрибута'}
-            </p>
-          </div>
-        </div>
+        <Button variant="ghost" onClick={() => navigate(isEditMode ? `/catalog/attributes/${attributeId}` : '/catalog/attributes')} className="back-button">
+          ← Назад
+        </Button>
+        <h1 className="attribute-form-page__title">
+          {isEditMode ? 'Редактирование атрибута' : 'Создание атрибута'}
+        </h1>
       </header>
 
       <form className="attribute-form-page__form" onSubmit={handleSubmit}>

@@ -283,38 +283,38 @@ export function ProductDetailPage() {
                   </div>
                 </div>
 
-                {product.category_id && (
+                {product.category && (
                   <div className="info-card">
                     <div className="info-card__icon info-card__icon--accent">
                       <FiTag />
                     </div>
                     <div className="info-card__content">
                       <span className="info-card__label">Категория</span>
-                      <span className="info-card__value">{product.category_id}</span>
+                      <span className="info-card__value">{product.category.name}</span>
                     </div>
                   </div>
                 )}
 
-                {product.product_type_id && (
+                {product.product_type && (
                   <div className="info-card">
                     <div className="info-card__icon info-card__icon--info">
                       <FiPackage />
                     </div>
                     <div className="info-card__content">
                       <span className="info-card__label">Тип продукта</span>
-                      <span className="info-card__value">{product.product_type_id}</span>
+                      <span className="info-card__value">{product.product_type.name}</span>
                     </div>
                   </div>
                 )}
 
-                {product.supplier_id && (
+                {product.supplier && (
                   <div className="info-card">
                     <div className="info-card__icon info-card__icon--success">
                       <FiBox />
                     </div>
                     <div className="info-card__content">
                       <span className="info-card__label">Поставщик</span>
-                      <span className="info-card__value">{product.supplier_id}</span>
+                      <span className="info-card__value">{product.supplier.name}</span>
                     </div>
                   </div>
                 )}

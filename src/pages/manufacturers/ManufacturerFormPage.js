@@ -119,19 +119,12 @@ export function ManufacturerFormPage() {
   return (
     <section className="manufacturer-form-page">
       <header className="manufacturer-form-page__header">
-        <div className="manufacturer-form-page__header-left">
-          <Button variant="ghost" onClick={() => navigate('/catalog/manufacturers')} className="back-button">
-            ← Назад
-          </Button>
-          <div className="manufacturer-form-page__title-wrapper">
-            <h1 className="manufacturer-form-page__title">
-              {isEditMode ? 'Редактирование производителя' : 'Создание производителя'}
-            </h1>
-            <p className="manufacturer-form-page__subtitle">
-              {isEditMode ? 'Внесите изменения в данные производителя' : 'Заполните форму для добавления нового производителя'}
-            </p>
-          </div>
-        </div>
+        <Button variant="ghost" onClick={() => navigate(isEditMode ? `/catalog/manufacturers/${manufacturerId}` : '/catalog/manufacturers')} className="back-button">
+          ← Назад
+        </Button>
+        <h1 className="manufacturer-form-page__title">
+          {isEditMode ? 'Редактирование производителя' : 'Создание производителя'}
+        </h1>
       </header>
 
       <form className="manufacturer-form-page__form" onSubmit={handleSubmit}>

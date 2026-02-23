@@ -169,19 +169,12 @@ export function CategoryFormPage() {
   return (
     <section className="category-form-page">
       <header className="category-form-page__header">
-        <div className="category-form-page__header-left">
-          <Button variant="ghost" onClick={() => navigate('/categories')} className="back-button">
-            ← Назад
-          </Button>
-          <div className="category-form-page__title-wrapper">
-            <h1 className="category-form-page__title">
-              {isEditMode ? 'Редактирование категории' : 'Создание категории'}
-            </h1>
-            <p className="category-form-page__subtitle">
-              {isEditMode ? 'Внесите изменения в данные категории' : 'Заполните форму для добавления новой категории'}
-            </p>
-          </div>
-        </div>
+        <Button variant="ghost" onClick={() => navigate(isEditMode ? `/categories/${categoryId}` : '/categories')} className="back-button">
+          ← Назад
+        </Button>
+        <h1 className="category-form-page__title">
+          {isEditMode ? 'Редактирование категории' : 'Создание категории'}
+        </h1>
       </header>
 
       <form className="category-form-page__form" onSubmit={handleSubmit}>
