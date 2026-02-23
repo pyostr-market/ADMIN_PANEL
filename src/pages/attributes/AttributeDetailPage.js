@@ -75,7 +75,8 @@ export function AttributeDetailPage() {
 
   useEffect(() => {
     loadAttribute();
-  }, [loadAttribute]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [attributeId]);
 
   const handleEditAttribute = () => {
     navigate(`/catalog/attributes/${attributeId}/edit`);

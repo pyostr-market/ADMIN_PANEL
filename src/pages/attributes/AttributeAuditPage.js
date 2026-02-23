@@ -234,7 +234,8 @@ export function AttributeAuditPage() {
 
   useEffect(() => {
     loadAudit();
-  }, [loadAudit]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [attributeId, currentPage]);
 
   const totalPages = Math.ceil(total / limit);
 

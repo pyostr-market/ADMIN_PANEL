@@ -75,7 +75,8 @@ export function ProductTypeDetailPage() {
 
   useEffect(() => {
     loadProductType();
-  }, [loadProductType]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productTypeId]);
 
   const handleEditProductType = () => {
     navigate(`/catalog/device_type/${productTypeId}/edit`);

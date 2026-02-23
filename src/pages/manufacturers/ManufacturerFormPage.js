@@ -52,7 +52,8 @@ export function ManufacturerFormPage() {
     if (isEditMode && manufacturerId) {
       loadManufacturer();
     }
-  }, [manufacturerId, isEditMode, loadManufacturer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [manufacturerId, isEditMode]);
 
   const validateForm = () => {
     const newErrors = {};

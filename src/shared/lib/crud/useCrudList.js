@@ -177,23 +177,15 @@ export function useCrudList({
     isRequestInProgressRef.current = false;
   }, [getServiceName]);
 
-  // Эффект для первоначальной загрузки
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    if (!hasLoadedRef.current && !isRequestInProgressRef.current) {
-      executeFetch();
-    }
-  }, []);
-
-  // Эффект для повторной загрузки при изменении параметров
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // Эффект для загрузки при изменении параметров (включая первоначальную загрузку)
   useEffect(() => {
     // Сбрасываем счетчик попыток при изменении параметров
     retryAttemptRef.current = 0;
 
-    if (hasLoadedRef.current && !isRequestInProgressRef.current) {
+    if (!isRequestInProgressRef.current) {
       executeFetch();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, search, filters]);
 
   const handleSearch = useCallback((value) => {

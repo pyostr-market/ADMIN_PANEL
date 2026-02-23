@@ -75,7 +75,8 @@ export function ManufacturerDetailPage() {
 
   useEffect(() => {
     loadManufacturer();
-  }, [loadManufacturer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [manufacturerId]);
 
   const handleEditManufacturer = () => {
     navigate(`/catalog/manufacturers/${manufacturerId}/edit`);

@@ -54,7 +54,8 @@ export function AttributeFormPage() {
     if (isEditMode && attributeId) {
       loadAttribute();
     }
-  }, [attributeId, isEditMode, loadAttribute]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [attributeId, isEditMode]);
 
   const validateForm = () => {
     const newErrors = {};

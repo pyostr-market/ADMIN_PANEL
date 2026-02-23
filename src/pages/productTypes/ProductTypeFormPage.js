@@ -52,7 +52,8 @@ export function ProductTypeFormPage() {
     if (isEditMode && productTypeId) {
       loadProductType();
     }
-  }, [productTypeId, isEditMode, loadProductType]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productTypeId, isEditMode]);
 
   const validateForm = () => {
     const newErrors = {};

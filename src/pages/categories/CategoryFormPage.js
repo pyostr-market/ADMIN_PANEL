@@ -72,7 +72,8 @@ export function CategoryFormPage() {
     if (isEditMode && categoryId) {
       loadCategory();
     }
-  }, [categoryId, isEditMode, loadCategory]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryId, isEditMode]);
 
   const validateForm = () => {
     const newErrors = {};

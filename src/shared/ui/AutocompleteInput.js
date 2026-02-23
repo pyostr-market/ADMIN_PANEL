@@ -39,12 +39,12 @@ export function AutocompleteInput({
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-  const [didLoadOnce, setDidLoadOnce] = useState(false);
 
   const inputRef = useRef(null);
   const dropdownRef = useRef(null);
   const debounceRef = useRef(null);
   const loadMoreRef = useRef(null);
+  const prevSearchQueryRef = useRef('');
 
   // Используем selectedOption из prop или из состояния
   const effectiveSelectedOption = propSelectedOption !== null ? propSelectedOption : selectedOption;
@@ -84,11 +84,6 @@ export function AutocompleteInput({
 
       // Есть ли еще данные для загрузки
       setHasMore(optionsArray.length === PAGE_SIZE);
-      
-      // Помечаем что загрузка выполнена (для предотвращения дублирования)
-      if (!append) {
-        setDidLoadOnce(true);
-      }
     } catch (err) {
       console.error('Error loading options:', err);
       if (!append) {
@@ -100,25 +95,33 @@ export function AutocompleteInput({
     }
   }, [fetchOptions]);
 
-  // Debounce для поиска при вводе текста (не срабатывает при первом открытии)
+  // Debounce для поиска при вводе текста
   useEffect(() => {
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
 
-    // Загружаем только если dropdown открыт И уже была загрузка при открытии
-    if (isOpen && didLoadOnce) {
+    // Загружаем только если dropdown открыт
+    if (!isOpen) return;
+
+    // Если searchQuery изменился при открытом dropdown - используем debounce
+    if (prevSearchQueryRef.current !== searchQuery) {
+      prevSearchQueryRef.current = searchQuery;
       debounceRef.current = setTimeout(() => {
         loadOptions(searchQuery, 0, false);
       }, 300);
+      return;
     }
+    
+    // При первом открытии (searchQuery не менялся) загружаем сразу
+    loadOptions(searchQuery, 0, false);
 
     return () => {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
       }
     };
-  }, [searchQuery, isOpen, didLoadOnce, loadOptions]);
+  }, [searchQuery, isOpen, loadOptions]);
 
   // Находим выбранную опцию в загруженных опциях (если не передана извне)
   useEffect(() => {
@@ -165,18 +168,13 @@ export function AutocompleteInput({
       setSearchQuery('');
       setHighlightedIndex(-1);
       setOffset(0);
-      // Загружаем данные сразу при открытии (без debounce)
-      if (!didLoadOnce && !isLoading) {
-        loadOptions('', 0, false);
-      }
     }
-  }, [disabled, didLoadOnce, isLoading, loadOptions]);
+  }, [disabled]);
 
   const handleCloseDropdown = useCallback(() => {
     setIsOpen(false);
     setSearchQuery('');
     setHighlightedIndex(-1);
-    setDidLoadOnce(false); // Сбрасываем чтобы при следующем открытии снова загрузить данные
   }, []);
 
   const handleSelectOption = useCallback((option) => {

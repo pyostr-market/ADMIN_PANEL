@@ -234,7 +234,8 @@ export function ProductAuditPage() {
 
   useEffect(() => {
     loadAudit();
-  }, [loadAudit]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productId, currentPage]);
 
   const totalPages = Math.ceil(total / limit);
 

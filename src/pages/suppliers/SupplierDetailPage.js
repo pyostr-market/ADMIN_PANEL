@@ -75,7 +75,8 @@ export function SupplierDetailPage() {
 
   useEffect(() => {
     loadSupplier();
-  }, [loadSupplier]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [supplierId]);
 
   const handleEditSupplier = () => {
     navigate(`/suppliers/${supplierId}/edit`);

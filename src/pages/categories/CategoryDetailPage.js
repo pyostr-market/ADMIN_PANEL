@@ -30,7 +30,8 @@ export function CategoryDetailPage() {
 
   useEffect(() => {
     loadCategory();
-  }, [loadCategory]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryId]);
 
   const handleEdit = () => {
     navigate(`/categories/${categoryId}/edit`);

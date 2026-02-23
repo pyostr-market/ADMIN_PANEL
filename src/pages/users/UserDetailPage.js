@@ -421,7 +421,8 @@ export function UserDetailPage() {
 
   useEffect(() => {
     loadUser();
-  }, [loadUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   // Вычисляемые значения — до любых условных return
   const userPermissions = user?.permissions || [];
