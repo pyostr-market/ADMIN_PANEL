@@ -10,22 +10,40 @@
 .product-form-page__header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 16px;
+  position: relative;
 }
 
 .product-form-page__header-left {
   display: flex;
   gap: 16px;
-  align-items: flex-start;
-  flex-wrap: wrap;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+
+.product-form-page__header .back-button {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 40px;
+  padding: 8px 12px;
+  font-size: 14px;
+  white-space: nowrap;
+  z-index: 1;
 }
 
 .product-form-page__title-wrapper {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  flex: 1;
+  min-width: 0;
+  padding-right: 100px;
+  text-align: left;
 }
 
 .product-form-page__title {

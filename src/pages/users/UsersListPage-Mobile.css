@@ -51,6 +51,7 @@
     border-bottom: 1px solid var(--border);
     gap: 8px;
     box-sizing: border-box;
+    overflow-x: auto;
   }
 
   .users-list-page__filters--loading {

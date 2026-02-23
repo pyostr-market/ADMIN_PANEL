@@ -4,6 +4,22 @@
   border-radius: var(--radius-sm);
   overflow: hidden;
   width: fit-content;
+  max-width: 100%;
+}
+
+.tabs--scrollable {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.tabs--scrollable::-webkit-scrollbar {
+  height: 4px;
+}
+
+.tabs--scrollable .tab {
+  flex-shrink: 0;
 }
 
 .tab {
@@ -16,6 +32,7 @@
   font-size: 13px;
   cursor: pointer;
   transition: all 0.15s ease;
+  white-space: nowrap;
 }
 
 .tab:last-child {

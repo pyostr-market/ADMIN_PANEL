@@ -657,7 +657,7 @@ export function UserDetailPage() {
           active={activeTab === TABS.general}
           onClick={() => setActiveTab(TABS.general)}
         >
-          <FiCalendar /> Общая информация
+          <FiCalendar /> Информация
         </Tab>
         <Tab
           active={activeTab === TABS.sessions}

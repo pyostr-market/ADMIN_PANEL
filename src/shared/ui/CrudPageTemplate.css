@@ -21,7 +21,18 @@
 }
 
 .crud-page__tabs {
-  width: fit-content;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.crud-page__tabs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.crud-page__tabs .tabs {
+  width: max-content;
 }
 
 .crud-page__filters {
@@ -35,10 +46,19 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: var(--space-1);
+}
+
+.crud-page__filters-extra::-webkit-scrollbar {
+  height: 4px;
 }
 
 .crud-page__filters-extra > * {
   min-width: 170px;
+  flex-shrink: 0;
 }
 
 .crud-page__search {

@@ -353,7 +353,7 @@ export function ProductDetailPage() {
               <div className="panel-header__content">
                 <h2 className="panel-title">
                   <FiBox className="panel-title__icon" />
-                  Общая информация
+                  Информация
                 </h2>
                 <Button
                   variant="secondary"

@@ -16,41 +16,25 @@
     border-bottom: 1px solid var(--border);
     padding: var(--space-3) var(--space-4);
     min-height: 52px;
+    margin-bottom: 0;
   }
 
   .category-form-page__header-left {
-    display: flex;
-    align-items: center;
     gap: var(--space-3);
-    position: relative;
   }
 
   .category-form-page__header .back-button {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
     height: 36px;
     padding: var(--space-2) var(--space-3);
     font-size: 13px;
-    white-space: nowrap;
-    z-index: 1;
   }
 
   .category-form-page__title-wrapper {
-    flex: 1;
-    min-width: 0;
-    text-align: left;
-    padding-right: 80px;
+    padding-right: 90px;
   }
 
   .category-form-page__title {
     font-size: 17px;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin: 0;
   }
 
   .category-form-page__subtitle {

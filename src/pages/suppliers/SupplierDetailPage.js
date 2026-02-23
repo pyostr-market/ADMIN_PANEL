@@ -251,7 +251,7 @@ export function SupplierDetailPage() {
         <div className="supplier-detail-page__panel">
           <div className="panel-header">
             <div className="panel-header__content">
-              <h2 className="panel-title">Общая информация</h2>
+              <h2 className="panel-title">Информация</h2>
               <Button
                 variant="secondary"
                 size="sm"
