@@ -105,8 +105,10 @@ export function CategoryFormPage() {
     }
   }, [errors.images]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e, stayOnPage = false) => {
+    if (e) {
+      e.preventDefault();
+    }
 
     if (!validateForm()) {
       notificationsRef.current?.error('Исправьте ошибки в форме');
@@ -140,14 +142,48 @@ export function CategoryFormPage() {
       };
 
       if (isEditMode) {
-        await updateCategoryRequest(categoryId, payload);
+        const responseData = await updateCategoryRequest(categoryId, payload);
         notificationsRef.current?.info('Категория обновлена');
+        
+        if (stayOnPage) {
+          // Обновляем данные формы из ответа
+          if (responseData) {
+            setFormData({
+              name: responseData.name || formData.name,
+              description: responseData.description || formData.description,
+              parent_id: responseData.parent_id || formData.parent_id,
+              manufacturer_id: responseData.manufacturer_id || formData.manufacturer_id,
+            });
+            // Обновляем изображения
+            if (responseData.images) {
+              setImages(responseData.images.map(img => ({
+                upload_id: img.upload_id,
+                image_key: img.file_path || img.image_url,
+                image_url: img.image_url,
+                ordering: img.ordering,
+                is_main: false,
+                isNew: false,
+                toDelete: false,
+              })));
+            }
+          }
+        }
       } else {
-        await createCategoryRequest(payload);
+        const responseData = await createCategoryRequest(payload);
         notificationsRef.current?.info('Категория создана');
+        
+        if (stayOnPage) {
+          // После создания перенаправляем на страницу редактирования с новым ID
+          const newCategoryId = responseData?.id;
+          if (newCategoryId) {
+            navigate(`/categories/${newCategoryId}`);
+          }
+        }
       }
 
-      navigate('/categories');
+      if (!stayOnPage) {
+        navigate('/categories');
+      }
     } catch (error) {
       const message = getApiErrorMessage(error);
       notificationsRef.current?.error(message);
@@ -290,13 +326,23 @@ export function CategoryFormPage() {
             Отмена
           </Button>
           <Button
+            type="button"
+            variant="primary"
+            leftIcon={<FiSave />}
+            loading={isSubmitting}
+            size="lg"
+            onClick={() => handleSubmit(null, true)}
+          >
+            Сохранить и продолжить редактирование
+          </Button>
+          <Button
             type="submit"
             variant="primary"
             leftIcon={<FiSave />}
             loading={isSubmitting}
             size="lg"
           >
-            {isEditMode ? 'Сохранить изменения' : 'Создать категорию'}
+            {isEditMode ? 'Сохранить' : 'Создать'}
           </Button>
         </div>
       </form>

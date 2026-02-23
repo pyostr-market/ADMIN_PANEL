@@ -197,8 +197,10 @@ export function ProductFormPage() {
     );
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e, stayOnPage = false) => {
+    if (e) {
+      e.preventDefault();
+    }
 
     if (!validateForm()) {
       notificationsRef.current?.error('Исправьте ошибки в форме');
@@ -320,14 +322,51 @@ export function ProductFormPage() {
         console.log('[ProductForm] Ответ от updateProductRequest:', responseData);
         handleApiResponse(responseData);
         notificationsRef.current?.info('Товар обновлен');
+        
+        if (stayOnPage) {
+          // При обновлении с stayOnPage просто обновляем данные формы из ответа
+          if (responseData) {
+            setFormData({
+              name: responseData.name || formData.name,
+              price: responseData.price?.toString() || formData.price,
+              description: responseData.description || formData.description,
+              category_id: responseData.category_id?.toString() || formData.category_id,
+              supplier_id: responseData.supplier_id?.toString() || formData.supplier_id,
+              product_type_id: responseData.product_type_id?.toString() || formData.product_type_id,
+            });
+            // Обновляем полные объекты для autocomplete
+            setSelectedCategory(responseData.category || selectedCategory);
+            setSelectedSupplier(responseData.supplier || selectedSupplier);
+            setSelectedProductType(responseData.product_type || selectedProductType);
+            // Обновляем атрибуты
+            if (responseData.attributes) {
+              setAttributes(responseData.attributes.map(attr => ({
+                id: attr.id,
+                name: attr.name,
+                value: attr.value,
+                is_filterable: attr.is_filterable,
+              })));
+            }
+          }
+        }
       } else {
         const responseData = await createProductRequest(formDataToSend);
         console.log('[ProductForm] Ответ от createProductRequest:', responseData);
         handleApiResponse(responseData);
         notificationsRef.current?.info('Товар создан');
+        
+        if (stayOnPage) {
+          // После создания перенаправляем на страницу редактирования с новым ID
+          const newProductId = responseData?.id || responseData?.product_id;
+          if (newProductId) {
+            navigate(`/catalog/products/${newProductId}`);
+          }
+        }
       }
 
-      navigate('/catalog/products');
+      if (!stayOnPage) {
+        navigate('/catalog/products');
+      }
     } catch (error) {
       const message = getApiErrorMessage(error);
       notificationsRef.current?.error(message);
@@ -673,13 +712,23 @@ export function ProductFormPage() {
             Отмена
           </Button>
           <Button
+            type="button"
+            variant="primary"
+            leftIcon={<FiSave />}
+            loading={isSubmitting}
+            size="lg"
+            onClick={() => handleSubmit(null, true)}
+          >
+            Сохранить и продолжить редактирование
+          </Button>
+          <Button
             type="submit"
             variant="primary"
             leftIcon={<FiSave />}
             loading={isSubmitting}
             size="lg"
           >
-            {isEditMode ? 'Сохранить изменения' : 'Создать товар'}
+            {isEditMode ? 'Сохранить' : 'Создать'}
           </Button>
         </div>
       </form>

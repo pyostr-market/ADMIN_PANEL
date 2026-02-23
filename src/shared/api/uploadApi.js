@@ -1,6 +1,6 @@
 import { productApi } from './http';
 
-const UPLOAD_TIMEOUT = 10000; // 10 секунд таймаут
+const UPLOAD_TIMEOUT = 30000; // 30 секунд таймаут (увеличено для отладки)
 
 /**
  * Загрузка файла на сервер

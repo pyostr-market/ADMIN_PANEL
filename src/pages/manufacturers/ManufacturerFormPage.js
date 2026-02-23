@@ -73,8 +73,10 @@ export function ManufacturerFormPage() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e, stayOnPage = false) => {
+    if (e) {
+      e.preventDefault();
+    }
 
     if (!validateForm()) {
       notificationsRef.current?.error('Исправьте ошибки в форме');
@@ -90,14 +92,34 @@ export function ManufacturerFormPage() {
       };
 
       if (isEditMode) {
-        await updateManufacturerRequest(manufacturerId, payload);
+        const responseData = await updateManufacturerRequest(manufacturerId, payload);
         notificationsRef.current?.info('Производитель обновлен');
+        
+        if (stayOnPage) {
+          // Обновляем данные формы из ответа
+          if (responseData) {
+            setFormData({
+              name: responseData.name || formData.name,
+              description: responseData.description || formData.description,
+            });
+          }
+        }
       } else {
-        await createManufacturerRequest(payload);
+        const responseData = await createManufacturerRequest(payload);
         notificationsRef.current?.info('Производитель создан');
+        
+        if (stayOnPage) {
+          // После создания перенаправляем на страницу редактирования с новым ID
+          const newManufacturerId = responseData?.id;
+          if (newManufacturerId) {
+            navigate(`/catalog/manufacturers/${newManufacturerId}`);
+          }
+        }
       }
 
-      navigate('/catalog/manufacturers');
+      if (!stayOnPage) {
+        navigate('/catalog/manufacturers');
+      }
     } catch (error) {
       const message = getApiErrorMessage(error);
       notificationsRef.current?.error(message);
@@ -177,10 +199,20 @@ export function ManufacturerFormPage() {
           <Button
             type="button"
             variant="secondary"
-            onClick={() => navigate('/manufacturers')}
+            onClick={() => navigate('/catalog/manufacturers')}
             leftIcon={<FiX />}
           >
             Отмена
+          </Button>
+          <Button
+            type="button"
+            variant="primary"
+            leftIcon={<FiSave />}
+            loading={isSubmitting}
+            size="lg"
+            onClick={() => handleSubmit(null, true)}
+          >
+            Сохранить и продолжить редактирование
           </Button>
           <Button
             type="submit"
@@ -189,7 +221,7 @@ export function ManufacturerFormPage() {
             loading={isSubmitting}
             size="lg"
           >
-            {isEditMode ? 'Сохранить изменения' : 'Создать производителя'}
+            {isEditMode ? 'Сохранить' : 'Создать'}
           </Button>
         </div>
       </form>

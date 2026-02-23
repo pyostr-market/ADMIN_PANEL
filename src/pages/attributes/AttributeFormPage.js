@@ -86,8 +86,10 @@ export function AttributeFormPage() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e, stayOnPage = false) => {
+    if (e) {
+      e.preventDefault();
+    }
 
     if (!validateForm()) {
       notificationsRef.current?.error('Исправьте ошибки в форме');
@@ -104,14 +106,37 @@ export function AttributeFormPage() {
       };
 
       if (isEditMode) {
-        await updateAttributeRequest(attributeId, payload);
+        const responseData = await updateAttributeRequest(attributeId, payload);
         notificationsRef.current?.info('Атрибут обновлен');
+        
+        if (stayOnPage) {
+          // Обновляем данные формы из ответа
+          if (responseData) {
+            setFormData({
+              name: responseData.name || formData.name,
+              value: responseData.value || formData.value,
+              is_filterable: responseData.is_filterable !== undefined 
+                ? responseData.is_filterable 
+                : formData.is_filterable,
+            });
+          }
+        }
       } else {
-        await createAttributeRequest(payload);
+        const responseData = await createAttributeRequest(payload);
         notificationsRef.current?.info('Атрибут создан');
+        
+        if (stayOnPage) {
+          // После создания перенаправляем на страницу редактирования с новым ID
+          const newAttributeId = responseData?.id;
+          if (newAttributeId) {
+            navigate(`/catalog/attributes/${newAttributeId}`);
+          }
+        }
       }
 
-      navigate('/catalog/attributes');
+      if (!stayOnPage) {
+        navigate('/catalog/attributes');
+      }
     } catch (error) {
       const message = getApiErrorMessage(error);
       notificationsRef.current?.error(message);
@@ -215,13 +240,23 @@ export function AttributeFormPage() {
             Отмена
           </Button>
           <Button
+            type="button"
+            variant="primary"
+            leftIcon={<FiSave />}
+            loading={isSubmitting}
+            size="lg"
+            onClick={() => handleSubmit(null, true)}
+          >
+            Сохранить и продолжить редактирование
+          </Button>
+          <Button
             type="submit"
             variant="primary"
             leftIcon={<FiSave />}
             loading={isSubmitting}
             size="lg"
           >
-            {isEditMode ? 'Сохранить изменения' : 'Создать атрибут'}
+            {isEditMode ? 'Сохранить' : 'Создать'}
           </Button>
         </div>
       </form>

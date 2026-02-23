@@ -76,8 +76,10 @@ export function UserCreatePage() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e, stayOnPage = false) => {
+    if (e) {
+      e.preventDefault();
+    }
 
     if (!validateForm()) {
       notificationsRef.current?.error('Исправьте ошибки в форме');
@@ -99,8 +101,10 @@ export function UserCreatePage() {
       //   group_id: formData.group_id ? Number(formData.group_id) : undefined,
       // };
       // await createUserRequest(payload);
-      // notifications.info('Пользователь создан');
-      // navigate('/users');
+      // notifications.success('Пользователь создан');
+      // if (!stayOnPage) {
+      //   navigate('/users');
+      // }
 
     } catch (error) {
       const message = getApiErrorMessage(error);
@@ -290,6 +294,16 @@ export function UserCreatePage() {
             leftIcon={<FiX />}
           >
             Отмена
+          </Button>
+          <Button
+            type="button"
+            variant="primary"
+            leftIcon={<FiSave />}
+            loading={isSubmitting}
+            size="lg"
+            onClick={() => handleSubmit(null, true)}
+          >
+            Сохранить и продолжить редактирование
           </Button>
           <Button
             type="submit"

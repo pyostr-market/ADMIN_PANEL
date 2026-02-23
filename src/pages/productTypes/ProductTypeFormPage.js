@@ -73,8 +73,10 @@ export function ProductTypeFormPage() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e, stayOnPage = false) => {
+    if (e) {
+      e.preventDefault();
+    }
 
     if (!validateForm()) {
       notificationsRef.current?.error('Исправьте ошибки в форме');
@@ -90,14 +92,34 @@ export function ProductTypeFormPage() {
       };
 
       if (isEditMode) {
-        await updateProductTypeRequest(productTypeId, payload);
+        const responseData = await updateProductTypeRequest(productTypeId, payload);
         notificationsRef.current?.info('Тип продукта обновлен');
+        
+        if (stayOnPage) {
+          // Обновляем данные формы из ответа
+          if (responseData) {
+            setFormData({
+              name: responseData.name || formData.name,
+              parent_id: responseData.parent_id || formData.parent_id,
+            });
+          }
+        }
       } else {
-        await createProductTypeRequest(payload);
+        const responseData = await createProductTypeRequest(payload);
         notificationsRef.current?.info('Тип продукта создан');
+        
+        if (stayOnPage) {
+          // После создания перенаправляем на страницу редактирования с новым ID
+          const newProductTypeId = responseData?.id;
+          if (newProductTypeId) {
+            navigate(`/catalog/device_type/${newProductTypeId}`);
+          }
+        }
       }
 
-      navigate('/catalog/device_type');
+      if (!stayOnPage) {
+        navigate('/catalog/device_type');
+      }
     } catch (error) {
       const message = getApiErrorMessage(error);
       notificationsRef.current?.error(message);
@@ -181,10 +203,20 @@ export function ProductTypeFormPage() {
           <Button
             type="button"
             variant="secondary"
-            onClick={() => navigate('/product-types')}
+            onClick={() => navigate('/catalog/device_type')}
             leftIcon={<FiX />}
           >
             Отмена
+          </Button>
+          <Button
+            type="button"
+            variant="primary"
+            leftIcon={<FiSave />}
+            loading={isSubmitting}
+            size="lg"
+            onClick={() => handleSubmit(null, true)}
+          >
+            Сохранить и продолжить редактирование
           </Button>
           <Button
             type="submit"
@@ -193,7 +225,7 @@ export function ProductTypeFormPage() {
             loading={isSubmitting}
             size="lg"
           >
-            {isEditMode ? 'Сохранить изменения' : 'Создать тип продукта'}
+            {isEditMode ? 'Сохранить' : 'Создать'}
           </Button>
         </div>
       </form>

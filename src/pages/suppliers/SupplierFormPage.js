@@ -83,8 +83,10 @@ export function SupplierFormPage() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e, stayOnPage = false) => {
+    if (e) {
+      e.preventDefault();
+    }
 
     if (!validateForm()) {
       notificationsRef.current?.error('Исправьте ошибки в форме');
@@ -101,14 +103,35 @@ export function SupplierFormPage() {
       };
 
       if (isEditMode) {
-        await updateSupplierRequest(supplierId, payload);
+        const responseData = await updateSupplierRequest(supplierId, payload);
         notificationsRef.current?.info('Поставщик обновлен');
+        
+        if (stayOnPage) {
+          // Обновляем данные формы из ответа
+          if (responseData) {
+            setFormData({
+              name: responseData.name || formData.name,
+              contact_email: responseData.contact_email || formData.contact_email,
+              phone: responseData.phone || formData.phone,
+            });
+          }
+        }
       } else {
-        await createSupplierRequest(payload);
+        const responseData = await createSupplierRequest(payload);
         notificationsRef.current?.info('Поставщик создан');
+        
+        if (stayOnPage) {
+          // После создания перенаправляем на страницу редактирования с новым ID
+          const newSupplierId = responseData?.id;
+          if (newSupplierId) {
+            navigate(`/suppliers/${newSupplierId}`);
+          }
+        }
       }
 
-      navigate('/suppliers');
+      if (!stayOnPage) {
+        navigate('/suppliers');
+      }
     } catch (error) {
       const message = getApiErrorMessage(error);
       notificationsRef.current?.error(message);
@@ -214,13 +237,23 @@ export function SupplierFormPage() {
             Отмена
           </Button>
           <Button
+            type="button"
+            variant="primary"
+            leftIcon={<FiSave />}
+            loading={isSubmitting}
+            size="lg"
+            onClick={() => handleSubmit(null, true)}
+          >
+            Сохранить и продолжить редактирование
+          </Button>
+          <Button
             type="submit"
             variant="primary"
             leftIcon={<FiSave />}
             loading={isSubmitting}
             size="lg"
           >
-            {isEditMode ? 'Сохранить изменения' : 'Создать поставщика'}
+            {isEditMode ? 'Сохранить' : 'Создать'}
           </Button>
         </div>
       </form>
