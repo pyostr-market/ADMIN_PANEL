@@ -84,6 +84,11 @@ export function AutocompleteInput({
 
       // Есть ли еще данные для загрузки
       setHasMore(optionsArray.length === PAGE_SIZE);
+      
+      // Помечаем что загрузка выполнена (для предотвращения дублирования)
+      if (!append) {
+        setDidLoadOnce(true);
+      }
     } catch (err) {
       console.error('Error loading options:', err);
       if (!append) {
@@ -161,12 +166,11 @@ export function AutocompleteInput({
       setHighlightedIndex(-1);
       setOffset(0);
       // Загружаем данные сразу при открытии (без debounce)
-      if (!didLoadOnce) {
+      if (!didLoadOnce && !isLoading) {
         loadOptions('', 0, false);
-        setDidLoadOnce(true);
       }
     }
-  }, [disabled, didLoadOnce, loadOptions]);
+  }, [disabled, didLoadOnce, isLoading, loadOptions]);
 
   const handleCloseDropdown = useCallback(() => {
     setIsOpen(false);

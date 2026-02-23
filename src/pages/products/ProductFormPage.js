@@ -60,6 +60,8 @@ export function ProductFormPage() {
   const [errors, setErrors] = useState({});
 
   const loadProduct = useCallback(async () => {
+    if (!productId) return;
+    
     setIsLoading(true);
     try {
       const data = await getProductByIdRequest(productId);
@@ -127,7 +129,7 @@ export function ProductFormPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [productId]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (isEditMode && productId) {
