@@ -1,40 +1,91 @@
-/* ManufacturerFormPage - Mobile styles */
+/* Form pages - Mobile styles */
 @media (max-width: 768px) {
-  .manufacturer-form {
-    padding: 16px;
+  .manufacturer-form,
+  .supplier-form,
+  .product-type-form,
+  .attribute-form,
+  .product-form,
+  .user-create-form {
+    padding: 12px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
-  .manufacturer-form__field {
-    gap: 6px;
+  .manufacturer-form__field,
+  .supplier-form__field,
+  .product-type-form__field,
+  .attribute-form__field,
+  .product-form__field,
+  .user-create-form__field {
+    gap: 4px;
+    width: 100%;
   }
 
   .manufacturer-form__field input,
+  .supplier-form__field input,
+  .product-type-form__field input,
+  .attribute-form__field input,
+  .product-form__field input,
+  .user-create-form__field input,
   .manufacturer-form__field textarea,
-  .manufacturer-form__field select {
-    height: 40px;
-    font-size: 14px;
-    padding: 8px 12px;
+  .supplier-form__field textarea,
+  .product-type-form__field textarea,
+  .attribute-form__field textarea,
+  .product-form__field textarea,
+  .user-create-form__field textarea,
+  .manufacturer-form__field select,
+  .supplier-form__field select,
+  .product-type-form__field select,
+  .attribute-form__field select,
+  .product-form__field select,
+  .user-create-form__field select {
+    height: 36px;
+    font-size: 13px;
+    padding: 6px 10px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
   }
 
-  .manufacturer-form__field textarea {
-    min-height: 100px;
+  .manufacturer-form__field textarea,
+  .supplier-form__field textarea,
+  .product-type-form__field textarea,
+  .attribute-form__field textarea,
+  .product-form__field textarea,
+  .user-create-form__field textarea {
+    min-height: 80px;
   }
 
-  .manufacturer-form__label {
-    font-size: 12px;
+  .manufacturer-form__label,
+  .supplier-form__label,
+  .product-type-form__label,
+  .attribute-form__label,
+  .product-form__label,
+  .user-create-form__label {
+    font-size: 11px;
     font-weight: 600;
   }
 
-  .manufacturer-form__actions {
+  .manufacturer-form__actions,
+  .supplier-form__actions,
+  .product-type-form__actions,
+  .attribute-form__actions,
+  .product-form__actions,
+  .user-create-form__actions {
     flex-direction: column;
     width: 100%;
-    gap: 8px;
-    margin-top: 16px;
+    gap: 6px;
+    margin-top: 12px;
   }
 
-  .manufacturer-form__actions button {
+  .manufacturer-form__actions button,
+  .supplier-form__actions button,
+  .product-type-form__actions button,
+  .attribute-form__actions button,
+  .product-form__actions button,
+  .user-create-form__actions button {
     width: 100%;
-    height: 42px;
-    font-size: 14px;
+    height: 38px;
+    font-size: 13px;
   }
 }

@@ -2,25 +2,28 @@
 @media (max-width: 768px) {
   .pagination {
     flex-direction: column;
-    gap: 8px;
-    padding: 12px;
+    gap: 6px;
+    padding: 10px;
   }
 
   .pagination__info {
-    font-size: 12px;
+    font-size: 11px;
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .pagination__controls {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     width: 100%;
   }
 
   .pagination button {
     flex: 1;
-    height: 38px;
-    min-width: 38px;
-    font-size: 13px;
+    height: 34px;
+    min-width: 34px;
+    font-size: 12px;
   }
 }

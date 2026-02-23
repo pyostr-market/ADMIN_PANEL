@@ -1,84 +1,24 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import {
-  FiChevronDown,
-  FiChevronLeft,
-  FiChevronRight,
-  FiGrid,
-  FiMoon,
-  FiSettings,
-  FiSun,
-  FiTruck,
-  FiUsers,
-  FiShoppingBag,
-  FiPackage,
-  FiTag,
-  FiUser,
-  FiLayers,
-} from 'react-icons/fi';
+import { FiChevronDown, FiChevronLeft, FiChevronRight, FiMoon, FiSun } from 'react-icons/fi';
 import { useSession } from '../../entities/session/model/SessionProvider';
-import { hasPermission } from '../../shared/lib/permissions/permissions';
+import { NAVIGATION_CONFIG, isActivePath } from '../../shared/config/navigation';
+import { Icons } from '../../shared/config/navigation-icons';
 import './AppSidebar.css';
 
 const SIDEBAR_COLLAPSED_STORAGE_KEY = 'market-admin:sidebar-collapsed';
 const THEME_STORAGE_KEY = 'market-admin:theme';
 
-const PERMISSIONS = {
-  usersList: ['users', 'users:view', 'admin:user', 'admin:user:view'],
-  permissionsGroups: [
-    'permission:view',
-    'permission:update',
-    'admin:group:create',
-    'admin:group:update',
-    'admin:group:delete',
-    'admin:group:view',
-  ],
-  products: ['product', 'product:view'],
-  suppliers: ['supplier', 'supplier:view'],
-  manufacturers: ['manufacturer', 'manufacturer:view'],
-  deviceTypes: ['device_type', 'device_type:view', 'product_type', 'product_type:view'],
-  attributes: ['product_attribute', 'product_attribute:view'],
-};
-
-const catalogItems = [
-  {
-    id: 'products',
-    label: 'Товары',
-    icon: FiShoppingBag,
-    to: '/catalog/products',
-    permission: PERMISSIONS.products,
-  },
-  {
-    id: 'manufacturers',
-    label: 'Производители',
-    icon: FiPackage,
-    to: '/catalog/manufacturers',
-    permission: PERMISSIONS.manufacturers,
-  },
-  {
-    id: 'device_type',
-    label: 'Типы устройств',
-    icon: FiTag,
-    to: '/catalog/device_type',
-    permission: PERMISSIONS.deviceTypes,
-  },
-  {
-    id: 'attributes',
-    label: 'Атрибуты',
-    icon: FiLayers,
-    to: '/catalog/attributes',
-    permission: PERMISSIONS.attributes,
-  },
-];
-
-function SidebarItemLink({ to, label, icon: Icon, collapsed }) {
+function SidebarItemLink({ to, label, Icon, collapsed }) {
   return (
     <NavLink
       to={to}
       title={collapsed ? label : undefined}
       className={({ isActive }) => `sidebar-link${isActive ? ' sidebar-link--active' : ''}`}
     >
-      <span className="sidebar-link__icon" aria-hidden="true"><Icon /></span>
+      <span className="sidebar-link__icon" aria-hidden="true">
+        <Icon />
+      </span>
       {!collapsed && <span>{label}</span>}
     </NavLink>
   );
@@ -87,39 +27,50 @@ function SidebarItemLink({ to, label, icon: Icon, collapsed }) {
 export function AppSidebar({ collapsed, onCollapse }) {
   const location = useLocation();
   const { permissions } = useSession();
-  const catalogHoverTimerRef = useRef(null);
   const [theme, setTheme] = useState(() => {
     if (typeof window === 'undefined') {
       return 'light';
     }
-
     return window.localStorage.getItem(THEME_STORAGE_KEY) || 'light';
   });
-  const [isCatalogOpen, setCatalogOpen] = useState(location.pathname.startsWith('/catalog'));
-  const [isUsersOpen, setUsersOpen] = useState(location.pathname.startsWith('/users'));
+
+  // Состояния для раскрытия групп
+  const [expandedGroups, setExpandedGroups] = useState(() => {
+    const initial = {};
+    Object.keys(NAVIGATION_CONFIG).forEach((key) => {
+      if (key !== 'footer' && key !== 'additional') {
+        initial[key] = location.pathname.startsWith(
+          NAVIGATION_CONFIG[key].items[0]?.path.split('/')[1] || ''
+        );
+      }
+    });
+    return initial;
+  });
 
   useEffect(() => {
-    if (location.pathname.startsWith('/catalog')) {
-      setCatalogOpen(true);
-    }
-    if (location.pathname.startsWith('/users')) {
-      setUsersOpen(true);
-    }
+    // Обновляем раскрытые группы на основе текущего пути
+    const newExpanded = { ...expandedGroups };
+    Object.keys(NAVIGATION_CONFIG).forEach((key) => {
+      if (key !== 'footer' && key !== 'additional') {
+        const menu = NAVIGATION_CONFIG[key];
+        const isPathInGroup = menu.items.some((item) =>
+          location.pathname.startsWith(item.path)
+        );
+        if (isPathInGroup) {
+          newExpanded[key] = true;
+        }
+      }
+    });
+    setExpandedGroups(newExpanded);
   }, [location.pathname]);
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
+    if (typeof window === 'undefined') return;
     window.localStorage.setItem(SIDEBAR_COLLAPSED_STORAGE_KEY, collapsed ? '1' : '0');
   }, [collapsed]);
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
+    if (typeof window === 'undefined') return;
     document.documentElement.setAttribute('data-theme', theme);
     window.localStorage.setItem(THEME_STORAGE_KEY, theme);
   }, [theme]);
@@ -132,46 +83,17 @@ export function AppSidebar({ collapsed, onCollapse }) {
     onCollapse((prev) => !prev);
   };
 
-  useEffect(
-    () => () => {
-      if (catalogHoverTimerRef.current) {
-        window.clearTimeout(catalogHoverTimerRef.current);
-      }
-    },
-    [],
-  );
-
-  const visibleCatalogItems = useMemo(
-    () => catalogItems.filter((item) => hasPermission(permissions, item.permission, 'any')),
-    [permissions],
-  );
-
-  const canSeeUsersList = hasPermission(permissions, PERMISSIONS.usersList, 'any');
-  const canSeePermissionsGroups = hasPermission(permissions, PERMISSIONS.permissionsGroups, 'any');
-  const canSeeSuppliers = hasPermission(permissions, PERMISSIONS.suppliers, 'any');
-  const canSeeCatalog = visibleCatalogItems.length > 0;
-  const canSeeUsersGroup = canSeeUsersList || canSeePermissionsGroups;
-
-  const handleCatalogMouseEnter = () => {
-    if (collapsed) {
-      return;
-    }
-
-    if (catalogHoverTimerRef.current) {
-      window.clearTimeout(catalogHoverTimerRef.current);
-    }
-
-    catalogHoverTimerRef.current = window.setTimeout(() => {
-      setCatalogOpen(true);
-      catalogHoverTimerRef.current = null;
-    }, 1000);
+  const toggleGroup = (groupKey) => {
+    setExpandedGroups((prev) => ({
+      ...prev,
+      [groupKey]: !prev[groupKey],
+    }));
   };
 
-  const handleCatalogMouseLeave = () => {
-    if (catalogHoverTimerRef.current) {
-      window.clearTimeout(catalogHoverTimerRef.current);
-      catalogHoverTimerRef.current = null;
-    }
+  // Получаем иконку по имени
+  const getIcon = (iconName) => {
+    const IconComponent = Icons[iconName];
+    return IconComponent || Icons.catalog;
   };
 
   return (
@@ -192,84 +114,58 @@ export function AppSidebar({ collapsed, onCollapse }) {
       </div>
 
       <nav className="sidebar-panel__nav">
-        <SidebarItemLink to="/profile" label="Профиль" icon={FiUser} collapsed={collapsed} />
+        {/* Профиль */}
+        <SidebarItemLink
+          to={NAVIGATION_CONFIG.footer.find((i) => i.icon === 'profile')?.path || '/profile'}
+          label="Профиль"
+          Icon={getIcon('profile')}
+          collapsed={collapsed}
+        />
 
-        {canSeeUsersGroup && (
-          <div className="sidebar-group">
-            <button
-              type="button"
-              className="sidebar-group__trigger"
-              title={collapsed ? 'Пользователи' : undefined}
-              onClick={() => setUsersOpen((prev) => !prev)}
-              aria-expanded={isUsersOpen}
-            >
-              <span className="sidebar-link__icon" aria-hidden="true"><FiUsers /></span>
-              {!collapsed && <span>Пользователи</span>}
-              {!collapsed && (
-                <span className="sidebar-group__chevron" aria-hidden="true">
-                  {isUsersOpen ? <FiChevronDown /> : <FiChevronRight />}
+        {/* Динамические группы меню */}
+        {Object.keys(NAVIGATION_CONFIG).map((groupKey) => {
+          if (groupKey === 'footer' || groupKey === 'additional') return null;
+
+          const group = NAVIGATION_CONFIG[groupKey];
+          const isOpen = expandedGroups[groupKey] || false;
+          const Icon = getIcon(group.icon);
+
+          return (
+            <div key={groupKey} className="sidebar-group">
+              <button
+                type="button"
+                className="sidebar-group__trigger"
+                title={collapsed ? group.title : undefined}
+                onClick={() => toggleGroup(groupKey)}
+                aria-expanded={isOpen}
+              >
+                <span className="sidebar-link__icon" aria-hidden="true">
+                  <Icon />
                 </span>
-              )}
-            </button>
-
-            {isUsersOpen && !collapsed && (
-              <div className="sidebar-group__items">
-                {canSeeUsersList && (
-                  <SidebarItemLink to="/users" label="Список пользователей" icon={FiUsers} collapsed={collapsed} />
+                {!collapsed && <span>{group.title}</span>}
+                {!collapsed && (
+                  <span className="sidebar-group__chevron" aria-hidden="true">
+                    {isOpen ? <FiChevronDown /> : <FiChevronRight />}
+                  </span>
                 )}
-                {canSeePermissionsGroups && (
-                  <SidebarItemLink to="/users/permissions-groups" label="Права и группы" icon={FiSettings} collapsed={collapsed} />
-                )}
-              </div>
-            )}
-          </div>
-        )}
+              </button>
 
-        {canSeeCatalog && (
-          <div
-            className="sidebar-group"
-            onMouseEnter={handleCatalogMouseEnter}
-            onMouseLeave={handleCatalogMouseLeave}
-          >
-            <button
-              type="button"
-              className="sidebar-group__trigger"
-              title={collapsed ? 'Каталог' : undefined}
-              onClick={() => setCatalogOpen((prev) => !prev)}
-              aria-expanded={isCatalogOpen}
-            >
-              <span className="sidebar-link__icon" aria-hidden="true"><FiGrid /></span>
-              {!collapsed && <span>Каталог</span>}
-              {!collapsed && (
-                <span className="sidebar-group__chevron" aria-hidden="true">
-                  {isCatalogOpen ? <FiChevronDown /> : <FiChevronRight />}
-                </span>
+              {isOpen && !collapsed && (
+                <div className="sidebar-group__items">
+                  {group.items.map((item) => (
+                    <SidebarItemLink
+                      key={item.path}
+                      to={item.path}
+                      label={item.label}
+                      Icon={getIcon(item.icon)}
+                      collapsed={collapsed}
+                    />
+                  ))}
+                </div>
               )}
-            </button>
-
-            {isCatalogOpen && !collapsed && (
-              <div className="sidebar-group__items">
-                {visibleCatalogItems.map((item) => (
-                  <SidebarItemLink
-                    key={item.id}
-                    to={item.to}
-                    label={item.label}
-                    icon={item.icon}
-                    collapsed={collapsed}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {canSeeSuppliers && (
-          <SidebarItemLink to="/suppliers" label="Поставщики" icon={FiTruck} collapsed={collapsed} />
-        )}
-
-        {!canSeeUsersGroup && !canSeeSuppliers && !canSeeCatalog && (
-          <p className="sidebar-panel__empty">Нет доступных разделов.</p>
-        )}
+            </div>
+          );
+        })}
       </nav>
 
       <div className="sidebar-panel__footer">

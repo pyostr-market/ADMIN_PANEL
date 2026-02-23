@@ -1,7 +1,7 @@
 /* Modal - Mobile styles */
 @media (max-width: 768px) {
   .modal-overlay {
-    padding: 12px;
+    padding: 10px;
     align-items: flex-end;
   }
 
@@ -11,6 +11,7 @@
     border-radius: 12px 12px 0 0;
     animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
+    max-width: 100%;
   }
 
   @keyframes slideUp {
@@ -32,33 +33,35 @@
   }
 
   .modal__header {
-    padding: 14px 16px;
-    gap: 8px;
+    padding: 12px;
+    gap: 6px;
     border-bottom-width: 1px;
   }
 
   .modal__title {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     margin: 0;
+    word-break: break-word;
   }
 
   .modal__content {
-    padding: 16px;
-    max-height: calc(90vh - 120px);
+    padding: 12px;
+    max-height: calc(90vh - 100px);
     overflow-y: auto;
+    word-break: break-word;
   }
 
   .modal__footer {
-    padding: 12px 16px;
+    padding: 10px 12px;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     border-top-width: 1px;
   }
 
   .modal__footer button {
     width: 100%;
-    height: 42px;
-    font-size: 14px;
+    height: 38px;
+    font-size: 13px;
   }
 }

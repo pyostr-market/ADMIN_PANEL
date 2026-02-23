@@ -2,21 +2,24 @@
 @media (max-width: 768px) {
   .search-input {
     width: 100%;
+    box-sizing: border-box;
   }
 
   .search-input__wrapper {
     width: 100%;
+    box-sizing: border-box;
   }
 
   .search-input__wrapper input {
-    height: 40px;
-    padding: 8px 36px 8px 12px;
-    font-size: 14px;
+    height: 36px;
+    padding: 6px 32px 6px 10px;
+    font-size: 13px;
+    box-sizing: border-box;
   }
 
   .search-input__loading-indicator {
-    right: 10px;
-    width: 16px;
-    height: 16px;
+    right: 8px;
+    width: 14px;
+    height: 14px;
   }
 }

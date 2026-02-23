@@ -4,6 +4,7 @@
     width: 100%;
     overflow-x: auto;
     flex-wrap: nowrap;
+    box-sizing: border-box;
   }
 
   .tabs::-webkit-scrollbar {
@@ -12,10 +13,10 @@
 
   .tab {
     min-width: fit-content;
-    padding: 10px 14px;
-    font-size: 13px;
+    padding: 8px 12px;
+    font-size: 12px;
     font-weight: 600;
-    height: 42px;
+    height: 38px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
