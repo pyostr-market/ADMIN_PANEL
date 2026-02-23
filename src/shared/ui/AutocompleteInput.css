@@ -188,3 +188,13 @@
 .autocomplete-input__option--highlighted .autocomplete-input__option-value {
   opacity: 0.9;
 }
+
+.autocomplete-input__load-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3) var(--space-4);
+  font-size: 13px;
+  color: var(--color-text-secondary, var(--text-secondary));
+  background: var(--color-background, var(--surface));
+}

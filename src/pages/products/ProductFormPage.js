@@ -46,6 +46,11 @@ export function ProductFormPage() {
     product_type_id: '',
   });
 
+  // Храним полные объекты для autocomplete
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedSupplier, setSelectedSupplier] = useState(null);
+  const [selectedProductType, setSelectedProductType] = useState(null);
+
   const [images, setImages] = useState([]);
   const [attributes, setAttributes] = useState([]);
   const [newAttribute, setNewAttribute] = useState({ name: '', value: '', is_filterable: false });
@@ -68,6 +73,16 @@ export function ProductFormPage() {
         supplier_id: data.supplier_id?.toString() || '',
         product_type_id: data.product_type_id?.toString() || '',
       });
+      // Сохраняем полные объекты для autocomplete
+      if (data.category) {
+        setSelectedCategory(data.category);
+      }
+      if (data.supplier) {
+        setSelectedSupplier(data.supplier);
+      }
+      if (data.product_type) {
+        setSelectedProductType(data.product_type);
+      }
       // Сохраняем все данные изображения
       // API возвращает: image_id, image_key (путь к файлу), image_url (полный URL), ordering, upload_id
       const processedImages = data.images?.map((img, index) => {
@@ -468,7 +483,7 @@ export function ProductFormPage() {
                     onChange={(value) => handleChange('category_id', value)}
                     fetchOptions={getCategoriesForAutocompleteRequest}
                     placeholder="Начните ввод для поиска категории..."
-                    searchField="name"
+                    selectedOption={selectedCategory}
                   />
                 </div>
 
@@ -479,7 +494,7 @@ export function ProductFormPage() {
                     onChange={(value) => handleChange('product_type_id', value)}
                     fetchOptions={getProductTypesForAutocompleteRequest}
                     placeholder="Начните ввод для поиска типа продукта..."
-                    searchField="name"
+                    selectedOption={selectedProductType}
                   />
                 </div>
 
@@ -490,7 +505,7 @@ export function ProductFormPage() {
                     onChange={(value) => handleChange('supplier_id', value)}
                     fetchOptions={getSuppliersForAutocompleteRequest}
                     placeholder="Начните ввод для поиска поставщика..."
-                    searchField="name"
+                    selectedOption={selectedSupplier}
                   />
                 </div>
               </div>
