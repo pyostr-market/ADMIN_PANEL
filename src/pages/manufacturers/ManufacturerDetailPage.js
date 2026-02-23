@@ -123,21 +123,9 @@ export function ManufacturerDetailPage() {
   return (
     <section className="manufacturer-detail-page">
       <header className="manufacturer-detail-page__header">
-        <div className="manufacturer-detail-page__header-left">
-          <Button variant="ghost" onClick={() => navigate('/catalog/manufacturers')} className="back-button">
-            ← Назад
-          </Button>
-          <div className="manufacturer-detail-page__user-info">
-            <div className="manufacturer-detail-page__avatar">
-              <FiBox />
-            </div>
-            <div className="manufacturer-detail-page__header-text">
-              <h1 className="manufacturer-detail-page__title">
-                {manufacturer.name || `Производитель #${manufacturer.id}`}
-              </h1>
-            </div>
-          </div>
-        </div>
+        <Button variant="ghost" onClick={() => navigate('/catalog/manufacturers')} className="back-button">
+          ← Назад
+        </Button>
         <div className="manufacturer-detail-page__actions">
           <PermissionGate permission={['manufacturer:update']} fallback={null}>
             <Button

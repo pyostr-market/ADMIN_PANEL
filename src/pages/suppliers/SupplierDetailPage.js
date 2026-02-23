@@ -123,21 +123,9 @@ export function SupplierDetailPage() {
   return (
     <section className="supplier-detail-page">
       <header className="supplier-detail-page__header">
-        <div className="supplier-detail-page__header-left">
-          <Button variant="ghost" onClick={() => navigate('/suppliers')} className="back-button">
-            ← Назад
-          </Button>
-          <div className="supplier-detail-page__user-info">
-            <div className="supplier-detail-page__avatar">
-              <FiBox />
-            </div>
-            <div className="supplier-detail-page__header-text">
-              <h1 className="supplier-detail-page__title">
-                {supplier.name || `Поставщик #${supplier.id}`}
-              </h1>
-            </div>
-          </div>
-        </div>
+        <Button variant="ghost" onClick={() => navigate('/suppliers')} className="back-button">
+          ← Назад
+        </Button>
         <div className="supplier-detail-page__actions">
           <PermissionGate permission={['supplier:update']} fallback={null}>
             <Button

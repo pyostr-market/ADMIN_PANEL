@@ -199,21 +199,9 @@ export function ProductDetailPage() {
   return (
     <section className="product-detail-page">
       <header className="product-detail-page__header">
-        <div className="product-detail-page__header-left">
-          <Button variant="ghost" onClick={() => navigate('/catalog/products')} className="back-button">
-            ← Назад
-          </Button>
-          <div className="product-detail-page__user-info">
-            <div className="product-detail-page__avatar">
-              <FiBox />
-            </div>
-            <div className="product-detail-page__header-text">
-              <h1 className="product-detail-page__title">
-                {product.name || `Товар #${product.id}`}
-              </h1>
-            </div>
-          </div>
-        </div>
+        <Button variant="ghost" onClick={() => navigate('/catalog/products')} className="back-button">
+          ← Назад
+        </Button>
         <div className="product-detail-page__actions">
           <PermissionGate permission={['product:update']} fallback={null}>
             <Button

@@ -123,21 +123,9 @@ export function ProductTypeDetailPage() {
   return (
     <section className="product-type-detail-page">
       <header className="product-type-detail-page__header">
-        <div className="product-type-detail-page__header-left">
-          <Button variant="ghost" onClick={() => navigate('/catalog/device_type')} className="back-button">
-            ← Назад
-          </Button>
-          <div className="product-type-detail-page__user-info">
-            <div className="product-type-detail-page__avatar">
-              <FiBox />
-            </div>
-            <div className="product-type-detail-page__header-text">
-              <h1 className="product-type-detail-page__title">
-                {productType.name || `Тип продукта #${productType.id}`}
-              </h1>
-            </div>
-          </div>
-        </div>
+        <Button variant="ghost" onClick={() => navigate('/catalog/device_type')} className="back-button">
+          ← Назад
+        </Button>
         <div className="product-type-detail-page__actions">
           <PermissionGate permission={['product_type:update']} fallback={null}>
             <Button

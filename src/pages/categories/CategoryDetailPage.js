@@ -71,12 +71,9 @@ export function CategoryDetailPage() {
   return (
     <section className="category-detail-page">
       <header className="category-detail-page__header">
-        <div className="category-detail-page__header-left">
-          <Button variant="ghost" onClick={handleBack} className="back-button">
-            ← Назад
-          </Button>
-          <h1 className="category-detail-page__title">{category.name || 'Без названия'}</h1>
-        </div>
+        <Button variant="ghost" onClick={handleBack} className="back-button">
+          ← Назад
+        </Button>
         <div className="category-detail-page__actions">
           <PermissionGate permission={['category:update']} fallback={null}>
             <Button

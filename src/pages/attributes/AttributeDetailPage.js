@@ -123,21 +123,9 @@ export function AttributeDetailPage() {
   return (
     <section className="attribute-detail-page">
       <header className="attribute-detail-page__header">
-        <div className="attribute-detail-page__header-left">
-          <Button variant="ghost" onClick={() => navigate('/catalog/attributes')} className="back-button">
-            ← Назад
-          </Button>
-          <div className="attribute-detail-page__user-info">
-            <div className="attribute-detail-page__avatar">
-              <FiTag />
-            </div>
-            <div className="attribute-detail-page__header-text">
-              <h1 className="attribute-detail-page__title">
-                {attribute.name || `Атрибут #${attribute.id}`}
-              </h1>
-            </div>
-          </div>
-        </div>
+        <Button variant="ghost" onClick={() => navigate('/catalog/attributes')} className="back-button">
+          ← Назад
+        </Button>
         <div className="attribute-detail-page__actions">
           <PermissionGate permission={['product_attribute:update']} fallback={null}>
             <Button
