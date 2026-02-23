@@ -69,13 +69,14 @@ export function ProductFormPage() {
         product_type_id: data.product_type_id?.toString() || '',
       });
       // Сохраняем все данные изображения
-      // API возвращает: image_id, image_key (путь к файлу), image_url (полный URL), ordering
+      // API возвращает: image_id, image_key (путь к файлу), image_url (полный URL), ordering, upload_id
       const processedImages = data.images?.map((img, index) => {
         console.log('[ProductForm] Обработка изображения:', img);
         return {
           image_id: img.image_id,
           image_key: img.image_key, // путь к файлу в S3
           image_url: img.image_url, // полный URL для отображения
+          upload_id: img.upload_id, // ID загруженного файла
           is_main: img.is_main === true,
           ordering: img.ordering ?? index, // порядок из API или по индексу
           isNew: false,
@@ -184,6 +185,20 @@ export function ProductFormPage() {
       return;
     }
 
+    // Проверяем, что все изображения загружены (есть upload_id)
+    const uploadingImages = images.filter(img => img.pendingUploadKey || !img.upload_id);
+    if (uploadingImages.length > 0) {
+      notificationsRef.current?.error('Дождитесь завершения загрузки всех изображений');
+      return;
+    }
+
+    // Проверяем, что есть изображения с upload_id
+    const uploadedImages = images.filter(img => img.upload_id && !img.toDelete);
+    if (uploadedImages.length === 0 && images.length > 0) {
+      notificationsRef.current?.error('Изображения не загружены или помечены на удаление');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -219,103 +234,66 @@ export function ProductFormPage() {
       }
 
       // Изображения
-      if (isEditMode) {
-        // Для редактирования используем images_json
-        // Важно: отправляем ВСЕ изображения в правильном порядке с ordering
-        // Находим индекс главного изображения
-        const mainImageIndex = images.findIndex(img => img.is_main && !img.toDelete);
+      // К моменту отправки все изображения уже загружены на сервер и имеют upload_id
+      const imagesToSend = images.filter(img => !img.toDelete);
 
-        // Фильтруем изображения для отправки (исключаем to_delete из основного списка)
-        const imagesToSend = images.filter(img => !img.toDelete);
-        
-        const imagesJson = imagesToSend.map((image, idx) => {
-          if (image.isNew) {
-            // Новое изображение - будет загружено
-            return {
-              action: 'to_create',
-              is_main: image.is_main,
-              ordering: idx, // Порядок в массиве
-            };
-          } else {
-            // Существующее изображение - сохраняем
-            // Отправляем image_key (путь к файлу), как требует API
-            return {
-              action: 'pass',
-              image_key: image.image_key,
-              is_main: image.is_main === true, // Гарантируем boolean
-              ordering: idx, // Порядок в массиве
-            };
-          }
+      const imagesJson = imagesToSend.map((image, idx) => {
+        // Новые изображения (isNew=true) отправляем с action: 'to_create'
+        // Существующие изображения отправляем с action: 'pass'
+        return {
+          action: image.isNew ? 'to_create' : 'pass',
+          upload_id: image.upload_id,
+          is_main: image.is_main === true,
+          ordering: idx,
+        };
+      });
+
+      // Добавляем операции to_delete для удалённых изображений
+      images
+        .filter(img => img.toDelete)
+        .forEach((image) => {
+          imagesJson.push({
+            action: 'to_delete',
+            upload_id: image.upload_id,
+          });
         });
 
-        // Добавляем операции to_delete для удалённых изображений
-        images
-          .filter(img => img.toDelete)
-          .forEach((image) => {
-            imagesJson.push({
-              action: 'to_delete',
-              image_key: image.image_key,
-            });
-          });
-
-        // Проверка: только одно изображение должно быть главным
-        const mainImages = imagesJson.filter(img => img.is_main === true);
-        if (mainImages.length > 1) {
-          console.warn('[ProductForm] ВНИМАНИЕ: Несколько главных изображений!', mainImages.length);
-          // Исправляем: оставляем только первое главное
-          let foundMain = false;
-          imagesJson.forEach(img => {
-            if (img.is_main === true) {
-              if (foundMain) {
-                img.is_main = false;
-              }
-              foundMain = true;
+      // Проверка: только одно изображение должно быть главным
+      const mainImages = imagesJson.filter(img => img.is_main === true);
+      if (mainImages.length > 1) {
+        console.warn('[ProductForm] ВНИМАНИЕ: Несколько главных изображений!', mainImages.length);
+        // Исправляем: оставляем только первое главное
+        let foundMain = false;
+        imagesJson.forEach(img => {
+          if (img.is_main === true) {
+            if (foundMain) {
+              img.is_main = false;
             }
-          });
-        }
-        if (mainImages.length === 0 && imagesJson.filter(img => img.action !== 'to_delete').length > 0) {
-          console.warn('[ProductForm] ВНИМАНИЕ: Нет главного изображения!');
-        }
-        
-        console.log('[ProductForm] Отправка изображений:', {
-          total: images.length,
-          toCreate: images.filter(i => i.isNew).length,
-          toDelete: images.filter(i => i.toDelete).length,
-          pass: images.filter(i => !i.isNew && !i.toDelete).length,
-          mainImageIndex,
-          mainImagesCount: mainImages.length,
-          allImages: images.map(i => ({ 
-            image_id: i.image_id, 
-            image_key: i.image_key, 
-            is_main: i.is_main, 
-            ordering: i.ordering,
-            isNew: i.isNew,
-            toDelete: i.toDelete 
-          })),
-          imagesJson,
-        });
-
-        formDataToSend.append('images_json', JSON.stringify(imagesJson));
-
-        // Добавляем файлы для новых изображений (to_create)
-        const newImages = images.filter(img => img.isNew && img.file);
-        console.log('[ProductForm] Файлы для загрузки:', newImages.length);
-        newImages.forEach((image) => {
-          formDataToSend.append('images', image.file);
-          formDataToSend.append('image_is_main', image.is_main ? 'true' : 'false');
-        });
-      } else {
-        // Для создания используем старый формат
-        images.forEach((image, index) => {
-          if (image.file) {
-            formDataToSend.append('images', image.file);
-            formDataToSend.append(
-              'image_is_main',
-              image.is_main ? 'true' : 'false'
-            );
+            foundMain = true;
           }
         });
       }
+      if (mainImages.length === 0 && imagesJson.filter(img => img.action !== 'to_delete').length > 0) {
+        console.warn('[ProductForm] ВНИМАНИЕ: Нет главного изображения!');
+      }
+
+      console.log('[ProductForm] Отправка изображений:', {
+        total: images.length,
+        toDelete: images.filter(i => i.toDelete).length,
+        pass: images.filter(i => !i.toDelete).length,
+        allImages: images.map(i => ({
+          image_id: i.image_id,
+          image_key: i.image_key,
+          upload_id: i.upload_id,
+          is_main: i.is_main,
+          ordering: i.ordering,
+          isNew: i.isNew,
+          toDelete: i.toDelete
+        })),
+        imagesJson,
+      });
+
+      formDataToSend.append('images_json', JSON.stringify(imagesJson));
 
       if (isEditMode) {
         const responseData = await updateProductRequest(productId, formDataToSend);
@@ -342,11 +320,12 @@ export function ProductFormPage() {
   const handleApiResponse = useCallback((responseData) => {
     console.log('[ProductForm] Ответ от сервера:', responseData);
     if (responseData.images) {
-      // Обновляем изображения с новыми данными от сервера (image_id, image_key, ordering)
+      // Обновляем изображения с новыми данными от сервера (image_id, image_key, ordering, upload_id)
       const updatedImages = responseData.images.map((apiImg) => ({
         image_id: apiImg.image_id,
         image_key: apiImg.image_key,
         image_url: apiImg.image_url,
+        upload_id: apiImg.upload_id,
         is_main: apiImg.is_main,
         ordering: apiImg.ordering,
         isNew: false, // Теперь это не новые изображения
@@ -548,6 +527,7 @@ export function ProductFormPage() {
                 multiple
                 showDelete
                 disabled={isSubmitting}
+                folder="products"
               />
             </div>
           </div>

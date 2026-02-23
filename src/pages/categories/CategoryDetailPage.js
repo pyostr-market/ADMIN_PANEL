@@ -120,13 +120,15 @@ export function CategoryDetailPage() {
               <div className="category-detail-row">
                 <span className="category-detail-row__label">Родительская категория:</span>
                 <span className="category-detail-row__value">
-                  {category.parent_id ? `ID: ${category.parent_id}` : '—'}
+                  {category.parent?.name ? `${category.parent.name} (ID: ${category.parent.id})` : 
+                   category.parent_id ? `ID: ${category.parent_id}` : '—'}
                 </span>
               </div>
               <div className="category-detail-row">
                 <span className="category-detail-row__label">Производитель:</span>
                 <span className="category-detail-row__value">
-                  {category.manufacturer_id ? `ID: ${category.manufacturer_id}` : '—'}
+                  {category.manufacturer?.name ? `${category.manufacturer.name} (ID: ${category.manufacturer.id})` : 
+                   category.manufacturer_id ? `ID: ${category.manufacturer_id}` : '—'}
                 </span>
               </div>
             </div>

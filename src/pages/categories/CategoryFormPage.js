@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FiSave, FiX, FiUpload, FiTrash2, FiImage } from 'react-icons/fi';
+import { FiSave, FiX, FiImage } from 'react-icons/fi';
 import { Button } from '../../shared/ui/Button';
+import { ImageCarousel } from '../../shared/ui/ImageCarousel';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import {
@@ -32,7 +33,6 @@ export function CategoryFormPage() {
   });
 
   const [images, setImages] = useState([]);
-  const [existingImages, setExistingImages] = useState([]);
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
@@ -47,11 +47,17 @@ export function CategoryFormPage() {
         parent_id: data.parent_id || '',
         manufacturer_id: data.manufacturer_id || '',
       });
-      
+
       if (data.images && data.images.length > 0) {
-        setExistingImages(data.images.map(img => ({
-          ordering: img.ordering,
+        // Существующие изображения уже загружены на сервер
+        setImages(data.images.map(img => ({
+          upload_id: img.upload_id,
+          image_key: img.file_path || img.image_url,
           image_url: img.image_url,
+          ordering: img.ordering,
+          is_main: false, // Для категорий нет понятия главного изображения
+          isNew: false,
+          toDelete: false,
         })));
       }
     } catch (error) {
@@ -76,7 +82,7 @@ export function CategoryFormPage() {
     }
 
     // При создании изображения обязательны
-    if (!isEditMode && images.length === 0 && existingImages.length === 0) {
+    if (!isEditMode && images.length === 0) {
       newErrors.images = 'Загрузите хотя бы одно изображение';
     }
 
@@ -91,42 +97,12 @@ export function CategoryFormPage() {
     }
   };
 
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length === 0) return;
-
-    const newImages = files.map((file, index) => ({
-      file,
-      preview: URL.createObjectURL(file),
-      ordering: images.length + existingImages.length + index,
-    }));
-
-    setImages((prev) => [...prev, ...newImages]);
-    
+  const handleImagesChange = useCallback((newImages) => {
+    setImages(newImages);
     if (errors.images) {
       setErrors((prev) => ({ ...prev, images: null }));
     }
-  };
-
-  const removeNewImage = (index) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const removeExistingImage = (index) => {
-    setExistingImages((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const updateImageOrdering = (index, newOrdering) => {
-    setImages((prev) => prev.map((img, i) => 
-      i === index ? { ...img, ordering: Number(newOrdering) } : img
-    ));
-  };
-
-  const updateExistingImageOrdering = (index, newOrdering) => {
-    setExistingImages((prev) => prev.map((img, i) => 
-      i === index ? { ...img, ordering: Number(newOrdering) } : img
-    ));
-  };
+  }, [errors.images]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -136,20 +112,30 @@ export function CategoryFormPage() {
       return;
     }
 
+    // Проверяем, что все изображения загружены (есть upload_id)
+    const uploadingImages = images.filter(img => img.pendingUploadKey || !img.upload_id);
+    if (uploadingImages.length > 0) {
+      notificationsRef.current?.error('Дождитесь завершения загрузки всех изображений');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      const allImages = [...existingImages, ...images];
-      const orderings = allImages.map(img => img.ordering);
-      const imageFiles = images.map(img => img.file);
+      // Формируем images_json для отправки
+      const imagesToSend = images.filter(img => !img.toDelete);
+      const imagesJson = imagesToSend.map((image, idx) => ({
+        action: image.isNew ? 'to_create' : 'pass',
+        upload_id: image.upload_id,
+        ordering: idx,
+      }));
 
       const payload = {
         name: formData.name.trim(),
         description: formData.description.trim() || null,
         parent_id: formData.parent_id ? Number(formData.parent_id) : null,
         manufacturer_id: formData.manufacturer_id ? Number(formData.manufacturer_id) : null,
-        images: imageFiles,
-        orderings: orderings,
+        images_json: JSON.stringify(imagesJson),
       };
 
       if (isEditMode) {
@@ -289,97 +275,14 @@ export function CategoryFormPage() {
               <span className="category-form__error category-form__error--block">{errors.images}</span>
             )}
 
-            <div className="category-images">
-              {/* Существующие изображения */}
-              {existingImages.length > 0 && (
-                <div className="category-images__list">
-                  <h3 className="category-images__subtitle">Существующие изображения</h3>
-                  {existingImages.map((img, index) => (
-                    <div key={index} className="category-image-item">
-                      <div className="category-image-item__preview">
-                        <img src={img.image_url} alt={`Изображение ${index + 1}`} />
-                      </div>
-                      <div className="category-image-item__info">
-                        <label className="category-image-item__label">
-                          Порядок:
-                          <input
-                            type="number"
-                            value={img.ordering}
-                            onChange={(e) => updateExistingImageOrdering(index, e.target.value)}
-                            min="0"
-                            className="category-image-item__ordering"
-                          />
-                        </label>
-                      </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => removeExistingImage(index)}
-                        className="category-image-item__remove"
-                        aria-label="Удалить изображение"
-                      >
-                        <FiTrash2 />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Новые изображения */}
-              {images.length > 0 && (
-                <div className="category-images__list">
-                  <h3 className="category-images__subtitle">Новые изображения</h3>
-                  {images.map((img, index) => (
-                    <div key={index} className="category-image-item">
-                      <div className="category-image-item__preview">
-                        <img src={img.preview} alt={`Изображение ${index + 1}`} />
-                      </div>
-                      <div className="category-image-item__info">
-                        <label className="category-image-item__label">
-                          Порядок:
-                          <input
-                            type="number"
-                            value={img.ordering}
-                            onChange={(e) => updateImageOrdering(index, e.target.value)}
-                            min="0"
-                            className="category-image-item__ordering"
-                          />
-                        </label>
-                        <span className="category-image-item__filename">{img.file.name}</span>
-                      </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => removeNewImage(index)}
-                        className="category-image-item__remove"
-                        aria-label="Удалить изображение"
-                      >
-                        <FiTrash2 />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Кнопка загрузки */}
-              <div className="category-images__upload">
-                <label className="category-images__upload-label">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleImageUpload}
-                    className="category-images__upload-input"
-                  />
-                  <span className="category-images__upload-button">
-                    <FiUpload />
-                    <span>Выбрать изображения</span>
-                  </span>
-                </label>
-              </div>
-            </div>
+            <ImageCarousel
+              images={images}
+              onImagesChange={handleImagesChange}
+              multiple
+              showDelete
+              disabled={isSubmitting}
+              folder="categories"
+            />
           </div>
         </div>
 

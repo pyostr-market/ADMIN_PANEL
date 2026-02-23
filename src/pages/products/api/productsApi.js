@@ -13,6 +13,7 @@ function unwrapResponse(response) {
  * @param {string} params.name - Фильтр по названию
  * @param {number | null} params.category_id - Фильтр по категории
  * @param {number | null} params.product_type_id - Фильтр по типу продукта
+ * @param {Object | null} params.attributes - Фильтр по атрибутам (JSON-объект)
  */
 export async function getProductsRequest({
   page = 1,
@@ -20,12 +21,16 @@ export async function getProductsRequest({
   name,
   category_id,
   product_type_id,
+  attributes,
 } = {}) {
   const offset = (page - 1) * limit;
   const queryParams = { limit, offset };
   if (name) queryParams.name = name;
   if (category_id !== undefined && category_id !== null) queryParams.category_id = category_id;
   if (product_type_id !== undefined && product_type_id !== null) queryParams.product_type_id = product_type_id;
+  if (attributes !== undefined && attributes !== null) {
+    queryParams.attributes = JSON.stringify(attributes);
+  }
 
   const response = await productApi.get(API_ENDPOINTS.products, { params: queryParams });
   const data = unwrapResponse(response);
@@ -48,6 +53,25 @@ export async function getProductsRequest({
 export async function getProductByIdRequest(productId) {
   const response = await productApi.get(`${API_ENDPOINTS.products}/${productId}`);
   return unwrapResponse(response);
+}
+
+/**
+ * Получение связанных вариантов товаров (для автокомплита)
+ * @param {Object} params - Параметры запроса
+ * @param {number | null} params.product_id - ID товара для исключения
+ * @param {string | null} params.name - Поиск по названию
+ */
+export async function getProductVariantsRequest({
+  product_id,
+  name,
+} = {}) {
+  const queryParams = {};
+  if (product_id !== undefined && product_id !== null) queryParams.product_id = product_id;
+  if (name) queryParams.name = name;
+
+  const response = await productApi.get(`${API_ENDPOINTS.products}/related/variants`, { params: queryParams });
+  const data = unwrapResponse(response);
+  return Array.isArray(data?.items) ? data.items : [];
 }
 
 /**
@@ -132,25 +156,6 @@ export async function getProductAuditRequest({
   const total = data?.total ?? items.length;
 
   return { items, total };
-}
-
-/**
- * Получение связанных вариантов товаров (для автокомплита)
- * @param {Object} params - Параметры запроса
- * @param {number | null} params.product_id - ID товара для исключения
- * @param {string | null} params.name - Поиск по названию
- */
-export async function getProductVariantsRequest({
-  product_id,
-  name,
-} = {}) {
-  const queryParams = {};
-  if (product_id !== undefined && product_id !== null) queryParams.product_id = product_id;
-  if (name) queryParams.name = name;
-
-  const response = await productApi.get(`${API_ENDPOINTS.products}/related/variants`, { params: queryParams });
-  const data = unwrapResponse(response);
-  return Array.isArray(data?.items) ? data.items : [];
 }
 
 /**

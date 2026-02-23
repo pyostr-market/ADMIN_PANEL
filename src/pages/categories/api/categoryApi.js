@@ -24,7 +24,18 @@ export async function getCategoriesRequest({
   const response = await productApi.get(API_ENDPOINTS.categories, { params: requestParams });
   const data = unwrapResponse(response);
   const items = Array.isArray(data?.items) ? data.items : [];
-  const total = data?.total ?? items.length;
+  // Нормализуем данные: если есть вложенные parent/manufacturer, извлекаем ID
+  const normalizedItems = items.map(item => {
+    const normalized = { ...item };
+    if (item?.parent && typeof item.parent === 'object') {
+      normalized.parent_id = item.parent.id;
+    }
+    if (item?.manufacturer && typeof item.manufacturer === 'object') {
+      normalized.manufacturer_id = item.manufacturer.id;
+    }
+    return normalized;
+  });
+  const total = data?.total ?? normalizedItems.length;
   const pagination = {
     page,
     limit,
@@ -32,7 +43,7 @@ export async function getCategoriesRequest({
     pages: Math.ceil(total / limit),
   };
 
-  return { items, pagination };
+  return { items: normalizedItems, pagination };
 }
 
 /**
@@ -54,46 +65,32 @@ export async function getCategoryByIdRequest(categoryId) {
 
 /**
  * Создание категории
- * @param {Object} payload - Данные категории (FormData)
+ * @param {Object} payload - Данные категории
  * @param {string} payload.name - Название (обяз.)
  * @param {string | null} payload.description - Описание
  * @param {number | null} payload.parent_id - ID родительской категории
  * @param {number | null} payload.manufacturer_id - ID производителя
- * @param {File[]} payload.images - Файлы изображений (обяз.)
- * @param {number[]} payload.orderings - Порядок сортировки для изображений (обяз.)
+ * @param {string} payload.images_json - JSON-массив операций с изображениями
  */
 export async function createCategoryRequest(payload) {
   const formData = new FormData();
   formData.append('name', payload.name);
-  
+
   if (payload.description !== null && payload.description !== undefined) {
     formData.append('description', payload.description);
   }
-  
+
   if (payload.parent_id !== null && payload.parent_id !== undefined) {
     formData.append('parent_id', payload.parent_id);
   }
-  
+
   if (payload.manufacturer_id !== null && payload.manufacturer_id !== undefined) {
     formData.append('manufacturer_id', payload.manufacturer_id);
   }
-  
-  // Добавляем изображения и orderings
-  if (payload.images && payload.images.length > 0) {
-    payload.images.forEach((image, index) => {
-      formData.append('images', image);
-    });
-    
-    if (payload.orderings && payload.orderings.length > 0) {
-      payload.orderings.forEach((ordering) => {
-        formData.append('orderings', ordering);
-      });
-    } else {
-      // Если orderings не указаны, добавляем по порядку
-      payload.images.forEach((_, index) => {
-        formData.append('orderings', index);
-      });
-    }
+
+  // Отправляем images_json
+  if (payload.images_json) {
+    formData.append('images_json', payload.images_json);
   }
 
   const response = await productApi.post(API_ENDPOINTS.categories, formData, {
@@ -107,49 +104,35 @@ export async function createCategoryRequest(payload) {
 /**
  * Обновление категории (PUT)
  * @param {number} categoryId - ID категории
- * @param {Object} payload - Данные для обновления (FormData)
+ * @param {Object} payload - Данные для обновления
  * @param {string | null} payload.name - Название
  * @param {string | null} payload.description - Описание
  * @param {number | null} payload.parent_id - ID родительской категории
  * @param {number | null} payload.manufacturer_id - ID производителя
- * @param {File[] | null} payload.images - Новые файлы изображений
- * @param {number[] | null} payload.orderings - Порядок сортировки для новых изображений
+ * @param {string} payload.images_json - JSON-массив операций с изображениями
  */
 export async function updateCategoryRequest(categoryId, payload) {
   const formData = new FormData();
-  
+
   if (payload.name !== null && payload.name !== undefined) {
     formData.append('name', payload.name);
   }
-  
+
   if (payload.description !== null && payload.description !== undefined) {
     formData.append('description', payload.description);
   }
-  
+
   if (payload.parent_id !== null && payload.parent_id !== undefined) {
     formData.append('parent_id', payload.parent_id);
   }
-  
+
   if (payload.manufacturer_id !== null && payload.manufacturer_id !== undefined) {
     formData.append('manufacturer_id', payload.manufacturer_id);
   }
-  
-  // Добавляем изображения и orderings только если они переданы
-  if (payload.images && payload.images.length > 0) {
-    payload.images.forEach((image) => {
-      formData.append('images', image);
-    });
-    
-    if (payload.orderings && payload.orderings.length > 0) {
-      payload.orderings.forEach((ordering) => {
-        formData.append('orderings', ordering);
-      });
-    } else {
-      // Если orderings не указаны, добавляем по порядку
-      payload.images.forEach((_, index) => {
-        formData.append('orderings', index);
-      });
-    }
+
+  // Отправляем images_json
+  if (payload.images_json) {
+    formData.append('images_json', payload.images_json);
   }
 
   const response = await productApi.put(`${API_ENDPOINTS.categories}/${categoryId}`, formData, {
