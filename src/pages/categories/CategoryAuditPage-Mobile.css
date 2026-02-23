@@ -1,0 +1,71 @@
+/* CategoryAuditPage - Mobile styles */
+@media (max-width: 768px) {
+  .category-audit-page {
+    padding: 16px;
+  }
+
+  .category-audit-page__header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .category-audit-page__header-left {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .category-audit-page__title {
+    font-size: 22px;
+  }
+
+  .category-audit-page__panel {
+    padding: 16px;
+  }
+
+  .audit-table__header {
+    font-size: 11px;
+    padding: 10px 8px;
+  }
+
+  .audit-table__cell {
+    padding: 12px 8px;
+    font-size: 13px;
+  }
+
+  .audit-table__cell--actions {
+    text-align: left;
+  }
+
+  .audit-action-badge {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+
+  .audit-detail-modal__header {
+    gap: 8px;
+  }
+
+  .audit-detail-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .audit-detail-label {
+    min-width: auto;
+    font-weight: 600;
+  }
+
+  .audit-data-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .audit-data-row__key {
+    min-width: auto;
+    font-weight: 600;
+  }
+
+  .category-audit-page__pagination {
+    margin-top: 16px;
+  }
+}

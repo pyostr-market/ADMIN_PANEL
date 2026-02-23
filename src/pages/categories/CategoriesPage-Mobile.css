@@ -1,14 +1,54 @@
 /* CategoriesPage - Mobile styles */
 @media (max-width: 768px) {
   .categories-page {
-    padding: var(--space-4);
+    padding: 16px;
   }
 
-  .categories-page h1 {
-    font-size: 20px;
+  .categories-page__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
 
-  .categories-page p {
-    font-size: 14px;
+  .categories-page__title {
+    font-size: 22px;
+  }
+
+  .categories-page__controls {
+    width: 100%;
+  }
+
+  .categories-page__controls button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .categories-page__filters {
+    max-width: 100%;
+  }
+
+  .categories-page__item-content {
+    max-width: calc(100% - 100px);
+  }
+
+  .categories-page__item-actions {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .categories-page__item-actions button {
+    width: 100%;
+    justify-content: center;
+    font-size: 13px;
+  }
+
+  .categories-page__item-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .categories-page__separator {
+    display: none;
   }
 }

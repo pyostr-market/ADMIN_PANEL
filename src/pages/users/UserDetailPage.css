@@ -142,7 +142,7 @@
   flex-wrap: wrap;
 }
 
-/* Tabs */
+/* user */
 .user-detail-page__tabs {
   display: flex;
   gap: var(--space-1);
@@ -150,6 +150,7 @@
   padding: var(--space-2);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
+
 }
 
 .user-detail-page__tabs .tab {

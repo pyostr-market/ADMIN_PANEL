@@ -94,6 +94,9 @@ html {
 @import './pages/permissionsGroups/PermissionsGroupsPage-Mobile.css';
 @import './pages/catalog/CatalogPage-Mobile.css';
 @import './pages/categories/CategoriesPage-Mobile.css';
+@import './pages/categories/CategoryFormPage-Mobile.css';
+@import './pages/categories/CategoryDetailPage-Mobile.css';
+@import './pages/categories/CategoryAuditPage-Mobile.css';
 @import './pages/support/SupportPage-Mobile.css';
 @import './pages/dashboard/DashboardPage-Mobile.css';
 @import './pages/errors/ErrorPage-Mobile.css';
