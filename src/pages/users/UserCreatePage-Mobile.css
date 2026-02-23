@@ -10,56 +10,55 @@
 
   /* Header */
   .user-create-page__header {
-    padding: 10px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: var(--space-3) var(--space-4);
     background: var(--surface);
     border: none;
     border-bottom: 1px solid var(--border);
     border-radius: 0;
     box-shadow: none;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    width: 100%;
-    box-sizing: border-box;
+    min-height: 52px;
   }
 
   .user-create-page__header-left {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    position: relative;
   }
 
   .user-create-page__header .back-button {
-    height: 32px;
-    padding: 6px 10px;
-    font-size: 12px;
-    align-self: flex-start;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 36px;
+    padding: var(--space-2) var(--space-3);
+    font-size: 13px;
+    white-space: nowrap;
+    z-index: 1;
   }
 
   .user-create-page__title-wrapper {
-    display: grid;
-    gap: 2px;
-    width: 100%;
-    max-width: 100%;
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    padding-right: 80px;
   }
 
   .user-create-page__title {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 600;
-    margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 100%;
+    margin: 0;
   }
 
   .user-create-page__subtitle {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin: 0;
-    word-break: break-word;
-    line-height: 1.3;
+    display: none;
   }
 
   /* Form */
@@ -70,9 +69,9 @@
 
   .user-create-page__actions {
     display: flex;
-    gap: 6px;
+    gap: var(--space-3);
     justify-content: stretch;
-    padding: 10px 12px;
+    padding: var(--space-4);
     background: var(--surface);
     border: none;
     border-top: 1px solid var(--border);
@@ -85,8 +84,8 @@
 
   .user-create-page__actions button {
     flex: 1;
-    height: 38px;
-    font-size: 13px;
+    height: 44px;
+    font-size: 14px;
   }
 
   /* Form sections */
@@ -99,7 +98,7 @@
     border: none;
     border-bottom: 1px solid var(--border);
     border-radius: 0;
-    padding: 12px;
+    padding: var(--space-4);
     box-shadow: none;
   }
 
@@ -110,16 +109,16 @@
   .user-create-form__section-header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
     border-bottom: 1px solid var(--border);
   }
 
   .user-create-form__section-icon {
     width: 40px;
     height: 40px;
-    border-radius: 8px;
+    border-radius: var(--radius-lg);
     font-size: 18px;
   }
 
@@ -138,17 +137,17 @@
   /* Grid */
   .user-create-form__grid {
     display: grid;
-    gap: 8px;
+    gap: var(--space-3);
     grid-template-columns: 1fr;
   }
 
   /* Fields */
   .user-create-form__field {
-    gap: 4px;
+    gap: var(--space-2);
   }
 
   .user-create-form__label {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
   }
 
@@ -162,9 +161,9 @@
 
   .user-create-form__field input,
   .user-create-form__field select {
-    height: 36px;
-    padding: 6px 10px;
-    font-size: 13px;
+    height: 40px;
+    padding: var(--space-2) var(--space-3);
+    font-size: 14px;
     box-sizing: border-box;
   }
 
@@ -174,24 +173,24 @@
   }
 
   .user-create-form__error {
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .user-create-form__loading {
-    font-size: 10px;
+    font-size: 11px;
   }
 
   /* Toggles */
   .user-create-form__toggles {
-    gap: 6px;
+    gap: var(--space-2);
   }
 
   .user-create-form__toggle {
-    padding: 10px;
-    border-radius: 8px;
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: var(--space-2);
   }
 
   .user-create-form__toggle input[type="checkbox"] {
@@ -200,7 +199,7 @@
   }
 
   .user-create-form__toggle-content {
-    gap: 8px;
+    gap: var(--space-2);
     width: 100%;
   }
 
@@ -219,7 +218,7 @@
 
   .user-create-form__toggle-status {
     font-size: 11px;
-    padding: 4px 8px;
+    padding: var(--space-1) var(--space-2);
     align-self: flex-start;
   }
 }

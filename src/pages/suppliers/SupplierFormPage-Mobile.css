@@ -1,76 +1,128 @@
-/* SupplierFormPage, ProductTypeFormPage, AttributeFormPage, ProductFormPage, UserCreatePage - Mobile styles */
+/* SupplierFormPage - Mobile styles */
 @media (max-width: 768px) {
-  .supplier-form,
-  .product-type-form,
-  .attribute-form,
-  .product-form,
-  .user-create-form {
-    padding: 16px;
+  .supplier-form-page {
+    padding: 0 !important;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
-  .supplier-form__field,
-  .product-type-form__field,
-  .attribute-form__field,
-  .product-form__field,
-  .user-create-form__field {
-    gap: 6px;
+  .supplier-form-page__header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: var(--space-3) var(--space-4);
+    min-height: 52px;
   }
 
-  .supplier-form__field input,
-  .product-type-form__field input,
-  .attribute-form__field input,
-  .product-form__field input,
-  .user-create-form__field input,
-  .supplier-form__field textarea,
-  .product-type-form__field textarea,
-  .attribute-form__field textarea,
-  .product-form__field textarea,
-  .user-create-form__field textarea,
-  .supplier-form__field select,
-  .product-type-form__field select,
-  .attribute-form__field select,
-  .product-form__field select,
-  .user-create-form__field select {
+  .supplier-form-page__header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    position: relative;
+  }
+
+  .supplier-form-page__header .back-button {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 36px;
+    padding: var(--space-2) var(--space-3);
+    font-size: 13px;
+    white-space: nowrap;
+    z-index: 1;
+  }
+
+  .supplier-form-page__title-wrapper {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    padding-right: 80px;
+  }
+
+  .supplier-form-page__title {
+    font-size: 17px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+  }
+
+  .supplier-form-page__subtitle {
+    display: none;
+  }
+
+  .supplier-form-page__form {
+    gap: var(--space-4);
+  }
+
+  .supplier-form {
+    gap: var(--space-4);
+  }
+
+  .supplier-form__section {
+    border-radius: 0;
+    padding: var(--space-4);
+  }
+
+  .supplier-form__section-header {
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .supplier-form__section-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .supplier-form__section-title {
+    font-size: 16px;
+  }
+
+  .supplier-form__grid {
+    gap: var(--space-3);
+  }
+
+  .supplier-form__field {
+    gap: var(--space-2);
+  }
+
+  .supplier-form__label {
+    font-size: 12px;
+  }
+
+  .supplier-form input,
+  .supplier-form textarea {
     height: 40px;
     font-size: 14px;
-    padding: 8px 12px;
+    padding: var(--space-2) var(--space-3);
   }
 
-  .supplier-form__field textarea,
-  .product-type-form__field textarea,
-  .attribute-form__field textarea,
-  .product-form__field textarea,
-  .user-create-form__field textarea {
-    min-height: 100px;
+  .supplier-form textarea {
+    min-height: 80px;
+    height: auto;
   }
 
-  .supplier-form__label,
-  .product-type-form__label,
-  .attribute-form__label,
-  .product-form__label,
-  .user-create-form__label {
-    font-size: 12px;
-    font-weight: 600;
+  .supplier-form-page__actions {
+    flex-direction: column-reverse;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    position: sticky;
+    bottom: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    z-index: 10;
   }
 
-  .supplier-form__actions,
-  .product-type-form__actions,
-  .attribute-form__actions,
-  .product-form__actions,
-  .user-create-form__actions {
-    flex-direction: column;
+  .supplier-form-page__actions button {
     width: 100%;
-    gap: 8px;
-    margin-top: 16px;
-  }
-
-  .supplier-form__actions button,
-  .product-type-form__actions button,
-  .attribute-form__actions button,
-  .product-form__actions button,
-  .user-create-form__actions button {
-    width: 100%;
-    height: 42px;
-    font-size: 14px;
+    justify-content: center;
+    height: 44px;
   }
 }

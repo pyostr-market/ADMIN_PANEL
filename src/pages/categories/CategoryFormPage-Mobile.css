@@ -1,29 +1,69 @@
 /* CategoryFormPage - Mobile styles */
 @media (max-width: 768px) {
   .category-form-page {
-    padding: 16px;
+    padding: 0 !important;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   .category-form-page__header {
-    flex-direction: column;
-    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: var(--space-3) var(--space-4);
+    min-height: 52px;
   }
 
   .category-form-page__header-left {
-    flex-direction: column;
-    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    position: relative;
+  }
+
+  .category-form-page__header .back-button {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 36px;
+    padding: var(--space-2) var(--space-3);
+    font-size: 13px;
+    white-space: nowrap;
+    z-index: 1;
+  }
+
+  .category-form-page__title-wrapper {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    padding-right: 80px;
   }
 
   .category-form-page__title {
-    font-size: 22px;
+    font-size: 17px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
   }
 
   .category-form-page__subtitle {
-    font-size: 14px;
+    display: none;
+  }
+
+  .category-form-page__form {
+    border-radius: 0;
+    box-shadow: none;
   }
 
   .category-form {
-    padding: 16px;
+    padding: var(--space-4);
   }
 
   .category-form__grid {
@@ -31,7 +71,7 @@
   }
 
   .category-form__section-header {
-    gap: 12px;
+    gap: var(--space-3);
   }
 
   .category-form__section-icon {
@@ -46,17 +86,25 @@
 
   .category-form-page__actions {
     flex-direction: column-reverse;
-    gap: 10px;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    position: sticky;
+    bottom: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    z-index: 10;
   }
 
   .category-form-page__actions button {
     width: 100%;
     justify-content: center;
+    height: 44px;
   }
 
   .category-image-item {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    position: relative;
   }
 
   .category-image-item__preview {
@@ -70,8 +118,9 @@
 
   .category-image-item__remove {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: var(--space-2);
+    right: var(--space-2);
+    z-index: 1;
   }
 
   .category-images__upload-button {

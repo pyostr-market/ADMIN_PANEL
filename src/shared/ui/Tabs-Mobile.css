@@ -5,6 +5,9 @@
     overflow-x: auto;
     flex-wrap: nowrap;
     box-sizing: border-box;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
   }
 
   .tabs::-webkit-scrollbar {
@@ -16,10 +19,11 @@
     padding: var(--space-2) var(--space-4);
     font-size: 12px;
     font-weight: 600;
-    height: 38px;
+    height: 42px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    border-radius: 0;
   }
 
   .tab:last-child {

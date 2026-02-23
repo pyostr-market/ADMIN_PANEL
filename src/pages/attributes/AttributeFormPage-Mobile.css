@@ -1,43 +1,129 @@
 /* AttributeFormPage - Mobile styles */
 @media (max-width: 768px) {
-  .attribute-form {
+  .attribute-form-page {
+    padding: 0 !important;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .attribute-form-page__header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: var(--space-3) var(--space-4);
+    min-height: 52px;
+  }
+
+  .attribute-form-page__header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    position: relative;
+  }
+
+  .attribute-form-page__header .back-button {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 36px;
+    padding: var(--space-2) var(--space-3);
+    font-size: 13px;
+    white-space: nowrap;
+    z-index: 1;
+  }
+
+  .attribute-form-page__title-wrapper {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    padding-right: 80px;
+  }
+
+  .attribute-form-page__title {
+    font-size: 17px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+  }
+
+  .attribute-form-page__subtitle {
+    display: none;
+  }
+
+  .attribute-form-page__form {
+    border-radius: 0;
+    box-shadow: none;
     padding: var(--space-4);
+  }
+
+  .attribute-form {
+    gap: var(--space-4);
+  }
+
+  .attribute-form__section {
+    gap: var(--space-4);
+  }
+
+  .attribute-form__section-header {
+    gap: var(--space-3);
+  }
+
+  .attribute-form__section-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .attribute-form__section-title {
+    font-size: 16px;
+  }
+
+  .attribute-form__grid {
+    gap: var(--space-3);
   }
 
   .attribute-form__field {
     gap: var(--space-2);
   }
 
-  .attribute-form__field input,
-  .attribute-form__field textarea,
-  .attribute-form__field select {
-    height: 48px;
-    font-size: 16px;
-    padding: 12px 14px;
-    border-radius: var(--radius-md);
-  }
-
-  .attribute-form__field textarea {
-    min-height: 120px;
-  }
-
   .attribute-form__label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
+    font-size: 12px;
   }
 
-  .attribute-form__actions {
-    flex-direction: column;
-    width: 100%;
-    gap: var(--space-2);
-    margin-top: var(--space-4);
+  .attribute-form input,
+  .attribute-form textarea,
+  .attribute-form select {
+    height: 40px;
+    font-size: 14px;
+    padding: var(--space-2) var(--space-3);
   }
 
-  .attribute-form__actions button {
+  .attribute-form textarea {
+    min-height: 80px;
+    height: auto;
+  }
+
+  .attribute-form-page__actions {
+    flex-direction: column-reverse;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    position: sticky;
+    bottom: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    z-index: 10;
+  }
+
+  .attribute-form-page__actions button {
     width: 100%;
-    height: 52px;
-    font-size: 15px;
-    font-weight: 600;
+    justify-content: center;
+    height: 44px;
   }
 }

@@ -1,43 +1,128 @@
 /* ProductTypeFormPage - Mobile styles */
 @media (max-width: 768px) {
+  .product-type-form-page {
+    padding: 0 !important;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .product-type-form-page__header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: var(--space-3) var(--space-4);
+    min-height: 52px;
+  }
+
+  .product-type-form-page__header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    position: relative;
+  }
+
+  .product-type-form-page__header .back-button {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 36px;
+    padding: var(--space-2) var(--space-3);
+    font-size: 13px;
+    white-space: nowrap;
+    z-index: 1;
+  }
+
+  .product-type-form-page__title-wrapper {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    padding-right: 80px;
+  }
+
+  .product-type-form-page__title {
+    font-size: 17px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+  }
+
+  .product-type-form-page__subtitle {
+    display: none;
+  }
+
+  .product-type-form-page__form {
+    gap: var(--space-4);
+  }
+
   .product-type-form {
+    gap: var(--space-4);
+  }
+
+  .product-type-form__section {
+    border-radius: 0;
     padding: var(--space-4);
+  }
+
+  .product-type-form__section-header {
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .product-type-form__section-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .product-type-form__section-title {
+    font-size: 16px;
+  }
+
+  .product-type-form__grid {
+    gap: var(--space-3);
   }
 
   .product-type-form__field {
     gap: var(--space-2);
   }
 
-  .product-type-form__field input,
-  .product-type-form__field textarea,
-  .product-type-form__field select {
-    height: 48px;
-    font-size: 16px;
-    padding: 12px 14px;
-    border-radius: var(--radius-md);
-  }
-
-  .product-type-form__field textarea {
-    min-height: 120px;
-  }
-
   .product-type-form__label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
+    font-size: 12px;
   }
 
-  .product-type-form__actions {
-    flex-direction: column;
-    width: 100%;
-    gap: var(--space-2);
-    margin-top: var(--space-4);
+  .product-type-form input,
+  .product-type-form textarea {
+    height: 40px;
+    font-size: 14px;
+    padding: var(--space-2) var(--space-3);
   }
 
-  .product-type-form__actions button {
+  .product-type-form textarea {
+    min-height: 80px;
+    height: auto;
+  }
+
+  .product-type-form-page__actions {
+    flex-direction: column-reverse;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    position: sticky;
+    bottom: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    z-index: 10;
+  }
+
+  .product-type-form-page__actions button {
     width: 100%;
-    height: 52px;
-    font-size: 15px;
-    font-weight: 600;
+    justify-content: center;
+    height: 44px;
   }
 }
