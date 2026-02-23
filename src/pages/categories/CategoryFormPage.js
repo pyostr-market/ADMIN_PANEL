@@ -128,7 +128,7 @@ export function CategoryFormPage() {
       const imagesJson = imagesToSend.map((image, idx) => ({
         action: image.isNew ? 'to_create' : 'pass',
         upload_id: image.upload_id,
-        ordering: idx,
+        orderings: idx,
       }));
 
       const payload = {

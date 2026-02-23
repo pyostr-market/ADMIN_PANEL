@@ -1,15 +1,16 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FiEye } from 'react-icons/fi';
-import { Button } from '../../shared/ui/Button';
-import { Pagination } from '../../shared/ui/Pagination';
-import { Modal } from '../../shared/ui/Modal';
-import { getApiErrorMessage } from '../../shared/api/apiError';
-import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
+import { Button } from '../../../shared/ui/Button';
+import { Pagination } from '../../../shared/ui/Pagination';
+import { Modal } from '../../../shared/ui/Modal';
+import { getApiErrorMessage } from '../../../shared/api/apiError';
+import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import { getProductAuditRequest } from './api/productsApi';
-import { getUsersInfo, formatUserDisplay } from '../../shared/lib/user/userInfo';
-import { withRetry } from '../../shared/lib/retry';
+import { getUsersInfo, formatUserDisplay } from '../../../shared/lib/user/userInfo';
+import { withRetry } from '../../../shared/lib/retry';
 import './ProductAuditPage.css';
+import './ProductAuditPage-Mobile.css';
 
 function AuditDetailModal({ auditRecord, onClose, userInfo }) {
   if (!auditRecord) return null;

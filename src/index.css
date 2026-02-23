@@ -80,10 +80,10 @@ html {
 @import './pages/attributes/AttributeFormPage-Mobile.css';
 @import './pages/attributes/AttributeAuditPage-Mobile.css';
 
-@import './pages/products/ProductsPage-Mobile.css';
-@import './pages/products/ProductDetailPage-Mobile.css';
-@import './pages/products/ProductFormPage-Mobile.css';
-@import './pages/products/ProductAuditPage-Mobile.css';
+@import './pages/products/ProductsPage/ProductsPage-Mobile.css';
+@import './pages/products/ProductDetailPage/ProductDetailPage-Mobile.css';
+@import './pages/products/ProductFormPage/ProductFormPage-Mobile.css';
+@import './pages/products/ProductAuditPage/ProductAuditPage-Mobile.css';
 
 @import './pages/users/UsersListPage-Mobile.css';
 @import './pages/users/UserDetailPage-Mobile.css';
@@ -92,7 +92,7 @@ html {
 @import './pages/profile/ProfilePage-Mobile.css';
 @import './pages/login/LoginPage-Mobile.css';
 @import './pages/permissionsGroups/PermissionsGroupsPage-Mobile.css';
-@import './pages/catalog/CatalogPage-Mobile.css';
+@import './pages/catalog/CatalogPage/CatalogPage-Mobile.css';
 @import './pages/categories/CategoriesPage-Mobile.css';
 @import './pages/categories/CategoryFormPage-Mobile.css';
 @import './pages/categories/CategoryDetailPage-Mobile.css';

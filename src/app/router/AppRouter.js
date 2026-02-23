@@ -12,15 +12,10 @@ import { SuppliersPage } from '../../pages/suppliers/SuppliersPage';
 import { SupplierFormPage } from '../../pages/suppliers/SupplierFormPage';
 import { SupplierDetailPage } from '../../pages/suppliers/SupplierDetailPage';
 import { SupplierAuditPage } from '../../pages/suppliers/SupplierAuditPage';
-import { CatalogPage } from '../../pages/catalog/CatalogPage';
 import { ManufacturersPage } from '../../pages/manufacturers/ManufacturersPage';
 import { ManufacturerFormPage } from '../../pages/manufacturers/ManufacturerFormPage';
 import { ManufacturerDetailPage } from '../../pages/manufacturers/ManufacturerDetailPage';
 import { ManufacturerAuditPage } from '../../pages/manufacturers/ManufacturerAuditPage';
-import { ProductsPage } from '../../pages/products/ProductsPage';
-import { ProductFormPage } from '../../pages/products/ProductFormPage';
-import { ProductDetailPage } from '../../pages/products/ProductDetailPage';
-import { ProductAuditPage } from '../../pages/products/ProductAuditPage';
 import { ProductTypesPage } from '../../pages/productTypes/ProductTypesPage';
 import { ProductTypeFormPage } from '../../pages/productTypes/ProductTypeFormPage';
 import { ProductTypeDetailPage } from '../../pages/productTypes/ProductTypeDetailPage';
@@ -35,6 +30,11 @@ import { CategoryDetailPage } from '../../pages/categories/CategoryDetailPage';
 import { CategoryAuditPage } from '../../pages/categories/CategoryAuditPage';
 import { PermissionsGroupsPage } from '../../pages/permissionsGroups/PermissionsGroupsPage';
 import { PrivateRoute, PublicOnlyRoute } from './routeGuards';
+import { ProductsPage } from '../../pages/products/ProductsPage';
+import { ProductFormPage } from '../../pages/products/ProductFormPage';
+import { ProductDetailPage } from '../../pages/products/ProductDetailPage';
+import { ProductAuditPage } from '../../pages/products/ProductAuditPage';
+import { CatalogPage } from '../../pages/catalog/CatalogPage';
 
 function ErrorPageByCode() {
   const { code } = useParams();

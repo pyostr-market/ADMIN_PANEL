@@ -1,16 +1,17 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FiEdit2, FiTrash2, FiBox, FiDollarSign, FiTag, FiPackage, FiFileText, FiClock, FiImage, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import { Button } from '../../shared/ui/Button';
-import { Modal } from '../../shared/ui/Modal';
-import { PermissionGate } from '../../shared/ui/PermissionGate';
-import { getApiErrorMessage } from '../../shared/api/apiError';
-import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
+import { Button } from '../../../shared/ui/Button';
+import { Modal } from '../../../shared/ui/Modal';
+import { PermissionGate } from '../../../shared/ui/PermissionGate';
+import { getApiErrorMessage } from '../../../shared/api/apiError';
+import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import {
   getProductByIdRequest,
   deleteProductRequest,
 } from './api/productsApi';
 import './ProductDetailPage.css';
+import './ProductDetailPage-Mobile.css';
 
 function DeleteProductModal({ product, onClose, onSubmit, isSubmitting }) {
   if (!product) return null;

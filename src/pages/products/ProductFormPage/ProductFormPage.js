@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FiSave, FiX, FiPlus, FiTrash2, FiImage, FiTag, FiFileText } from 'react-icons/fi';
-import { Button } from '../../shared/ui/Button';
-import { Tabs, Tab } from '../../shared/ui/Tabs';
-import { ImageCarousel } from '../../shared/ui/ImageCarousel';
-import { AutocompleteInput } from '../../shared/ui/AutocompleteInput';
-import { getApiErrorMessage } from '../../shared/api/apiError';
-import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
+import { Button } from '../../../shared/ui/Button';
+import { Tabs, Tab } from '../../../shared/ui/Tabs';
+import { ImageCarousel } from '../../../shared/ui/ImageCarousel';
+import { AutocompleteInput } from '../../../shared/ui/AutocompleteInput';
+import { getApiErrorMessage } from '../../../shared/api/apiError';
+import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import {
   getProductByIdRequest,
   createProductRequest,
@@ -16,6 +16,7 @@ import {
   getProductTypesForAutocompleteRequest,
 } from './api/productsApi';
 import './ProductFormPage.css';
+import './ProductFormPage-Mobile.css';
 
 // Вкладки формы
 const TABS = {

@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiPackage, FiPlus, FiTrash2, FiEye, FiEdit2, FiTag } from 'react-icons/fi';
-import { PermissionGate } from '../../shared/ui/PermissionGate';
-import { Button } from '../../shared/ui/Button';
-import { SearchInput } from '../../shared/ui/SearchInput';
-import { Pagination } from '../../shared/ui/Pagination';
-import { EntityList } from '../../shared/ui/EntityList';
-import { Modal } from '../../shared/ui/Modal';
-import { Select } from '../../shared/ui/Select';
-import { useCrudList } from '../../shared/lib/crud';
+import { PermissionGate } from '../../../shared/ui/PermissionGate';
+import { Button } from '../../../shared/ui/Button';
+import { SearchInput } from '../../../shared/ui/SearchInput';
+import { Pagination } from '../../../shared/ui/Pagination';
+import { EntityList } from '../../../shared/ui/EntityList';
+import { Modal } from '../../../shared/ui/Modal';
+import { Select } from '../../../shared/ui/Select';
+import { useCrudList } from '../../../shared/lib/crud';
 import {
   getProductsRequest,
   deleteProductRequest,
@@ -16,6 +16,7 @@ import {
   getProductTypesForAutocompleteRequest,
 } from './api/productsApi';
 import './ProductsPage.css';
+import './ProductsPage-Mobile.css';
 
 const PAGE_LIMIT = 20;
 

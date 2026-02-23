@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { usePageSocketSubscription } from '../../shared/lib/socket/usePageSocketSubscription';
+import { usePageSocketSubscription } from '../../../shared/lib/socket/usePageSocketSubscription';
 
 export function CatalogPage() {
   const [eventsCount, setEventsCount] = useState(0);
