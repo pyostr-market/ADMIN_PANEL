@@ -8,7 +8,7 @@
     overflow-x: hidden;
   }
 
-  /* Header */
+  /* Header - название слева, кнопка справа */
   .users-list-page__header {
     flex-direction: row;
     align-items: center;
@@ -29,10 +29,12 @@
     font-weight: 600;
     margin: 0;
     white-space: nowrap;
+    flex: 0 1 auto;
   }
 
   .users-list-page__controls {
     flex-shrink: 0;
+    margin-left: auto;
   }
 
   .users-list-page__controls button {

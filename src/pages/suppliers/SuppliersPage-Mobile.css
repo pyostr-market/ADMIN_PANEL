@@ -15,8 +15,9 @@
   .manufacturers-page__header,
   .product-types-page__header,
   .attributes-page__header {
-    flex-direction: column;
-    align-items: stretch;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     gap: 10px;
     padding: 10px 12px;
     background: var(--surface);
@@ -36,17 +37,15 @@
     font-weight: 600;
     margin: 0;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    flex: 0 1 auto;
   }
 
   .suppliers-page__controls,
   .manufacturers-page__controls,
   .product-types-page__controls,
   .attributes-page__controls {
-    width: 100%;
-    display: flex;
-    gap: 6px;
+    flex-shrink: 0;
+    margin-left: auto;
   }
 
   .suppliers-page__controls button,
