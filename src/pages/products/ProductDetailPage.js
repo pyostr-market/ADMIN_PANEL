@@ -8,85 +8,9 @@ import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import {
   getProductByIdRequest,
-  updateProductRequest,
   deleteProductRequest,
 } from './api/productsApi';
 import './ProductDetailPage.css';
-
-function EditProductModal({ product, onClose, onSubmit, isSubmitting }) {
-  const [formData, setFormData] = useState({
-    name: product?.name || '',
-    price: product?.price?.toString() || '',
-    description: product?.description || '',
-  });
-
-  useEffect(() => {
-    setFormData({
-      name: product?.name || '',
-      price: product?.price?.toString() || '',
-      description: product?.description || '',
-    });
-  }, [product]);
-
-  const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  return (
-    <Modal
-      isOpen
-      onClose={onClose}
-      title="Редактирование товара"
-      size="md"
-      footer={(
-        <>
-          <Button variant="secondary" onClick={onClose}>Отмена</Button>
-          <Button
-            variant="primary"
-            onClick={() => onSubmit(formData)}
-            loading={isSubmitting}
-          >
-            Сохранить
-          </Button>
-        </>
-      )}
-    >
-      <div className="edit-product-form">
-        <label className="edit-product-form__field">
-          <span className="edit-product-form__label">Название</span>
-          <input
-            type="text"
-            value={formData.name}
-            onChange={(e) => handleChange('name', e.target.value)}
-            placeholder="Введите название"
-          />
-        </label>
-
-        <label className="edit-product-form__field">
-          <span className="edit-product-form__label">Цена</span>
-          <input
-            type="number"
-            step="0.01"
-            min="0"
-            value={formData.price}
-            onChange={(e) => handleChange('price', e.target.value)}
-            placeholder="0.00"
-          />
-        </label>
-
-        <label className="edit-product-form__field">
-          <span className="edit-product-form__label">Описание</span>
-          <textarea
-            value={formData.description}
-            onChange={(e) => handleChange('description', e.target.value)}
-            placeholder="Введите описание"
-            rows={4}
-          />
-        </label>
-      </div>
-    </Modal>
-  );
-}
 
 function DeleteProductModal({ product, onClose, onSubmit, isSubmitting }) {
   if (!product) return null;
@@ -209,9 +133,7 @@ export function ProductDetailPage() {
 
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const loadProduct = useCallback(async () => {
@@ -231,24 +153,8 @@ export function ProductDetailPage() {
     loadProduct();
   }, [loadProduct]);
 
-  const handleSaveProduct = async (payload) => {
-    setIsSaving(true);
-    try {
-      const formData = new FormData();
-      formData.append('name', payload.name);
-      formData.append('price', parseFloat(payload.price));
-      formData.append('description', payload.description);
-
-      await updateProductRequest(productId, formData);
-      await loadProduct();
-      notificationsRef.current?.info('Товар обновлен');
-      setIsEditModalOpen(false);
-    } catch (error) {
-      const message = getApiErrorMessage(error);
-      notificationsRef.current?.error(message);
-    } finally {
-      setIsSaving(false);
-    }
+  const handleEditProduct = () => {
+    navigate(`/catalog/products/${productId}/edit`);
   };
 
   const handleDeleteProduct = async () => {
@@ -313,7 +219,7 @@ export function ProductDetailPage() {
             <Button
               variant="secondary"
               leftIcon={<FiEdit2 />}
-              onClick={() => setIsEditModalOpen(true)}
+              onClick={handleEditProduct}
             >
               Редактировать
             </Button>
@@ -465,15 +371,6 @@ export function ProductDetailPage() {
           </div>
         )}
       </div>
-
-      {isEditModalOpen && (
-        <EditProductModal
-          product={product}
-          onClose={() => setIsEditModalOpen(false)}
-          onSubmit={handleSaveProduct}
-          isSubmitting={isSaving}
-        />
-      )}
 
       {isDeleteModalOpen && (
         <DeleteProductModal

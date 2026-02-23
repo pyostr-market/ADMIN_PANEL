@@ -8,86 +8,9 @@ import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import {
   getAttributeByIdRequest,
-  updateAttributeRequest,
   deleteAttributeRequest,
 } from './api/attributesApi';
 import './AttributeDetailPage.css';
-
-function EditAttributeModal({ attribute, onClose, onSubmit, isSubmitting }) {
-  const [formData, setFormData] = useState({
-    name: attribute?.name || '',
-    value: attribute?.value || '',
-    is_filterable: attribute?.is_filterable || false,
-  });
-
-  useEffect(() => {
-    setFormData({
-      name: attribute?.name || '',
-      value: attribute?.value || '',
-      is_filterable: attribute?.is_filterable || false,
-    });
-  }, [attribute]);
-
-  const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleCheckboxChange = (field) => {
-    setFormData((prev) => ({ ...prev, [field]: !prev[field] }));
-  };
-
-  return (
-    <Modal
-      isOpen
-      onClose={onClose}
-      title="Редактирование атрибута"
-      size="md"
-      footer={(
-        <>
-          <Button variant="secondary" onClick={onClose}>Отмена</Button>
-          <Button
-            variant="primary"
-            onClick={() => onSubmit(formData)}
-            loading={isSubmitting}
-          >
-            Сохранить
-          </Button>
-        </>
-      )}
-    >
-      <div className="edit-attribute-form">
-        <label className="edit-attribute-form__field">
-          <span className="edit-attribute-form__label">Название</span>
-          <input
-            type="text"
-            value={formData.name}
-            onChange={(e) => handleChange('name', e.target.value)}
-            placeholder="Введите название"
-          />
-        </label>
-
-        <label className="edit-attribute-form__field">
-          <span className="edit-attribute-form__label">Значение</span>
-          <input
-            type="text"
-            value={formData.value}
-            onChange={(e) => handleChange('value', e.target.value)}
-            placeholder="Введите значение"
-          />
-        </label>
-
-        <label className="edit-attribute-form__checkbox">
-          <input
-            type="checkbox"
-            checked={formData.is_filterable}
-            onChange={() => handleCheckboxChange('is_filterable')}
-          />
-          <span>Использовать для фильтрации</span>
-        </label>
-      </div>
-    </Modal>
-  );
-}
 
 function DeleteAttributeModal({ attribute, onClose, onSubmit, isSubmitting }) {
   if (!attribute) return null;
@@ -134,9 +57,7 @@ export function AttributeDetailPage() {
 
   const [attribute, setAttribute] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const loadAttribute = useCallback(async () => {
@@ -156,19 +77,8 @@ export function AttributeDetailPage() {
     loadAttribute();
   }, [loadAttribute]);
 
-  const handleSaveAttribute = async (payload) => {
-    setIsSaving(true);
-    try {
-      await updateAttributeRequest(attributeId, payload);
-      await loadAttribute();
-      notificationsRef.current?.info('Атрибут обновлен');
-      setIsEditModalOpen(false);
-    } catch (error) {
-      const message = getApiErrorMessage(error);
-      notificationsRef.current?.error(message);
-    } finally {
-      setIsSaving(false);
-    }
+  const handleEditAttribute = () => {
+    navigate(`/catalog/attributes/${attributeId}/edit`);
   };
 
   const handleDeleteAttribute = async () => {
@@ -233,7 +143,7 @@ export function AttributeDetailPage() {
             <Button
               variant="secondary"
               leftIcon={<FiEdit2 />}
-              onClick={() => setIsEditModalOpen(true)}
+              onClick={handleEditAttribute}
             >
               Редактировать
             </Button>
@@ -309,15 +219,6 @@ export function AttributeDetailPage() {
           </div>
         </div>
       </div>
-
-      {isEditModalOpen && (
-        <EditAttributeModal
-          attribute={attribute}
-          onClose={() => setIsEditModalOpen(false)}
-          onSubmit={handleSaveAttribute}
-          isSubmitting={isSaving}
-        />
-      )}
 
       {isDeleteModalOpen && (
         <DeleteAttributeModal

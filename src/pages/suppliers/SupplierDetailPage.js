@@ -8,83 +8,9 @@ import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import {
   getSupplierByIdRequest,
-  updateSupplierRequest,
   deleteSupplierRequest,
 } from './api/suppliersApi';
 import './SupplierDetailPage.css';
-
-function EditSupplierModal({ supplier, onClose, onSubmit, isSubmitting }) {
-  const [formData, setFormData] = useState({
-    name: supplier?.name || '',
-    contact_email: supplier?.contact_email || '',
-    phone: supplier?.phone || '',
-  });
-
-  useEffect(() => {
-    setFormData({
-      name: supplier?.name || '',
-      contact_email: supplier?.contact_email || '',
-      phone: supplier?.phone || '',
-    });
-  }, [supplier]);
-
-  const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  return (
-    <Modal
-      isOpen
-      onClose={onClose}
-      title="Редактирование поставщика"
-      size="md"
-      footer={(
-        <>
-          <Button variant="secondary" onClick={onClose}>Отмена</Button>
-          <Button
-            variant="primary"
-            onClick={() => onSubmit(formData)}
-            loading={isSubmitting}
-          >
-            Сохранить
-          </Button>
-        </>
-      )}
-    >
-      <div className="edit-supplier-form">
-        <label className="edit-supplier-form__field">
-          <span className="edit-supplier-form__label">Название</span>
-          <input
-            type="text"
-            value={formData.name}
-            onChange={(e) => handleChange('name', e.target.value)}
-            placeholder="Введите название"
-          />
-        </label>
-
-        <label className="edit-supplier-form__field">
-          <span className="edit-supplier-form__label">Email для связи</span>
-          <input
-            type="email"
-            value={formData.contact_email}
-            onChange={(e) => handleChange('contact_email', e.target.value)}
-            placeholder="supplier@example.com"
-          />
-        </label>
-
-        <label className="edit-supplier-form__field">
-          <span className="edit-supplier-form__label">Телефон</span>
-          <input
-            type="tel"
-            value={formData.phone}
-            onChange={(e) => handleChange('phone', e.target.value)}
-            placeholder="+7 (999) 000-00-00"
-          />
-        </label>
-      </div>
-    </Modal>
-  );
-}
 
 function DeleteSupplierModal({ supplier, onClose, onSubmit, isSubmitting }) {
   if (!supplier) return null;
@@ -131,9 +57,7 @@ export function SupplierDetailPage() {
 
   const [supplier, setSupplier] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const loadSupplier = useCallback(async () => {
@@ -153,19 +77,8 @@ export function SupplierDetailPage() {
     loadSupplier();
   }, [loadSupplier]);
 
-  const handleSaveSupplier = async (payload) => {
-    setIsSaving(true);
-    try {
-      await updateSupplierRequest(supplierId, payload);
-      await loadSupplier();
-      notificationsRef.current?.info('Поставщик обновлен');
-      setIsEditModalOpen(false);
-    } catch (error) {
-      const message = getApiErrorMessage(error);
-      notificationsRef.current?.error(message);
-    } finally {
-      setIsSaving(false);
-    }
+  const handleEditSupplier = () => {
+    navigate(`/suppliers/${supplierId}/edit`);
   };
 
   const handleDeleteSupplier = async () => {
@@ -230,7 +143,7 @@ export function SupplierDetailPage() {
             <Button
               variant="secondary"
               leftIcon={<FiEdit2 />}
-              onClick={() => setIsEditModalOpen(true)}
+              onClick={handleEditSupplier}
             >
               Редактировать
             </Button>
@@ -310,15 +223,6 @@ export function SupplierDetailPage() {
           </div>
         </div>
       </div>
-
-      {isEditModalOpen && (
-        <EditSupplierModal
-          supplier={supplier}
-          onClose={() => setIsEditModalOpen(false)}
-          onSubmit={handleSaveSupplier}
-          isSubmitting={isSaving}
-        />
-      )}
 
       {isDeleteModalOpen && (
         <DeleteSupplierModal

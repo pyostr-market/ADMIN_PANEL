@@ -8,72 +8,9 @@ import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import {
   getProductTypeByIdRequest,
-  updateProductTypeRequest,
   deleteProductTypeRequest,
 } from './api/productTypesApi';
 import './ProductTypeDetailPage.css';
-
-function EditProductTypeModal({ productType, onClose, onSubmit, isSubmitting }) {
-  const [formData, setFormData] = useState({
-    name: productType?.name || '',
-    parent_id: productType?.parent_id || '',
-  });
-
-  useEffect(() => {
-    setFormData({
-      name: productType?.name || '',
-      parent_id: productType?.parent_id || '',
-    });
-  }, [productType]);
-
-  const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  return (
-    <Modal
-      isOpen
-      onClose={onClose}
-      title="Редактирование типа продукта"
-      size="md"
-      footer={(
-        <>
-          <Button variant="secondary" onClick={onClose}>Отмена</Button>
-          <Button
-            variant="primary"
-            onClick={() => onSubmit(formData)}
-            loading={isSubmitting}
-          >
-            Сохранить
-          </Button>
-        </>
-      )}
-    >
-      <div className="edit-product-type-form">
-        <label className="edit-product-type-form__field">
-          <span className="edit-product-type-form__label">Название</span>
-          <input
-            type="text"
-            value={formData.name}
-            onChange={(e) => handleChange('name', e.target.value)}
-            placeholder="Введите название"
-          />
-        </label>
-
-        <label className="edit-product-type-form__field">
-          <span className="edit-product-type-form__label">Родительский тип</span>
-          <input
-            type="number"
-            value={formData.parent_id}
-            onChange={(e) => handleChange('parent_id', e.target.value)}
-            placeholder="ID родительского типа"
-            min="1"
-          />
-        </label>
-      </div>
-    </Modal>
-  );
-}
 
 function DeleteProductTypeModal({ productType, onClose, onSubmit, isSubmitting }) {
   if (!productType) return null;
@@ -120,9 +57,7 @@ export function ProductTypeDetailPage() {
 
   const [productType, setProductType] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const loadProductType = useCallback(async () => {
@@ -142,19 +77,8 @@ export function ProductTypeDetailPage() {
     loadProductType();
   }, [loadProductType]);
 
-  const handleSaveProductType = async (payload) => {
-    setIsSaving(true);
-    try {
-      await updateProductTypeRequest(productTypeId, payload);
-      await loadProductType();
-      notificationsRef.current?.info('Тип продукта обновлен');
-      setIsEditModalOpen(false);
-    } catch (error) {
-      const message = getApiErrorMessage(error);
-      notificationsRef.current?.error(message);
-    } finally {
-      setIsSaving(false);
-    }
+  const handleEditProductType = () => {
+    navigate(`/catalog/device_type/${productTypeId}/edit`);
   };
 
   const handleDeleteProductType = async () => {
@@ -219,7 +143,7 @@ export function ProductTypeDetailPage() {
             <Button
               variant="secondary"
               leftIcon={<FiEdit2 />}
-              onClick={() => setIsEditModalOpen(true)}
+              onClick={handleEditProductType}
             >
               Редактировать
             </Button>
@@ -287,15 +211,6 @@ export function ProductTypeDetailPage() {
           </div>
         </div>
       </div>
-
-      {isEditModalOpen && (
-        <EditProductTypeModal
-          productType={productType}
-          onClose={() => setIsEditModalOpen(false)}
-          onSubmit={handleSaveProductType}
-          isSubmitting={isSaving}
-        />
-      )}
 
       {isDeleteModalOpen && (
         <DeleteProductTypeModal
