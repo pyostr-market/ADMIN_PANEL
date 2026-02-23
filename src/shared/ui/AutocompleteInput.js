@@ -14,7 +14,6 @@ import './AutocompleteInput.css';
  * @param {string} error - Сообщение об ошибке
  * @param {Function} getOptionLabel - Функция для получения лейбла опции
  * @param {Function} getOptionValue - Функция для получения значения опции
- * @param {string} searchField - Поле для поиска
  */
 export function AutocompleteInput({
   label,
@@ -26,66 +25,83 @@ export function AutocompleteInput({
   error,
   getOptionLabel = (option) => option.name || `ID: ${option.id}`,
   getOptionValue = (option) => option.id,
-  searchField = 'name',
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [options, setOptions] = useState([]);
+  const [allOptions, setAllOptions] = useState([]); // Все загруженные опции
+  const [filteredOptions, setFilteredOptions] = useState([]); // Отфильтрованные опции
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [hasLoadedAllOptions, setHasLoadedAllOptions] = useState(false);
 
   const inputRef = useRef(null);
   const dropdownRef = useRef(null);
-  const debounceRef = useRef(null);
 
-  // Загружаем опции при изменении searchQuery
-  const loadOptions = useCallback(async (query) => {
-    if (!fetchOptions) return;
+  // Фильтрация опций на клиенте при изменении searchQuery
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setFilteredOptions(allOptions);
+    } else {
+      const query = searchQuery.toLowerCase().trim();
+      setFilteredOptions(
+        allOptions.filter((opt) => {
+          const label = getOptionLabel(opt).toLowerCase();
+          return label.includes(query);
+        })
+      );
+    }
+  }, [searchQuery, allOptions, getOptionLabel]);
+
+  // Загружаем все опции при первом открытии dropdown
+  const loadAllOptions = useCallback(async () => {
+    if (!fetchOptions || hasLoadedAllOptions) return;
 
     setIsLoading(true);
     try {
-      const params = query ? { [searchField]: query } : {};
-      const results = await fetchOptions(params);
-      setOptions(Array.isArray(results) ? results : []);
+      const results = await fetchOptions({ limit: 100, offset: 0 });
+      const optionsArray = Array.isArray(results) ? results : [];
+      setAllOptions(optionsArray);
+      setFilteredOptions(optionsArray);
+      setHasLoadedAllOptions(true);
     } catch (err) {
-      console.error('Error loading options:', err);
-      setOptions([]);
+      console.error('Error loading all options:', err);
+      setAllOptions([]);
+      setFilteredOptions([]);
     } finally {
       setIsLoading(false);
     }
-  }, [fetchOptions, searchField]);
+  }, [fetchOptions, hasLoadedAllOptions]);
 
-  // Debounce для поиска
+  // Загружаем выбранную опцию по ID при монтировании (если value уже есть)
   useEffect(() => {
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current);
-    }
-
-    if (isOpen) {
-      debounceRef.current = setTimeout(() => {
-        loadOptions(searchQuery);
-      }, 300);
-    }
-
-    return () => {
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current);
-      }
-    };
-  }, [searchQuery, isOpen, loadOptions]);
-
-  // Находим выбранную опцию при изменении value
-  useEffect(() => {
-    if (value && options.length > 0) {
-      const found = options.find((opt) => String(getOptionValue(opt)) === String(value));
-      if (found) {
-        setSelectedOption(found);
-      }
+    if (value && !isInitialized) {
+      const loadSelectedOption = async () => {
+        try {
+          // Загружаем все опции без фильтра, чтобы найти нужную по ID
+          const results = await fetchOptions({ limit: 100, offset: 0 });
+          if (Array.isArray(results)) {
+            const found = results.find((opt) => String(getOptionValue(opt)) === String(value));
+            if (found) {
+              setSelectedOption(found);
+            }
+            setAllOptions(results);
+            setFilteredOptions(results);
+            setHasLoadedAllOptions(true);
+          }
+        } catch (err) {
+          console.error('Error loading selected option:', err);
+        } finally {
+          setIsInitialized(true);
+        }
+      };
+      loadSelectedOption();
     } else if (!value) {
-      setSelectedOption(null);
+      setIsInitialized(true);
     }
-  }, [value, options, getOptionValue]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
 
   // Закрываем dropdown при клике вне компонента
   useClickOutside([inputRef, dropdownRef], () => {
@@ -97,8 +113,10 @@ export function AutocompleteInput({
       setIsOpen(true);
       setSearchQuery('');
       setHighlightedIndex(-1);
+      // Загружаем все опции при открытии dropdown
+      loadAllOptions();
     }
-  }, [disabled]);
+  }, [disabled, loadAllOptions]);
 
   const handleCloseDropdown = useCallback(() => {
     setIsOpen(false);
@@ -142,7 +160,7 @@ export function AutocompleteInput({
       case 'ArrowDown':
         e.preventDefault();
         setHighlightedIndex((prev) =>
-          prev < options.length - 1 ? prev + 1 : prev
+          prev < filteredOptions.length - 1 ? prev + 1 : prev
         );
         break;
       case 'ArrowUp':
@@ -151,8 +169,8 @@ export function AutocompleteInput({
         break;
       case 'Enter':
         e.preventDefault();
-        if (highlightedIndex >= 0 && highlightedIndex < options.length) {
-          handleSelectOption(options[highlightedIndex]);
+        if (highlightedIndex >= 0 && highlightedIndex < filteredOptions.length) {
+          handleSelectOption(filteredOptions[highlightedIndex]);
         }
         break;
       case 'Escape':
@@ -161,7 +179,7 @@ export function AutocompleteInput({
       default:
         break;
     }
-  }, [isOpen, options, highlightedIndex, handleSelectOption, handleCloseDropdown]);
+  }, [isOpen, filteredOptions, highlightedIndex, handleSelectOption, handleCloseDropdown]);
 
   // Скроллим к выделенному элементу
   useEffect(() => {
@@ -226,12 +244,12 @@ export function AutocompleteInput({
             <div className="autocomplete-input__option autocomplete-input__option--loading">
               Загрузка...
             </div>
-          ) : options.length === 0 ? (
+          ) : filteredOptions.length === 0 ? (
             <div className="autocomplete-input__option autocomplete-input__option--empty">
               {searchQuery ? 'Ничего не найдено' : 'Начните ввод для поиска'}
             </div>
           ) : (
-            options.map((option, index) => {
+            filteredOptions.map((option, index) => {
               const optionValue = getOptionValue(option);
               const isSelected = String(optionValue) === String(value);
               const isHighlighted = index === highlightedIndex;

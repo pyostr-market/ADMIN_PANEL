@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FiSave, FiX, FiPlus, FiTrash2, FiImage, FiTag, FiDollarSign, FiFileText } from 'react-icons/fi';
+import { FiSave, FiX, FiPlus, FiTrash2, FiImage, FiTag, FiFileText } from 'react-icons/fi';
 import { Button } from '../../shared/ui/Button';
 import { Tabs, Tab } from '../../shared/ui/Tabs';
 import { ImageCarousel } from '../../shared/ui/ImageCarousel';
@@ -414,7 +414,6 @@ export function ProductFormPage() {
 
                 <div className="product-form__field">
                   <label className="product-form__label">
-                    <FiDollarSign className="product-form__label-icon" />
                     Цена <span className="required">*</span>
                   </label>
                   <input
