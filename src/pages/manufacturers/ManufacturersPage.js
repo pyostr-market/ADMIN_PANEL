@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiPlus, FiTrash2, FiEye, FiEdit2 } from 'react-icons/fi';
+import { FiBox, FiPlus, FiTrash2, FiEye, FiEdit2 } from 'react-icons/fi';
 import { PermissionGate } from '../../shared/ui/PermissionGate';
 import { Button } from '../../shared/ui/Button';
 import { SearchInput } from '../../shared/ui/SearchInput';
@@ -110,7 +110,7 @@ export function ManufacturersPage() {
         <SearchInput
           value={manufacturersCrud.search}
           onChange={(e) => manufacturersCrud.setSearch(e.target.value)}
-          placeholder="Поиск по названию..."
+          placeholder="Поиск по названию или описанию..."
           loading={manufacturersCrud.isLoading}
         />
       </div>
@@ -121,6 +121,9 @@ export function ManufacturersPage() {
           <>
             <div className="manufacturers-page__item-content" onClick={() => handleViewManufacturer(manufacturer)}>
               <div className="manufacturers-page__item-main">
+                <div className="manufacturers-page__avatar">
+                  <FiBox />
+                </div>
                 <div className="manufacturers-page__item-info">
                   <div className="manufacturers-page__item-header">
                     <p className="manufacturers-page__item-title">

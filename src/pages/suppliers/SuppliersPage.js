@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiPlus, FiTrash2, FiEye, FiEdit2, FiMail, FiPhone } from 'react-icons/fi';
+import { FiBox, FiPlus, FiTrash2, FiEye, FiEdit2, FiMail, FiPhone } from 'react-icons/fi';
 import { PermissionGate } from '../../shared/ui/PermissionGate';
 import { Button } from '../../shared/ui/Button';
 import { SearchInput } from '../../shared/ui/SearchInput';
@@ -110,7 +110,7 @@ export function SuppliersPage() {
         <SearchInput
           value={suppliersCrud.search}
           onChange={(e) => suppliersCrud.setSearch(e.target.value)}
-          placeholder="Поиск по названию..."
+          placeholder="Поиск по названию, email или телефону..."
           loading={suppliersCrud.isLoading}
         />
       </div>
@@ -121,6 +121,9 @@ export function SuppliersPage() {
           <>
             <div className="suppliers-page__item-content" onClick={() => handleViewSupplier(supplier)}>
               <div className="suppliers-page__item-main">
+                <div className="suppliers-page__avatar">
+                  <FiBox />
+                </div>
                 <div className="suppliers-page__item-info">
                   <div className="suppliers-page__item-header">
                     <p className="suppliers-page__item-title">

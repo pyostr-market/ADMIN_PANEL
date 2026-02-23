@@ -1,9 +1,6 @@
-/* SuppliersPage, ManufacturersPage, ProductTypesPage, AttributesPage - Mobile styles */
+/* SuppliersPage - Mobile styles */
 @media (max-width: 768px) {
-  .suppliers-page,
-  .manufacturers-page,
-  .product-types-page,
-  .attributes-page {
+  .suppliers-page {
     padding: 0 !important;
     gap: 0;
     width: 100%;
@@ -11,10 +8,8 @@
     overflow-x: hidden;
   }
 
-  .suppliers-page__header,
-  .manufacturers-page__header,
-  .product-types-page__header,
-  .attributes-page__header {
+  /* Header - название слева, кнопка справа */
+  .suppliers-page__header {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
@@ -29,10 +24,7 @@
     box-sizing: border-box;
   }
 
-  .suppliers-page__title,
-  .manufacturers-page__title,
-  .product-types-page__title,
-  .attributes-page__title {
+  .suppliers-page__title {
     font-size: 16px;
     font-weight: 600;
     margin: 0;
@@ -40,30 +32,20 @@
     flex: 0 1 auto;
   }
 
-  .suppliers-page__controls,
-  .manufacturers-page__controls,
-  .product-types-page__controls,
-  .attributes-page__controls {
+  .suppliers-page__controls {
     flex-shrink: 0;
     margin-left: auto;
   }
 
-  .suppliers-page__controls button,
-  .manufacturers-page__controls button,
-  .product-types-page__controls button,
-  .attributes-page__controls button {
-    flex: 1;
+  .suppliers-page__controls button {
     height: 34px;
+    padding: 6px 12px;
     font-size: 12px;
   }
 
-  .suppliers-page__filters,
-  .manufacturers-page__filters,
-  .product-types-page__filters,
-  .attributes-page__filters {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+  /* Filters */
+  .suppliers-page__filters {
+    grid-template-columns: 1fr;
     padding: 10px 12px;
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -71,112 +53,182 @@
     box-sizing: border-box;
   }
 
-  .suppliers-page__filters select,
-  .manufacturers-page__filters select,
-  .product-types-page__filters select,
-  .attributes-page__filters select,
-  .suppliers-page__filters input,
-  .manufacturers-page__filters input,
-  .product-types-page__filters input,
-  .attributes-page__filters input {
-    height: 36px;
-    font-size: 13px;
-    padding: 6px 10px;
-    box-sizing: border-box;
+  .suppliers-page__filters--loading {
+    opacity: 0.6;
+    pointer-events: none;
   }
 
+  /* Entity List */
   .suppliers-page__list,
-  .manufacturers-page__list,
-  .product-types-page__list,
-  .attributes-page__list,
   .entity-list {
     padding: 0;
   }
 
-  .suppliers-page__item,
-  .manufacturers-page__item,
-  .product-types-page__item,
-  .attributes-page__item {
+  .suppliers-page__item {
     padding: 0;
     margin: 0;
+    border-bottom: 1px solid var(--border);
+    width: 100%;
   }
 
-  .suppliers-page__item-content,
-  .manufacturers-page__item-content,
-  .product-types-page__item-content,
-  .attributes-page__item-content {
-    flex-direction: column;
-    gap: 8px;
+  .suppliers-page__item:last-child {
+    border-bottom: none;
+  }
+
+  /* Item content - на всю ширину */
+  .suppliers-page__item-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
     padding: 10px 12px;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 60px;
   }
 
-  .suppliers-page__item-main,
-  .manufacturers-page__item-main,
-  .product-types-page__item-main,
-  .attributes-page__item-main {
-    flex-direction: column;
-    gap: 6px;
+  .suppliers-page__item-main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
     width: 100%;
     min-width: 0;
+    flex: 1;
   }
 
-  .suppliers-page__item-header,
-  .manufacturers-page__item-header,
-  .product-types-page__item-header,
-  .attributes-page__item-header {
+  .suppliers-page__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    color: white;
+    background: var(--gradient-avatar);
+  }
+
+  .suppliers-page__item-content:hover .suppliers-page__avatar {
+    transform: none;
+  }
+
+  .suppliers-page__item-info {
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
     gap: 4px;
+    min-width: 0;
+    flex: 1;
     width: 100%;
   }
 
-  .suppliers-page__item-title,
-  .manufacturers-page__item-title,
-  .product-types-page__item-title,
-  .attributes-page__item-title {
+  .suppliers-page__item-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+    height: 24px;
+    width: 100%;
+  }
+
+  .suppliers-page__item-title {
     font-size: 14px;
     font-weight: 600;
     margin: 0;
-    word-break: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+    width: 100%;
   }
 
-  .suppliers-page__item-badges,
-  .manufacturers-page__item-badges,
-  .product-types-page__item-badges,
-  .attributes-page__item-badges {
+  .suppliers-page__item-badges {
     display: flex;
     gap: 4px;
-    flex-wrap: wrap;
+    flex-shrink: 0;
   }
 
-  .suppliers-page__item-meta,
-  .manufacturers-page__item-meta,
-  .product-types-page__item-meta,
-  .attributes-page__item-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
+  .suppliers-page__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
     font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .suppliers-page__item-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    overflow: hidden;
+    font-size: 11px;
     color: var(--text-muted);
-  }
-
-  .suppliers-page__item-actions,
-  .manufacturers-page__item-actions,
-  .product-types-page__item-actions,
-  .attributes-page__item-actions {
-    display: flex;
-    gap: 6px;
     width: 100%;
-    padding-top: 8px;
-    border-top: 1px solid var(--border);
+    line-height: 1.4;
   }
 
-  .suppliers-page__item-actions button,
-  .manufacturers-page__item-actions button,
-  .product-types-page__item-actions button,
-  .attributes-page__item-actions button {
-    flex: 1;
-    height: 34px;
-    font-size: 12px;
+  .suppliers-page__item-meta:empty {
+    display: none;
+  }
+
+  .suppliers-page__meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+  }
+
+  .suppliers-page__meta-item:empty {
+    display: none;
+  }
+
+  .suppliers-page__meta-icon {
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  .suppliers-page__separator {
+    color: var(--border-strong);
+    flex-shrink: 0;
+  }
+
+  /* Item actions - на всю ширину */
+  .suppliers-page__item-actions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 8px 12px;
+    border-top: 1px solid var(--border);
+    background: var(--surface-subtle);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .suppliers-page__item-actions button {
+    height: 32px;
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+
+  .suppliers-page__item-actions .btn-delete {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    min-width: 32px;
+  }
+
+  /* Pagination */
+  .suppliers-page__pagination {
+    padding: 10px 12px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    width: 100%;
+    box-sizing: border-box;
   }
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiPlus, FiTrash2, FiEye, FiEdit2 } from 'react-icons/fi';
+import { FiTag, FiPlus, FiTrash2, FiEye, FiEdit2 } from 'react-icons/fi';
 import { PermissionGate } from '../../shared/ui/PermissionGate';
 import { Button } from '../../shared/ui/Button';
 import { SearchInput } from '../../shared/ui/SearchInput';
@@ -90,16 +90,6 @@ export function CategoriesPage() {
     navigate('/categories/create');
   };
 
-  const getCategoryParentName = (category) => {
-    if (!category.parent_id) return null;
-    return `Родитель: ID ${category.parent_id}`;
-  };
-
-  const getCategoryManufacturerName = (category) => {
-    if (!category.manufacturer_id) return null;
-    return `Производитель: ID ${category.manufacturer_id}`;
-  };
-
   return (
     <section className="categories-page">
       <header className="categories-page__header">
@@ -121,7 +111,7 @@ export function CategoriesPage() {
         <SearchInput
           value={categoriesCrud.search}
           onChange={(e) => categoriesCrud.setSearch(e.target.value)}
-          placeholder="Поиск по названию..."
+          placeholder="Поиск по названию или описанию..."
           loading={categoriesCrud.isLoading}
         />
       </div>
@@ -132,6 +122,9 @@ export function CategoriesPage() {
           <>
             <div className="categories-page__item-content" onClick={() => handleViewCategory(category)}>
               <div className="categories-page__item-main">
+                <div className="categories-page__avatar">
+                  <FiTag />
+                </div>
                 <div className="categories-page__item-info">
                   <div className="categories-page__item-header">
                     <p className="categories-page__item-title">
@@ -146,7 +139,7 @@ export function CategoriesPage() {
                       <>
                         <span className="categories-page__separator">•</span>
                         <span className="categories-page__meta-item">
-                          {getCategoryParentName(category)}
+                          Родитель: ID {category.parent_id}
                         </span>
                       </>
                     )}
@@ -154,7 +147,7 @@ export function CategoriesPage() {
                       <>
                         <span className="categories-page__separator">•</span>
                         <span className="categories-page__meta-item">
-                          {getCategoryManufacturerName(category)}
+                          Производитель: ID {category.manufacturer_id}
                         </span>
                       </>
                     )}

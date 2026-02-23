@@ -1,67 +1,107 @@
+/* ManufacturersPage - стиль как у UsersListPage */
 .manufacturers-page {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
-  padding: var(--space-6);
-  max-width: 1400px;
-  margin: 0 auto;
+  gap: var(--space-3);
 }
 
+/* Header */
 .manufacturers-page__header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 40px;
 }
 
 .manufacturers-page__title {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text);
   margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
 }
 
 .manufacturers-page__controls {
   display: flex;
-  gap: var(--space-3);
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 180px;
 }
 
+/* Filters */
 .manufacturers-page__filters {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
   gap: var(--space-3);
+  margin-bottom: var(--space-3);
   transition: opacity 0.2s ease;
 }
 
 .manufacturers-page__filters--loading {
   opacity: 0.6;
+  pointer-events: none;
 }
 
+/* Entity List Item */
 .manufacturers-page__item-content {
+  display: flex;
   flex: 1;
   cursor: pointer;
+  transition: all 0.2s;
+  padding: var(--space-2);
+  margin: calc(-1 * var(--space-2));
+  border-radius: var(--radius-md);
+}
+
+.manufacturers-page__item-content:hover {
+  background: var(--surface-subtle);
 }
 
 .manufacturers-page__item-main {
   display: flex;
-  align-items: flex-start;
-  gap: var(--space-4);
+  gap: var(--space-3);
+  align-items: center;
+  width: 100%;
+}
+
+.manufacturers-page__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  color: white;
+  background: var(--gradient-avatar);
+  transition: transform 0.2s;
+}
+
+.manufacturers-page__item-content:hover .manufacturers-page__avatar {
+  transform: scale(1.05);
 }
 
 .manufacturers-page__item-info {
-  flex: 1;
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
 }
 
 .manufacturers-page__item-header {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-2);
+  gap: var(--space-2);
+  flex-wrap: wrap;
 }
 
 .manufacturers-page__item-title {
-  font-size: 16px;
   font-weight: 600;
-  color: var(--text);
+  font-size: 14px;
   margin: 0;
+  color: var(--text);
 }
 
 .manufacturers-page__item-badges {
@@ -72,60 +112,62 @@
 .manufacturers-page__badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
-  border-radius: var(--radius-md);
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
-  font-weight: 500;
 }
 
 .manufacturers-page__badge--verified {
-  background-color: var(--success-bg);
-  color: var(--accent-green);
+  background: var(--success);
+  color: white;
 }
 
 .manufacturers-page__item-meta {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  font-size: 14px;
-  color: var(--text-secondary);
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
 .manufacturers-page__meta-item {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
+}
+
+.manufacturers-page__meta-icon {
+  font-size: 12px;
+  color: var(--text-muted);
 }
 
 .manufacturers-page__meta-label {
   font-weight: 500;
-  color: var(--text-muted);
 }
 
 .manufacturers-page__separator {
-  color: var(--border);
+  color: var(--border-strong);
 }
 
+/* Item Actions */
 .manufacturers-page__item-actions {
   display: flex;
-  gap: var(--space-2);
+  gap: var(--space-1);
   align-items: center;
 }
 
-.manufacturers-page__item-actions .btn-delete {
+.btn-delete:hover {
   color: var(--danger);
+  border-color: var(--danger);
 }
 
-.manufacturers-page__item-actions .btn-delete:hover {
-  background-color: var(--danger);
-  color: white;
-}
-
+/* Modal confirm text */
 .modal-confirm-text {
-  font-size: 15px;
-  color: var(--text);
-  margin: 0 0 var(--space-3) 0;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .modal-confirm-text strong {
@@ -133,7 +175,30 @@
 }
 
 .modal-confirm-note {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
-  margin: 0;
+  margin-top: var(--space-2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .manufacturers-page__header {
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .manufacturers-page__controls {
+    justify-content: center;
+  }
+
+  .manufacturers-page__item-content {
+    flex-direction: column;
+  }
+
+  .manufacturers-page__item-actions {
+    justify-content: flex-end;
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--border);
+    margin-top: var(--space-2);
+  }
 }

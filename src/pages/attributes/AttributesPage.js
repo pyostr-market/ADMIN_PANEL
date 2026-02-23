@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiPlus, FiTrash2, FiEye, FiEdit2 } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEye, FiEdit2, FiTag } from 'react-icons/fi';
 import { PermissionGate } from '../../shared/ui/PermissionGate';
 import { Button } from '../../shared/ui/Button';
 import { SearchInput } from '../../shared/ui/SearchInput';
@@ -110,7 +110,7 @@ export function AttributesPage() {
         <SearchInput
           value={attributesCrud.search}
           onChange={(e) => attributesCrud.setSearch(e.target.value)}
-          placeholder="Поиск по названию..."
+          placeholder="Поиск по названию или значению..."
           loading={attributesCrud.isLoading}
         />
       </div>
@@ -121,6 +121,9 @@ export function AttributesPage() {
           <>
             <div className="attributes-page__item-content" onClick={() => handleViewAttribute(attribute)}>
               <div className="attributes-page__item-main">
+                <div className="attributes-page__avatar">
+                  <FiTag />
+                </div>
                 <div className="attributes-page__item-info">
                   <div className="attributes-page__item-header">
                     <p className="attributes-page__item-title">

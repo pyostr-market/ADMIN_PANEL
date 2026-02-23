@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiPlus, FiTrash2, FiEye, FiEdit2, FiDollarSign, FiPackage, FiTag } from 'react-icons/fi';
+import { FiPackage, FiPlus, FiTrash2, FiEye, FiEdit2, FiDollarSign, FiTag } from 'react-icons/fi';
 import { PermissionGate } from '../../shared/ui/PermissionGate';
 import { Button } from '../../shared/ui/Button';
 import { SearchInput } from '../../shared/ui/SearchInput';
@@ -182,8 +182,8 @@ export function ProductsPage() {
                   {mainImage(product) ? (
                     <img src={mainImage(product)} alt={product.name} className="products-page__item-img" />
                   ) : (
-                    <div className="products-page__item-no-image">
-                      <FiPackage size={24} />
+                    <div className="products-page__item-avatar">
+                      <FiPackage />
                     </div>
                   )}
                 </div>

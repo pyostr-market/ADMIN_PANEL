@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiPlus, FiTrash2, FiEye, FiEdit2 } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEye, FiEdit2, FiBox } from 'react-icons/fi';
 import { PermissionGate } from '../../shared/ui/PermissionGate';
 import { Button } from '../../shared/ui/Button';
 import { SearchInput } from '../../shared/ui/SearchInput';
@@ -121,6 +121,9 @@ export function ProductTypesPage() {
           <>
             <div className="product-types-page__item-content" onClick={() => handleViewProductType(productType)}>
               <div className="product-types-page__item-main">
+                <div className="product-types-page__avatar">
+                  <FiBox />
+                </div>
                 <div className="product-types-page__item-info">
                   <div className="product-types-page__item-header">
                     <p className="product-types-page__item-title">
@@ -135,7 +138,7 @@ export function ProductTypesPage() {
                       <>
                         <span className="product-types-page__separator">•</span>
                         <span className="product-types-page__meta-item">
-                          Родительский тип: {productType.parent_id}
+                          Родительский тип: ID {productType.parent_id}
                         </span>
                       </>
                     )}
