@@ -5,6 +5,7 @@ import { Button } from '../../../shared/ui/Button';
 import { Tabs, Tab } from '../../../shared/ui/Tabs';
 import { ImageCarousel } from '../../../shared/ui/ImageCarousel';
 import { AutocompleteInput } from '../../../shared/ui/AutocompleteInput';
+import { RichTextEditor } from '../../../shared/ui/RichTextEditor';
 import { getApiErrorMessage } from '../../../shared/api/apiError';
 import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import {
@@ -448,23 +449,6 @@ export function ProductFormPage() {
                     <span className="product-form__error">{errors.price}</span>
                   )}
                 </div>
-
-                <div className="product-form__field product-form__field--full">
-                  <label className="product-form__label">
-                    <FiFileText className="product-form__label-icon" />
-                    Описание
-                  </label>
-                  <textarea
-                    value={formData.description}
-                    onChange={(e) => handleChange('description', e.target.value)}
-                    placeholder="Введите описание товара"
-                    rows={4}
-                    className={errors.description ? 'input-error' : ''}
-                  />
-                  {errors.description && (
-                    <span className="product-form__error">{errors.description}</span>
-                  )}
-                </div>
               </div>
             </div>
 
@@ -512,6 +496,32 @@ export function ProductFormPage() {
                     selectedOption={selectedSupplier}
                   />
                 </div>
+              </div>
+            </div>
+
+            <div className="product-form__section product-form__section--description">
+              <div className="product-form__section-header">
+                <div className="product-form__section-icon product-form__section-icon--info">
+                  <FiFileText />
+                </div>
+                <div>
+                  <h2 className="product-form__section-title">Описание товара</h2>
+                  <p className="product-form__section-description">
+                    Подробное описание товара с возможностью форматирования текста
+                  </p>
+                </div>
+              </div>
+
+              <div className="product-form__field product-form__field--full">
+                <RichTextEditor
+                  value={formData.description}
+                  onChange={(html) => handleChange('description', html)}
+                  placeholder="Введите описание товара..."
+                  disabled={isSubmitting}
+                />
+                {errors.description && (
+                  <span className="product-form__error">{errors.description}</span>
+                )}
               </div>
             </div>
           </div>

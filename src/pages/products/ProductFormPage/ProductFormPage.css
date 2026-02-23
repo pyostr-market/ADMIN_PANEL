@@ -121,6 +121,12 @@
   color: var(--color-text-secondary, #666);
 }
 
+/* Секция описания товара */
+.product-form__section--description {
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  border-color: #e3e8ef;
+}
+
 .product-form__grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

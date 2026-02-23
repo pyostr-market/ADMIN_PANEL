@@ -12,6 +12,7 @@ export { SearchInput } from './SearchInput';
 export { EntityList } from './EntityList';
 export { ImageCarousel } from './ImageCarousel';
 export { AutocompleteInput } from './AutocompleteInput';
+export { RichTextEditor } from './RichTextEditor';
 
 // Permissions
 export { PermissionGate } from './PermissionGate';
