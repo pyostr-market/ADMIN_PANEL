@@ -17,6 +17,7 @@
     border-left: none;
     border-right: none;
     box-sizing: border-box;
+    width: 100%;
   }
 
   .entity-list__item:first-child {
@@ -34,6 +35,7 @@
   .entity-item {
     width: 100%;
     min-width: 0;
+    flex: 1;
   }
 
   .entity-item__title {
@@ -41,6 +43,7 @@
     font-weight: 600;
     margin: 0 0 4px 0;
     word-break: break-word;
+    width: 100%;
   }
 
   .entity-item__description {
@@ -48,6 +51,7 @@
     line-height: 1.4;
     margin: 0;
     word-break: break-word;
+    width: 100%;
   }
 
   .entity-item__meta {
@@ -55,6 +59,7 @@
     gap: 6px;
     flex-wrap: wrap;
     margin-top: 4px;
+    width: 100%;
   }
 
   .entity-actions {
@@ -64,6 +69,7 @@
     margin-top: 0;
     border-top: 1px solid var(--border);
     gap: 6px;
+    box-sizing: border-box;
   }
 
   .entity-actions button {

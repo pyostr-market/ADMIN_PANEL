@@ -293,21 +293,23 @@ export function UsersListPage() {
                         </span>
                       </>
                     )}
-                    {user.group && (
+                    {(user.group || user.created_at) && (
                       <>
                         <span className="users-list-page__separator">•</span>
-                        <span className="users-list-page__meta-item">
-                          <FiUser className="users-list-page__meta-icon" />
-                          {user.group.name}
-                        </span>
-                      </>
-                    )}
-                    {user.created_at && (
-                      <>
-                        <span className="users-list-page__separator">•</span>
-                        <span className="users-list-page__meta-item">
-                          {new Date(user.created_at).toLocaleDateString('ru-RU')}
-                        </span>
+                        {user.group && (
+                          <span className="users-list-page__meta-item">
+                            <FiUser className="users-list-page__meta-icon" />
+                            {user.group.name}
+                          </span>
+                        )}
+                        {user.group && user.created_at && (
+                          <span className="users-list-page__separator">•</span>
+                        )}
+                        {user.created_at && (
+                          <span className="users-list-page__meta-item">
+                            {new Date(user.created_at).toLocaleDateString('ru-RU')}
+                          </span>
+                        )}
                       </>
                     )}
                   </div>

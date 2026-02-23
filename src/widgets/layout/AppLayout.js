@@ -34,13 +34,6 @@ export function AppLayout() {
           </button>
         </header>
 
-        {/* Мобильная шапка */}
-        <div className="mobile-header">
-          <div className="mobile-header__content">
-            <h1 className="mobile-header__title">Market Admin</h1>
-          </div>
-        </div>
-
         <main className="app-shell__content">
           <NotificationsPanel />
           <Outlet />
