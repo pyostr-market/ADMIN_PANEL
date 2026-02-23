@@ -41,7 +41,15 @@ export async function getCategoriesRequest({
  */
 export async function getCategoryByIdRequest(categoryId) {
   const response = await productApi.get(`${API_ENDPOINTS.categories}/${categoryId}`);
-  return unwrapResponse(response);
+  const data = unwrapResponse(response);
+  // Нормализуем данные: если есть вложенные parent/manufacturer, извлекаем ID
+  if (data?.parent && typeof data.parent === 'object') {
+    data.parent_id = data.parent.id;
+  }
+  if (data?.manufacturer && typeof data.manufacturer === 'object') {
+    data.manufacturer_id = data.manufacturer.id;
+  }
+  return data;
 }
 
 /**
