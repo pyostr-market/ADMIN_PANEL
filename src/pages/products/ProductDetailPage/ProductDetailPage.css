@@ -184,6 +184,19 @@
   }
 }
 
+/* Нижняя секция: Атрибуты и Описание */
+.product-detail-page__bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+@media (max-width: 1024px) {
+  .product-detail-page__bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Panels */
 .product-detail-page__panel {
   background: var(--surface);
@@ -308,27 +321,6 @@
   font-size: 20px;
 }
 
-/* Product Description */
-.product-description {
-  margin-top: var(--space-3);
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--border);
-}
-
-.product-description__title {
-  font-size: 14px;
-  font-weight: 600;
-  margin: 0 0 var(--space-2) 0;
-  color: var(--text);
-}
-
-.product-description__text {
-  margin: 0;
-  font-size: 14px;
-  color: var(--text);
-  line-height: 1.6;
-}
-
 /* Attributes */
 .attributes-grid {
   display: grid;
@@ -372,4 +364,26 @@
   font-weight: 600;
   color: var(--text);
   word-break: break-word;
+}
+
+/* Product Description in Panel */
+.product-description__text {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.product-description__text b,
+.product-description__text strong {
+  font-weight: 600;
+}
+
+.product-description__text div {
+  margin-bottom: var(--space-2);
+}
+
+.product-description__text br {
+  display: block;
+  content: "";
+  margin: var(--space-2) 0;
 }

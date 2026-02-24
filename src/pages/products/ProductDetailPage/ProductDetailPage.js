@@ -321,45 +321,61 @@ export function ProductDetailPage() {
                   </div>
                 )}
               </div>
-
-              {product.description && (
-                <div className="product-description">
-                  <h3 className="product-description__title">Описание</h3>
-                  <p className="product-description__text">{product.description}</p>
-                </div>
-              )}
             </div>
           </div>
         </div>
 
-        {/* Атрибуты */}
-        {product.attributes && product.attributes.length > 0 && (
-          <div className="product-detail-page__panel">
-            <div className="panel-header">
-              <div className="panel-header__content">
-                <h2 className="panel-title">
-                  <FiFileText className="panel-title__icon" />
-                  Атрибуты
-                </h2>
+        {/* Нижняя секция: Атрибуты и Описание */}
+        <div className="product-detail-page__bottom-grid">
+          {/* Атрибуты */}
+          {product.attributes && product.attributes.length > 0 && (
+            <div className="product-detail-page__panel">
+              <div className="panel-header">
+                <div className="panel-header__content">
+                  <h2 className="panel-title">
+                    <FiFileText className="panel-title__icon" />
+                    Атрибуты
+                  </h2>
+                </div>
               </div>
-            </div>
-            <div className="panel-content">
-              <div className="attributes-grid">
-                {product.attributes.map((attr, index) => (
-                  <div key={index} className="attribute-card">
-                    <div className="attribute-card__header">
-                      <span className="attribute-card__name">{attr.name}</span>
-                      {attr.is_filterable && (
-                        <span className="attribute-card__filterable">Фильтруемый</span>
-                      )}
+              <div className="panel-content">
+                <div className="attributes-grid">
+                  {product.attributes.map((attr, index) => (
+                    <div key={index} className="attribute-card">
+                      <div className="attribute-card__header">
+                        <span className="attribute-card__name">{attr.name}</span>
+                        {attr.is_filterable && (
+                          <span className="attribute-card__filterable">Фильтруемый</span>
+                        )}
+                      </div>
+                      <span className="attribute-card__value">{attr.value}</span>
                     </div>
-                    <span className="attribute-card__value">{attr.value}</span>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+
+          {/* Описание */}
+          {product.description && (
+            <div className="product-detail-page__panel">
+              <div className="panel-header">
+                <div className="panel-header__content">
+                  <h2 className="panel-title">
+                    <FiFileText className="panel-title__icon" />
+                    Описание
+                  </h2>
+                </div>
+              </div>
+              <div className="panel-content">
+                <div 
+                  className="product-description__text"
+                  dangerouslySetInnerHTML={{ __html: product.description }}
+                />
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {isDeleteModalOpen && (

@@ -82,4 +82,8 @@
   .info-card__value {
     font-size: 14px;
   }
+
+  .product-detail-page__bottom-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
