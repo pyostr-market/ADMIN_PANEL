@@ -180,3 +180,43 @@ export async function getCategoryAuditRequest({
 
   return { items, total };
 }
+
+/**
+ * Получение списка категорий (для автокомплита)
+ * @param {Object} params - Параметры запроса
+ * @param {number} params.limit - Количество элементов
+ * @param {number} params.offset - Смещение
+ * @param {string} params.name - Фильтр по названию
+ */
+export async function getCategoriesForAutocompleteRequest({
+  limit = 10,
+  offset = 0,
+  name,
+} = {}) {
+  const queryParams = { limit, offset };
+  if (name) queryParams.name = name;
+
+  const response = await productApi.get(API_ENDPOINTS.categories, { params: queryParams });
+  const data = unwrapResponse(response);
+  return Array.isArray(data?.items) ? data.items : [];
+}
+
+/**
+ * Получение списка производителей (для автокомплита)
+ * @param {Object} params - Параметры запроса
+ * @param {number} params.limit - Количество элементов
+ * @param {number} params.offset - Смещение
+ * @param {string} params.name - Фильтр по названию
+ */
+export async function getManufacturersForAutocompleteRequest({
+  limit = 10,
+  offset = 0,
+  name,
+} = {}) {
+  const queryParams = { limit, offset };
+  if (name) queryParams.name = name;
+
+  const response = await productApi.get(API_ENDPOINTS.manufacturers, { params: queryParams });
+  const data = unwrapResponse(response);
+  return Array.isArray(data?.items) ? data.items : [];
+}

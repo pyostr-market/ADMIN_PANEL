@@ -2,12 +2,14 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FiSave, FiX } from 'react-icons/fi';
 import { Button } from '../../shared/ui/Button';
+import { AutocompleteInput } from '../../shared/ui/AutocompleteInput';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import {
   getProductTypeByIdRequest,
   createProductTypeRequest,
   updateProductTypeRequest,
+  getProductTypesForAutocompleteRequest,
 } from './api/productTypesApi';
 import './ProductTypeFormPage.css';
 
@@ -28,6 +30,9 @@ export function ProductTypeFormPage() {
     parent_id: '',
   });
 
+  // Храним полный объект для autocomplete
+  const [selectedParent, setSelectedParent] = useState(null);
+
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
@@ -40,6 +45,10 @@ export function ProductTypeFormPage() {
         name: data.name || '',
         parent_id: data.parent_id || '',
       });
+      // Сохраняем полный объект для autocomplete
+      if (data.parent) {
+        setSelectedParent(data.parent);
+      }
     } catch (error) {
       const message = getApiErrorMessage(error);
       notificationsRef.current?.error(message);
@@ -94,7 +103,7 @@ export function ProductTypeFormPage() {
       if (isEditMode) {
         const responseData = await updateProductTypeRequest(productTypeId, payload);
         notificationsRef.current?.info('Тип продукта обновлен');
-        
+
         if (stayOnPage) {
           // Обновляем данные формы из ответа
           if (responseData) {
@@ -102,6 +111,8 @@ export function ProductTypeFormPage() {
               name: responseData.name || formData.name,
               parent_id: responseData.parent_id || formData.parent_id,
             });
+            // Обновляем полный объект для autocomplete
+            setSelectedParent(responseData.parent || selectedParent);
           }
         }
       } else {
@@ -181,18 +192,16 @@ export function ProductTypeFormPage() {
               </div>
 
               <div className="product-type-form__field">
-                <label className="product-type-form__label">
-                  Родительский тип
-                </label>
-                <input
-                  type="number"
+                <AutocompleteInput
+                  label="Родительский тип"
                   value={formData.parent_id}
-                  onChange={(e) => handleChange('parent_id', e.target.value)}
-                  placeholder="ID родительского типа (необязательно)"
-                  min="1"
+                  onChange={(value) => handleChange('parent_id', value)}
+                  fetchOptions={getProductTypesForAutocompleteRequest}
+                  placeholder="Начните ввод для поиска родительского типа..."
+                  selectedOption={selectedParent}
                 />
                 <span className="product-type-form__hint">
-                  Укажите ID родительского типа для создания иерархии
+                  Укажите родительский тип для создания иерархии
                 </span>
               </div>
             </div>

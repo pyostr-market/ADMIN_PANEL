@@ -18,6 +18,9 @@ import {
   FiX,
   FiFileText,
   FiBox,
+  FiClipboard,
+  FiRepeat,
+  FiCheckSquare,
 } from 'react-icons/fi';
 
 export const Icons = {
@@ -26,6 +29,8 @@ export const Icons = {
   warehouse: FiBox,
   users: FiUsers,
   orders: FiFileText,
+  customers: FiUsers,
+  tickets: FiClipboard,
   chats: FiMessageSquare,
   permissions: FiShield,
   products: FiShoppingBag,
@@ -35,6 +40,8 @@ export const Icons = {
   'product-types': FiLayers,
   attributes: FiLayers,
   'warehouse-products': FiBox,
+  movements: FiRepeat,
+  inventory: FiCheckSquare,
   prices: FiDollarSign,
   settings: FiSettings,
   home: FiHome,

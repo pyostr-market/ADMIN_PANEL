@@ -36,6 +36,18 @@ import { ProductDetailPage } from '../../pages/products/ProductDetailPage';
 import { ProductAuditPage } from '../../pages/products/ProductAuditPage';
 import { CatalogPage } from '../../pages/catalog/CatalogPage';
 
+// CRM
+import { CrmPage } from '../../pages/crm/CrmPage';
+import { OrdersPage } from '../../pages/crm/OrdersPage';
+import { CustomersPage } from '../../pages/crm/CustomersPage';
+import { TicketsPage } from '../../pages/crm/TicketsPage';
+
+// Warehouse
+import { WarehousePage } from '../../pages/warehouse/WarehousePage';
+import { StockPage } from '../../pages/warehouse/StockPage';
+import { StockMovementsPage } from '../../pages/warehouse/StockMovementsPage';
+import { InventoryPage } from '../../pages/warehouse/InventoryPage';
+
 function ErrorPageByCode() {
   const { code } = useParams();
   return <ErrorPage code={code} />;
@@ -118,6 +130,18 @@ export function AppRouter() {
             <Route path="/catalog/attributes/:attributeId" element={<AttributeDetailPage />} />
             <Route path="/catalog/attributes/:attributeId/audit" element={<AttributeAuditPage />} />
           </Route>
+
+          {/* CRM Routes */}
+          <Route path="/crm" element={<CrmPage />} />
+          <Route path="/crm/orders" element={<OrdersPage />} />
+          <Route path="/crm/customers" element={<CustomersPage />} />
+          <Route path="/crm/tickets" element={<TicketsPage />} />
+
+          {/* Warehouse Routes */}
+          <Route path="/warehouse" element={<WarehousePage />} />
+          <Route path="/warehouse/stock" element={<StockPage />} />
+          <Route path="/warehouse/movements" element={<StockMovementsPage />} />
+          <Route path="/warehouse/inventory" element={<InventoryPage />} />
         </Route>
       </Route>
 

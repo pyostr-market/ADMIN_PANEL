@@ -3,12 +3,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { FiSave, FiX, FiImage } from 'react-icons/fi';
 import { Button } from '../../shared/ui/Button';
 import { ImageCarousel } from '../../shared/ui/ImageCarousel';
+import { AutocompleteInput } from '../../shared/ui/AutocompleteInput';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import {
   getCategoryByIdRequest,
   createCategoryRequest,
   updateCategoryRequest,
+  getCategoriesForAutocompleteRequest,
+  getManufacturersForAutocompleteRequest,
 } from './api/categoryApi';
 import './CategoryFormPage.css';
 import './CategoryFormPage-Mobile.css';
@@ -32,6 +35,10 @@ export function CategoryFormPage() {
     manufacturer_id: '',
   });
 
+  // Храним полные объекты для autocomplete
+  const [selectedParent, setSelectedParent] = useState(null);
+  const [selectedManufacturer, setSelectedManufacturer] = useState(null);
+
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,6 +54,14 @@ export function CategoryFormPage() {
         parent_id: data.parent_id || '',
         manufacturer_id: data.manufacturer_id || '',
       });
+
+      // Сохраняем полные объекты для autocomplete
+      if (data.parent) {
+        setSelectedParent(data.parent);
+      }
+      if (data.manufacturer) {
+        setSelectedManufacturer(data.manufacturer);
+      }
 
       if (data.images && data.images.length > 0) {
         // Существующие изображения уже загружены на сервер
@@ -144,7 +159,7 @@ export function CategoryFormPage() {
       if (isEditMode) {
         const responseData = await updateCategoryRequest(categoryId, payload);
         notificationsRef.current?.info('Категория обновлена');
-        
+
         if (stayOnPage) {
           // Обновляем данные формы из ответа
           if (responseData) {
@@ -154,6 +169,9 @@ export function CategoryFormPage() {
               parent_id: responseData.parent_id || formData.parent_id,
               manufacturer_id: responseData.manufacturer_id || formData.manufacturer_id,
             });
+            // Обновляем полные объекты для autocomplete
+            setSelectedParent(responseData.parent || selectedParent);
+            setSelectedManufacturer(responseData.manufacturer || selectedManufacturer);
             // Обновляем изображения
             if (responseData.images) {
               setImages(responseData.images.map(img => ({
@@ -245,34 +263,30 @@ export function CategoryFormPage() {
               </div>
 
               <div className="category-form__field">
-                <label className="category-form__label">
-                  ID родительской категории
-                </label>
-                <input
-                  type="number"
+                <AutocompleteInput
+                  label="Родительская категория"
                   value={formData.parent_id}
-                  onChange={(e) => handleChange('parent_id', e.target.value)}
-                  placeholder="ID родительской категории (необязательно)"
-                  min="1"
+                  onChange={(value) => handleChange('parent_id', value)}
+                  fetchOptions={getCategoriesForAutocompleteRequest}
+                  placeholder="Начните ввод для поиска родительской категории..."
+                  selectedOption={selectedParent}
                 />
                 <span className="category-form__hint">
-                  Укажите ID родительской категории для создания иерархии
+                  Укажите родительскую категорию для создания иерархии
                 </span>
               </div>
 
               <div className="category-form__field">
-                <label className="category-form__label">
-                  ID производителя
-                </label>
-                <input
-                  type="number"
+                <AutocompleteInput
+                  label="Производитель"
                   value={formData.manufacturer_id}
-                  onChange={(e) => handleChange('manufacturer_id', e.target.value)}
-                  placeholder="ID производителя (необязательно)"
-                  min="1"
+                  onChange={(value) => handleChange('manufacturer_id', value)}
+                  fetchOptions={getManufacturersForAutocompleteRequest}
+                  placeholder="Начните ввод для поиска производителя..."
+                  selectedOption={selectedManufacturer}
                 />
                 <span className="category-form__hint">
-                  Укажите ID производителя, к которому относится категория
+                  Укажите производителя, к которому относится категория
                 </span>
               </div>
 

@@ -8,19 +8,24 @@ export const NAVIGATION_CONFIG = {
     icon: 'crm',
     items: [
       {
-        label: 'Пользователи',
-        path: '/users',
-        icon: 'users',
-      },
-      {
-        label: 'Заявки',
-        path: '/orders',
+        label: 'Заказы',
+        path: '/crm/orders',
         icon: 'orders',
       },
       {
-        label: 'Чаты',
-        path: '/chats',
-        icon: 'chats',
+        label: 'Клиенты',
+        path: '/crm/customers',
+        icon: 'customers',
+      },
+      {
+        label: 'Обращения',
+        path: '/crm/tickets',
+        icon: 'tickets',
+      },
+      {
+        label: 'Пользователи',
+        path: '/users',
+        icon: 'users',
       },
       {
         label: 'Группы доступа',
@@ -60,11 +65,11 @@ export const NAVIGATION_CONFIG = {
         path: '/catalog/device_type',
         icon: 'product-types',
       },
-      {
-        label: 'Атрибуты',
-        path: '/catalog/attributes',
-        icon: 'attributes',
-      },
+      // {
+      //   label: 'Атрибуты',
+      //   path: '/catalog/attributes',
+      //   icon: 'attributes',
+      // },
     ],
   },
 
@@ -75,18 +80,18 @@ export const NAVIGATION_CONFIG = {
     items: [
       {
         label: 'Товары на складе',
-        path: '/warehouse/products',
+        path: '/warehouse/stock',
         icon: 'warehouse-products',
       },
       {
-        label: 'Прайсы',
-        path: '/warehouse/prices',
-        icon: 'prices',
+        label: 'Движение товаров',
+        path: '/warehouse/movements',
+        icon: 'movements',
       },
       {
-        label: 'Настройки',
-        path: '/warehouse/settings',
-        icon: 'settings',
+        label: 'Инвентаризация',
+        path: '/warehouse/inventory',
+        icon: 'inventory',
       },
     ],
   },
