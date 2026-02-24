@@ -1,29 +1,8 @@
+/* CategoryFormPage - специфичные стили страницы */
 .category-form-page {
   padding: var(--space-6);
   max-width: 1000px;
   margin: 0 auto;
-}
-
-.category-form-page__header {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  margin-bottom: var(--space-8);
-}
-
-.category-form-page__header .back-button {
-  flex-shrink: 0;
-  height: 40px;
-  padding: var(--space-2) var(--space-3);
-  font-size: 14px;
-  white-space: nowrap;
-}
-
-.category-form-page__title {
-  font-size: 28px;
-  font-weight: 600;
-  color: var(--text);
-  margin: 0;
 }
 
 .category-form-page__form {
@@ -32,68 +11,7 @@
   box-shadow: var(--shadow-sm);
 }
 
-.category-form {
-  padding: var(--space-6);
-}
-
-.category-form__section {
-  margin-bottom: var(--space-8);
-  padding-bottom: var(--space-8);
-  border-bottom: 1px solid var(--border);
-}
-
-.category-form__section:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
-.category-form__section-header {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-4);
-  margin-bottom: var(--space-6);
-}
-
-.category-form__section-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-lg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  flex-shrink: 0;
-}
-
-.category-form__section-icon--primary {
-  background: var(--gradient-avatar);
-}
-
-.category-form__section-icon--secondary {
-  background: var(--gradient-danger);
-  color: var(--surface);
-}
-
-.category-form__section-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text);
-  margin: 0 0 var(--space-1) 0;
-}
-
-.category-form__section-description {
-  font-size: 14px;
-  color: var(--text-muted);
-  margin: 0;
-}
-
-.category-form__grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-5);
-}
-
+/* Стили для полей формы - можно удалить после рефакторинга */
 .category-form__field {
   display: flex;
   flex-direction: column;
@@ -115,7 +33,6 @@
 }
 
 .category-form input[type="text"],
-.category-form input[type="number"],
 .category-form textarea {
   padding: 10px var(--space-3);
   border: 1px solid var(--border);
@@ -127,7 +44,6 @@
 }
 
 .category-form input[type="text"]:focus,
-.category-form input[type="number"]:focus,
 .category-form textarea:focus {
   outline: none;
   border-color: var(--accent-blue);
@@ -157,14 +73,6 @@
 .category-form__error--block {
   display: block;
   margin-bottom: var(--space-4);
-}
-
-.category-form-page__actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--space-3);
-  padding-top: var(--space-6);
-  border-top: 1px solid var(--border);
 }
 
 /* Images section */
@@ -283,14 +191,4 @@
 
 .category-images__upload-button svg {
   font-size: 18px;
-}
-
-.category-form-page__loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
-  gap: var(--space-4);
-  color: var(--text-muted);
 }

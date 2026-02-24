@@ -2,6 +2,10 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiSave, FiX, FiUser, FiLock, FiPhone, FiShield, FiCheckCircle } from 'react-icons/fi';
 import { Button } from '../../shared/ui/Button';
+import { PageHeader } from '../../shared/ui/PageHeader/PageHeader';
+import { FormSection } from '../../shared/ui/FormSection/FormSection';
+import { FormGrid } from '../../shared/ui/FormGrid/FormGrid';
+import { PageActions } from '../../shared/ui/PageActions/PageActions';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import { getAllGroupsRequest } from './api/usersApi';
@@ -116,35 +120,21 @@ export function UserCreatePage() {
 
   return (
     <section className="user-create-page">
-      {/* Header */}
-      <header className="user-create-page__header">
-        <div className="user-create-page__header-left">
-          <Button variant="ghost" onClick={() => navigate('/users')} className="back-button">
-            ← Назад
-          </Button>
-          <div className="user-create-page__title-wrapper">
-            <h1 className="user-create-page__title">Создание пользователя</h1>
-            <p className="user-create-page__subtitle">Заполните форму для добавления нового пользователя</p>
-          </div>
-        </div>
-      </header>
+      <PageHeader
+        title="Создание пользователя"
+        subtitle="Заполните форму для добавления нового пользователя"
+        onBack={() => navigate('/users')}
+      />
 
-      {/* Form */}
       <form className="user-create-page__form" onSubmit={handleSubmit}>
         <div className="user-create-form">
-          {/* Основные данные */}
-          <div className="user-create-form__section">
-            <div className="user-create-form__section-header">
-              <div className="user-create-form__section-icon user-create-form__section-icon--primary">
-                <FiUser />
-              </div>
-              <div>
-                <h2 className="user-create-form__section-title">Основные данные</h2>
-                <p className="user-create-form__section-description">Учётные данные пользователя</p>
-              </div>
-            </div>
-            
-            <div className="user-create-form__grid">
+          <FormSection
+            icon={<FiUser />}
+            iconVariant="primary"
+            title="Основные данные"
+            description="Учётные данные пользователя"
+          >
+            <FormGrid columns={2}>
               <div className="user-create-form__field">
                 <label className="user-create-form__label">
                   <FiPhone className="user-create-form__label-icon" />
@@ -179,7 +169,7 @@ export function UserCreatePage() {
                 )}
               </div>
 
-              <div className="user-create-form__field">
+              <div className="user-create-form__field user-create-form__field--full">
                 <label className="user-create-form__label">
                   <FiLock className="user-create-form__label-icon" />
                   Подтверждение пароля <span className="required">*</span>
@@ -195,21 +185,15 @@ export function UserCreatePage() {
                   <span className="user-create-form__error">{errors.confirmPassword}</span>
                 )}
               </div>
-            </div>
-          </div>
+            </FormGrid>
+          </FormSection>
 
-          {/* Статус */}
-          <div className="user-create-form__section">
-            <div className="user-create-form__section-header">
-              <div className="user-create-form__section-icon user-create-form__section-icon--success">
-                <FiCheckCircle />
-              </div>
-              <div>
-                <h2 className="user-create-form__section-title">Статус</h2>
-                <p className="user-create-form__section-description">Настройки доступа и верификации</p>
-              </div>
-            </div>
-            
+          <FormSection
+            icon={<FiCheckCircle />}
+            iconVariant="success"
+            title="Статус"
+            description="Настройки доступа и верификации"
+          >
             <div className="user-create-form__toggles">
               <label className="user-create-form__toggle">
                 <div className="user-create-form__toggle-content">
@@ -249,20 +233,14 @@ export function UserCreatePage() {
                 </span>
               </label>
             </div>
-          </div>
+          </FormSection>
 
-          {/* Группа */}
-          <div className="user-create-form__section">
-            <div className="user-create-form__section-header">
-              <div className="user-create-form__section-icon user-create-form__section-icon--info">
-                <FiShield />
-              </div>
-              <div>
-                <h2 className="user-create-form__section-title">Группа</h2>
-                <p className="user-create-form__section-description">Назначение группы прав</p>
-              </div>
-            </div>
-            
+          <FormSection
+            icon={<FiShield />}
+            iconVariant="info"
+            title="Группа"
+            description="Назначение группы прав"
+          >
             <div className="user-create-form__field">
               <label className="user-create-form__label">Группа пользователей</label>
               <select
@@ -282,11 +260,10 @@ export function UserCreatePage() {
                 <span className="user-create-form__loading">Загрузка групп...</span>
               )}
             </div>
-          </div>
+          </FormSection>
         </div>
 
-        {/* Actions */}
-        <div className="user-create-page__actions">
+        <PageActions>
           <Button
             type="button"
             variant="secondary"
@@ -314,7 +291,7 @@ export function UserCreatePage() {
           >
             Создать пользователя
           </Button>
-        </div>
+        </PageActions>
       </form>
     </section>
   );

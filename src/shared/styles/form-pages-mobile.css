@@ -1,0 +1,281 @@
+/* Универсальные мобильные стили для страниц форм */
+
+/* === Form Pages Mobile Styles === */
+@media (max-width: 768px) {
+  /* Общие стили для всех *-form-page */
+  .category-form-page,
+  .supplier-form-page,
+  .manufacturer-form-page,
+  .attribute-form-page,
+  .product-type-form-page,
+  .user-create-page {
+    padding: 0 !important;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Header */
+  .category-form-page__header,
+  .supplier-form-page__header,
+  .manufacturer-form-page__header,
+  .attribute-form-page__header,
+  .product-type-form-page__header,
+  .user-create-page__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 48px;
+  }
+
+  .category-form-page__header .back-button,
+  .supplier-form-page__header .back-button,
+  .manufacturer-form-page__header .back-button,
+  .attribute-form-page__header .back-button,
+  .product-type-form-page__header .back-button,
+  .user-create-page__header .back-button {
+    flex-shrink: 0;
+    height: 32px;
+    padding: 6px 8px;
+    font-size: 12px;
+    min-width: auto;
+  }
+
+  .category-form-page__title,
+  .supplier-form-page__title,
+  .manufacturer-form-page__title,
+  .attribute-form-page__title,
+  .product-type-form-page__title,
+  .user-create-page__title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Form */
+  .category-form-page__form,
+  .supplier-form-page__form,
+  .manufacturer-form-page__form,
+  .attribute-form-page__form,
+  .product-type-form-page__form,
+  .user-create-page__form {
+    gap: 0;
+    padding: 0;
+  }
+
+  /* Actions */
+  .category-form-page__actions,
+  .supplier-form-page__actions,
+  .manufacturer-form-page__actions,
+  .attribute-form-page__actions,
+  .product-type-form-page__actions,
+  .user-create-page__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-radius: 0;
+    box-shadow: none;
+    position: sticky;
+    bottom: 0;
+    z-index: 99;
+  }
+
+  .category-form-page__actions button,
+  .supplier-form-page__actions button,
+  .manufacturer-form-page__actions button,
+  .attribute-form-page__actions button,
+  .product-type-form-page__actions button,
+  .user-create-page__actions button {
+    width: 100%;
+    height: 44px;
+    font-size: 14px;
+  }
+
+  /* Form sections */
+  .category-form,
+  .supplier-form,
+  .manufacturer-form,
+  .attribute-form,
+  .product-type-form,
+  .user-create-form {
+    gap: 0;
+  }
+
+  .category-form__section,
+  .supplier-form__section,
+  .manufacturer-form__section,
+  .attribute-form__section,
+  .product-type-form__section,
+  .user-create-form__section {
+    background: var(--surface);
+    border: none;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    padding: 16px;
+    box-shadow: none;
+  }
+
+  .category-form__section:last-child,
+  .supplier-form__section:last-child,
+  .manufacturer-form__section:last-child,
+  .attribute-form__section:last-child,
+  .product-type-form__section:last-child,
+  .user-create-form__section:last-child {
+    border-bottom: none;
+  }
+
+  .category-form__section-header,
+  .supplier-form__section-header,
+  .manufacturer-form__section-header,
+  .attribute-form__section-header,
+  .product-type-form__section-header,
+  .user-create-form__section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .category-form__section-icon,
+  .supplier-form__section-icon,
+  .manufacturer-form__section-icon,
+  .attribute-form__section-icon,
+  .product-type-form__section-icon,
+  .user-create-form__section-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    font-size: 18px;
+  }
+
+  .category-form__section-title,
+  .supplier-form__section-title,
+  .manufacturer-form__section-title,
+  .attribute-form__section-title,
+  .product-type-form__section-title,
+  .user-create-form__section-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .category-form__section-description,
+  .supplier-form__section-description,
+  .manufacturer-form__section-description,
+  .attribute-form__section-description,
+  .product-type-form__section-description,
+  .user-create-form__section-description {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin: 2px 0 0;
+  }
+
+  /* Grid */
+  .category-form__grid,
+  .supplier-form__grid,
+  .manufacturer-form__grid,
+  .attribute-form__grid,
+  .product-type-form__grid,
+  .user-create-form__grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr;
+  }
+
+  /* Fields */
+  .category-form__field,
+  .supplier-form__field,
+  .manufacturer-form__field,
+  .attribute-form__field,
+  .product-type-form__field,
+  .user-create-form__field {
+    gap: 8px;
+  }
+
+  .category-form__label,
+  .supplier-form__label,
+  .manufacturer-form__label,
+  .attribute-form__label,
+  .product-type-form__label,
+  .user-create-form__label {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .category-form__label .required,
+  .supplier-form__label .required,
+  .manufacturer-form__label .required,
+  .attribute-form__label .required,
+  .product-type-form__label .required,
+  .user-create-form__label .required {
+    color: var(--danger);
+  }
+
+  /* Inputs */
+  .category-form input,
+  .supplier-form input,
+  .manufacturer-form input,
+  .attribute-form input,
+  .product-type-form input,
+  .user-create-form input,
+  .category-form textarea,
+  .supplier-form textarea,
+  .manufacturer-form textarea,
+  .attribute-form textarea,
+  .product-type-form textarea,
+  .user-create-form textarea {
+    height: 40px;
+    padding: 8px 12px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+
+  .category-form textarea,
+  .supplier-form textarea,
+  .manufacturer-form textarea,
+  .attribute-form textarea,
+  .product-type-form textarea,
+  .user-create-form textarea {
+    min-height: 80px;
+    height: auto;
+  }
+
+  /* Errors */
+  .category-form__error,
+  .supplier-form__error,
+  .manufacturer-form__error,
+  .attribute-form__error,
+  .product-type-form__error,
+  .user-create-form__error {
+    font-size: 11px;
+  }
+
+  /* Toggles (для UserCreatePage) */
+  .user-create-form__toggle {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .user-create-form__toggle-status {
+    align-self: flex-start;
+  }
+}

@@ -2,6 +2,11 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FiSave, FiX } from 'react-icons/fi';
 import { Button } from '../../shared/ui/Button';
+import { PageHeader } from '../../shared/ui/PageHeader/PageHeader';
+import { FormSection } from '../../shared/ui/FormSection/FormSection';
+import { FormGrid } from '../../shared/ui/FormGrid/FormGrid';
+import { PageActions } from '../../shared/ui/PageActions/PageActions';
+import { LoadingState } from '../../shared/ui/LoadingState/LoadingState';
 import { AutocompleteInput } from '../../shared/ui/AutocompleteInput';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
@@ -105,22 +110,19 @@ export function ProductTypeFormPage() {
         notificationsRef.current?.info('Тип продукта обновлен');
 
         if (stayOnPage) {
-          // Обновляем данные формы из ответа
           if (responseData) {
             setFormData({
               name: responseData.name || formData.name,
               parent_id: responseData.parent_id || formData.parent_id,
             });
-            // Обновляем полный объект для autocomplete
             setSelectedParent(responseData.parent || selectedParent);
           }
         }
       } else {
         const responseData = await createProductTypeRequest(payload);
         notificationsRef.current?.info('Тип продукта создан');
-        
+
         if (stayOnPage) {
-          // После создания перенаправляем на страницу редактирования с новым ID
           const newProductTypeId = responseData?.id;
           if (newProductTypeId) {
             navigate(`/catalog/device_type/${newProductTypeId}`);
@@ -142,73 +144,59 @@ export function ProductTypeFormPage() {
   if (isLoading) {
     return (
       <section className="product-type-form-page">
-        <div className="product-type-form-page__loading">
-          <div className="loading-spinner" />
-          <p>Загрузка данных типа продукта...</p>
-        </div>
+        <LoadingState message="Загрузка данных типа продукта..." size="lg" />
       </section>
     );
   }
 
   return (
     <section className="product-type-form-page">
-      <header className="product-type-form-page__header">
-        <Button variant="ghost" onClick={() => navigate(isEditMode ? `/catalog/device_type/${productTypeId}` : '/catalog/device_type')} className="back-button">
-          ← Назад
-        </Button>
-        <h1 className="product-type-form-page__title">
-          {isEditMode ? 'Редактирование типа продукта' : 'Создание типа продукта'}
-        </h1>
-      </header>
+      <PageHeader
+        title={isEditMode ? 'Редактирование типа продукта' : 'Создание типа продукта'}
+        onBack={() => navigate(isEditMode ? `/catalog/device_type/${productTypeId}` : '/catalog/device_type')}
+      />
 
       <form className="product-type-form-page__form" onSubmit={handleSubmit}>
-        <div className="product-type-form">
-          <div className="product-type-form__section">
-            <div className="product-type-form__section-header">
-              <div className="product-type-form__section-icon product-type-form__section-icon--primary">
-                <span>🏷️</span>
-              </div>
-              <div>
-                <h2 className="product-type-form__section-title">Основная информация</h2>
-                <p className="product-type-form__section-description">Данные о типе продукта</p>
-              </div>
+        <FormSection
+          icon={<span>🏷️</span>}
+          iconVariant="primary"
+          title="Основная информация"
+          description="Данные о типе продукта"
+        >
+          <FormGrid columns={2}>
+            <div className="product-type-form__field">
+              <label className="product-type-form__label">
+                Название <span className="required">*</span>
+              </label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => handleChange('name', e.target.value)}
+                placeholder="Введите название типа продукта"
+                className={errors.name ? 'input-error' : ''}
+              />
+              {errors.name && (
+                <span className="product-type-form__error">{errors.name}</span>
+              )}
             </div>
 
-            <div className="product-type-form__grid">
-              <div className="product-type-form__field">
-                <label className="product-type-form__label">
-                  Название <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => handleChange('name', e.target.value)}
-                  placeholder="Введите название типа продукта"
-                  className={errors.name ? 'input-error' : ''}
-                />
-                {errors.name && (
-                  <span className="product-type-form__error">{errors.name}</span>
-                )}
-              </div>
-
-              <div className="product-type-form__field">
-                <AutocompleteInput
-                  label="Родительский тип"
-                  value={formData.parent_id}
-                  onChange={(value) => handleChange('parent_id', value)}
-                  fetchOptions={getProductTypesForAutocompleteRequest}
-                  placeholder="Начните ввод для поиска родительского типа..."
-                  selectedOption={selectedParent}
-                />
-                <span className="product-type-form__hint">
-                  Укажите родительский тип для создания иерархии
-                </span>
-              </div>
+            <div className="product-type-form__field">
+              <AutocompleteInput
+                label="Родительский тип"
+                value={formData.parent_id}
+                onChange={(value) => handleChange('parent_id', value)}
+                fetchOptions={getProductTypesForAutocompleteRequest}
+                placeholder="Начните ввод для поиска родительского типа..."
+                selectedOption={selectedParent}
+              />
+              <span className="product-type-form__hint">
+                Укажите родительский тип для создания иерархии
+              </span>
             </div>
-          </div>
-        </div>
+          </FormGrid>
+        </FormSection>
 
-        <div className="product-type-form-page__actions">
+        <PageActions>
           <Button
             type="button"
             variant="secondary"
@@ -236,7 +224,7 @@ export function ProductTypeFormPage() {
           >
             {isEditMode ? 'Сохранить' : 'Создать'}
           </Button>
-        </div>
+        </PageActions>
       </form>
     </section>
   );

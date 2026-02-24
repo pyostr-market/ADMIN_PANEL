@@ -2,6 +2,12 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FiSave, FiX } from 'react-icons/fi';
 import { Button } from '../../shared/ui/Button';
+import { PageHeader } from '../../shared/ui/PageHeader/PageHeader';
+import { FormSection } from '../../shared/ui/FormSection/FormSection';
+import { FormGrid } from '../../shared/ui/FormGrid/FormGrid';
+import { FormTextarea } from '../../shared/ui/FormTextarea/FormTextarea';
+import { PageActions } from '../../shared/ui/PageActions/PageActions';
+import { LoadingState } from '../../shared/ui/LoadingState/LoadingState';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import {
@@ -94,9 +100,8 @@ export function ManufacturerFormPage() {
       if (isEditMode) {
         const responseData = await updateManufacturerRequest(manufacturerId, payload);
         notificationsRef.current?.info('Производитель обновлен');
-        
+
         if (stayOnPage) {
-          // Обновляем данные формы из ответа
           if (responseData) {
             setFormData({
               name: responseData.name || formData.name,
@@ -107,9 +112,8 @@ export function ManufacturerFormPage() {
       } else {
         const responseData = await createManufacturerRequest(payload);
         notificationsRef.current?.info('Производитель создан');
-        
+
         if (stayOnPage) {
-          // После создания перенаправляем на страницу редактирования с новым ID
           const newManufacturerId = responseData?.id;
           if (newManufacturerId) {
             navigate(`/catalog/manufacturers/${newManufacturerId}`);
@@ -131,71 +135,55 @@ export function ManufacturerFormPage() {
   if (isLoading) {
     return (
       <section className="manufacturer-form-page">
-        <div className="manufacturer-form-page__loading">
-          <div className="loading-spinner" />
-          <p>Загрузка данных производителя...</p>
-        </div>
+        <LoadingState message="Загрузка данных производителя..." size="lg" />
       </section>
     );
   }
 
   return (
     <section className="manufacturer-form-page">
-      <header className="manufacturer-form-page__header">
-        <Button variant="ghost" onClick={() => navigate(isEditMode ? `/catalog/manufacturers/${manufacturerId}` : '/catalog/manufacturers')} className="back-button">
-          ← Назад
-        </Button>
-        <h1 className="manufacturer-form-page__title">
-          {isEditMode ? 'Редактирование производителя' : 'Создание производителя'}
-        </h1>
-      </header>
+      <PageHeader
+        title={isEditMode ? 'Редактирование производителя' : 'Создание производителя'}
+        onBack={() => navigate(isEditMode ? `/catalog/manufacturers/${manufacturerId}` : '/catalog/manufacturers')}
+      />
 
       <form className="manufacturer-form-page__form" onSubmit={handleSubmit}>
-        <div className="manufacturer-form">
-          <div className="manufacturer-form__section">
-            <div className="manufacturer-form__section-header">
-              <div className="manufacturer-form__section-icon manufacturer-form__section-icon--primary">
-                <span>🏭</span>
-              </div>
-              <div>
-                <h2 className="manufacturer-form__section-title">Основная информация</h2>
-                <p className="manufacturer-form__section-description">Данные о производителе</p>
-              </div>
+        <FormSection
+          icon={<span>🏭</span>}
+          iconVariant="primary"
+          title="Основная информация"
+          description="Данные о производителе"
+        >
+          <FormGrid columns={2}>
+            <div className="manufacturer-form__field">
+              <label className="manufacturer-form__label">
+                Название <span className="required">*</span>
+              </label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => handleChange('name', e.target.value)}
+                placeholder="Введите название производителя"
+                className={errors.name ? 'input-error' : ''}
+              />
+              {errors.name && (
+                <span className="manufacturer-form__error">{errors.name}</span>
+              )}
             </div>
 
-            <div className="manufacturer-form__grid">
-              <div className="manufacturer-form__field">
-                <label className="manufacturer-form__label">
-                  Название <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => handleChange('name', e.target.value)}
-                  placeholder="Введите название производителя"
-                  className={errors.name ? 'input-error' : ''}
-                />
-                {errors.name && (
-                  <span className="manufacturer-form__error">{errors.name}</span>
-                )}
-              </div>
-
-              <div className="manufacturer-form__field manufacturer-form__field--full">
-                <label className="manufacturer-form__label">
-                  Описание
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => handleChange('description', e.target.value)}
-                  placeholder="Введите описание производителя"
-                  rows={4}
-                />
-              </div>
+            <div className="manufacturer-form__field manufacturer-form__field--full">
+              <FormTextarea
+                label="Описание"
+                value={formData.description}
+                onChange={(e) => handleChange('description', e.target.value)}
+                placeholder="Введите описание производителя"
+                rows={4}
+              />
             </div>
-          </div>
-        </div>
+          </FormGrid>
+        </FormSection>
 
-        <div className="manufacturer-form-page__actions">
+        <PageActions>
           <Button
             type="button"
             variant="secondary"
@@ -223,7 +211,7 @@ export function ManufacturerFormPage() {
           >
             {isEditMode ? 'Сохранить' : 'Создать'}
           </Button>
-        </div>
+        </PageActions>
       </form>
     </section>
   );

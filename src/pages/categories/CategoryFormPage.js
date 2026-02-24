@@ -4,6 +4,12 @@ import { FiSave, FiX, FiImage } from 'react-icons/fi';
 import { Button } from '../../shared/ui/Button';
 import { ImageCarousel } from '../../shared/ui/ImageCarousel';
 import { AutocompleteInput } from '../../shared/ui/AutocompleteInput';
+import { PageHeader } from '../../shared/ui/PageHeader/PageHeader';
+import { FormSection } from '../../shared/ui/FormSection/FormSection';
+import { FormGrid } from '../../shared/ui/FormGrid/FormGrid';
+import { FormTextarea } from '../../shared/ui/FormTextarea/FormTextarea';
+import { PageActions } from '../../shared/ui/PageActions/PageActions';
+import { LoadingState } from '../../shared/ui/LoadingState/LoadingState';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import {
@@ -14,7 +20,6 @@ import {
   getManufacturersForAutocompleteRequest,
 } from './api/categoryApi';
 import './CategoryFormPage.css';
-import './CategoryFormPage-Mobile.css';
 
 export function CategoryFormPage() {
   const navigate = useNavigate();
@@ -189,7 +194,7 @@ export function CategoryFormPage() {
       } else {
         const responseData = await createCategoryRequest(payload);
         notificationsRef.current?.info('Категория создана');
-        
+
         if (stayOnPage) {
           // После создания перенаправляем на страницу редактирования с новым ID
           const newCategoryId = responseData?.id;
@@ -213,124 +218,103 @@ export function CategoryFormPage() {
   if (isLoading) {
     return (
       <section className="category-form-page">
-        <div className="category-form-page__loading">
-          <div className="loading-spinner" />
-          <p>Загрузка данных категории...</p>
-        </div>
+        <LoadingState message="Загрузка данных категории..." size="lg" />
       </section>
     );
   }
 
   return (
     <section className="category-form-page">
-      <header className="category-form-page__header">
-        <Button variant="ghost" onClick={() => navigate(isEditMode ? `/categories/${categoryId}` : '/categories')} className="back-button">
-          ← Назад
-        </Button>
-        <h1 className="category-form-page__title">
-          {isEditMode ? 'Редактирование категории' : 'Создание категории'}
-        </h1>
-      </header>
+      <PageHeader
+        title={isEditMode ? 'Редактирование категории' : 'Создание категории'}
+        onBack={() => navigate(isEditMode ? `/categories/${categoryId}` : '/categories')}
+      />
 
       <form className="category-form-page__form" onSubmit={handleSubmit}>
-        <div className="category-form">
-          <div className="category-form__section">
-            <div className="category-form__section-header">
-              <div className="category-form__section-icon category-form__section-icon--primary">
-                <span>📁</span>
-              </div>
-              <div>
-                <h2 className="category-form__section-title">Основная информация</h2>
-                <p className="category-form__section-description">Данные о категории</p>
-              </div>
+        <FormSection
+          icon={<span>📁</span>}
+          iconVariant="primary"
+          title="Основная информация"
+          description="Данные о категории"
+        >
+          <FormGrid columns={2}>
+            <div className="category-form__field">
+              <label className="category-form__label">
+                Название <span className="required">*</span>
+              </label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => handleChange('name', e.target.value)}
+                placeholder="Введите название категории"
+                className={errors.name ? 'input-error' : ''}
+              />
+              {errors.name && (
+                <span className="category-form__error">{errors.name}</span>
+              )}
             </div>
 
-            <div className="category-form__grid">
-              <div className="category-form__field">
-                <label className="category-form__label">
-                  Название <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => handleChange('name', e.target.value)}
-                  placeholder="Введите название категории"
-                  className={errors.name ? 'input-error' : ''}
-                />
-                {errors.name && (
-                  <span className="category-form__error">{errors.name}</span>
-                )}
-              </div>
-
-              <div className="category-form__field">
-                <AutocompleteInput
-                  label="Родительская категория"
-                  value={formData.parent_id}
-                  onChange={(value) => handleChange('parent_id', value)}
-                  fetchOptions={getCategoriesForAutocompleteRequest}
-                  placeholder="Начните ввод для поиска родительской категории..."
-                  selectedOption={selectedParent}
-                />
-                <span className="category-form__hint">
-                  Укажите родительскую категорию для создания иерархии
-                </span>
-              </div>
-
-              <div className="category-form__field">
-                <AutocompleteInput
-                  label="Производитель"
-                  value={formData.manufacturer_id}
-                  onChange={(value) => handleChange('manufacturer_id', value)}
-                  fetchOptions={getManufacturersForAutocompleteRequest}
-                  placeholder="Начните ввод для поиска производителя..."
-                  selectedOption={selectedManufacturer}
-                />
-                <span className="category-form__hint">
-                  Укажите производителя, к которому относится категория
-                </span>
-              </div>
-
-              <div className="category-form__field category-form__field--full">
-                <label className="category-form__label">
-                  Описание
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => handleChange('description', e.target.value)}
-                  placeholder="Введите описание категории"
-                  rows={4}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="category-form__section">
-            <div className="category-form__section-header">
-              <div className="category-form__section-icon category-form__section-icon--secondary">
-                <FiImage />
-              </div>
-              <div>
-                <h2 className="category-form__section-title">Изображения</h2>
-                <p className="category-form__section-description">Загрузите изображения категории</p>
-              </div>
+            <div className="category-form__field">
+              <AutocompleteInput
+                label="Родительская категория"
+                value={formData.parent_id}
+                onChange={(value) => handleChange('parent_id', value)}
+                fetchOptions={getCategoriesForAutocompleteRequest}
+                placeholder="Начните ввод для поиска родительской категории..."
+                selectedOption={selectedParent}
+              />
+              <span className="category-form__hint">
+                Укажите родительскую категорию для создания иерархии
+              </span>
             </div>
 
-            {errors.images && (
-              <span className="category-form__error category-form__error--block">{errors.images}</span>
-            )}
+            <div className="category-form__field">
+              <AutocompleteInput
+                label="Производитель"
+                value={formData.manufacturer_id}
+                onChange={(value) => handleChange('manufacturer_id', value)}
+                fetchOptions={getManufacturersForAutocompleteRequest}
+                placeholder="Начните ввод для поиска производителя..."
+                selectedOption={selectedManufacturer}
+              />
+              <span className="category-form__hint">
+                Укажите производителя, к которому относится категория
+              </span>
+            </div>
 
-            <ImageCarousel
-              images={images}
-              onImagesChange={handleImagesChange}
-              multiple
-              showDelete
-              disabled={isSubmitting}
-              folder="categories"
-            />
-          </div>
-        </div>
+            <div className="category-form__field category-form__field--full">
+              <FormTextarea
+                label="Описание"
+                value={formData.description}
+                onChange={(e) => handleChange('description', e.target.value)}
+                placeholder="Введите описание категории"
+                rows={4}
+              />
+            </div>
+          </FormGrid>
+        </FormSection>
 
-        <div className="category-form-page__actions">
+        <FormSection
+          icon={<FiImage />}
+          iconVariant="secondary"
+          title="Изображения"
+          description="Загрузите изображения категории"
+        >
+          {errors.images && (
+            <span className="category-form__error category-form__error--block">{errors.images}</span>
+          )}
+
+          <ImageCarousel
+            images={images}
+            onImagesChange={handleImagesChange}
+            multiple
+            showDelete
+            disabled={isSubmitting}
+            folder="categories"
+          />
+        </FormSection>
+
+        <PageActions>
           <Button
             type="button"
             variant="secondary"
@@ -356,9 +340,9 @@ export function CategoryFormPage() {
             loading={isSubmitting}
             size="lg"
           >
-            {isEditMode ? 'Сохранить' : 'Создать'}
+            {isEditMode ? 'Создать' : 'Сохранить'}
           </Button>
-        </div>
+        </PageActions>
       </form>
     </section>
   );

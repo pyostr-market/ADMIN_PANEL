@@ -2,6 +2,7 @@
 @import './shared/ui/EntityList.css';
 @import './shared/ui/CrudPageTemplate.css';
 @import './shared/styles/BottomNav.css';
+@import './shared/styles/form-pages-mobile.css';
 
 /* Фиксация ширины скролл-бара для предотвращения сдвига контента */
 html {
@@ -59,25 +60,21 @@ html {
 @import './widgets/layout/NotificationsPanel-Mobile.css';
 @import './widgets/sidebar/AppSidebar-Mobile.css';
 
-/* Page Mobile styles */
+/* Page Mobile styles - Detail, Audit, List pages */
 @import './pages/manufacturers/ManufacturersPage-Mobile.css';
 @import './pages/manufacturers/ManufacturerDetailPage-Mobile.css';
-@import './pages/manufacturers/ManufacturerFormPage-Mobile.css';
 @import './pages/manufacturers/ManufacturerAuditPage-Mobile.css';
 
 @import './pages/suppliers/SuppliersPage-Mobile.css';
 @import './pages/suppliers/SupplierDetailPage-Mobile.css';
-@import './pages/suppliers/SupplierFormPage-Mobile.css';
 @import './pages/suppliers/SupplierAuditPage-Mobile.css';
 
 @import './pages/productTypes/ProductTypesPage-Mobile.css';
 @import './pages/productTypes/ProductTypeDetailPage-Mobile.css';
-@import './pages/productTypes/ProductTypeFormPage-Mobile.css';
 @import './pages/productTypes/ProductTypeAuditPage-Mobile.css';
 
 @import './pages/attributes/AttributesPage-Mobile.css';
 @import './pages/attributes/AttributeDetailPage-Mobile.css';
-@import './pages/attributes/AttributeFormPage-Mobile.css';
 @import './pages/attributes/AttributeAuditPage-Mobile.css';
 
 @import './pages/products/ProductsPage/ProductsPage-Mobile.css';
@@ -87,14 +84,12 @@ html {
 
 @import './pages/users/UsersListPage-Mobile.css';
 @import './pages/users/UserDetailPage-Mobile.css';
-@import './pages/users/UserCreatePage-Mobile.css';
 
 @import './pages/profile/ProfilePage-Mobile.css';
 @import './pages/login/LoginPage-Mobile.css';
 @import './pages/permissionsGroups/PermissionsGroupsPage-Mobile.css';
 @import './pages/catalog/CatalogPage/CatalogPage-Mobile.css';
 @import './pages/categories/CategoriesPage-Mobile.css';
-@import './pages/categories/CategoryFormPage-Mobile.css';
 @import './pages/categories/CategoryDetailPage-Mobile.css';
 @import './pages/categories/CategoryAuditPage-Mobile.css';
 @import './pages/support/SupportPage-Mobile.css';

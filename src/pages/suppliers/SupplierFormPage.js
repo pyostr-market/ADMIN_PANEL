@@ -2,6 +2,11 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FiSave, FiX } from 'react-icons/fi';
 import { Button } from '../../shared/ui/Button';
+import { PageHeader } from '../../shared/ui/PageHeader/PageHeader';
+import { FormSection } from '../../shared/ui/FormSection/FormSection';
+import { FormGrid } from '../../shared/ui/FormGrid/FormGrid';
+import { PageActions } from '../../shared/ui/PageActions/PageActions';
+import { LoadingState } from '../../shared/ui/LoadingState/LoadingState';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import {
@@ -105,9 +110,8 @@ export function SupplierFormPage() {
       if (isEditMode) {
         const responseData = await updateSupplierRequest(supplierId, payload);
         notificationsRef.current?.info('Поставщик обновлен');
-        
+
         if (stayOnPage) {
-          // Обновляем данные формы из ответа
           if (responseData) {
             setFormData({
               name: responseData.name || formData.name,
@@ -119,9 +123,8 @@ export function SupplierFormPage() {
       } else {
         const responseData = await createSupplierRequest(payload);
         notificationsRef.current?.info('Поставщик создан');
-        
+
         if (stayOnPage) {
-          // После создания перенаправляем на страницу редактирования с новым ID
           const newSupplierId = responseData?.id;
           if (newSupplierId) {
             navigate(`/suppliers/${newSupplierId}`);
@@ -143,91 +146,77 @@ export function SupplierFormPage() {
   if (isLoading) {
     return (
       <section className="supplier-form-page">
-        <div className="supplier-form-page__loading">
-          <div className="loading-spinner" />
-          <p>Загрузка данных поставщика...</p>
-        </div>
+        <LoadingState message="Загрузка данных поставщика..." size="lg" />
       </section>
     );
   }
 
   return (
     <section className="supplier-form-page">
-      <header className="supplier-form-page__header">
-        <Button variant="ghost" onClick={() => navigate(isEditMode ? `/suppliers/${supplierId}` : '/suppliers')} className="back-button">
-          ← Назад
-        </Button>
-        <h1 className="supplier-form-page__title">
-          {isEditMode ? 'Редактирование поставщика' : 'Создание поставщика'}
-        </h1>
-      </header>
+      <PageHeader
+        title={isEditMode ? 'Редактирование поставщика' : 'Создание поставщика'}
+        onBack={() => navigate(isEditMode ? `/suppliers/${supplierId}` : '/suppliers')}
+      />
 
       <form className="supplier-form-page__form" onSubmit={handleSubmit}>
-        <div className="supplier-form">
-          <div className="supplier-form__section">
-            <div className="supplier-form__section-header">
-              <div className="supplier-form__section-icon supplier-form__section-icon--primary">
-                <span>📦</span>
-              </div>
-              <div>
-                <h2 className="supplier-form__section-title">Основная информация</h2>
-                <p className="supplier-form__section-description">Данные о поставщике</p>
-              </div>
+        <FormSection
+          icon={<span>📦</span>}
+          iconVariant="primary"
+          title="Основная информация"
+          description="Данные о поставщике"
+        >
+          <FormGrid columns={2}>
+            <div className="supplier-form__field">
+              <label className="supplier-form__label">
+                Название <span className="required">*</span>
+              </label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => handleChange('name', e.target.value)}
+                placeholder="Введите название поставщика"
+                className={errors.name ? 'input-error' : ''}
+              />
+              {errors.name && (
+                <span className="supplier-form__error">{errors.name}</span>
+              )}
             </div>
 
-            <div className="supplier-form__grid">
-              <div className="supplier-form__field">
-                <label className="supplier-form__label">
-                  Название <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => handleChange('name', e.target.value)}
-                  placeholder="Введите название поставщика"
-                  className={errors.name ? 'input-error' : ''}
-                />
-                {errors.name && (
-                  <span className="supplier-form__error">{errors.name}</span>
-                )}
-              </div>
-
-              <div className="supplier-form__field">
-                <label className="supplier-form__label">
-                  Email для связи
-                </label>
-                <input
-                  type="email"
-                  value={formData.contact_email}
-                  onChange={(e) => handleChange('contact_email', e.target.value)}
-                  placeholder="supplier@example.com"
-                  className={errors.contact_email ? 'input-error' : ''}
-                />
-                {errors.contact_email && (
-                  <span className="supplier-form__error">{errors.contact_email}</span>
-                )}
-              </div>
-
-              <div className="supplier-form__field">
-                <label className="supplier-form__label">
-                  Телефон
-                </label>
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => handleChange('phone', e.target.value)}
-                  placeholder="+7 (999) 000-00-00"
-                  className={errors.phone ? 'input-error' : ''}
-                />
-                {errors.phone && (
-                  <span className="supplier-form__error">{errors.phone}</span>
-                )}
-              </div>
+            <div className="supplier-form__field">
+              <label className="supplier-form__label">
+                Email для связи
+              </label>
+              <input
+                type="email"
+                value={formData.contact_email}
+                onChange={(e) => handleChange('contact_email', e.target.value)}
+                placeholder="supplier@example.com"
+                className={errors.contact_email ? 'input-error' : ''}
+              />
+              {errors.contact_email && (
+                <span className="supplier-form__error">{errors.contact_email}</span>
+              )}
             </div>
-          </div>
-        </div>
 
-        <div className="supplier-form-page__actions">
+            <div className="supplier-form__field">
+              <label className="supplier-form__label">
+                Телефон
+              </label>
+              <input
+                type="tel"
+                value={formData.phone}
+                onChange={(e) => handleChange('phone', e.target.value)}
+                placeholder="+7 (999) 000-00-00"
+                className={errors.phone ? 'input-error' : ''}
+              />
+              {errors.phone && (
+                <span className="supplier-form__error">{errors.phone}</span>
+              )}
+            </div>
+          </FormGrid>
+        </FormSection>
+
+        <PageActions>
           <Button
             type="button"
             variant="secondary"
@@ -255,7 +244,7 @@ export function SupplierFormPage() {
           >
             {isEditMode ? 'Сохранить' : 'Создать'}
           </Button>
-        </div>
+        </PageActions>
       </form>
     </section>
   );

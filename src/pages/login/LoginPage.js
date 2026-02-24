@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSession } from '../../entities/session/model/SessionProvider';
+import { Card } from '../../shared/ui/Card/Card';
+import { Button } from '../../shared/ui/Button';
+import { LoadingState } from '../../shared/ui/LoadingState/LoadingState';
 import './LoginPage.css';
 
 export function LoginPage() {
@@ -33,38 +36,49 @@ export function LoginPage() {
     }
   };
 
+  if (submitting) {
+    return <LoadingState message="Вход в систему..." size="lg" />;
+  }
+
   return (
     <section className="auth-card">
-      <h1>Вход в панель управления</h1>
-      <form className="auth-form" onSubmit={onSubmit}>
-        <label htmlFor="username">Логин</label>
-        <input
-          id="username"
-          name="username"
-          autoComplete="username"
-          value={form.username}
-          onChange={onChange}
-          required
+      <Card padding="md">
+        <h1>Вход в панель управления</h1>
+        <form className="auth-form" onSubmit={onSubmit}>
+          <label htmlFor="username">Логин</label>
+          <input
+            id="username"
+            name="username"
+            autoComplete="username"
+            value={form.username}
+            onChange={onChange}
+            required
+          />
 
-        />
+          <label htmlFor="password">Пароль</label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            autoComplete="current-password"
+            value={form.password}
+            onChange={onChange}
+            required
+          />
 
-        <label htmlFor="password">Пароль</label>
-        <input
-          id="password"
-          type="password"
-          name="password"
-          autoComplete="current-password"
-          value={form.password}
-          onChange={onChange}
-          required
-        />
+          {error && <p className="auth-error">{error}</p>}
 
-        {error ? <p className="auth-error">{error}</p> : null}
-
-        <button type="submit" disabled={submitting}>
-          {submitting ? 'Вход...' : 'Войти'}
-        </button>
-      </form>
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={submitting}
+            loading={submitting}
+            className="auth-form__submit"
+          >
+            {submitting ? 'Вход...' : 'Войти'}
+          </Button>
+        </form>
+      </Card>
     </section>
   );
 }

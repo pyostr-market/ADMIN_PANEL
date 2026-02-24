@@ -1,11 +1,7 @@
+/* LoginPage - специфичные стили страницы */
 .auth-card {
   width: min(420px, calc(100vw - 32px));
   margin: 72px auto;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  padding: var(--space-5);
 }
 
 .auth-card h1 {
@@ -26,21 +22,9 @@
   color: var(--text-muted);
 }
 
-.auth-form button {
-  background: var(--primary);
-  color: var(--text);
-  border-color: var(--primary);
-  font-weight: 500;
-}
-
-.auth-form button:hover {
-  background: var(--primary-hover);
-  border-color: var(--primary-hover);
-}
-
-.auth-form button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.auth-form__submit {
+  width: 100%;
+  justify-content: center;
 }
 
 .auth-error {

@@ -2,6 +2,8 @@ import {useState, useEffect, useRef, useCallback} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiUser, FiEdit2, FiSave, FiX, FiShield, FiPhone, FiCalendar, FiCheckCircle } from 'react-icons/fi';
 import { Button } from '../../shared/ui/Button';
+import { Card } from '../../shared/ui/Card/Card';
+import { LoadingState } from '../../shared/ui/LoadingState/LoadingState';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import { useSession } from '../../entities/session/model/SessionProvider';
@@ -74,10 +76,7 @@ export function ProfilePage() {
   if (isLoading) {
     return (
       <section className="profile-page">
-        <div className="profile-page__loading">
-          <div className="loading-spinner" />
-          <p>Загрузка профиля...</p>
-        </div>
+        <LoadingState message="Загрузка профиля..." size="lg" />
       </section>
     );
   }
@@ -97,7 +96,6 @@ export function ProfilePage() {
 
   return (
     <section className="profile-page">
-      {/* Header */}
       <header className="profile-page__header">
         <h1 className="profile-page__title">Мой профиль</h1>
         {!isEditing ? (
@@ -129,9 +127,8 @@ export function ProfilePage() {
         )}
       </header>
 
-      {/* Content */}
       <div className="profile-page__content">
-        <div className="profile-card">
+        <Card>
           <div className="profile-card__avatar">
             <FiUser />
           </div>
@@ -225,12 +222,11 @@ export function ProfilePage() {
               </div>
             )}
           </div>
-        </div>
+        </Card>
 
-        {/* Additional Info */}
-        <div className="profile-card profile-card--secondary">
+        <Card variant="secondary">
           <h2 className="profile-card__subtitle">Дополнительная информация</h2>
-          
+
           <div className="profile-card__row">
             <div className="profile-card__label">ID пользователя</div>
             <div className="profile-card__value code">{profile.id}</div>
@@ -255,7 +251,7 @@ export function ProfilePage() {
               </div>
             </div>
           )}
-        </div>
+        </Card>
       </div>
     </section>
   );

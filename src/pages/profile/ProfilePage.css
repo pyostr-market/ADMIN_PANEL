@@ -1,5 +1,6 @@
+/* ProfilePage - специфичные стили страницы */
 .profile-page {
-  padding: 24px;
+  padding: var(--space-6);
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -8,11 +9,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: var(--space-6);
 }
 
 .profile-page__title {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 600;
   color: var(--text);
   margin: 0;
@@ -20,13 +21,13 @@
 
 .profile-page__actions {
   display: flex;
-  gap: 12px;
+  gap: var(--space-2);
 }
 
 .profile-page__content {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--space-6);
 }
 
 .profile-page__loading,
@@ -36,7 +37,7 @@
   align-items: center;
   justify-content: center;
   min-height: 400px;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .profile-page__loading p,
@@ -47,21 +48,10 @@
 
 .profile-page__error h2 {
   color: var(--text);
-  margin: 0 0 8px 0;
+  margin: 0 0 var(--space-2) 0;
 }
 
 /* Profile Card */
-.profile-card {
-  background: var(--surface);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-sm);
-  padding: var(--space-5);
-}
-
-.profile-card--secondary {
-  background: var(--surface-subtle);
-}
-
 .profile-card__avatar {
   width: 80px;
   height: 80px;
@@ -168,21 +158,17 @@
 
 @media (max-width: 768px) {
   .profile-page {
-    padding: 16px;
+    padding: var(--space-4);
   }
 
   .profile-page__header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
+    gap: var(--space-3);
   }
 
   .profile-page__actions {
     width: 100%;
-  }
-
-  .profile-card {
-    padding: 20px;
   }
 
   .profile-card__avatar {

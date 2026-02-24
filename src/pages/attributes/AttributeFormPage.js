@@ -2,6 +2,11 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FiSave, FiX } from 'react-icons/fi';
 import { Button } from '../../shared/ui/Button';
+import { PageHeader } from '../../shared/ui/PageHeader/PageHeader';
+import { FormSection } from '../../shared/ui/FormSection/FormSection';
+import { FormGrid } from '../../shared/ui/FormGrid/FormGrid';
+import { PageActions } from '../../shared/ui/PageActions/PageActions';
+import { LoadingState } from '../../shared/ui/LoadingState/LoadingState';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import {
@@ -108,15 +113,14 @@ export function AttributeFormPage() {
       if (isEditMode) {
         const responseData = await updateAttributeRequest(attributeId, payload);
         notificationsRef.current?.info('Атрибут обновлен');
-        
+
         if (stayOnPage) {
-          // Обновляем данные формы из ответа
           if (responseData) {
             setFormData({
               name: responseData.name || formData.name,
               value: responseData.value || formData.value,
-              is_filterable: responseData.is_filterable !== undefined 
-                ? responseData.is_filterable 
+              is_filterable: responseData.is_filterable !== undefined
+                ? responseData.is_filterable
                 : formData.is_filterable,
             });
           }
@@ -124,9 +128,8 @@ export function AttributeFormPage() {
       } else {
         const responseData = await createAttributeRequest(payload);
         notificationsRef.current?.info('Атрибут создан');
-        
+
         if (stayOnPage) {
-          // После создания перенаправляем на страницу редактирования с новым ID
           const newAttributeId = responseData?.id;
           if (newAttributeId) {
             navigate(`/catalog/attributes/${newAttributeId}`);
@@ -148,89 +151,75 @@ export function AttributeFormPage() {
   if (isLoading) {
     return (
       <section className="attribute-form-page">
-        <div className="attribute-form-page__loading">
-          <div className="loading-spinner" />
-          <p>Загрузка данных атрибута...</p>
-        </div>
+        <LoadingState message="Загрузка данных атрибута..." size="lg" />
       </section>
     );
   }
 
   return (
     <section className="attribute-form-page">
-      <header className="attribute-form-page__header">
-        <Button variant="ghost" onClick={() => navigate(isEditMode ? `/catalog/attributes/${attributeId}` : '/catalog/attributes')} className="back-button">
-          ← Назад
-        </Button>
-        <h1 className="attribute-form-page__title">
-          {isEditMode ? 'Редактирование атрибута' : 'Создание атрибута'}
-        </h1>
-      </header>
+      <PageHeader
+        title={isEditMode ? 'Редактирование атрибута' : 'Создание атрибута'}
+        onBack={() => navigate(isEditMode ? `/catalog/attributes/${attributeId}` : '/catalog/attributes')}
+      />
 
       <form className="attribute-form-page__form" onSubmit={handleSubmit}>
-        <div className="attribute-form">
-          <div className="attribute-form__section">
-            <div className="attribute-form__section-header">
-              <div className="attribute-form__section-icon attribute-form__section-icon--primary">
-                <span>🏷️</span>
-              </div>
-              <div>
-                <h2 className="attribute-form__section-title">Основная информация</h2>
-                <p className="attribute-form__section-description">Данные об атрибуте продукта</p>
-              </div>
+        <FormSection
+          icon={<span>🏷️</span>}
+          iconVariant="primary"
+          title="Основная информация"
+          description="Данные об атрибуте продукта"
+        >
+          <FormGrid columns={2}>
+            <div className="attribute-form__field">
+              <label className="attribute-form__label">
+                Название <span className="required">*</span>
+              </label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => handleChange('name', e.target.value)}
+                placeholder="Введите название атрибута"
+                className={errors.name ? 'input-error' : ''}
+              />
+              {errors.name && (
+                <span className="attribute-form__error">{errors.name}</span>
+              )}
             </div>
 
-            <div className="attribute-form__grid">
-              <div className="attribute-form__field">
-                <label className="attribute-form__label">
-                  Название <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => handleChange('name', e.target.value)}
-                  placeholder="Введите название атрибута"
-                  className={errors.name ? 'input-error' : ''}
-                />
-                {errors.name && (
-                  <span className="attribute-form__error">{errors.name}</span>
-                )}
-              </div>
-
-              <div className="attribute-form__field">
-                <label className="attribute-form__label">
-                  Значение <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={formData.value}
-                  onChange={(e) => handleChange('value', e.target.value)}
-                  placeholder="Введите значение атрибута"
-                  className={errors.value ? 'input-error' : ''}
-                />
-                {errors.value && (
-                  <span className="attribute-form__error">{errors.value}</span>
-                )}
-              </div>
-
-              <div className="attribute-form__field attribute-form__field--checkbox">
-                <label className="attribute-form__checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={formData.is_filterable}
-                    onChange={() => handleCheckboxChange('is_filterable')}
-                  />
-                  <span>Использовать для фильтрации</span>
-                </label>
-                <span className="attribute-form__hint">
-                  Атрибуты с этой опцией будут доступны в фильтрах каталога
-                </span>
-              </div>
+            <div className="attribute-form__field">
+              <label className="attribute-form__label">
+                Значение <span className="required">*</span>
+              </label>
+              <input
+                type="text"
+                value={formData.value}
+                onChange={(e) => handleChange('value', e.target.value)}
+                placeholder="Введите значение атрибута"
+                className={errors.value ? 'input-error' : ''}
+              />
+              {errors.value && (
+                <span className="attribute-form__error">{errors.value}</span>
+              )}
             </div>
-          </div>
-        </div>
 
-        <div className="attribute-form-page__actions">
+            <div className="attribute-form__field attribute-form__field--full">
+              <label className="attribute-form__checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={formData.is_filterable}
+                  onChange={() => handleCheckboxChange('is_filterable')}
+                />
+                <span>Использовать для фильтрации</span>
+              </label>
+              <span className="attribute-form__hint">
+                Атрибуты с этой опцией будут доступны в фильтрах каталога
+              </span>
+            </div>
+          </FormGrid>
+        </FormSection>
+
+        <PageActions>
           <Button
             type="button"
             variant="secondary"
@@ -258,7 +247,7 @@ export function AttributeFormPage() {
           >
             {isEditMode ? 'Сохранить' : 'Создать'}
           </Button>
-        </div>
+        </PageActions>
       </form>
     </section>
   );
