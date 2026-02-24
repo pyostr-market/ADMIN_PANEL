@@ -30,5 +30,9 @@ export { LoadingState } from './LoadingState/LoadingState';
 export { ErrorState } from './ErrorState/ErrorState';
 export { EmptyState } from './EmptyState/EmptyState';
 
+// Utility Components
+export { DeleteConfirmModal } from './DeleteConfirmModal/DeleteConfirmModal';
+export { InfoCard } from './InfoCard/InfoCard';
+
 // Permissions
 export { PermissionGate } from './PermissionGate';

@@ -323,6 +323,69 @@ import { EmptyState } from '../../shared/ui/EmptyState/EmptyState';
 
 ---
 
+## Utility Components
+
+### DeleteConfirmModal
+
+Универсальное модальное окно подтверждения удаления.
+
+**Импорт:**
+```js
+import { DeleteConfirmModal } from '../../shared/ui/DeleteConfirmModal/DeleteConfirmModal';
+```
+
+**Пропсы:**
+- `isOpen` (boolean) — открыто ли окно
+- `onClose` (function) — обработчик закрытия
+- `onSubmit` (function) — обработчик подтверждения
+- `isSubmitting` (boolean) — идёт ли удаление
+- `entityName` (string) — название сущности
+- `entityTitle` (string) — заголовок сущности
+
+**Пример:**
+```jsx
+{entityToDelete && (
+  <DeleteConfirmModal
+    isOpen={!!entityToDelete}
+    onClose={() => setEntityToDelete(null)}
+    onSubmit={handleDelete}
+    isSubmitting={isDeleting}
+    entityName="категорию"
+    entityTitle={entityToDelete.name}
+  />
+)}
+```
+
+---
+
+### InfoCard
+
+Карточка с информацией для страниц деталей.
+
+**Импорт:**
+```js
+import { InfoCard } from '../../shared/ui/InfoCard/InfoCard';
+```
+
+**Пропсы:**
+- `label` (string) — метка
+- `value` (string|ReactNode) — значение
+- `icon` (ReactNode) — иконка
+- `variant` ('default' | 'highlighted' | 'success' | 'warning' | 'danger')
+- `className` (string) — дополнительный класс
+
+**Пример:**
+```jsx
+<InfoCard
+  label="Статус"
+  value="Активен"
+  icon={<FiCheckCircle />}
+  variant="success"
+/>
+```
+
+---
+
 ## Миграция существующих страниц
 
 ### До:

@@ -3,6 +3,8 @@
 @import './shared/ui/CrudPageTemplate.css';
 @import './shared/styles/BottomNav.css';
 @import './shared/styles/form-pages-mobile.css';
+@import './shared/styles/audit.css';
+@import './shared/styles/entity-list-page.css';
 
 /* Фиксация ширины скролл-бара для предотвращения сдвига контента */
 html {

@@ -1,0 +1,41 @@
+.delete-confirm-modal {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+.delete-confirm-modal__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--danger-bg);
+  color: var(--danger);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.delete-confirm-modal__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.delete-confirm-modal__text {
+  margin: 0 0 var(--space-2) 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.delete-confirm-modal__text strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.delete-confirm-modal__note {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}

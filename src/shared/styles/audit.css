@@ -1,0 +1,235 @@
+/* AuditPage - универсальные стили */
+
+.audit-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.audit-page__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 40px;
+}
+
+.audit-page__header .back-button {
+  flex-shrink: 0;
+}
+
+.audit-page__title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.audit-page__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.audit-page__panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.audit-page__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10);
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* Audit Table */
+.audit-table-wrapper {
+  overflow-x: auto;
+}
+
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.audit-table__header {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--border);
+}
+
+.audit-table__header--actions {
+  text-align: right;
+}
+
+.audit-table__row {
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.15s ease;
+}
+
+.audit-table__row:last-child {
+  border-bottom: none;
+}
+
+.audit-table__row:hover {
+  background: var(--surface-subtle);
+}
+
+.audit-table__cell {
+  padding: var(--space-3) var(--space-4);
+  font-size: 14px;
+  color: var(--text);
+  vertical-align: middle;
+}
+
+.audit-table__cell--actions {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Audit Action Badge */
+.audit-action-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.audit-action-badge--create {
+  background-color: var(--success-bg);
+  color: var(--accent-green);
+}
+
+.audit-action-badge--update {
+  background-color: var(--accent-blue-bg);
+  color: var(--accent-blue);
+}
+
+.audit-action-badge--delete {
+  background-color: var(--accent-red-bg);
+  color: var(--accent-red);
+}
+
+/* Audit User Info */
+.audit-user-info {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.audit-date {
+  font-size: 14px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* Audit Detail Modal */
+.audit-detail-modal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.audit-detail-modal__header {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.audit-detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.audit-detail-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  min-width: 120px;
+}
+
+.audit-detail-value {
+  font-size: 14px;
+  color: var(--text);
+  flex: 1;
+}
+
+.audit-detail-value.audit-action-create {
+  color: var(--success);
+}
+
+.audit-detail-value.audit-action-update {
+  color: var(--info);
+}
+
+.audit-detail-value.audit-action-delete {
+  color: var(--danger);
+}
+
+.audit-detail-modal__data {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Audit Data Block */
+.audit-data-block {
+  background-color: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+
+.audit-data-block__title {
+  margin: 0 0 var(--space-3) 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.audit-data-block__content {
+  font-family: var(--font-family-mono);
+  font-size: 13px;
+  background: var(--surface);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  max-height: 300px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.audit-data-block__empty {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .audit-table__header--actions,
+  .audit-table__cell--actions {
+    text-align: center;
+  }
+
+  .audit-detail-row {
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .audit-detail-label {
+    min-width: auto;
+  }
+}
