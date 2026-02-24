@@ -2,7 +2,7 @@
   display: flex;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  overflow: hidden;
+  overflow-x: auto;
   width: fit-content;
   max-width: 100%;
 }
