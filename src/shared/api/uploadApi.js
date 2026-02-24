@@ -26,21 +26,34 @@ export async function uploadFileRequest(
     formData.append('original_filename', originalFilename);
   }
 
-  const response = await productApi.post('/upload', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    timeout: UPLOAD_TIMEOUT,
-    signal: abortSignal,
-    onUploadProgress: (progressEvent) => {
-      if (onProgress && progressEvent.total) {
-        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-        onProgress(percentCompleted);
-      }
-    },
+  console.log('[uploadApi] Отправка файла:', {
+    fileName: file.name,
+    fileSize: file.size,
+    fileType: file.type,
+    folder,
+    originalFilename,
   });
 
-  return response.data?.data ?? response.data;
+  try {
+    const response = await productApi.post('/upload/', formData, {
+      timeout: UPLOAD_TIMEOUT,
+      signal: abortSignal,
+      // Важно: не устанавливаем Content-Type вручную для FormData
+      // Axios должен сам установить 'multipart/form-data' с boundary
+      onUploadProgress: (progressEvent) => {
+        if (onProgress && progressEvent.total) {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          onProgress(percentCompleted);
+        }
+      },
+    });
+    console.log('Отправка в S3 2', response.data);
+    return response.data?.data ?? response.data;
+
+  } catch (error) {
+    console.error('[uploadApi] Ошибка загрузки файла:', error);
+    throw error;
+  }
 }
 
 /**

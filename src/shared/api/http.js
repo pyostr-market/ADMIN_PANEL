@@ -16,6 +16,26 @@ export const productApi = axios.create({
   timeout: 15000,
 });
 
+// Interceptor для логирования и исправления URL
+productApi.interceptors.request.use(
+  (config) => {
+    // Принудительно заменяем http:// на https:// для production
+    if (config.baseURL?.startsWith('https://')) {
+      // URL уже правильный
+    }
+    console.log('[productApi] Request:', {
+      url: config.baseURL + config.url,
+      method: config.method,
+      headers: config.headers,
+    });
+    return config;
+  },
+  (error) => {
+    console.error('[productApi] Request error:', error);
+    return Promise.reject(error);
+  }
+);
+
 export function setupAuthorizedApiInterceptors({
   getAccessToken,
   getRefreshToken,

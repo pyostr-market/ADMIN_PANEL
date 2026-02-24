@@ -80,6 +80,7 @@ export function ImageCarousel({
       const currentImages = imagesRef.current;
       const updatedImages = currentImages.map((img, idx) => {
         if (idx === imageIndex && img.pendingUploadKey === uploadKey) {
+          console.log(result)
           return {
             ...img,
             upload_id: result.upload_id,
