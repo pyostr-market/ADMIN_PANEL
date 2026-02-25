@@ -13,6 +13,7 @@ import {
   deleteSupplierRequest,
 } from './api/suppliersApi';
 import './SuppliersPage.css';
+import './SuppliersPage-Mobile.css';
 
 const PAGE_LIMIT = 20;
 

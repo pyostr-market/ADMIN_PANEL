@@ -17,6 +17,7 @@ import {
   getCategoriesForAutocompleteRequest,
 } from './api/categoryPricingPolicyApi';
 import './CategoryPricingPolicyFormPage.css';
+import './CategoryPricingPolicyFormPage-Mobile.css';
 
 export function CategoryPricingPolicyFormPage() {
   const navigate = useNavigate();

@@ -1,116 +1,158 @@
+/* CategoryPricingPoliciesPage - стиль как у SuppliersPage/CategoriesPage */
 .category-pricing-policies-page {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: 1.5rem;
+  gap: var(--space-3);
 }
 
+/* Header */
 .category-pricing-policies-page__header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 40px;
 }
 
 .category-pricing-policies-page__title {
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: var(--color-text-primary);
   margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
 }
 
 .category-pricing-policies-page__controls {
   display: flex;
-  gap: 0.75rem;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 180px;
 }
 
+/* Filters */
 .category-pricing-policies-page__filters {
-  display: flex;
-  gap: 1rem;
-  padding: 1rem;
-  background: var(--color-bg-secondary);
-  border-radius: var(--border-radius-md);
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
   transition: opacity 0.2s ease;
 }
 
 .category-pricing-policies-page__filters--loading {
   opacity: 0.6;
+  pointer-events: none;
 }
 
+/* Entity List Item Content - аналогично SuppliersPage */
 .category-pricing-policies-page__item-content {
+  display: flex;
   flex: 1;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  padding: 0.5rem;
-  border-radius: var(--border-radius-sm);
+  transition: all 0.2s;
+  padding: var(--space-2);
+  margin: calc(-1 * var(--space-2));
+  border-radius: var(--radius-md);
 }
 
 .category-pricing-policies-page__item-content:hover {
-  background-color: var(--color-bg-hover);
+  background: var(--surface-subtle);
 }
 
 .category-pricing-policies-page__item-main {
   display: flex;
-  gap: 1rem;
-  align-items: flex-start;
+  gap: var(--space-3);
+  align-items: center;
+  width: 100%;
 }
 
 .category-pricing-policies-page__item-avatar {
   width: 48px;
   height: 48px;
-  border-radius: var(--border-radius-md);
-  background: var(--gradient-primary, linear-gradient(135deg, #60a5fa 0%, #2563eb 100%));
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 1.5rem;
+  font-size: 22px;
   flex-shrink: 0;
+  color: white;
+  background: var(--gradient-primary);
+  transition: transform 0.2s;
+}
+
+.entity-list__item:hover .category-pricing-policies-page__item-avatar {
+  transform: scale(1.05);
 }
 
 .category-pricing-policies-page__item-info {
-  flex: 1;
+  display: grid;
+  gap: var(--space-1);
   min-width: 0;
 }
 
 .category-pricing-policies-page__item-header {
-  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
 }
 
 .category-pricing-policies-page__item-title {
-  font-size: 1.125rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  font-size: 14px;
   margin: 0;
+  color: var(--text);
 }
 
 .category-pricing-policies-page__item-meta {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color: var(--color-text-secondary);
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
 .category-pricing-policies-page__meta-item {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: var(--space-1);
 }
 
 .category-pricing-policies-page__meta-label {
   font-weight: 500;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .category-pricing-policies-page__separator {
-  color: var(--color-border);
+  color: var(--border-strong);
 }
 
+/* Item Actions */
 .category-pricing-policies-page__item-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--space-1);
+  align-items: center;
   flex-shrink: 0;
+}
+
+.btn-delete:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* Modal confirm text */
+.modal-confirm-text {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.modal-confirm-text strong {
+  color: var(--text);
+}
+
+.modal-confirm-note {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: var(--space-2);
 }

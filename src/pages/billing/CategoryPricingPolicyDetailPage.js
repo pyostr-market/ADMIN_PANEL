@@ -6,6 +6,7 @@ import { Button } from '../../shared/ui/Button';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { getCategoryPricingPolicyByIdRequest } from './api/categoryPricingPolicyApi';
 import './CategoryPricingPolicyDetailPage.css';
+import './CategoryPricingPolicyDetailPage-Mobile.css';
 
 export function CategoryPricingPolicyDetailPage() {
   const { pricingPolicyId } = useParams();

@@ -94,6 +94,10 @@ html {
 @import './pages/categories/CategoriesPage-Mobile.css';
 @import './pages/categories/CategoryDetailPage-Mobile.css';
 @import './pages/categories/CategoryAuditPage-Mobile.css';
+
+@import './pages/billing/CategoryPricingPoliciesPage-Mobile.css';
+@import './pages/billing/CategoryPricingPolicyDetailPage-Mobile.css';
+@import './pages/billing/CategoryPricingPolicyFormPage-Mobile.css';
 @import './pages/support/SupportPage-Mobile.css';
 @import './pages/dashboard/DashboardPage-Mobile.css';
 @import './pages/errors/ErrorPage-Mobile.css';

@@ -13,6 +13,7 @@ import {
   deleteCategoryPricingPolicyRequest,
 } from './api/categoryPricingPolicyApi';
 import './CategoryPricingPoliciesPage.css';
+import './CategoryPricingPoliciesPage-Mobile.css';
 
 const PAGE_LIMIT = 20;
 
@@ -141,11 +142,7 @@ export function CategoryPricingPoliciesPage() {
                   </div>
                   <div className="category-pricing-policies-page__item-meta">
                     <span className="category-pricing-policies-page__meta-item">
-                      <span className="category-pricing-policies-page__meta-label">ID:</span> {policy.id}
-                    </span>
-                    <span className="category-pricing-policies-page__separator">•</span>
-                    <span className="category-pricing-policies-page__meta-item">
-                      <span className="category-pricing-policies-page__meta-label">Наценка фикс:</span> {formatCurrency(policy.markup_fixed)}
+                      <span className="category-pricing-policies-page__meta-label">Наценка:</span> {formatCurrency(policy.markup_fixed)}
                     </span>
                     <span className="category-pricing-policies-page__separator">•</span>
                     <span className="category-pricing-policies-page__meta-item">
@@ -153,15 +150,7 @@ export function CategoryPricingPoliciesPage() {
                     </span>
                     <span className="category-pricing-policies-page__separator">•</span>
                     <span className="category-pricing-policies-page__meta-item">
-                      <span className="category-pricing-policies-page__meta-label">Комиссия %:</span> {formatPercent(policy.commission_percent)}
-                    </span>
-                    <span className="category-pricing-policies-page__separator">•</span>
-                    <span className="category-pricing-policies-page__meta-item">
-                      <span className="category-pricing-policies-page__meta-label">Скидка %:</span> {formatPercent(policy.discount_percent)}
-                    </span>
-                    <span className="category-pricing-policies-page__separator">•</span>
-                    <span className="category-pricing-policies-page__meta-item">
-                      <span className="category-pricing-policies-page__meta-label">НДС:</span> {formatPercent(policy.tax_rate)}
+                      <span className="category-pricing-policies-page__meta-label">Комиссия:</span> {formatPercent(policy.commission_percent)}
                     </span>
                   </div>
                 </div>

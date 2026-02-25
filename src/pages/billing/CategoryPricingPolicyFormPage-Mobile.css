@@ -1,0 +1,150 @@
+/* CategoryPricingPolicyFormPage - Mobile styles */
+@media (max-width: 768px) {
+  .category-pricing-policy-form-page {
+    padding: 0 !important;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .category-pricing-policy-form-page__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 48px;
+  }
+
+  .category-pricing-policy-form-page__header .back-button {
+    flex-shrink: 0;
+    height: 32px;
+    padding: 6px 8px;
+    font-size: 12px;
+    min-width: auto;
+  }
+
+  .category-pricing-policy-form-page__title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .category-pricing-policy-form-page__header .category-pricing-policy-form-page__actions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .category-pricing-policy-form-page__header .category-pricing-policy-form-page__actions button {
+    height: 32px;
+    padding: 6px 8px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .category-pricing-policy-form-page__form {
+    gap: 0;
+    padding: 0;
+  }
+
+  /* Переопределяем FormSection для мобильных */
+  .category-pricing-policy-form-page .form-section {
+    padding: var(--space-4);
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    box-shadow: none;
+    margin-bottom: 0;
+  }
+
+  .category-pricing-policy-form-page .form-section:last-child {
+    border-bottom: none;
+  }
+
+  .category-pricing-policy-form-page .form-section__header {
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .category-pricing-policy-form-page .form-section__icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    border-radius: 8px;
+  }
+
+  .category-pricing-policy-form-page .form-section__title {
+    font-size: 16px;
+  }
+
+  .category-pricing-policy-form-page .form-section__description {
+    font-size: 12px;
+  }
+
+  /* Grid */
+  .category-pricing-policy-form-page .form-grid {
+    display: grid;
+    gap: var(--space-3);
+    grid-template-columns: 1fr;
+  }
+
+  /* Fields */
+  .category-pricing-policy-form__field {
+    gap: 6px;
+  }
+
+  .category-pricing-policy-form__label {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .category-pricing-policy-form__label .required {
+    color: var(--danger);
+  }
+
+  .category-pricing-policy-form__field input {
+    height: 40px;
+    padding: 8px 12px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+
+  .category-pricing-policy-form__hint {
+    font-size: 11px;
+  }
+
+  .category-pricing-policy-form__error {
+    font-size: 11px;
+  }
+
+  /* PageActions - переопределяем для липкого футера */
+  .category-pricing-policy-form-page__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    position: sticky;
+    bottom: 0;
+    z-index: 99;
+  }
+
+  .category-pricing-policy-form-page__actions button {
+    width: 100%;
+    height: 44px;
+    font-size: 14px;
+  }
+}
