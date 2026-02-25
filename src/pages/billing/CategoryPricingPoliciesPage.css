@@ -60,7 +60,7 @@
   width: 48px;
   height: 48px;
   border-radius: var(--border-radius-md);
-  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+  background: var(--gradient-primary, linear-gradient(135deg, #60a5fa 0%, #2563eb 100%));
   display: flex;
   align-items: center;
   justify-content: center;

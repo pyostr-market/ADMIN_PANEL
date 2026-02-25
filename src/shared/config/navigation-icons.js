@@ -14,7 +14,6 @@ import {
   FiSettings,
   FiUser,
   FiMoon,
-  FiSun,
   FiX,
   FiFileText,
   FiBox,

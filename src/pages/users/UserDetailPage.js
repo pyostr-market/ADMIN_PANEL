@@ -725,7 +725,7 @@ export function UserDetailPage() {
                 </div>
                 <div className="info-card__content">
                   <span className="info-card__label">Телефон</span>
-                  <span className="info-card__value">{user.primary_phone?.phone_number || 'Не указан'}</span>
+                  <span className="info-card__value">{user.phones?.[0]?.phone_number || 'Не указан'}</span>
                 </div>
               </div>
 

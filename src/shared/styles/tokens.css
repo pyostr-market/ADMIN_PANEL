@@ -59,15 +59,15 @@
   --accent-red-bg: #ffebee;
   --card-bg: #f8f9fa;
   --gradient-avatar: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  
-  /* Gradient utilities for badges/icons - solid gradients for white icons */
-  --gradient-success: linear-gradient(135deg, #16a34a 0%, #059669 100%);
-  --gradient-info: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  --gradient-danger: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-  --gradient-secondary: linear-gradient(135deg, #64748b 0%, #475569 100%);
-  --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  --gradient-info-light: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  --gradient-success-light: linear-gradient(135deg, #10b981 0%, #059669 100%);
+
+  /* Gradient utilities for badges/icons - light theme (softer, lighter gradients) */
+  --gradient-primary: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
+  --gradient-secondary: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+  --gradient-accent: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  --gradient-success: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  --gradient-warning: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  --gradient-info: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+  --gradient-danger: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
 
   /* Focus ring colors */
   --focus-ring-primary: rgba(38, 38, 38, 0.15);
@@ -148,15 +148,15 @@
   --accent-red-bg: #450a0a;
   --card-bg: #1f1f1f;
   --gradient-avatar: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
-  
-  /* Gradient utilities for badges/icons (dark theme) */
-  --gradient-success: linear-gradient(135deg, var(--success) 0%, #047857 100%);
-  --gradient-info: linear-gradient(135deg, var(--info) 0%, #1d4ed8 100%);
-  --gradient-danger: linear-gradient(135deg, var(--danger) 0%, var(--danger-hover) 100%);
-  --gradient-secondary: linear-gradient(135deg, #475569 0%, #334155 100%);
-  --gradient-warning: linear-gradient(135deg, #713f12 0%, #a16207 100%);
-  --gradient-info-light: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
-  --gradient-success-light: linear-gradient(135deg, #14532d 0%, #16a34a 100%);
+
+  /* Gradient utilities for badges/icons - dark theme (darker, more saturated gradients) */
+  --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  --gradient-secondary: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  --gradient-accent: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  --gradient-success: linear-gradient(135deg, #10b981 0%, #047857 100%);
+  --gradient-warning: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  --gradient-info: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  --gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
 
   /* Focus ring colors (dark theme) */
   --focus-ring-primary: rgba(96, 165, 250, 0.2);
