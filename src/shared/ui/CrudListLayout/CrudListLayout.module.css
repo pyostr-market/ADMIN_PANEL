@@ -1,0 +1,305 @@
+/* Основной layout */
+.crudListLayout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+/* Header на всю ширину */
+.crudListHeader {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 40px;
+}
+
+/* Поиск на всю ширину */
+.crudListSearch {
+  grid-column: 1 / -1;
+  margin-bottom: var(--space-3);
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  width: 100%;
+}
+
+.crudListSearch input {
+  flex: 1;
+  box-sizing: border-box;
+}
+
+.crudListSearchFiltersBtn {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+
+.crudListSearchFiltersBtn:hover {
+  background: var(--surface-subtle);
+  color: var(--text);
+}
+
+.crudListSearchFiltersBtn svg {
+  font-size: 18px;
+}
+
+/* Контейнер для списка и пагинации (левая колонка) */
+.crudListContent {
+  grid-column: 1 / 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+/* Список внутри контента */
+.crudListList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Пагинация под списком */
+.crudListPagination {
+  padding: var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Сайдбар с фильтрами (правая колонка) */
+.crudListFiltersSidebar {
+  grid-column: 2 / 3;
+  grid-row: 3 / 4;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  position: sticky;
+  top: var(--space-4);
+  transition: opacity 0.2s ease;
+  height: fit-content;
+}
+
+.crudListFiltersSidebarLoading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.crudListFiltersSidebarRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.crudListFiltersSidebarTitle {
+  margin: 0 0 var(--space-2);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.crudListFiltersSidebarGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.crudListFiltersSidebarSelect {
+  width: 100%;
+  height: 38px;
+  font-size: 13px;
+}
+
+.crudListFiltersSidebarSelect select {
+  width: 100%;
+}
+
+.crudListFiltersSidebar .btn-ghost {
+  width: 100%;
+  justify-content: center;
+}
+
+.crudListResetFiltersBtn {
+  margin-top: var(--space-2);
+}
+
+/* Пагинация */
+.crudListPagination {
+  padding: var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: var(--space-2);
+}
+
+/* Модальное окно фильтров */
+.crudFiltersModalContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.crudFiltersModalGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.crudFiltersModalLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.crudFiltersModalSelect {
+  width: 100%;
+}
+
+.crudFiltersModalSelect select {
+  width: 100%;
+}
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+  .crudListLayout {
+    padding: 0 !important;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header */
+  .crudListHeader {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .crudListHeaderTitle {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+    flex: 0 1 auto;
+  }
+
+  .crudListHeaderControls {
+    flex-shrink: 0;
+    margin-left: auto;
+    justify-content: center;
+  }
+
+  .crudListHeaderControls button {
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  /* Поиск с кнопкой фильтров */
+  .crudListSearch {
+    padding: 10px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .crudListSearch input {
+    flex: 1;
+    height: 40px;
+    font-size: 14px;
+    padding: 8px 12px;
+    box-sizing: border-box;
+  }
+
+  .crudListSearchFiltersBtn {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.2s;
+  }
+
+  .crudListSearchFiltersBtn:hover {
+    background: var(--surface-subtle);
+    color: var(--text);
+  }
+
+  .crudListSearchFiltersBtn svg {
+    font-size: 20px;
+  }
+
+  /* Сайдбар скрываем на мобильных */
+  .crudListFiltersSidebar {
+    display: none;
+  }
+
+  /* Список */
+  .crudListList,
+  .entityList {
+    padding: 0;
+  }
+
+  .crudListItem {
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid var(--border);
+    width: 100%;
+  }
+
+  .crudListItem:last-child {
+    border-bottom: none;
+  }
+
+  /* Пагинация */
+  .crudListPagination {
+    padding: 10px 12px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
