@@ -126,7 +126,7 @@
 
   .entityActions {
     width: 100%;
-    justify-content: stretch;
+    justify-content: flex-end;
     padding-top: var(--space-2);
     margin-top: 0;
     border-top: 1px solid var(--border);
@@ -135,8 +135,8 @@
   }
 
   .entityActions button {
-    flex: 1;
-    min-width: 80px;
+    flex: 0 0 auto;
+    min-width: auto;
     height: 34px;
     font-size: 12px;
   }

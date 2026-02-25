@@ -1,39 +1,120 @@
-/* UserCreatePage - специфичные стили страницы */
+/* UserCreatePage - стиль как у ProductFormPage */
 .userCreatePage {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-4);
   padding: var(--space-4);
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
+.userCreatePageHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  position: relative;
+}
+
+.userCreatePageHeader .backButton {
+  flex-shrink: 0;
+  height: 40px;
+  padding: 8px 12px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.userCreatePageTitle {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text);
+}
+
 .userCreatePageForm {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-4);
 }
 
-/* Form sections */
+.userCreatePageActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+}
+
+/* Form Sections */
 .userCreateForm {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-4);
+}
+
+.userCreateFormSection {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+
+.userCreateFormSectionHeader {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  margin-bottom: var(--space-5);
+}
+
+.userCreateFormSectionIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.userCreateFormSectionIconPrimary {
+  background: var(--gradient-avatar);
+  color: white;
+}
+
+.userCreateFormSectionIconSecondary {
+  background: var(--gradient-secondary);
+  color: white;
+}
+
+.userCreateFormSectionIconSuccess {
+  background: var(--gradient-success);
+  color: white;
+}
+
+.userCreateFormSectionTitle {
+  margin: 0 0 var(--space-1) 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.userCreateFormSectionDescription {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-muted);
 }
 
 /* Grid */
 .userCreateFormGrid {
   display: grid;
-  gap: var(--space-3);
-  grid-template-columns: 1fr;
-}
-
-@media (min-width: 640px) {
-  .userCreateFormGrid {
-    grid-template-columns: 1fr 1fr;
-  }
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
 }
 
 /* Fields */
 .userCreateFormField {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-1);
 }
 
@@ -42,17 +123,12 @@
 }
 
 .userCreateFormLabel {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--text);
   display: flex;
   align-items: center;
   gap: var(--space-1);
-}
-
-.userCreateFormLabelIcon {
-  font-size: 14px;
-  color: var(--text-muted);
 }
 
 .userCreateFormLabel .required {
@@ -69,11 +145,11 @@
   color: var(--text);
   font-size: 14px;
   transition: all 0.2s;
+  outline: none;
 }
 
 .userCreateFormField input:focus,
 .userCreateFormField select:focus {
-  outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px var(--focus-ring-indigo);
 }
@@ -168,16 +244,153 @@
 }
 
 /* Responsive */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .userCreatePage {
+    padding: 0 !important;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .userCreatePageHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 48px;
+  }
+
+  .userCreatePageHeader .backButton {
+    flex-shrink: 0;
+    height: 32px;
+    padding: 6px 8px;
+    font-size: 12px;
+    min-width: auto;
+  }
+
+  .userCreatePageTitle {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .userCreatePageForm {
+    gap: 0;
+    padding: 0;
+  }
+
   .userCreatePageActions {
+    display: flex;
     flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-radius: 0;
+    box-shadow: none;
+    position: sticky;
+    bottom: 0;
+    z-index: 99;
   }
 
   .userCreatePageActions button {
     width: 100%;
-    justify-content: center;
+    height: 44px;
+    font-size: 14px;
   }
 
+  /* Form sections */
+  .userCreateForm {
+    gap: 0;
+  }
+
+  .userCreateFormSection {
+    background: var(--surface);
+    border: none;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    padding: 16px;
+    box-shadow: none;
+  }
+
+  .userCreateFormSection:last-child {
+    border-bottom: none;
+  }
+
+  .userCreateFormSectionHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .userCreateFormSectionIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    font-size: 18px;
+  }
+
+  .userCreateFormSectionTitle {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .userCreateFormSectionDescription {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin: 2px 0 0;
+  }
+
+  /* Grid */
+  .userCreateFormGrid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr;
+  }
+
+  /* Fields */
+  .userCreateFormField {
+    gap: 8px;
+  }
+
+  .userCreateFormLabel {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .userCreateFormLabel .required {
+    color: var(--danger);
+  }
+
+  .userCreateFormField input,
+  .userCreateFormField select {
+    height: 40px;
+    padding: 8px 12px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+
+  .userCreateFormError {
+    font-size: 11px;
+  }
+
+  /* Toggles */
   .userCreateFormToggle {
     flex-direction: column;
     align-items: flex-start;

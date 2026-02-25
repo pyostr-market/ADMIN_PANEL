@@ -209,47 +209,70 @@ export function UsersListPage() {
       </header>
 
       <div className={`${styles.usersListPageFilters}${usersCrud.isLoading ? ` ${styles.usersListPageFiltersLoading}` : ''}`}>
-        <SearchInput
-          value={usersCrud.search}
-          onChange={(e) => usersCrud.setSearch(e.target.value)}
-          placeholder="Поиск по телефону или ID..."
-          loading={usersCrud.isLoading}
-        />
-        <div className={styles.usersListPageFiltersGroup}>
-          <Select
-            value={filters.is_active}
-            onChange={(e) => handleFilterChange('is_active', e.target.value)}
-            onFocus={loadGroups}
-            options={[
-              { value: 'all', label: 'Все статусы' },
-              { value: 'true', label: 'Активные' },
-              { value: 'false', label: 'Заблокированные' },
-            ]}
-            disabled={usersCrud.isLoading}
-          />
+        <div className={styles.usersListPageFiltersRow}>
+          <div className={styles.usersListPageSearchWrapper}>
+            <SearchInput
+              value={usersCrud.search}
+              onChange={(e) => usersCrud.setSearch(e.target.value)}
+              placeholder="Поиск по телефону или ID..."
+              loading={usersCrud.isLoading}
+            />
+          </div>
+          <div className={styles.usersListPageFiltersGroup}>
+            <Select
+              value={filters.is_active}
+              onChange={(e) => handleFilterChange('is_active', e.target.value)}
+              options={[
+                { value: 'all', label: 'Все статусы' },
+                { value: 'true', label: 'Активные' },
+                { value: 'false', label: 'Заблокированные' },
+              ]}
+              placeholder="Статус"
+              wrapperClassName={styles.usersListPageFilterSelect}
+              onFocus={loadGroups}
+              disabled={usersCrud.isLoading}
+            />
 
-          <Select
-            value={filters.is_verified}
-            onChange={(e) => handleFilterChange('is_verified', e.target.value)}
-            onFocus={loadGroups}
-            options={[
-              { value: 'all', label: 'Все верификации' },
-              { value: 'true', label: 'Верифицированные' },
-              { value: 'false', label: 'Не верифицированные' },
-            ]}
-            disabled={usersCrud.isLoading}
-          />
+            <Select
+              value={filters.is_verified}
+              onChange={(e) => handleFilterChange('is_verified', e.target.value)}
+              options={[
+                { value: 'all', label: 'Все верификации' },
+                { value: 'true', label: 'Верифицированные' },
+                { value: 'false', label: 'Не верифицированные' },
+              ]}
+              placeholder="Верификация"
+              wrapperClassName={styles.usersListPageFilterSelect}
+              onFocus={loadGroups}
+              disabled={usersCrud.isLoading}
+            />
 
-          <Select
-            value={filters.group}
-            onChange={(e) => handleFilterChange('group', e.target.value)}
-            onFocus={loadGroups}
-            options={[
-              { value: 'all', label: 'Все группы' },
-              ...groups.map((group) => ({ value: String(group.id), label: group.name })),
-            ]}
-            disabled={usersCrud.isLoading || isLoadingGroups}
-          />
+            <Select
+              value={filters.group}
+              onChange={(e) => handleFilterChange('group', e.target.value)}
+              options={[
+                { value: 'all', label: 'Все группы' },
+                ...groups.map((group) => ({ value: String(group.id), label: group.name })),
+              ]}
+              placeholder="Группа"
+              wrapperClassName={styles.usersListPageFilterSelect}
+              onFocus={loadGroups}
+              disabled={usersCrud.isLoading || isLoadingGroups}
+            />
+
+            {(filters.is_active !== 'all' || filters.is_verified !== 'all' || filters.group !== 'all') && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setFilters({ is_active: 'all', is_verified: 'all', group: 'all' });
+                  usersCrud.setPage(1);
+                }}
+              >
+                Сбросить фильтры
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 

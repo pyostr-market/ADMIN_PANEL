@@ -1,10 +1,241 @@
-/* UserDetailPage - обновлённый дизайн */
+/* UserDetailPage - стиль как у ProductDetailPage */
 .userDetailPage {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.userDetailPageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 40px;
+}
+
+.userDetailPageHeader .backButton {
+  flex-shrink: 0;
+  height: 36px;
+  padding: 0 var(--space-3);
+}
+
+.userDetailPageActions {
+  display: flex;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.userDetailPageActions button {
+  height: 36px;
+  padding: 0 var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.userDetailPageActions button svg {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Tabs */
+.userDetailPageTabs {
+  display: flex;
+  gap: var(--space-1);
+  background: var(--surface);
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.userDetailPageTabs .tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  transition: all 0.2s;
+  line-height: 1;
+}
+
+.userDetailPageTabs .tab svg {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.userDetailPageTabs .tabActive {
+  background: var(--bg-active-tab);
+  color: white;
+}
+
+.tabBadge {
+  background: var(--surface-muted);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.userDetailPageTabs .tabActive .tabBadge {
+  background: var(--primary-hover);
+}
+
+/* User Profile Header */
+.userProfileHeader {
+  display: flex;
+  align-items: center;
   gap: var(--space-4);
   padding: var(--space-4);
-  max-width: 1400px;
-  margin: 0 auto;
+  background: var(--surface-subtle);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
+}
+
+.userProfileAvatar {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  flex-shrink: 0;
+  color: white;
+  background: var(--gradient-avatar);
+}
+
+.userProfileAvatarActive {
+  background: var(--gradient-success) !important;
+}
+
+.userProfileAvatarInactive {
+  background: var(--gradient-danger) !important;
+}
+
+.userProfileInfo {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.userProfileName {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text);
+}
+
+.userProfileBadges {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.userProfileBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.userProfileBadgeInactive {
+  background: var(--danger);
+  color: white;
+}
+
+.userProfileBadgeVerified {
+  background: var(--success);
+  color: white;
+}
+
+.userProfileBadgeGroup {
+  background: #4c4c4c;
+  color: white;
+}
+
+/* User Detail Page Content */
+.userDetailPageContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.userDetailPageGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+@media (max-width: 1024px) {
+  .userDetailPageGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Нижняя секция: Права и Группы */
+.userDetailPageBottomGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+@media (max-width: 1024px) {
+  .userDetailPageBottomGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Panels */
+.userDetailPagePanel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.panelHeaderContent {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.panelTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.panelTitleIcon {
+  color: var(--text-muted);
+}
+
+.panelContent {
+  padding: var(--space-3);
 }
 
 /* Loading & Error states */
@@ -43,180 +274,6 @@
   margin: 0;
 }
 
-/* Header */
-.userDetailPageHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  padding: var(--space-4);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-}
-
-.userDetailPageHeaderLeft {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  flex-wrap: wrap;
-}
-
-.backButton {
-  flex-shrink: 0;
-}
-
-.userDetailPageUserInfo {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-
-.userDetailPageAvatar {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  flex-shrink: 0;
-  color: white;
-}
-
-.userDetailPageAvatarActive {
-  background: var(--gradient-success);
-}
-
-.userDetailPageAvatarInactive {
-  background: var(--gradient-danger);
-}
-
-.userDetailPageHeaderText {
-  display: grid;
-  gap: var(--space-1);
-}
-
-.userDetailPageTitle {
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0;
-}
-
-.userDetailPageBadges {
-  display: flex;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-}
-
-.userDetailPageBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding: 4px 10px;
-  border-radius: var(--radius-md);
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.userDetailPageBadgeInactive {
-  background: var(--danger);
-  color: white;
-}
-
-.userDetailPageBadgeVerified {
-  background: var(--success);
-  color: white;
-}
-
-.userDetailPageBadgeGroup {
-  background: #4c4c4c;
-  color: white;
-}
-
-.userDetailPageActions {
-  display: flex;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-}
-
-/* user */
-.userDetailPageTabs {
-  display: flex;
-  gap: var(--space-1);
-  background: var(--surface);
-  padding: var(--space-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-
-}
-
-.userDetailPageTabs .tab {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-md);
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.userDetailPageTabs .tabActive {
-  background: var(--bg-active-tab);
-  color: white;
-}
-
-.tabBadge {
-  background: var(--surface-muted);
-  padding: 2px 8px;
-  border-radius: var(--radius-sm);
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.userDetailPageTabs .tabActive .tabBadge {
-  background: var(--primary-hover);
-}
-
-/* Content */
-.userDetailPageContent {
-  display: grid;
-  gap: var(--space-4);
-}
-
-/* Panel */
-.userDetailPagePanel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4);
-  display: grid;
-  gap: var(--space-4);
-  box-shadow: var(--shadow-sm);
-}
-
-.userDetailPagePanelLarge {
-  padding: var(--space-5);
-}
-
-.panelHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--border);
-}
-
-.panelTitle {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 0;
-}
-
 /* Empty state */
 .emptyState {
   display: flex;
@@ -242,7 +299,7 @@
 /* User Info Grid */
 .userInfoGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: var(--space-3);
 }
 
@@ -264,6 +321,16 @@
 
 .infoCardFull {
   grid-column: 1 / -1;
+}
+
+.infoCardHighlight {
+  background: var(--gradient-avatar);
+  border: none;
+}
+
+.infoCardHighlight .infoCardLabel,
+.infoCardHighlight .infoCardValue {
+  color: white;
 }
 
 .infoCardIcon {
@@ -299,6 +366,14 @@
   background: var(--gradient-info);
 }
 
+.infoCardIconAccent {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.infoCardIconDanger {
+  background: var(--gradient-danger);
+}
+
 .infoCardContent {
   display: grid;
   gap: 2px;
@@ -307,33 +382,18 @@
 
 .infoCardLabel {
   font-size: 12px;
-  color: var(--text-muted);
   font-weight: 500;
 }
 
 .infoCardValue {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text);
   word-break: break-word;
 }
 
-.infoCardValue.code {
-  font-family: var(--font-family-mono);
-  font-size: 12px;
-}
-
-.infoCardStatus {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.statusActive {
-  color: var(--success);
-}
-
-.statusInactive {
-  color: var(--danger);
+.infoCardValueLarge {
+  font-size: 20px;
 }
 
 /* Sessions */
@@ -418,6 +478,7 @@
 /* Permissions */
 .permissionsSearch {
   max-width: 400px;
+  margin-bottom: var(--space-3);
 }
 
 .permissionsSearch input {
@@ -433,69 +494,107 @@
 .permissionsSearch input:focus {
   outline: none;
   border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--focus-ring-indigo);
 }
 
 .permissionsList {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 
 .permissionsSection {
-  display: grid;
-  gap: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.permissionsSectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  background: linear-gradient(135deg, var(--surface-subtle), var(--surface));
+  border-bottom: 1px solid var(--border);
 }
 
 .permissionsSectionTitle {
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.permissionsSectionCount {
+  font-size: 12px;
   font-weight: 600;
   color: var(--text-muted);
-  text-transform: capitalize;
-  margin: 0;
-  padding: var(--space-2) 0;
-  border-bottom: 1px solid var(--border);
+  background: var(--surface-muted);
+  padding: 2px 10px;
+  border-radius: var(--radius-sm);
+  min-width: 24px;
+  text-align: center;
 }
 
 .permissionsSectionItems {
   display: grid;
-  gap: var(--space-1);
 }
 
 .permissionCard {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-light);
   gap: var(--space-2);
   transition: all 0.2s;
 }
 
+.permissionCard:last-child {
+  border-bottom: none;
+}
+
 .permissionCard:hover {
-  border-color: var(--border-strong);
   background: var(--surface-subtle);
 }
 
 .permissionCardContent {
   display: grid;
-  gap: 2px;
+  gap: 4px;
   min-width: 0;
   flex: 1;
 }
 
 .permissionCardName {
-  font-weight: 500;
-  font-size: 13px;
+  font-weight: 600;
+  font-size: 14px;
   color: var(--text);
 }
 
 .permissionCardDescription {
   font-size: 12px;
   color: var(--text-muted);
+  line-height: 1.4;
 }
 
 .permissionCardAction {
   flex-shrink: 0;
+}
+
+.permissionCardAction button {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.permissionCard:hover .permissionCardAction button {
+  opacity: 1;
+}
+
+.permissionCardAction button:hover {
+  background: var(--danger);
+  color: white;
+  border-color: var(--danger);
 }
 
 /* Groups */
@@ -745,67 +844,67 @@
 /* Responsive */
 @media (max-width: 768px) {
   .userDetailPage {
-    padding: 0 !important;
+    padding: 0;
     gap: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   .userDetailPageHeader {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 12px 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
     background: var(--surface);
     border-bottom: 1px solid var(--border);
+    position: sticky;
     top: 0;
-    z-index: 10;
-  }
-
-  .userDetailPageHeaderLeft {
-    flex-direction: column;
-    align-items: center;
+    z-index: 100;
     width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
   }
 
-  .userDetailPageUserInfo {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .userDetailPageAvatar {
-    width: 56px;
-    height: 56px;
-    font-size: 24px;
-  }
-
-  .userDetailPageTitle {
-    font-size: 17px;
-    font-weight: 600;
-    margin: 0;
-  }
-
-  .userDetailPageBadges {
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 4px;
+  .userDetailPageHeader .backButton {
+    flex-shrink: 0;
+    height: 32px;
+    padding: 6px 8px;
+    font-size: 12px;
+    min-width: auto;
+    margin-right: auto;
   }
 
   .userDetailPageActions {
-    width: 100%;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
+    flex-shrink: 0;
+    display: flex;
+    gap: 4px;
+    min-width: 0;
   }
 
   .userDetailPageActions button {
-    flex: 1;
-    min-width: 100px;
-    height: 38px;
-    font-size: 13px;
+    height: 32px;
+    padding: 0 8px;
+    font-size: 11px;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .userDetailPageActions button svg {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
   }
 
   .userDetailPageTabs {
     width: 100%;
     overflow-x: auto;
     padding: 0;
+    border-radius: 0;
+    border-bottom: 1px solid var(--border);
   }
 
   .userDetailPageTabs::-webkit-scrollbar {
@@ -816,16 +915,51 @@
     height: 42px;
     font-size: 13px;
     font-weight: 600;
+    border-radius: 0;
+    border-bottom: 2px solid transparent;
+  }
+
+  .userDetailPageTabs .tabActive {
+    background: transparent;
+    border-bottom-color: var(--primary);
+    color: var(--primary);
   }
 
   .userDetailPageContent {
     gap: 12px;
-    padding: 12px 16px;
+    padding: 12px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
-  .userDetailPagePanel {
+  .userProfileHeader {
+    flex-direction: column;
+    text-align: center;
     padding: 16px;
-    border-radius: 8px;
+  }
+
+  .userProfileAvatar {
+    width: 80px;
+    height: 80px;
+    font-size: 32px;
+    border-radius: 50%;
+  }
+
+  .userProfileName {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .userProfileBadges {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .userProfileBadge {
+    padding: 2px 6px;
+    font-size: 10px;
   }
 
   .userInfoGrid {
@@ -847,8 +981,18 @@
     border-radius: 8px;
   }
 
+  .infoCardLabel {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
   .infoCardValue {
     font-size: 14px;
+  }
+
+  .userDetailPageBottomGrid {
+    grid-template-columns: 1fr !important;
   }
 
   .permissionsSearch input {

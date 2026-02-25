@@ -364,7 +364,7 @@
     flex-shrink: 0;
   }
 
-  /* Item actions - на всю ширину */
+  /* Item actions - кнопки справа */
   .categoriesPageItemActions {
     display: flex;
     gap: 4px;
@@ -374,12 +374,14 @@
     background: var(--surface-subtle);
     width: 100%;
     box-sizing: border-box;
+    justify-content: flex-end;
   }
 
   .categoriesPageItemActions button {
     height: 32px;
     font-size: 11px;
     padding: 6px 8px;
+    flex: 0 0 auto;
   }
 
   .categoriesPageItemActions .btn-delete {

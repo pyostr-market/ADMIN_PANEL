@@ -15,6 +15,8 @@ import {
   FiCalendar,
   FiActivity,
   FiUser,
+  FiMail,
+  FiInfo,
 } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { Tabs, Tab } from '../../../shared/ui/Tabs/Tabs';
@@ -370,7 +372,6 @@ export function UserDetailPage() {
   const notifications = useNotifications();
   const notificationsRef = useRef(notifications);
 
-  // Обновляем ref при изменении notifications
   useEffect(() => {
     notificationsRef.current = notifications;
   }, [notifications]);
@@ -531,7 +532,6 @@ export function UserDetailPage() {
   };
 
   const handleLeaveGroup = async (groupId) => {
-    // Пока заглушка - API для удаления из группы нет
     notificationsRef.current?.info('Функция выхода из группы будет реализована позже');
   };
 
@@ -556,7 +556,7 @@ export function UserDetailPage() {
     return (
       <section className={styles.userDetailPage}>
         <div className={styles.userDetailPageLoading}>
-          <div className={styles.loadingSpinner} />
+          <div className="loading-spinner" />
           <p>Загрузка данных пользователя...</p>
         </div>
       </section>
@@ -581,38 +581,9 @@ export function UserDetailPage() {
     <section className={styles.userDetailPage}>
       {/* Header */}
       <header className={styles.userDetailPageHeader}>
-        <div className={styles.userDetailPageHeaderLeft}>
-          <Button variant="ghost" onClick={() => navigate('/users')} className={styles.backButton}>
-            ← Назад
-          </Button>
-          <div className={styles.userDetailPageUserInfo}>
-            <div className={`${styles.userDetailPageAvatar} ${user.is_active ? styles.userDetailPageAvatarActive : styles.userDetailPageAvatarInactive}`}>
-              <FiUsers />
-            </div>
-            <div className={styles.userDetailPageHeaderText}>
-              <h1 className={styles.userDetailPageTitle}>
-                {user.primary_phone?.phone_number || `Пользователь #${user.id}`}
-              </h1>
-              <div className={styles.userDetailPageBadges}>
-                {!user.is_active && (
-                  <span className={`${styles.userDetailPageBadge} ${styles.userDetailPageBadgeInactive}`}>
-                    <FiLock /> Заблокирован
-                  </span>
-                )}
-                {user.is_verified && (
-                  <span className={`${styles.userDetailPageBadge} ${styles.userDetailPageBadgeVerified}`}>
-                    <FiCheck /> Верифицирован
-                  </span>
-                )}
-                {user.group && (
-                  <span className={`${styles.userDetailPageBadge} ${styles.userDetailPageBadgeGroup}`}>
-                    <FiShield /> {user.group.name}
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+        <Button variant="ghost" onClick={() => navigate('/users')} className={styles.backButton}>
+          ← Назад
+        </Button>
         <div className={styles.userDetailPageActions}>
           <PermissionGate permission={['admin:user:ban']} fallback={null}>
             <Button
@@ -679,119 +650,161 @@ export function UserDetailPage() {
       <div className={styles.userDetailPageContent}>
         {/* General Tab */}
         {activeTab === TABS.general && (
-          <div className={`${styles.userDetailPagePanel} ${styles.userDetailPagePanelLarge}`}>
+          <div className={styles.userDetailPagePanel}>
             <div className={styles.panelHeader}>
-              <h2 className={styles.panelTitle}>Общие данные</h2>
+              <div className={styles.panelHeaderContent}>
+                <h2 className={styles.panelTitle}>
+                  <FiUser className={styles.panelTitleIcon} />
+                  Профиль пользователя
+                </h2>
+              </div>
             </div>
-
-            <div className={styles.userInfoGrid}>
-              <div className={styles.infoCard}>
-                <div className={styles.infoCardIconPrimary}>
-                  <FiUsers />
-                </div>
-                <div className={styles.infoCardContent}>
-                  <span className={styles.infoCardLabel}>ID пользователя</span>
-                  <span className={styles.infoCardValue}>{user.id}</span>
-                </div>
-              </div>
-
-              <div className={styles.infoCard}>
-                <div className={styles.infoCardIconSecondary}>
-                  <FiShield />
-                </div>
-                <div className={styles.infoCardContent}>
-                  <span className={styles.infoCardLabel}>Публичный ID</span>
-                  <span className={`${styles.infoCardValue} ${styles.code}`}>{user.public_id || '—'}</span>
-                </div>
-              </div>
-
-              <div className={styles.infoCard}>
-                <div className={styles.infoCardIconSuccess}>
-                  <FiPhone />
-                </div>
-                <div className={styles.infoCardContent}>
-                  <span className={styles.infoCardLabel}>Телефон</span>
-                  <span className={styles.infoCardValue}>{user.phones?.[0]?.phone_number || 'Не указан'}</span>
-                </div>
-              </div>
-
-              <div className={styles.infoCard}>
-                <div className={styles.infoCardIconPrimary}>
+            <div className={styles.panelContent}>
+              <div className={styles.userProfileHeader}>
+                <div className={`${styles.userProfileAvatar} ${user.is_active ? styles.userProfileAvatarActive : styles.userProfileAvatarInactive}`}>
                   <FiUser />
                 </div>
-                <div className={styles.infoCardContent}>
-                  <span className={styles.infoCardLabel}>ФИО</span>
-                  <span className={styles.infoCardValue}>{user.fio || 'Не указано'}</span>
+                <div className={styles.userProfileInfo}>
+                  <h3 className={styles.userProfileName}>
+                    {user.primary_phone?.phone_number || `Пользователь #${user.id}`}
+                  </h3>
+                  <div className={styles.userProfileBadges}>
+                    {!user.is_active && (
+                      <span className={`${styles.userProfileBadge} ${styles.userProfileBadgeInactive}`}>
+                        <FiLock /> Заблокирован
+                      </span>
+                    )}
+                    {user.is_verified && (
+                      <span className={`${styles.userProfileBadge} ${styles.userProfileBadgeVerified}`}>
+                        <FiCheck /> Верифицирован
+                      </span>
+                    )}
+                    {user.group && (
+                      <span className={`${styles.userProfileBadge} ${styles.userProfileBadgeGroup}`}>
+                        <FiShield /> {user.group.name}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              <div className={styles.infoCard}>
-                <div className={styles.infoCardIconInfo}>
-                  <FiUsers />
+              <div className={styles.userInfoGrid}>
+                <div className={`${styles.infoCard} ${styles.infoCardHighlight}`}>
+                  <div className={`${styles.infoCardIcon} ${styles.infoCardIconPrimary}`}>
+                    <FiUsers />
+                  </div>
+                  <div className={styles.infoCardContent}>
+                    <span className={styles.infoCardLabel}>ID пользователя</span>
+                    <span className={`${styles.infoCardValue} ${styles.infoCardValueLarge}`}>
+                      {user.id}
+                    </span>
+                  </div>
                 </div>
-                <div className={styles.infoCardContent}>
-                  <span className={styles.infoCardLabel}>Группа</span>
-                  <span className={styles.infoCardValue}>{user.group?.name || 'Не назначена'}</span>
-                </div>
-              </div>
 
-              <div className={styles.infoCard}>
-                <div className={styles.infoCardIconSuccess}>
-                  <FiCheck />
+                <div className={styles.infoCard}>
+                  <div className={`${styles.infoCardIcon} ${styles.infoCardIconSecondary}`}>
+                    <FiShield />
+                  </div>
+                  <div className={styles.infoCardContent}>
+                    <span className={styles.infoCardLabel}>Публичный ID</span>
+                    <span className={styles.infoCardValue}>{user.public_id || '—'}</span>
+                  </div>
                 </div>
-                <div className={styles.infoCardContent}>
-                  <span className={styles.infoCardLabel}>Статус</span>
-                  <span className={`${styles.infoCardStatus} ${user.is_active ? styles.statusActive : styles.statusInactive}`}>
-                    {user.is_active ? 'Активен' : 'Заблокирован'}
-                  </span>
-                </div>
-              </div>
 
-              <div className={styles.infoCard}>
-                <div className={styles.infoCardIconSuccess}>
-                  <FiCheck />
-                </div>
-                <div className={styles.infoCardContent}>
-                  <span className={styles.infoCardLabel}>Верификация</span>
-                  <span className={`${styles.infoCardStatus} ${user.is_verified ? styles.statusActive : styles.statusInactive}`}>
-                    {user.is_verified ? 'Верифицирован' : 'Не верифицирован'}
-                  </span>
-                </div>
-              </div>
+                {user.phones?.[0] && (
+                  <div className={styles.infoCard}>
+                    <div className={`${styles.infoCardIcon} ${styles.infoCardIconSuccess}`}>
+                      <FiPhone />
+                    </div>
+                    <div className={styles.infoCardContent}>
+                      <span className={styles.infoCardLabel}>Телефон</span>
+                      <span className={styles.infoCardValue}>{user.phones[0].phone_number}</span>
+                    </div>
+                  </div>
+                )}
 
-              <div className={`${styles.infoCard} ${styles.infoCardFull}`}>
-                <div className={styles.infoCardIconPrimary}>
-                  <FiCalendar />
-                </div>
-                <div className={styles.infoCardContent}>
-                  <span className={styles.infoCardLabel}>Создан</span>
-                  <span className={styles.infoCardValue}>
-                    {user.created_at ? new Date(user.created_at).toLocaleString('ru-RU') : '—'}
-                  </span>
-                </div>
-              </div>
+                {user.fio && (
+                  <div className={styles.infoCard}>
+                    <div className={`${styles.infoCardIcon} ${styles.infoCardIconInfo}`}>
+                      <FiUser />
+                    </div>
+                    <div className={styles.infoCardContent}>
+                      <span className={styles.infoCardLabel}>ФИО</span>
+                      <span className={styles.infoCardValue}>{user.fio}</span>
+                    </div>
+                  </div>
+                )}
 
-              <div className={`${styles.infoCard} ${styles.infoCardFull}`}>
-                <div className={styles.infoCardIconSecondary}>
-                  <FiEdit2 />
-                </div>
-                <div className={styles.infoCardContent}>
-                  <span className={styles.infoCardLabel}>Обновлён</span>
-                  <span className={styles.infoCardValue}>
-                    {user.updated_at ? new Date(user.updated_at).toLocaleString('ru-RU') : '—'}
-                  </span>
-                </div>
-              </div>
+                {user.group && (
+                  <div className={styles.infoCard}>
+                    <div className={`${styles.infoCardIcon} ${styles.infoCardIconAccent}`}>
+                      <FiUsers />
+                    </div>
+                    <div className={styles.infoCardContent}>
+                      <span className={styles.infoCardLabel}>Группа</span>
+                      <span className={styles.infoCardValue}>{user.group.name}</span>
+                    </div>
+                  </div>
+                )}
 
-              <div className={`${styles.infoCard} ${styles.infoCardFull}`}>
-                <div className={styles.infoCardIconInfo}>
-                  <FiActivity />
+                <div className={styles.infoCard}>
+                  <div className={`${styles.infoCardIcon} ${user.is_active ? styles.infoCardIconSuccess : styles.infoCardIconDanger}`}>
+                    <FiInfo />
+                  </div>
+                  <div className={styles.infoCardContent}>
+                    <span className={styles.infoCardLabel}>Статус</span>
+                    <span className={styles.infoCardValue}>
+                      {user.is_active ? 'Активен' : 'Заблокирован'}
+                    </span>
+                  </div>
                 </div>
-                <div className={styles.infoCardContent}>
-                  <span className={styles.infoCardLabel}>Последний вход</span>
-                  <span className={styles.infoCardValue}>
-                    {user.last_login_at ? new Date(user.last_login_at).toLocaleString('ru-RU') : '—'}
-                  </span>
+
+                <div className={styles.infoCard}>
+                  <div className={`${styles.infoCardIcon} ${styles.infoCardIconAccent}`}>
+                    <FiCheck />
+                  </div>
+                  <div className={styles.infoCardContent}>
+                    <span className={styles.infoCardLabel}>Верификация</span>
+                    <span className={styles.infoCardValue}>
+                      {user.is_verified ? 'Верифицирован' : 'Не верифицирован'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className={`${styles.infoCard} ${styles.infoCardFull}`}>
+                  <div className={`${styles.infoCardIcon} ${styles.infoCardIconPrimary}`}>
+                    <FiCalendar />
+                  </div>
+                  <div className={styles.infoCardContent}>
+                    <span className={styles.infoCardLabel}>Создан</span>
+                    <span className={styles.infoCardValue}>
+                      {user.created_at ? new Date(user.created_at).toLocaleString('ru-RU') : '—'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className={`${styles.infoCard} ${styles.infoCardFull}`}>
+                  <div className={`${styles.infoCardIcon} ${styles.infoCardIconSecondary}`}>
+                    <FiEdit2 />
+                  </div>
+                  <div className={styles.infoCardContent}>
+                    <span className={styles.infoCardLabel}>Обновлён</span>
+                    <span className={styles.infoCardValue}>
+                      {user.updated_at ? new Date(user.updated_at).toLocaleString('ru-RU') : '—'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className={`${styles.infoCard} ${styles.infoCardFull}`}>
+                  <div className={`${styles.infoCardIcon} ${styles.infoCardIconInfo}`}>
+                    <FiActivity />
+                  </div>
+                  <div className={styles.infoCardContent}>
+                    <span className={styles.infoCardLabel}>Последний вход</span>
+                    <span className={styles.infoCardValue}>
+                      {user.last_login_at ? new Date(user.last_login_at).toLocaleString('ru-RU') : '—'}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -804,74 +817,75 @@ export function UserDetailPage() {
             <div className={styles.panelHeader}>
               <h2 className={styles.panelTitle}>Активные сессии</h2>
             </div>
-
-            {userSessions.length === 0 ? (
-              <div className={styles.emptyState}>
-                <FiClock className={styles.emptyStateIcon} />
-                <p>У пользователя нет активных сессий</p>
-              </div>
-            ) : (
-              <div className={styles.sessionsList}>
-                {userSessions.map((session) => (
-                  <div key={session.id} className={styles.sessionCard}>
-                    <div className={styles.sessionCardHeader}>
-                      <div className={styles.sessionCardTitle}>
-                        <FiClock />
-                        <span>Сессия #{session.id}</span>
+            <div className={styles.panelContent}>
+              {userSessions.length === 0 ? (
+                <div className={styles.emptyState}>
+                  <FiClock className={styles.emptyStateIcon} />
+                  <p>У пользователя нет активных сессий</p>
+                </div>
+              ) : (
+                <div className={styles.sessionsList}>
+                  {userSessions.map((session) => (
+                    <div key={session.id} className={styles.sessionCard}>
+                      <div className={styles.sessionCardHeader}>
+                        <div className={styles.sessionCardTitle}>
+                          <FiClock />
+                          <span>Сессия #{session.id}</span>
+                        </div>
+                        <div className={styles.sessionCardStatus}>
+                          {session.is_active ? (
+                            <span className={`${styles.sessionCardBadge} ${styles.sessionCardBadgeActive}`}>Активна</span>
+                          ) : (
+                            <span className={`${styles.sessionCardBadge} ${styles.sessionCardBadgeInactive}`}>Неактивна</span>
+                          )}
+                        </div>
+                        <PermissionGate permission={['admin:user:update']} fallback={null}>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              setSelectedSession(session);
+                              setIsTerminateModalOpen(true);
+                            }}
+                            aria-label="Завершить сессию"
+                          >
+                            <FiLogOut />
+                          </Button>
+                        </PermissionGate>
                       </div>
-                      <div className={styles.sessionCardStatus}>
-                        {session.is_active ? (
-                          <span className={`${styles.sessionCardBadge} ${styles.sessionCardBadgeActive}`}>Активна</span>
-                        ) : (
-                          <span className={`${styles.sessionCardBadge} ${styles.sessionCardBadgeInactive}`}>Неактивна</span>
-                        )}
-                      </div>
-                      <PermissionGate permission={['admin:user:update']} fallback={null}>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => {
-                            setSelectedSession(session);
-                            setIsTerminateModalOpen(true);
-                          }}
-                          aria-label="Завершить сессию"
-                        >
-                          <FiLogOut />
-                        </Button>
-                      </PermissionGate>
-                    </div>
-                    <div className={styles.sessionCardBody}>
-                      <div className={styles.sessionCardInfo}>
-                        <span className={styles.sessionCardLabel}>Создана:</span>
-                        <span className={styles.sessionCardValue}>
-                          {session.created_at ? new Date(session.created_at).toLocaleString('ru-RU') : '—'}
-                        </span>
-                      </div>
-                      {session.last_activity && (
+                      <div className={styles.sessionCardBody}>
                         <div className={styles.sessionCardInfo}>
-                          <span className={styles.sessionCardLabel}>Последняя активность:</span>
+                          <span className={styles.sessionCardLabel}>Создана:</span>
                           <span className={styles.sessionCardValue}>
-                            {new Date(session.last_activity).toLocaleString('ru-RU')}
+                            {session.created_at ? new Date(session.created_at).toLocaleString('ru-RU') : '—'}
                           </span>
                         </div>
-                      )}
-                      {session.device_info && (
-                        <div className={styles.sessionCardInfo}>
-                          <span className={styles.sessionCardLabel}>Устройство:</span>
-                          <span className={styles.sessionCardValue}>{session.device_info}</span>
-                        </div>
-                      )}
-                      {session.ip_address && (
-                        <div className={styles.sessionCardInfo}>
-                          <span className={styles.sessionCardLabel}>IP адрес:</span>
-                          <span className={styles.sessionCardValue}>{session.ip_address}</span>
-                        </div>
-                      )}
+                        {session.last_activity && (
+                          <div className={styles.sessionCardInfo}>
+                            <span className={styles.sessionCardLabel}>Последняя активность:</span>
+                            <span className={styles.sessionCardValue}>
+                              {new Date(session.last_activity).toLocaleString('ru-RU')}
+                            </span>
+                          </div>
+                        )}
+                        {session.device_info && (
+                          <div className={styles.sessionCardInfo}>
+                            <span className={styles.sessionCardLabel}>Устройство:</span>
+                            <span className={styles.sessionCardValue}>{session.device_info}</span>
+                          </div>
+                        )}
+                        {session.ip_address && (
+                          <div className={styles.sessionCardInfo}>
+                            <span className={styles.sessionCardLabel}>IP адрес:</span>
+                            <span className={styles.sessionCardValue}>{session.ip_address}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )}
 
@@ -879,7 +893,12 @@ export function UserDetailPage() {
         {activeTab === TABS.permissions && (
           <div className={styles.userDetailPagePanel}>
             <div className={styles.panelHeader}>
-              <h2 className={styles.panelTitle}>Права пользователя</h2>
+              <div className={styles.panelHeaderContent}>
+                <h2 className={styles.panelTitle}>
+                  <FiShield className={styles.panelTitleIcon} />
+                  Права пользователя
+                </h2>
+              </div>
               <PermissionGate permission={['admin:user:assign']} fallback={null}>
                 <Button
                   variant="primary"
@@ -921,7 +940,10 @@ export function UserDetailPage() {
                   const sectionPermissions = permissionBuckets[section] ?? [];
                   return (
                     <div key={section} className={styles.permissionsSection}>
-                      <h3 className={styles.permissionsSectionTitle}>{section}</h3>
+                      <div className={styles.permissionsSectionHeader}>
+                        <h3 className={styles.permissionsSectionTitle}>{section}</h3>
+                        <span className={styles.permissionsSectionCount}>{sectionPermissions.length}</span>
+                      </div>
                       <div className={styles.permissionsSectionItems}>
                         {sectionPermissions.map((permission) => (
                           <div key={permission.id} className={styles.permissionCard}>
