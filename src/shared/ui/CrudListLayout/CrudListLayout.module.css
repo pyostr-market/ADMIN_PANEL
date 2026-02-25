@@ -143,17 +143,6 @@
   margin-top: var(--space-2);
 }
 
-/* Пагинация */
-.crudListPagination {
-  padding: var(--space-3);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: var(--space-2);
-}
-
 /* Модальное окно фильтров */
 .crudFiltersModalContent {
   display: flex;
@@ -248,20 +237,6 @@
     box-sizing: border-box;
   }
 
-  .crudListSearchFiltersBtn {
-    flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border);
-    background: var(--surface);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--text-muted);
-    transition: all 0.2s;
-  }
 
   .crudListSearchFiltersBtn:hover {
     background: var(--surface-subtle);

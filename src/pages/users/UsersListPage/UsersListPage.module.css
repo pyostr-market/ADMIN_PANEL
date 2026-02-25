@@ -1,73 +1,6 @@
-/* UsersListPage - Django Admin style layout */
-.usersListPage {
-  display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: var(--space-4);
-  align-items: start;
-}
+/* UsersListPage - стили для страницы пользователей */
 
-/* Header */
-.usersListPageHeader {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  min-height: 40px;
-}
-
-/* Search - отдельно сверху */
-.usersListPageSearch {
-  grid-column: 1 / -1;
-  margin-bottom: var(--space-3);
-  display: flex;
-  gap: var(--space-2);
-  align-items: center;
-}
-
-.usersListPageSearch input {
-  flex: 1;
-  box-sizing: border-box;
-}
-
-.usersListPageSearchFiltersBtn {
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  background: var(--surface);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: var(--text-muted);
-  transition: all 0.2s;
-}
-
-.usersListPageSearchFiltersBtn:hover {
-  background: var(--surface-subtle);
-  color: var(--text);
-}
-
-.usersListPageSearchFiltersBtn svg {
-  font-size: 18px;
-}
-
-/* Filters - Sidebar справа */
-.usersListPageFilters {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-4);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  position: sticky;
-  top: var(--space-4);
-  transition: opacity 0.2s ease;
-}
-
+/* Заголовок и кнопки */
 .usersListPageTitle {
   margin: 0;
   font-size: 20px;
@@ -81,58 +14,6 @@
   align-items: center;
   justify-content: flex-end;
   min-width: 180px;
-}
-
-.usersListPageFiltersLoading {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-.usersListPageFiltersRow {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  width: 100%;
-}
-
-.usersListPageFiltersTitle {
-  margin: 0 0 var(--space-2);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.usersListPageFiltersGroup {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  width: 100%;
-}
-
-.usersListPageFilterSelect {
-  width: 100%;
-  height: 38px;
-  font-size: 13px;
-}
-
-.usersListPageFilterSelect select {
-  width: 100%;
-}
-
-.usersListPageFilters .btn-ghost {
-  width: 100%;
-  justify-content: center;
-}
-
-.btnResetFilters {
-  margin-top: var(--space-2);
-}
-
-/* Список пользователей */
-.usersListPageList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
 }
 
 /* Entity List Item */
@@ -296,19 +177,9 @@
   margin-top: var(--space-2);
 }
 
-/* Responsive */
+/* Responsive - Mobile */
 @media (max-width: 768px) {
-  .usersListPage {
-    padding: 0 !important;
-    gap: 0;
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* Header - название слева, кнопка справа */
+  /* Header */
   .usersListPageHeader {
     flex-direction: row;
     align-items: center;
@@ -342,55 +213,6 @@
     height: 34px;
     padding: 6px 12px;
     font-size: 12px;
-  }
-
-  /* Search - на всю ширину с кнопкой фильтров справа */
-  .usersListPageSearch {
-    padding: 10px 12px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 0;
-    width: 100%;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-
-  .usersListPageSearch input {
-    flex: 1;
-    height: 40px;
-    font-size: 14px;
-    padding: 8px 12px;
-    box-sizing: border-box;
-  }
-
-  .usersListPageSearchFiltersBtn {
-    flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border);
-    background: var(--surface);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--text-muted);
-    transition: all 0.2s;
-  }
-
-  .usersListPageSearchFiltersBtn:hover {
-    background: var(--surface-subtle);
-    color: var(--text);
-  }
-
-  .usersListPageSearchFiltersBtn svg {
-    font-size: 20px;
-  }
-
-  /* Filters - скрываем на мобильных */
-  .usersListPageFilters {
-    display: none;
   }
 
   /* Entity List */
@@ -432,7 +254,7 @@
     flex: 1;
   }
 
-  /* Аватарка пользователя - компактная, квадратная */
+  /* Аватарка пользователя - компактная, круглая */
   .usersListPageAvatar {
     flex: 0 0 50px;
     width: 50px;
@@ -484,10 +306,9 @@
   }
 
   .usersListPageBadge {
-    padding: 4px 8px;
-    font-size: 12px;
+    padding: 2px 6px;
+    font-size: 10px;
     flex-shrink: 0;
-    border-radius: var(--radius-sm);
   }
 
   .usersListPageItemMeta {
@@ -564,42 +385,4 @@
     width: 100%;
     box-sizing: border-box;
   }
-}
-
-/* Desktop - Pagination */
-.usersListPagePagination {
-  padding: var(--space-3);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: var(--space-2);
-}
-
-/* Filters Modal - для мобильных */
-.filtersModalContent {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
-.filtersModalGroup {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.filtersModalLabel {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-}
-
-.filtersModalSelect {
-  width: 100%;
-}
-
-.filtersModalSelect select {
-  width: 100%;
 }
