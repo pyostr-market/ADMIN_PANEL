@@ -14,7 +14,7 @@ export function SupplierAuditPage() {
   return (
     <AuditPage
       title="История изменений поставщика"
-      backUrl={`/suppliers/${supplierId}`}
+      backUrl={`/catalog/suppliers/${supplierId}`}
       fetchAudit={fetchAudit}
     />
   );
