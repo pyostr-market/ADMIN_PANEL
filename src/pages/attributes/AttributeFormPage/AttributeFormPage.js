@@ -1,12 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FiSave, FiX } from 'react-icons/fi';
-import { Button } from '../../../shared/ui/Button/Button';
-import { PageHeader } from '../../../shared/ui/PageHeader/PageHeader';
+import { FormPage } from '../../../shared/ui/FormPage';
 import { FormSection } from '../../../shared/ui/FormSection/FormSection';
 import { FormGrid } from '../../../shared/ui/FormGrid/FormGrid';
-import { PageActions } from '../../../shared/ui/PageActions/PageActions';
-import { LoadingState } from '../../../shared/ui/LoadingState/LoadingState';
 import { getApiErrorMessage } from '../../../shared/api/apiError';
 import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import {
@@ -59,8 +55,7 @@ export function AttributeFormPage() {
     if (isEditMode && attributeId) {
       loadAttribute();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [attributeId, isEditMode]);
+  }, [attributeId, isEditMode, loadAttribute]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -91,11 +86,7 @@ export function AttributeFormPage() {
     }
   };
 
-  const handleSubmit = async (e, stayOnPage = false) => {
-    if (e) {
-      e.preventDefault();
-    }
-
+  const handleSubmit = async (stayOnPage = false) => {
     if (!validateForm()) {
       notificationsRef.current?.error('Исправьте ошибки в форме');
       return;
@@ -114,16 +105,14 @@ export function AttributeFormPage() {
         const responseData = await updateAttributeRequest(attributeId, payload);
         notificationsRef.current?.info('Атрибут обновлен');
 
-        if (stayOnPage) {
-          if (responseData) {
-            setFormData({
-              name: responseData.name || formData.name,
-              value: responseData.value || formData.value,
-              is_filterable: responseData.is_filterable !== undefined
-                ? responseData.is_filterable
-                : formData.is_filterable,
-            });
-          }
+        if (stayOnPage && responseData) {
+          setFormData({
+            name: responseData.name || formData.name,
+            value: responseData.value || formData.value,
+            is_filterable: responseData.is_filterable !== undefined
+              ? responseData.is_filterable
+              : formData.is_filterable,
+          });
         }
       } else {
         const responseData = await createAttributeRequest(payload);
@@ -148,107 +137,76 @@ export function AttributeFormPage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <section className={styles.attributeFormPage}>
-        <LoadingState message="Загрузка данных атрибута..." size="lg" />
-      </section>
-    );
-  }
+  const handleBack = () => {
+    navigate(isEditMode ? `/catalog/attributes/${attributeId}` : '/catalog/attributes');
+  };
 
   return (
-    <section className={styles.attributeFormPage}>
-      <PageHeader
-        title={isEditMode ? 'Редактирование атрибута' : 'Создание атрибута'}
-        onBack={() => navigate(isEditMode ? `/catalog/attributes/${attributeId}` : '/catalog/attributes')}
-      />
+    <FormPage
+      title={isEditMode ? 'Редактирование атрибута' : 'Создание атрибута'}
+      backUrl={isEditMode ? `/catalog/attributes/${attributeId}` : '/catalog/attributes'}
+      isLoading={isLoading}
+      isSubmitting={isSubmitting}
+      onBack={handleBack}
+      onSubmit={() => handleSubmit(false)}
+      onSubmitAndStay={() => handleSubmit(true)}
+      showSubmitStay={true}
+      submitText={isEditMode ? 'Сохранить' : 'Создать'}
+    >
+      <FormSection
+        icon={<span>🏷️</span>}
+        iconVariant="primary"
+        title="Основная информация"
+        description="Данные об атрибуте продукта"
+      >
+        <FormGrid columns={2}>
+          <div className={styles.attributeFormField}>
+            <label className={styles.attributeFormLabel}>
+              Название <span className={styles.required}>*</span>
+            </label>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => handleChange('name', e.target.value)}
+              placeholder="Введите название атрибута"
+              className={errors.name ? styles.inputError : ''}
+            />
+            {errors.name && (
+              <span className={styles.attributeFormError}>{errors.name}</span>
+            )}
+          </div>
 
-      <form className={styles.attributeFormPageForm} onSubmit={handleSubmit}>
-        <FormSection
-          icon={<span>🏷️</span>}
-          iconVariant="primary"
-          title="Основная информация"
-          description="Данные об атрибуте продукта"
-        >
-          <FormGrid columns={2}>
-            <div className={styles.attributeFormField}>
-              <label className={styles.attributeFormLabel}>
-                Название <span className={styles.required}>*</span>
-              </label>
+          <div className={styles.attributeFormField}>
+            <label className={styles.attributeFormLabel}>
+              Значение <span className={styles.required}>*</span>
+            </label>
+            <input
+              type="text"
+              value={formData.value}
+              onChange={(e) => handleChange('value', e.target.value)}
+              placeholder="Введите значение атрибута"
+              className={errors.value ? styles.inputError : ''}
+            />
+            {errors.value && (
+              <span className={styles.attributeFormError}>{errors.value}</span>
+            )}
+          </div>
+
+          <div className={`${styles.attributeFormField} ${styles.attributeFormFieldFull}`}>
+            <label className={styles.attributeFormCheckboxLabel}>
               <input
-                type="text"
-                value={formData.name}
-                onChange={(e) => handleChange('name', e.target.value)}
-                placeholder="Введите название атрибута"
-                className={errors.name ? styles.inputError : ''}
+                type="checkbox"
+                checked={formData.is_filterable}
+                onChange={() => handleCheckboxChange('is_filterable')}
               />
-              {errors.name && (
-                <span className={styles.attributeFormError}>{errors.name}</span>
-              )}
-            </div>
-
-            <div className={styles.attributeFormField}>
-              <label className={styles.attributeFormLabel}>
-                Значение <span className={styles.required}>*</span>
-              </label>
-              <input
-                type="text"
-                value={formData.value}
-                onChange={(e) => handleChange('value', e.target.value)}
-                placeholder="Введите значение атрибута"
-                className={errors.value ? styles.inputError : ''}
-              />
-              {errors.value && (
-                <span className={styles.attributeFormError}>{errors.value}</span>
-              )}
-            </div>
-
-            <div className={`${styles.attributeFormField} ${styles.attributeFormFieldFull}`}>
-              <label className={styles.attributeFormCheckboxLabel}>
-                <input
-                  type="checkbox"
-                  checked={formData.is_filterable}
-                  onChange={() => handleCheckboxChange('is_filterable')}
-                />
-                <span>Использовать для фильтрации</span>
-              </label>
-              <span className={styles.attributeFormHint}>
-                Атрибуты с этой опцией будут доступны в фильтрах каталога
-              </span>
-            </div>
-          </FormGrid>
-        </FormSection>
-
-        <PageActions>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => navigate('/catalog/attributes')}
-            leftIcon={<FiX />}
-          >
-            Отмена
-          </Button>
-          <Button
-            type="button"
-            variant="primary"
-            leftIcon={<FiSave />}
-            loading={isSubmitting}
-            size="lg"
-            onClick={() => handleSubmit(null, true)}
-          >
-            Сохранить и продолжить редактирование
-          </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            leftIcon={<FiSave />}
-            loading={isSubmitting}
-            size="lg"
-          >
-            {isEditMode ? 'Сохранить' : 'Создать'}
-          </Button>
-        </PageActions>
-      </form>
-    </section>
+              <span>Использовать для фильтрации</span>
+            </label>
+            <span className={styles.attributeFormHint}>
+              Атрибуты с этой опцией будут доступны в фильтрах каталога
+            </span>
+          </div>
+        </FormGrid>
+      </FormSection>
+    </FormPage>
   );
 }

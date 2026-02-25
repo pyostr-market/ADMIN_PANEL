@@ -1,13 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FiSave, FiX } from 'react-icons/fi';
-import { Button } from '../../../shared/ui/Button/Button';
-import { PageHeader } from '../../../shared/ui/PageHeader/PageHeader';
+import { FormPage } from '../../../shared/ui/FormPage';
 import { FormSection } from '../../../shared/ui/FormSection/FormSection';
 import { FormGrid } from '../../../shared/ui/FormGrid/FormGrid';
 import { FormTextarea } from '../../../shared/ui/FormTextarea/FormTextarea';
-import { PageActions } from '../../../shared/ui/PageActions/PageActions';
-import { LoadingState } from '../../../shared/ui/LoadingState/LoadingState';
 import { getApiErrorMessage } from '../../../shared/api/apiError';
 import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import {
@@ -58,8 +54,7 @@ export function ManufacturerFormPage() {
     if (isEditMode && manufacturerId) {
       loadManufacturer();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [manufacturerId, isEditMode]);
+  }, [manufacturerId, isEditMode, loadManufacturer]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -79,11 +74,7 @@ export function ManufacturerFormPage() {
     }
   };
 
-  const handleSubmit = async (e, stayOnPage = false) => {
-    if (e) {
-      e.preventDefault();
-    }
-
+  const handleSubmit = async (stayOnPage = false) => {
     if (!validateForm()) {
       notificationsRef.current?.error('Исправьте ошибки в форме');
       return;
@@ -101,13 +92,11 @@ export function ManufacturerFormPage() {
         const responseData = await updateManufacturerRequest(manufacturerId, payload);
         notificationsRef.current?.info('Производитель обновлен');
 
-        if (stayOnPage) {
-          if (responseData) {
-            setFormData({
-              name: responseData.name || formData.name,
-              description: responseData.description || formData.description,
-            });
-          }
+        if (stayOnPage && responseData) {
+          setFormData({
+            name: responseData.name || formData.name,
+            description: responseData.description || formData.description,
+          });
         }
       } else {
         const responseData = await createManufacturerRequest(payload);
@@ -132,87 +121,56 @@ export function ManufacturerFormPage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <section className={styles.manufacturerFormPage}>
-        <LoadingState message="Загрузка данных производителя..." size="lg" />
-      </section>
-    );
-  }
+  const handleBack = () => {
+    navigate(isEditMode ? `/catalog/manufacturers/${manufacturerId}` : '/catalog/manufacturers');
+  };
 
   return (
-    <section className={styles.manufacturerFormPage}>
-      <PageHeader
-        title={isEditMode ? 'Редактирование производителя' : 'Создание производителя'}
-        onBack={() => navigate(isEditMode ? `/catalog/manufacturers/${manufacturerId}` : '/catalog/manufacturers')}
-      />
+    <FormPage
+      title={isEditMode ? 'Редактирование производителя' : 'Создание производителя'}
+      backUrl={isEditMode ? `/catalog/manufacturers/${manufacturerId}` : '/catalog/manufacturers'}
+      isLoading={isLoading}
+      isSubmitting={isSubmitting}
+      onBack={handleBack}
+      onSubmit={() => handleSubmit(false)}
+      onSubmitAndStay={() => handleSubmit(true)}
+      showSubmitStay={true}
+      submitText={isEditMode ? 'Сохранить' : 'Создать'}
+    >
+      <FormSection
+        icon={<span>🏭</span>}
+        iconVariant="primary"
+        title="Основная информация"
+        description="Данные о производителе"
+      >
+        <FormGrid columns={2}>
+          <div className={styles.manufacturerFormField}>
+            <label className={styles.manufacturerFormLabel}>
+              Название <span className="required">*</span>
+            </label>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => handleChange('name', e.target.value)}
+              placeholder="Введите название производителя"
+              className={errors.name ? 'inputError' : ''}
+            />
+            {errors.name && (
+              <span className={styles.manufacturerFormError}>{errors.name}</span>
+            )}
+          </div>
 
-      <form className={styles.manufacturerFormPageForm} onSubmit={handleSubmit}>
-        <FormSection
-          icon={<span>🏭</span>}
-          iconVariant="primary"
-          title="Основная информация"
-          description="Данные о производителе"
-        >
-          <FormGrid columns={2}>
-            <div className={styles.manufacturerFormField}>
-              <label className={styles.manufacturerFormLabel}>
-                Название <span className="required">*</span>
-              </label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) => handleChange('name', e.target.value)}
-                placeholder="Введите название производителя"
-                className={errors.name ? 'inputError' : ''}
-              />
-              {errors.name && (
-                <span className={styles.manufacturerFormError}>{errors.name}</span>
-              )}
-            </div>
-
-            <div className={`${styles.manufacturerFormField} ${styles.manufacturerFormFieldFull}`}>
-              <FormTextarea
-                label="Описание"
-                value={formData.description}
-                onChange={(e) => handleChange('description', e.target.value)}
-                placeholder="Введите описание производителя"
-                rows={4}
-              />
-            </div>
-          </FormGrid>
-        </FormSection>
-
-        <PageActions>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => navigate('/catalog/manufacturers')}
-            leftIcon={<FiX />}
-          >
-            Отмена
-          </Button>
-          <Button
-            type="button"
-            variant="primary"
-            leftIcon={<FiSave />}
-            loading={isSubmitting}
-            size="lg"
-            onClick={() => handleSubmit(null, true)}
-          >
-            Сохранить и продолжить редактирование
-          </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            leftIcon={<FiSave />}
-            loading={isSubmitting}
-            size="lg"
-          >
-            {isEditMode ? 'Сохранить' : 'Создать'}
-          </Button>
-        </PageActions>
-      </form>
-    </section>
+          <div className={`${styles.manufacturerFormField} ${styles.manufacturerFormFieldFull}`}>
+            <FormTextarea
+              label="Описание"
+              value={formData.description}
+              onChange={(e) => handleChange('description', e.target.value)}
+              placeholder="Введите описание производителя"
+              rows={4}
+            />
+          </div>
+        </FormGrid>
+      </FormSection>
+    </FormPage>
   );
 }
