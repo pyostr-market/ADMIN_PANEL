@@ -1,114 +1,317 @@
-@import './shared/styles/tokens.css';
-/*@import './shared/styles/BottomNav.css';*/
-/*@import './shared/styles/form-pages-mobile.css';*/
-/*@import './shared/styles/audit.css';*/
-/*@import './shared/styles/entity-list-page.css';*/
+:root {
+    color-scheme: light;
+    --font-family-base: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+    --font-family-mono: 'IBM Plex Mono', 'SFMono-Regular', ui-monospace, monospace;
 
-/* Фиксация ширины скролл-бара для предотвращения сдвига контента */
-html {
-  scrollbar-gutter: stable both-edges;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-7: 28px;
+    --space-8: 32px;
+
+    --radius-sm: 3px;
+    --radius-md: 4px;
+    --radius-lg: 6px;
+    --radius-xl: 10px;
+    --radius-2xl: 12px;
+
+    --bg: #f5f5f5;
+    --bg-active-tab: #454545;
+    --surface: #ffffff;
+    --surface-subtle: #fafafa;
+    --surface-muted: #f0f0f0;
+    --text: #1a1a1a;
+    --text-muted: #737373;
+    --text-secondary: #666666;
+    --primary: #262626;
+    --primary-hover: #404040;
+    --danger: #dc2626;
+    --danger-hover: #b91c1c;
+    --danger-bg: #fee2e2;
+    --success: #52bd7a;
+    --success-bg: #dcfce7;
+    --warning: #ca8a04;
+    --warning-bg: #fef9c3;
+    --info: #2563eb;
+    --info-bg: #dbeafe;
+    --border: #d4d4d4;
+    --border-strong: #a3a3a3;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --modal-overlay: rgba(0, 0, 0, 0.5);
+
+    --sidebar-width: 220px;
+    --sidebar-width-collapsed: 60px;
+
+    /* Accent colors for icons/badges */
+    --accent-blue: #1976d2;
+    --accent-blue-bg: #e3f2fd;
+    --accent-purple: #7b1fa2;
+    --accent-purple-bg: #f3e5f5;
+    --accent-orange: #f57c00;
+    --accent-orange-bg: #fff3e0;
+    --accent-green: #2e7d32;
+    --accent-green-bg: #e8f5e9;
+    --accent-red: #c62828;
+    --accent-red-bg: #ffebee;
+    --card-bg: #f8f9fa;
+    --gradient-avatar: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+    /* Gradient utilities for badges/icons - light theme (softer, lighter gradients) */
+    --gradient-primary: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
+    --gradient-secondary: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+    --gradient-accent: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    --gradient-success: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+    --gradient-warning: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    --gradient-info: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+    --gradient-danger: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+
+    /* Focus ring colors */
+    --focus-ring-primary: rgba(38, 38, 38, 0.15);
+    --focus-ring-danger: rgba(220, 38, 38, 0.1);
+    --focus-ring-blue: rgba(25, 118, 210, 0.15);
+    --focus-ring-indigo: rgba(99, 102, 241, 0.1);
+
+    /* Legacy color aliases for backward compatibility */
+    --color-text: var(--text);
+    --color-text-secondary: var(--text-secondary);
+    --color-background: var(--surface);
+    --color-background-secondary: var(--surface-subtle);
+    --color-border: var(--border);
+    --color-primary: var(--primary);
+    --color-primary-light: var(--accent-blue-bg);
+    --color-success: var(--success);
+    --color-success-light: var(--success-bg);
+    --color-info: var(--info);
+    --color-info-light: var(--info-bg);
+    --color-error: var(--danger);
+    --color-error-light: var(--danger-bg);
+    --color-accent: var(--accent-red);
+    --color-accent-light: var(--accent-red-bg);
+
+    /* Additional semantic aliases for attribute pages and other components */
+    --text-primary: var(--text);
+    --text-tertiary: var(--text-muted);
+    --bg-card: var(--card-bg);
+    --bg-secondary: var(--surface-subtle);
+    --bg-input: var(--surface);
+    --border-default: var(--border);
+    --primary-default: var(--primary);
+    --primary-light: var(--accent-blue-bg);
+    --primary-dark: var(--accent-blue);
+    --error-default: var(--danger);
+    --error-light: var(--danger-bg);
+    --success-default: var(--success);
+    --success-light: var(--success-bg);
+    --gradient-warning: var(--gradient-warning);
 }
 
-/* Page state utility */
-.page-state {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
+[data-theme='dark'] {
+    color-scheme: dark;
+    --bg: #0a0a0a;
+    --bg-active-tab: #424242;
+    --surface: #171717;
+    --surface-subtle: #1f1f1f;
+    --surface-muted: #0f0f0f;
+    --text: #e5e5e5;
+    --text-muted: #a3a3a3;
+    --text-secondary: #999999;
+    --primary: #d5d5d5;
+    --primary-hover: #525252;
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
+    --danger-bg: #7f1d1d;
+    --success: #22c55e;
+    --success-bg: #14532d;
+    --warning: #eab308;
+    --warning-bg: #713f12;
+    --info: #3b82f6;
+    --info-bg: #1e3a5f;
+    --border: #404040;
+    --border-strong: #525252;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.5);
+    --modal-overlay: rgba(0, 0, 0, 0.7);
+
+    --accent-blue: #60a5fa;
+    --accent-blue-bg: #1e3a5f;
+    --accent-purple: #c084fc;
+    --accent-purple-bg: #3b0764;
+    --accent-orange: #fb923c;
+    --accent-orange-bg: #431407;
+    --accent-green: #4ade80;
+    --accent-green-bg: #14532d;
+    --accent-red: #f87171;
+    --accent-red-bg: #450a0a;
+    --card-bg: #1f1f1f;
+    --gradient-avatar: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+
+    /* Gradient utilities for badges/icons - dark theme (darker, more saturated gradients) */
+    --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    --gradient-secondary: linear-gradient(135deg, #64748b 0%, #475569 100%);
+    --gradient-accent: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    --gradient-success: linear-gradient(135deg, #10b981 0%, #047857 100%);
+    --gradient-warning: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    --gradient-info: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    --gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+
+    /* Focus ring colors (dark theme) */
+    --focus-ring-primary: rgba(96, 165, 250, 0.2);
+    --focus-ring-danger: rgba(239, 68, 68, 0.15);
+    --focus-ring-blue: rgba(96, 165, 250, 0.2);
+    --focus-ring-indigo: rgba(99, 102, 241, 0.15);
+
+    /* Legacy color aliases for backward compatibility (dark theme) */
+    --color-text: var(--text);
+    --color-text-secondary: var(--text-secondary);
+    --color-background: var(--surface);
+    --color-background-secondary: var(--surface-subtle);
+    --color-border: var(--border);
+    --color-primary: var(--primary);
+    --color-primary-light: var(--accent-blue-bg);
+    --color-success: var(--success);
+    --color-success-light: var(--success-bg);
+    --color-info: var(--info);
+    --color-info-light: var(--info-bg);
+    --color-error: var(--danger);
+    --color-error-light: var(--danger-bg);
+    --color-accent: var(--accent-red);
+    --color-accent-light: var(--accent-red-bg);
+
+    /* Additional semantic aliases for attribute pages and other components (dark theme) */
+    --text-primary: var(--text);
+    --text-tertiary: var(--text-muted);
+    --bg-card: var(--card-bg);
+    --bg-secondary: var(--surface-subtle);
+    --bg-input: var(--surface);
+    --border-default: var(--border);
+    --primary-default: var(--primary);
+    --primary-light: var(--accent-blue-bg);
+    --primary-dark: var(--accent-blue);
+    --error-default: var(--danger);
+    --error-light: var(--danger-bg);
+    --success-default: var(--success);
+    --success-light: var(--success-bg);
+    --gradient-warning: var(--gradient-warning);
 }
 
-/* Actions row utility */
-.actions-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-bottom: var(--space-3);
+* {
+    box-sizing: border-box;
 }
 
-/* Notifications panel (legacy - for pages that still use it) */
-.notifications-panel {
-  margin-bottom: var(--space-3);
-  border: 1px solid var(--border);
-  background: var(--warning-bg);
-  border-radius: var(--radius-sm);
-  padding: var(--space-2) var(--space-3);
+html,
+body,
+#root {
+    min-height: 100%;
 }
 
-.notifications-panel__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--space-2);
+body {
+    margin: 0;
+    font-family: var(--font-family-base);
+    color: var(--text);
+    background: var(--bg);
 }
 
-.notifications-panel__header h4 {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 600;
+a {
+    color: inherit;
+    text-decoration: none;
 }
 
-.notifications-panel ul {
-  margin: 0;
-  padding-left: 18px;
+button,
+input {
+    font: inherit;
 }
 
-.notifications-panel li {
-  font-size: 13px;
+button {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    padding: var(--space-2) var(--space-3);
+    font-size: 13px;
+    font-weight: 500;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
-/* Mobile styles imports */
-/*@import './widgets/layout/AppLayout-Mobile.css';*/
-/*@import './widgets/layout/NotificationsPanel-Mobile.css';*/
-/*@import './widgets/sidebar/AppSidebar-Mobile.css';*/
+button:hover {
+    border-color: var(--border-strong);
+    background: var(--surface-subtle);
+}
 
-/*!* Page Mobile styles - Detail, Audit, List pages *!*/
-/*@import './pages/manufacturers/ManufacturersPage-Mobile.css';*/
-/*@import './pages/manufacturers/ManufacturerDetailPage-Mobile.css';*/
-/*@import './pages/manufacturers/ManufacturerAuditPage-Mobile.css';*/
+input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px var(--space-3);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 13px;
+}
 
-/*@import './pages/suppliers/SuppliersPage-Mobile.css';*/
-/*@import './pages/suppliers/SupplierDetailPage-Mobile.css';*/
-/*@import './pages/suppliers/SupplierAuditPage-Mobile.css';*/
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: var(--surface);
+}
 
-/*@import './pages/productTypes/ProductTypesPage-Mobile.css';*/
-/*@import './pages/productTypes/ProductTypeDetailPage-Mobile.css';*/
-/*@import './pages/productTypes/ProductTypeAuditPage-Mobile.css';*/
+input:disabled {
+    background: var(--surface-muted);
+    cursor: not-allowed;
+}
 
-/*@import './pages/attributes/AttributesPage-Mobile.css';*/
-/*@import './pages/attributes/AttributeDetailPage-Mobile.css';*/
-/*@import './pages/attributes/AttributeAuditPage-Mobile.css';*/
+select {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 13px;
+    padding: 7px var(--space-3);
+    cursor: pointer;
+}
 
-/*@import './pages/products/ProductsPage/ProductsPage-Mobile.css';*/
-/*@import './pages/products/ProductDetailPage/ProductDetailPage-Mobile.css';*/
-/*@import './pages/products/ProductFormPage/ProductFormPage-Mobile.css';*/
-/*@import './pages/products/ProductAuditPage/ProductAuditPage-Mobile.css';*/
+select:focus {
+    outline: none;
+    border-color: var(--primary);
+}
 
-/*@import './pages/users/UsersListPage-Mobile.css';*/
-/*@import './pages/users/UserDetailPage-Mobile.css';*/
+/* Base page typography */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+}
 
-/*@import './pages/profile/ProfilePage-Mobile.css';*/
-/*@import './pages/login/LoginPage-Mobile.css';*/
-/*@import './pages/permissionsGroups/PermissionsGroupsPage-Mobile.css';*/
-/*@import './pages/catalog/CatalogPage/CatalogPage-Mobile.css';*/
-/*@import './pages/categories/CategoriesPage-Mobile.css';*/
-/*@import './pages/categories/CategoryDetailPage-Mobile.css';*/
-/*@import './pages/categories/CategoryAuditPage-Mobile.css';*/
+h1 {
+    font-size: 20px;
+}
 
-/*@import './pages/billing/CategoryPricingPoliciesPage-Mobile.css';*/
-/*@import './pages/billing/CategoryPricingPolicyDetailPage-Mobile.css';*/
-/*@import './pages/billing/CategoryPricingPolicyFormPage-Mobile.css';*/
-/*@import './pages/support/SupportPage-Mobile.css';*/
-/*@import './pages/dashboard/DashboardPage-Mobile.css';*/
-/*@import './pages/errors/ErrorPage-Mobile.css';*/
+h2 {
+    font-size: 18px;
+}
 
-/*!* UI Component Mobile styles *!*/
-/*@import './shared/ui/CrudPageTemplate-Mobile.css';*/
-/*@import './shared/ui/Modal-Mobile.css';*/
-/*@import './shared/ui/Pagination-Mobile.css';*/
-/*@import './shared/ui/EntityList-Mobile.css';*/
-/*@import './shared/ui/Button-Mobile.css';*/
-/*@import './shared/ui/Input-Mobile.css';*/
-/*@import './shared/ui/Select-Mobile.css';*/
-/*@import './shared/ui/Tabs-Mobile.css';*/
-/*@import './shared/ui/SearchInput-Mobile.css';*/
-/*@import './shared/ui/AutocompleteInput-Mobile.css';*/
-/*@import './shared/ui/ImageCarousel-Mobile.css';*/
+h3 {
+    font-size: 16px;
+}
+
+h4 {
+    font-size: 14px;
+}
+
+p {
+    margin: 0 0 var(--space-3);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+section {
+    display: grid;
+    gap: var(--space-3);
+}
+
+section h1 {
+    margin-bottom: var(--space-1);
+}

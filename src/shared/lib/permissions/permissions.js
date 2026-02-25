@@ -37,6 +37,26 @@ export function getPermissionSection(permissionName) {
 }
 
 /**
+ * Группирует права по секциям (часть имени до первого двоеточия)
+ * @param {Array} permissions - Массив прав (объектов с полем name)
+ * @returns {Object} Объект, где ключи - секции, значения - массивы прав
+ */
+export function buildPermissionBuckets(permissions) {
+  return permissions.reduce((acc, permission) => {
+    const key = typeof permission.name === 'string'
+      ? permission.name.split(':').filter(Boolean)[0] || 'other'
+      : 'other';
+
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+
+    acc[key].push(permission);
+    return acc;
+  }, {});
+}
+
+/**
  * Проверяет, является ли право view-правом в своей секции
  */
 export function isViewPermission(permissionName) {

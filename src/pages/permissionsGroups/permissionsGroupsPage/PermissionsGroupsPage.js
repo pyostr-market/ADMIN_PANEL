@@ -17,7 +17,8 @@ import {
   isGlobalPermission,
   getPermissionSection,
   isViewPermission,
-} from '../../../shared/lib/permissions/permissions';
+  buildPermissionBuckets,
+} from '../../../shared/lib/permissions';
 import {
   getPermissionsRequest,
   createPermissionRequest,
@@ -36,21 +37,6 @@ const TABS = {
 };
 
 const PAGE_LIMIT = 20;
-
-function buildPermissionBuckets(permissions) {
-  return permissions.reduce((acc, permission) => {
-    const key = typeof permission.name === 'string'
-      ? permission.name.split(':').filter(Boolean)[0] || 'other'
-      : 'other';
-
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-
-    acc[key].push(permission);
-    return acc;
-  }, {});
-}
 
 function normalizeGroup(group) {
   const permissionIds = Array.isArray(group.permission_ids)

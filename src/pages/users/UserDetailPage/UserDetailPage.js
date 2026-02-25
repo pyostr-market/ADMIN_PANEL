@@ -33,6 +33,7 @@ import {
   getAllGroupsRequest,
   deleteSessionRequest,
 } from '../api/usersApi';
+import { buildPermissionBuckets } from '../../../shared/lib/permissions';
 import styles from './UserDetailPage.module.css';
 
 const TABS = {
@@ -41,21 +42,6 @@ const TABS = {
   permissions: 'permissions',
   groups: 'groups',
 };
-
-function buildPermissionBuckets(permissions) {
-  return permissions.reduce((acc, permission) => {
-    const key = typeof permission.name === 'string'
-      ? permission.name.split(':').filter(Boolean)[0] || 'other'
-      : 'other';
-
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-
-    acc[key].push(permission);
-    return acc;
-  }, {});
-}
 
 // Модальное окно назначения прав и групп
 function AssignModal({
