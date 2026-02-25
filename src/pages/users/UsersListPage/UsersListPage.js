@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiCheck, FiPlus, FiTrash2, FiUser, FiUserCheck, FiUserX, FiEye } from 'react-icons/fi';
+import { FiCheck, FiPlus, FiTrash2, FiUser, FiUserCheck, FiUserX, FiEye, FiSettings } from 'react-icons/fi';
 import { useCrudList } from '../../../shared/lib/crud';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
 import { Button } from '../../../shared/ui/Button/Button';
@@ -96,6 +96,7 @@ export function UsersListPage() {
   const notifications = useNotifications();
   const [userToBan, setUserToBan] = useState(null);
   const [userToDelete, setUserToDelete] = useState(null);
+  const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
   const [filters, setFilters] = useState({
     is_active: 'all',
     is_verified: 'all',
@@ -138,6 +139,7 @@ export function UsersListPage() {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
 
+    // Формируем API фильтры - только активные фильтры
     const apiFilters = {};
     if (newFilters.is_active !== 'all') {
       apiFilters.is_active = newFilters.is_active === 'true';
@@ -149,8 +151,16 @@ export function UsersListPage() {
       apiFilters.group = newFilters.group;
     }
 
+    // Передаем только активные фильтры в useCrudList
     usersCrud.setFilters(apiFilters);
+    usersCrud.setPage(1);
   };
+
+  const handleResetFilters = useCallback(() => {
+    setFilters({ is_active: 'all', is_verified: 'all', group: 'all' });
+    usersCrud.setFilters({});
+    usersCrud.setPage(1);
+  }, [usersCrud]);
 
   const handleBanUser = async () => {
     if (!userToBan) return;
@@ -192,7 +202,8 @@ export function UsersListPage() {
   }, [filters]);
 
   return (
-    <section className={styles.usersListPage}>
+    <>
+      <section className={styles.usersListPage}>
       <header className={styles.usersListPageHeader}>
         <h1 className={styles.usersListPageTitle}>Пользователи</h1>
         <div className={styles.usersListPageControls}>
@@ -208,79 +219,31 @@ export function UsersListPage() {
         </div>
       </header>
 
-      <div className={`${styles.usersListPageFilters}${usersCrud.isLoading ? ` ${styles.usersListPageFiltersLoading}` : ''}`}>
-        <div className={styles.usersListPageFiltersRow}>
-          <div className={styles.usersListPageSearchWrapper}>
-            <SearchInput
-              value={usersCrud.search}
-              onChange={(e) => usersCrud.setSearch(e.target.value)}
-              placeholder="Поиск по телефону или ID..."
-              loading={usersCrud.isLoading}
-            />
-          </div>
-          <div className={styles.usersListPageFiltersGroup}>
-            <Select
-              value={filters.is_active}
-              onChange={(e) => handleFilterChange('is_active', e.target.value)}
-              options={[
-                { value: 'all', label: 'Все статусы' },
-                { value: 'true', label: 'Активные' },
-                { value: 'false', label: 'Заблокированные' },
-              ]}
-              placeholder="Статус"
-              wrapperClassName={styles.usersListPageFilterSelect}
-              onFocus={loadGroups}
-              disabled={usersCrud.isLoading}
-            />
-
-            <Select
-              value={filters.is_verified}
-              onChange={(e) => handleFilterChange('is_verified', e.target.value)}
-              options={[
-                { value: 'all', label: 'Все верификации' },
-                { value: 'true', label: 'Верифицированные' },
-                { value: 'false', label: 'Не верифицированные' },
-              ]}
-              placeholder="Верификация"
-              wrapperClassName={styles.usersListPageFilterSelect}
-              onFocus={loadGroups}
-              disabled={usersCrud.isLoading}
-            />
-
-            <Select
-              value={filters.group}
-              onChange={(e) => handleFilterChange('group', e.target.value)}
-              options={[
-                { value: 'all', label: 'Все группы' },
-                ...groups.map((group) => ({ value: String(group.id), label: group.name })),
-              ]}
-              placeholder="Группа"
-              wrapperClassName={styles.usersListPageFilterSelect}
-              onFocus={loadGroups}
-              disabled={usersCrud.isLoading || isLoadingGroups}
-            />
-
-            {(filters.is_active !== 'all' || filters.is_verified !== 'all' || filters.group !== 'all') && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  setFilters({ is_active: 'all', is_verified: 'all', group: 'all' });
-                  usersCrud.setPage(1);
-                }}
-              >
-                Сбросить фильтры
-              </Button>
-            )}
-          </div>
-        </div>
+      {/* Поиск - отдельно сверху */}
+      <div className={styles.usersListPageSearch}>
+        <SearchInput
+          value={usersCrud.search}
+          onChange={(e) => usersCrud.setSearch(e.target.value)}
+          placeholder="Поиск по телефону или ID..."
+          loading={usersCrud.isLoading}
+        />
+        <button
+          type="button"
+          className={styles.usersListPageSearchFiltersBtn}
+          onClick={() => setIsFiltersModalOpen(true)}
+          aria-label="Открыть фильтры"
+        >
+          <FiSettings />
+        </button>
       </div>
 
-      <EntityList
-        items={usersCrud.items}
-        renderItem={(user) => (
-          <>
-            <div className={styles.usersListPageItemContent} onClick={() => handleViewUser(user)}>
+      {/* Список пользователей */}
+      <div className={styles.usersListPageList}>
+        <EntityList
+          items={usersCrud.items}
+          renderItem={(user) => (
+            <>
+              <div className={styles.usersListPageItemContent} onClick={() => handleViewUser(user)}>
               <div className={styles.usersListPageItemMain}>
                 <div className={`${styles.usersListPageAvatar} ${user.is_active ? styles.usersListPageAvatarActive : styles.usersListPageAvatarInactive}`}>
                   <FiUser />
@@ -376,8 +339,8 @@ export function UsersListPage() {
                 </Button>
               </PermissionGate>
             </div>
-          </>
-        )}
+            </>
+          )}
         emptyMessage={
           usersCrud.isLoading
             ? 'Загрузка пользователей...'
@@ -397,24 +360,165 @@ export function UsersListPage() {
           loading={usersCrud.isLoading}
         />
       )}
+      </div>
 
-      {userToBan && (
-        <BanUserModal
-          user={userToBan}
-          onClose={() => setUserToBan(null)}
-          onSubmit={handleBanUser}
-          isSubmitting={usersCrud.isSubmitting}
-        />
-      )}
+      {/* Фильтры - сайдбар справа */}
+      <aside className={`${styles.usersListPageFilters}${usersCrud.isLoading ? ` ${styles.usersListPageFiltersLoading}` : ''}`}>
+        <div className={styles.usersListPageFiltersRow}>
+          <h3 className={styles.usersListPageFiltersTitle}>Фильтры</h3>
+          
+          <div className={styles.usersListPageFiltersGroup}>
+            <Select
+              value={filters.is_active}
+              onChange={(e) => handleFilterChange('is_active', e.target.value)}
+              options={[
+                { value: 'all', label: 'Все статусы' },
+                { value: 'true', label: 'Активные' },
+                { value: 'false', label: 'Заблокированные' },
+              ]}
+              placeholder="Статус"
+              wrapperClassName={styles.usersListPageFilterSelect}
+              onFocus={loadGroups}
+              disabled={usersCrud.isLoading}
+            />
 
-      {userToDelete && (
-        <DeleteUserModal
-          user={userToDelete}
-          onClose={() => setUserToDelete(null)}
-          onSubmit={handleDeleteUser}
-          isSubmitting={usersCrud.isSubmitting}
-        />
-      )}
+            <Select
+              value={filters.is_verified}
+              onChange={(e) => handleFilterChange('is_verified', e.target.value)}
+              options={[
+                { value: 'all', label: 'Все верификации' },
+                { value: 'true', label: 'Верифицированные' },
+                { value: 'false', label: 'Не верифицированные' },
+              ]}
+              placeholder="Верификация"
+              wrapperClassName={styles.usersListPageFilterSelect}
+              onFocus={loadGroups}
+              disabled={usersCrud.isLoading}
+            />
+
+            <Select
+              value={filters.group}
+              onChange={(e) => handleFilterChange('group', e.target.value)}
+              options={[
+                { value: 'all', label: 'Все группы' },
+                ...groups.map((group) => ({ value: String(group.id), label: group.name })),
+              ]}
+              placeholder="Группа"
+              wrapperClassName={styles.usersListPageFilterSelect}
+              onFocus={loadGroups}
+              disabled={usersCrud.isLoading || isLoadingGroups}
+            />
+
+            {(filters.is_active !== 'all' || filters.is_verified !== 'all' || filters.group !== 'all') && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className={styles.btnResetFilters}
+                onClick={() => {
+                  setFilters({ is_active: 'all', is_verified: 'all', group: 'all' });
+                  usersCrud.setFilters({});
+                  usersCrud.setPage(1);
+                }}
+              >
+                ✕ Сбросить фильтры
+              </Button>
+            )}
+          </div>
+        </div>
+      </aside>
     </section>
+
+    {/* Модальное окно фильтров - только для мобильных */}
+    <Modal
+      isOpen={isFiltersModalOpen}
+      onClose={() => setIsFiltersModalOpen(false)}
+      title="Фильтры"
+      size="sm"
+      footer={(
+        <>
+          <Button variant="secondary" onClick={() => setIsFiltersModalOpen(false)}>Отмена</Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              handleResetFilters();
+              setIsFiltersModalOpen(false);
+            }}
+          >
+            Сбросить фильтры
+          </Button>
+        </>
+      )}
+    >
+      <div className={styles.filtersModalContent}>
+        <div className={styles.filtersModalGroup}>
+          <label className={styles.filtersModalLabel}>Статус</label>
+          <Select
+            value={filters.is_active}
+            onChange={(e) => handleFilterChange('is_active', e.target.value)}
+            options={[
+              { value: 'all', label: 'Все статусы' },
+              { value: 'true', label: 'Активные' },
+              { value: 'false', label: 'Заблокированные' },
+            ]}
+            placeholder="Статус"
+            wrapperClassName={styles.filtersModalSelect}
+            onFocus={loadGroups}
+            disabled={usersCrud.isLoading}
+          />
+        </div>
+
+        <div className={styles.filtersModalGroup}>
+          <label className={styles.filtersModalLabel}>Верификация</label>
+          <Select
+            value={filters.is_verified}
+            onChange={(e) => handleFilterChange('is_verified', e.target.value)}
+            options={[
+              { value: 'all', label: 'Все верификации' },
+              { value: 'true', label: 'Верифицированные' },
+              { value: 'false', label: 'Не верифицированные' },
+            ]}
+            placeholder="Верификация"
+            wrapperClassName={styles.filtersModalSelect}
+            onFocus={loadGroups}
+            disabled={usersCrud.isLoading}
+          />
+        </div>
+
+        <div className={styles.filtersModalGroup}>
+          <label className={styles.filtersModalLabel}>Группа</label>
+          <Select
+            value={filters.group}
+            onChange={(e) => handleFilterChange('group', e.target.value)}
+            options={[
+              { value: 'all', label: 'Все группы' },
+              ...groups.map((group) => ({ value: String(group.id), label: group.name })),
+            ]}
+            placeholder="Группа"
+            wrapperClassName={styles.filtersModalSelect}
+            onFocus={loadGroups}
+            disabled={usersCrud.isLoading || isLoadingGroups}
+          />
+        </div>
+      </div>
+    </Modal>
+
+    {userToBan && (
+      <BanUserModal
+        user={userToBan}
+        onClose={() => setUserToBan(null)}
+        onSubmit={handleBanUser}
+        isSubmitting={usersCrud.isSubmitting}
+      />
+    )}
+
+    {userToDelete && (
+      <DeleteUserModal
+        user={userToDelete}
+        onClose={() => setUserToDelete(null)}
+        onSubmit={handleDeleteUser}
+        isSubmitting={usersCrud.isSubmitting}
+      />
+    )}
+    </>
   );
 }

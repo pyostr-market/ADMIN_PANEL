@@ -194,7 +194,7 @@ export function useCrudList({
   }, []);
 
   const handleFilterChange = useCallback((newFilters) => {
-    setFilters((prev) => ({ ...prev, ...newFilters }));
+    setFilters(newFilters);
     setPage(1);
   }, []);
 

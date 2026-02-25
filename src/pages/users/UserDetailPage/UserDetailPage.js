@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   FiCheck,
   FiEdit2,
@@ -369,6 +369,7 @@ function TerminateSessionModal({ session, onClose, onConfirm, isSubmitting }) {
 export function UserDetailPage() {
   const { userId } = useParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const notifications = useNotifications();
   const notificationsRef = useRef(notifications);
 
@@ -379,7 +380,13 @@ export function UserDetailPage() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState(TABS.general);
+  const [activeTab, setActiveTab] = useState(() => {
+    const tabFromUrl = searchParams.get('tab');
+    if (tabFromUrl && Object.values(TABS).includes(tabFromUrl)) {
+      return tabFromUrl;
+    }
+    return TABS.general;
+  });
   const [isBanModalOpen, setIsBanModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
@@ -392,6 +399,11 @@ export function UserDetailPage() {
   const [permissionSearch, setPermissionSearch] = useState('');
   const [isRevoking, setIsRevoking] = useState(false);
   const [isTerminating, setIsTerminating] = useState(false);
+
+  const handleTabChange = useCallback((tab) => {
+    setActiveTab(tab);
+    setSearchParams({ tab }, { replace: true });
+  }, [setSearchParams]);
 
   const loadUser = useCallback(async () => {
     setIsLoading(true);
@@ -613,33 +625,33 @@ export function UserDetailPage() {
       <Tabs className={styles.userDetailPageTabs}>
         <Tab
           active={activeTab === TABS.general}
-          onClick={() => setActiveTab(TABS.general)}
+          onClick={() => handleTabChange(TABS.general)}
         >
-          <FiCalendar /> Информация
+           Информация
         </Tab>
         <Tab
           active={activeTab === TABS.sessions}
-          onClick={() => setActiveTab(TABS.sessions)}
+          onClick={() => handleTabChange(TABS.sessions)}
         >
-          <FiClock /> Сессии
+          Сессии
           {userSessions.length > 0 && (
             <span className={styles.tabBadge}>{userSessions.length}</span>
           )}
         </Tab>
         <Tab
           active={activeTab === TABS.permissions}
-          onClick={() => setActiveTab(TABS.permissions)}
+          onClick={() => handleTabChange(TABS.permissions)}
         >
-          <FiShield /> Права
+          Права
           {userPermissions.length > 0 && (
             <span className={styles.tabBadge}>{userPermissions.length}</span>
           )}
         </Tab>
         <Tab
           active={activeTab === TABS.groups}
-          onClick={() => setActiveTab(TABS.groups)}
+          onClick={() => handleTabChange(TABS.groups)}
         >
-          <FiUsers /> Группы
+          Группы
           {userGroups.length > 0 && (
             <span className={styles.tabBadge}>{userGroups.length}</span>
           )}
