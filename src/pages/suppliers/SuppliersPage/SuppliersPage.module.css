@@ -336,10 +336,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 4px;
+    min-width: 28px;
+    height: 28px;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
     font-size: 12px;
+    font-weight: 500;
     flex-shrink: 0;
   }
 
