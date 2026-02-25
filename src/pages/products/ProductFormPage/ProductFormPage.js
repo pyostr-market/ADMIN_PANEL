@@ -411,9 +411,7 @@ export function ProductFormPage() {
         <Button variant="ghost" onClick={() => navigate(isEditMode ? `/catalog/products/${productId}` : '/catalog/products')} className={styles.backButton}>
           ← Назад
         </Button>
-        <h1 className={styles.productFormPageTitle}>
-          {isEditMode ? 'Редактирование товара' : 'Создание товара'}
-        </h1>
+
       </header>
 
       <div className={styles.productFormPageTabs}>

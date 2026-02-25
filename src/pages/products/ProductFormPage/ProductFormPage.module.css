@@ -1,86 +1,30 @@
-.productFormPage {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 24px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.productFormPageHeader {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  position: relative;
-}
-
-.productFormPageHeader .backButton {
-  flex-shrink: 0;
-  height: 40px;
-  padding: 8px 12px;
-  font-size: 14px;
-  white-space: nowrap;
-}
-
-.productFormPageTitle {
-  margin: 0;
-  font-size: 28px;
-  font-weight: 600;
-  color: var(--color-text, #333);
-}
-
-.productFormPageTabs {
-  border-bottom: 1px solid var(--color-border, #e0e0e0);
-}
-
-.productFormPageForm {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.productFormPageActions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding-top: 24px;
-  border-top: 1px solid var(--color-border, #e0e0e0);
-}
-
-.productFormPageLoading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  color: var(--color-text-secondary, #9e9e9e);
-}
+/* ProductFormPage - стили для страницы создания/редактирования товара */
 
 /* Product Form Sections */
 .productForm {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--space-5);
 }
 
 .productFormSection {
-  background: var(--color-background, #fff);
-  border: 1px solid var(--color-border, #e0e0e0);
-  border-radius: 12px;
-  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
 }
 
 .productFormSectionHeader {
   display: flex;
-  gap: 16px;
+  gap: var(--space-4);
   align-items: flex-start;
-  margin-bottom: 24px;
+  margin-bottom: var(--space-5);
 }
 
 .productFormSectionIcon {
   width: 48px;
   height: 48px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,54 +33,52 @@
 }
 
 .productFormSectionIconPrimary {
-  background: var(--color-primary-light, #e3f2fd);
-  color: var(--color-primary, #2196f3);
+  background: var(--accent-blue-bg);
+  color: var(--accent-blue);
 }
 
 .productFormSectionIconSecondary {
-  background: var(--color-background-secondary, #f5f5f5);
-  color: var(--color-text, #333);
+  background: var(--surface-subtle);
+  color: var(--text);
 }
 
 .productFormSectionIconAccent {
-  background: var(--color-accent-light, #fce4ec);
-  color: var(--color-accent, #e91e63);
+  background: var(--accent-purple-bg);
+  color: var(--accent-purple);
 }
 
 .productFormSectionIconInfo {
-  background: var(--color-info-light, #fff3e0);
-  color: var(--color-info, #ff9800);
+  background: var(--accent-orange-bg);
+  color: var(--accent-orange);
 }
 
 .productFormSectionTitle {
-  margin: 0 0 4px 0;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  color: var(--color-text, #333);
+  color: var(--text);
+  margin: 0;
 }
 
 .productFormSectionDescription {
-  margin: 0;
   font-size: 14px;
-  color: var(--color-text-secondary, #666);
+  color: var(--text-muted);
+  margin: var(--space-1) 0 0 0;
 }
 
-/* Секция описания товара */
 .productFormSectionDescriptionSection {
-  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
-  border-color: #e3e8ef;
+  margin-top: var(--space-3);
 }
 
 .productFormGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: var(--space-4);
 }
 
 .productFormField {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .productFormFieldFull {
@@ -146,186 +88,131 @@
 .productFormLabel {
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-text, #333);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.productFormLabelIcon {
-  font-size: 16px;
-  color: var(--color-text-secondary, #9e9e9e);
-}
-
-.productForm input[type="text"],
-.productForm input[type="number"],
-.productForm textarea {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--color-border, #e0e0e0);
-  border-radius: 6px;
-  font-size: 14px;
-  color: var(--color-text, #333);
-  background: var(--color-background, #fff);
-  transition: all 0.2s ease;
-  outline: none;
-  font-family: inherit;
-}
-
-.productForm input[type="text"]:focus,
-.productForm input[type="number"]:focus,
-.productForm textarea:focus {
-  border-color: var(--color-primary, var(--primary));
-  box-shadow: 0 0 0 3px var(--focus-ring-primary);
-}
-
-.productForm input[type="text"].inputError,
-.productForm input[type="number"].inputError,
-.productForm textarea.inputError {
-  border-color: var(--color-error, var(--danger));
-}
-
-.productForm textarea {
-  resize: vertical;
-  min-height: 100px;
+  color: var(--text);
 }
 
 .productFormError {
-  font-size: 12px;
-  color: var(--color-error, #f44336);
+  font-size: 13px;
+  color: var(--danger);
 }
 
 .required {
-  color: var(--color-error, #f44336);
+  color: var(--danger);
 }
 
 /* Attributes Form */
 .attributesForm {
-  margin-bottom: 20px;
+  margin-bottom: var(--space-4);
 }
 
 .attributesFormRow {
   display: flex;
-  gap: 12px;
   align-items: flex-end;
+  gap: var(--space-3);
   flex-wrap: wrap;
 }
 
 .attributesFormInput {
   flex: 1;
   min-width: 150px;
-  padding: 10px 12px;
-  border: 1px solid var(--color-border, #e0e0e0);
-  border-radius: 6px;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   font-size: 14px;
-  color: var(--color-text, #333);
-  background: var(--color-background, #fff);
-  transition: all 0.2s ease;
-  outline: none;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--text);
+  transition: border-color 0.2s;
 }
 
 .attributesFormInput:focus {
-  border-color: var(--color-primary, var(--primary));
-  box-shadow: 0 0 0 3px var(--focus-ring-primary);
+  outline: none;
+  border-color: var(--accent-blue);
 }
 
 .attributesFormCheckbox {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   font-size: 14px;
-  color: var(--color-text, #333);
+  color: var(--text);
   cursor: pointer;
   white-space: nowrap;
 }
 
-.attributesFormCheckbox input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
-
 /* Attributes List */
 .attributesList {
-  border: 1px solid var(--color-border, #e0e0e0);
-  border-radius: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 
 .attributesListHeader {
   display: grid;
-  grid-template-columns: 1fr 1fr 120px 60px;
-  gap: 12px;
-  padding: 12px 16px;
-  background: var(--color-background-secondary, #f5f5f5);
+  grid-template-columns: 1fr 1fr auto auto;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--surface-subtle);
   font-size: 13px;
   font-weight: 600;
-  color: var(--color-text, #333);
-  border-bottom: 1px solid var(--color-border, #e0e0e0);
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
 }
 
 .attributesListCol {
-  display: flex;
-  align-items: center;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 13px;
 }
 
 .attributesListColCheckbox {
+  display: flex;
+  align-items: center;
   justify-content: center;
 }
 
 .attributesListColActions {
-  justify-content: center;
+  text-align: right;
 }
 
 .attributesListRow {
   display: grid;
-  grid-template-columns: 1fr 1fr 120px 60px;
-  gap: 12px;
-  padding: 12px 16px;
+  grid-template-columns: 1fr 1fr auto auto;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border);
   align-items: center;
-  border-bottom: 1px solid var(--color-border, #e0e0e0);
-  transition: background 0.2s ease;
 }
 
 .attributesListRow:last-child {
   border-bottom: none;
 }
 
-.attributesListRow:hover {
-  background: var(--color-background-secondary, #f5f5f5);
-}
-
 .attributesListInput {
-  width: 100%;
-  padding: 8px 10px;
-  border: 1px solid var(--color-border, #e0e0e0);
-  border-radius: 4px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   font-size: 14px;
-  color: var(--color-text, #333);
-  background: var(--color-background, #fff);
-  transition: all 0.2s ease;
-  outline: none;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--text);
+  transition: border-color 0.2s;
 }
 
 .attributesListInput:focus {
-  border-color: var(--color-primary, var(--primary));
-  box-shadow: 0 0 0 2px var(--focus-ring-primary);
+  outline: none;
+  border-color: var(--accent-blue);
 }
 
 .attributesListCheckbox {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.attributesListCheckbox input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
   cursor: pointer;
 }
 
 .attributesListDelete {
-  justify-self: center;
+  padding: var(--space-2);
 }
 
 .attributesListEmpty {
@@ -333,190 +220,53 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 48px 24px;
+  padding: var(--space-8);
   text-align: center;
-  color: var(--color-text-secondary, #9e9e9e);
-  border: 1px dashed var(--color-border, #e0e0e0);
-  border-radius: 8px;
-}
-
-.attributesListEmpty svg {
-  margin-bottom: 16px;
-  opacity: 0.5;
+  color: var(--text-muted);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
 }
 
 .attributesListEmpty p {
-  margin: 0 0 8px 0;
-  font-size: 16px;
+  margin: var(--space-2) 0;
+  font-size: 14px;
+  color: var(--text);
 }
 
 .attributesListEmptyHint {
   font-size: 13px;
-  color: var(--color-text-secondary, #9e9e9e);
 }
 
-/* Responsive */
+/* Responsive - Mobile */
 @media (max-width: 768px) {
-  .productFormPage {
-    padding: 0 !important;
-    gap: 0;
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
-  .productFormPageHeader {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 12px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    width: 100%;
-    box-sizing: border-box;
-    min-height: 48px;
-  }
-
-  .productFormPageHeader .backButton {
-    flex-shrink: 0;
-    height: 32px;
-    padding: 6px 8px;
-    font-size: 12px;
-    min-width: auto;
-  }
-
-  .productFormPageTitle {
-    font-size: 16px;
-    font-weight: 600;
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .productFormPageHeader .productFormPageActions {
-    display: flex;
-    gap: 4px;
-    flex-shrink: 0;
-  }
-
-  .productFormPageHeader .productFormPageActions button {
-    height: 32px;
-    padding: 6px 8px;
-    font-size: 11px;
-    white-space: nowrap;
-  }
-
-  .productFormPageForm {
-    gap: 0;
-    padding: 0;
-  }
-
-  .productFormPageActions {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 12px;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    border-radius: 0;
-    box-shadow: none;
-    position: sticky;
-    bottom: 0;
-    z-index: 99;
-  }
-
-  .productFormPageActions button {
-    width: 100%;
-    height: 44px;
-    font-size: 14px;
-  }
-
-  /* Form sections */
-  .productForm {
-    gap: 0;
-  }
-
-  .productFormSection {
-    background: var(--surface);
-    border: none;
-    border-bottom: 1px solid var(--border);
-    border-radius: 0;
-    padding: 16px;
-    box-shadow: none;
-  }
-
-  .productFormSection:last-child {
-    border-bottom: none;
-  }
-
-  .productFormSectionHeader {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .productFormSectionIcon {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    font-size: 18px;
-  }
-
-  .productFormSectionTitle {
-    font-size: 14px;
-    font-weight: 600;
-    margin: 0;
-  }
-
-  .productFormSectionDescription {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin: 2px 0 0;
-  }
-
-  /* Grid */
   .productFormGrid {
-    display: grid;
-    gap: 12px;
     grid-template-columns: 1fr;
   }
 
-  /* Fields */
-  .productFormField {
-    gap: 8px;
+  .attributesFormRow {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .productFormLabel {
-    font-size: 12px;
-    font-weight: 600;
+  .attributesFormInput {
+    width: 100%;
   }
 
-  .productFormLabel .required {
-    color: var(--danger);
+  .attributesFormCheckbox {
+    width: 100%;
+    justify-content: flex-start;
   }
 
-  .productForm input,
-  .productForm textarea {
-    height: 40px;
-    padding: 8px 12px;
-    font-size: 14px;
-    box-sizing: border-box;
+  .attributesListHeader,
+  .attributesListRow {
+    grid-template-columns: 1fr 1fr auto;
   }
 
-  .productForm textarea {
-    min-height: 80px;
-    height: auto;
+  .attributesListColActions {
+    display: none;
   }
 
-  .productFormError {
-    font-size: 11px;
+  .attributesListRow {
+    grid-template-columns: 1fr 1fr auto;
   }
 }

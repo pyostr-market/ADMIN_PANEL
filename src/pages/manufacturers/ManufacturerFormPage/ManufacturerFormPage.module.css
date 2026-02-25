@@ -1,20 +1,5 @@
-/* ManufacturerFormPage - специфичные стили страницы */
-.manufacturerFormPage {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-  padding: var(--space-6);
-  max-width: 900px;
-  margin: 0 auto;
-}
+/* ManufacturerFormPage - стили для страницы создания/редактирования производителя */
 
-.manufacturerFormPageForm {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-}
-
-/* Стили для полей формы */
 .manufacturerFormField {
   display: flex;
   flex-direction: column;
@@ -29,52 +14,9 @@
   font-size: 14px;
   font-weight: 500;
   color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-}
-
-.manufacturerFormLabel .required {
-  color: var(--danger);
-}
-
-.manufacturerForm input,
-.manufacturerForm textarea {
-  padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  font-size: 15px;
-  font-family: inherit;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  background: var(--surface);
-  color: var(--text);
-}
-
-.manufacturerForm input:focus,
-.manufacturerForm textarea:focus {
-  outline: none;
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 0 3px var(--focus-ring-blue);
-}
-
-.manufacturerForm input.inputError,
-.manufacturerForm textarea.inputError {
-  border-color: var(--danger);
-}
-
-.manufacturerForm input.inputError:focus,
-.manufacturerForm textarea.inputError:focus {
-  border-color: var(--danger);
-  box-shadow: 0 0 0 3px var(--focus-ring-danger);
 }
 
 .manufacturerFormError {
   font-size: 13px;
   color: var(--danger);
-  margin-top: -4px;
-}
-
-.manufacturerForm textarea {
-  resize: vertical;
-  min-height: 100px;
 }

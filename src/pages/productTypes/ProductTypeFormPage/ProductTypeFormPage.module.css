@@ -1,43 +1,32 @@
 /* ProductTypeFormPage - стили для страницы создания/редактирования типа продукта */
 
-.productTypeFormPage {
+.productTypeFormField {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  background: var(--surface-subtle);
+  gap: var(--space-2);
 }
 
-/* Loading & Error states */
-.loadingState,
-.errorState {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-8);
-  text-align: center;
-  color: var(--text-muted);
-}
-
-.errorState h2 {
+.productTypeFormLabel {
+  font-size: 14px;
+  font-weight: 500;
   color: var(--text);
-  margin-bottom: var(--space-2);
 }
 
-.errorState p {
-  margin-bottom: var(--space-4);
-}
-
-/* Form errors */
-.formError {
-  color: var(--danger);
+.productTypeFormError {
   font-size: 13px;
+  color: var(--danger);
+}
+
+.productTypeFormHint {
+  font-size: 13px;
+  color: var(--text-muted);
   margin-top: var(--space-1);
 }
 
-/* Responsive - Mobile */
-@media (max-width: 768px) {
-  .productTypeFormPage {
-    padding: 0 !important;
-  }
+.input-error {
+  border-color: var(--danger) !important;
+}
+
+.required {
+  color: var(--danger);
 }

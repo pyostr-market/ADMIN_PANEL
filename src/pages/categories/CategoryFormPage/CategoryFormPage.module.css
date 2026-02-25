@@ -1,17 +1,5 @@
-/* CategoryFormPage - специфичные стили страницы */
-.categoryFormPage {
-  padding: var(--space-6);
-  max-width: 1000px;
-  margin: 0 auto;
-}
+/* CategoryFormPage - стили для страницы создания/редактирования категории */
 
-.categoryFormPageForm {
-  background: var(--surface);
-  border-radius: var(--radius-2xl);
-  box-shadow: var(--shadow-sm);
-}
-
-/* Стили для полей формы - можно удалить после рефакторинга */
 .categoryFormField {
   display: flex;
   flex-direction: column;
@@ -25,44 +13,7 @@
 .categoryFormLabel {
   font-size: 14px;
   font-weight: 500;
-  color: var(--text-primary);
-}
-
-.categoryFormLabel .required {
-  color: var(--danger);
-}
-
-.categoryForm input[type="text"],
-.categoryForm textarea {
-  padding: 10px var(--space-3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  font-size: 15px;
   color: var(--text);
-  background: var(--surface);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.categoryForm input[type="text"]:focus,
-.categoryForm textarea:focus {
-  outline: none;
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 0 3px var(--focus-ring-blue);
-}
-
-.categoryForm input.input-error,
-.categoryForm textarea.input-error {
-  border-color: var(--danger);
-}
-
-.categoryForm input.input-error:focus,
-.categoryForm textarea.input-error:focus {
-  box-shadow: 0 0 0 3px var(--focus-ring-danger);
-}
-
-.categoryFormHint {
-  font-size: 13px;
-  color: var(--text-muted);
 }
 
 .categoryFormError {
@@ -72,123 +23,11 @@
 
 .categoryFormErrorBlock {
   display: block;
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-2);
 }
 
-/* Images section */
-.categoryImages {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-}
-
-.categoryImagesList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.categoryImagesSubtitle {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0 0 var(--space-3) 0;
-}
-
-.categoryImageItem {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-3);
-  background: var(--surface-subtle);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
-}
-
-.categoryImageItemPreview {
-  width: 80px;
-  height: 80px;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.categoryImageItemPreview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.categoryImageItemInfo {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.categoryImageItemLabel {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: 14px;
-  color: var(--text-primary);
-}
-
-.categoryImageItemOrdering {
-  width: 80px;
-  padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  font-size: 14px;
-}
-
-.categoryImageItemFilename {
+.categoryFormHint {
   font-size: 13px;
   color: var(--text-muted);
-  word-break: break-all;
-}
-
-.categoryImageItemRemove {
-  color: var(--danger);
-}
-
-.categoryImageItemRemove:hover {
-  background: var(--danger-bg);
-}
-
-.categoryImagesUpload {
-  margin-top: var(--space-3);
-}
-
-.categoryImagesUploadLabel {
-  display: inline-block;
-  cursor: pointer;
-}
-
-.categoryImagesUploadInput {
-  display: none;
-}
-
-.categoryImagesUploadButton {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 12px var(--space-5);
-  background: var(--surface-subtle);
-  border: 2px dashed var(--border);
-  border-radius: var(--radius-lg);
-  color: var(--text-muted);
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.categoryImagesUploadButton:hover {
-  background: var(--surface-muted);
-  border-color: var(--text-tertiary);
-  color: var(--text-primary);
-}
-
-.categoryImagesUploadButton svg {
-  font-size: 18px;
+  margin-top: var(--space-1);
 }

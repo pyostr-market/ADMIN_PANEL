@@ -1,3 +1,5 @@
+/* CategoryDetailPage - стили для страницы детального просмотра категории */
+
 .categoryDetailPage {
   display: flex;
   flex-direction: column;
@@ -22,14 +24,13 @@
   flex-shrink: 0;
 }
 
-/* Content */
 .categoryDetailPageContent {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 }
 
-/* Panel */
+/* Panel - используется для секций */
 .categoryDetailPagePanel {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -41,8 +42,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-2);
   padding: var(--space-3);
   border-bottom: 1px solid var(--border);
 }
@@ -66,91 +65,7 @@
   padding: var(--space-3);
 }
 
-/* Category Info Grid */
-.categoryInfoGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--space-3);
-  padding: var(--space-3);
-}
-
-.infoCard {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3);
-  background: var(--surface-subtle);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  transition: all 0.2s;
-}
-
-.infoCard:hover {
-  border-color: var(--border-strong);
-  background: var(--surface-muted);
-}
-
-.infoCardFull {
-  grid-column: 1 / -1;
-}
-
-.infoCardIcon {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  flex-shrink: 0;
-}
-
-.infoCardIcon,
-.infoCardIcon svg,
-.infoCardIcon span {
-  color: white;
-}
-
-.infoCardIconPrimary {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-}
-
-.infoCardIconSecondary {
-  background: linear-gradient(135deg, #6b7280, #4b5563);
-}
-
-.infoCardIconAccent {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-}
-
-.infoCardIconInfo {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-}
-
-.infoCardIconSuccess {
-  background: linear-gradient(135deg, #10b981, #059669);
-}
-
-.infoCardContent {
-  display: grid;
-  gap: 2px;
-  min-width: 0;
-}
-
-.infoCardLabel {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.infoCardValue {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-  word-break: break-word;
-}
-
-/* Images Grid */
+/* Images Grid - специфично для категорий */
 .categoryImagesGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -191,7 +106,22 @@
   font-weight: 500;
 }
 
-/* Empty state */
+/* Loading & Empty states */
+.categoryDetailPageLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-10);
+}
+
+.categoryDetailPageLoading p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
 .categoryDetailPageEmpty {
   display: flex;
   flex-direction: column;
@@ -209,76 +139,36 @@
   color: var(--text);
 }
 
-/* Loading */
-.categoryDetailPageLoading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-3);
-  padding: var(--space-10);
-}
-
-.categoryDetailPageLoading p {
-  margin: 0;
-  font-size: 14px;
-  color: var(--text-muted);
-}
-
 /* Responsive - Mobile */
 @media (max-width: 768px) {
   .categoryDetailPage {
     padding: 0;
     gap: 0;
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
   }
 
   .categoryDetailPageHeader {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
+    padding: 12px 16px;
     background: var(--surface);
     border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
-    z-index: 100;
-    width: 100%;
-    box-sizing: border-box;
-    min-width: 0;
+    z-index: 10;
   }
 
   .categoryDetailPageHeader .backButton {
-    flex-shrink: 0;
     height: 32px;
     padding: 6px 8px;
     font-size: 12px;
-    min-width: auto;
-    margin-right: auto;
-  }
-
-  .categoryDetailPageActions {
-    flex-shrink: 0;
-    display: flex;
-    gap: 4px;
-    min-width: 0;
   }
 
   .categoryDetailPageActions button {
     height: 32px;
-    padding: 6px 8px;
+    padding: 6px 12px;
     font-size: 11px;
-    white-space: nowrap;
   }
 
   .categoryDetailPageContent {
-    gap: 12px;
-    padding: 12px;
-    width: 100%;
-    box-sizing: border-box;
+    padding: 12px 16px;
   }
 
   .categoryDetailPagePanel {
@@ -286,7 +176,7 @@
   }
 
   .panelHeader {
-    padding: 12px;
+    padding: 12px 16px;
   }
 
   .panelTitle {
@@ -295,36 +185,6 @@
 
   .panelContent {
     padding: 12px;
-  }
-
-  .categoryInfoGrid {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    padding: 0;
-  }
-
-  .infoCard {
-    flex-direction: column;
-    text-align: center;
-    padding: 12px;
-    border-radius: 8px;
-  }
-
-  .infoCardIcon {
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
-    border-radius: 8px;
-  }
-
-  .infoCardLabel {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-
-  .infoCardValue {
-    font-size: 14px;
   }
 
   .categoryImagesGrid {
