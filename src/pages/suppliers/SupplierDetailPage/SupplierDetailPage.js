@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FiEdit2, FiTrash2, FiMail, FiPhone, FiBox, FiClock } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiMail, FiPhone, FiBox, FiClock, FiArrowLeft } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { Modal } from '../../../shared/ui/Modal/Modal';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
@@ -82,6 +82,14 @@ export function SupplierDetailPage() {
     navigate(`/suppliers/${supplierId}/edit`);
   };
 
+  const handleViewAudit = () => {
+    navigate(`/suppliers/${supplierId}/audit`);
+  };
+
+  const handleBack = () => {
+    navigate('/suppliers');
+  };
+
   const handleDeleteSupplier = async () => {
     setIsDeleting(true);
     try {
@@ -110,11 +118,11 @@ export function SupplierDetailPage() {
   if (!supplier) {
     return (
       <section className={styles.supplierDetailPage}>
-        <div className={styles.supplierDetailPageError}>
+        <div className={styles.errorState}>
           <h2>Поставщик не найден</h2>
           <p>Запрошенный поставщик не существует или был удален</p>
-          <Button variant="primary" onClick={() => navigate('/suppliers')}>
-            К списку поставщиков
+          <Button variant="primary" leftIcon={<FiArrowLeft />} onClick={handleBack}>
+            Назад к списку
           </Button>
         </div>
       </section>
@@ -124,7 +132,7 @@ export function SupplierDetailPage() {
   return (
     <section className={styles.supplierDetailPage}>
       <header className={styles.supplierDetailPageHeader}>
-        <Button variant="ghost" onClick={() => navigate('/suppliers')} className={styles.backButton}>
+        <Button variant="ghost" onClick={handleBack} className={styles.backButton}>
           ← Назад
         </Button>
         <div className={styles.supplierDetailPageActions}>
@@ -170,7 +178,7 @@ export function SupplierDetailPage() {
               <div className={`${styles.infoCardIcon} ${styles.infoCardIconPrimary}`}>
                 <FiBox />
               </div>
-              <div className={styles.infoCardContent}>
+              <div className={styles.infoCard__content}>
                 <span className={styles.infoCardLabel}>ID поставщика</span>
                 <span className={styles.infoCardValue}>{supplier.id}</span>
               </div>
@@ -178,9 +186,9 @@ export function SupplierDetailPage() {
 
             <div className={styles.infoCard}>
               <div className={`${styles.infoCardIcon} ${styles.infoCardIconSecondary}`}>
-                <span>📦</span>
+                <FiBox />
               </div>
-              <div className={styles.infoCardContent}>
+              <div className={styles.infoCard__content}>
                 <span className={styles.infoCardLabel}>Название</span>
                 <span className={styles.infoCardValue}>{supplier.name || '—'}</span>
               </div>
@@ -191,7 +199,7 @@ export function SupplierDetailPage() {
                 <div className={`${styles.infoCardIcon} ${styles.infoCardIconSuccess}`}>
                   <FiMail />
                 </div>
-                <div className={styles.infoCardContent}>
+                <div className={styles.infoCard__content}>
                   <span className={styles.infoCardLabel}>Email</span>
                   <span className={styles.infoCardValue}>{supplier.contact_email}</span>
                 </div>
@@ -203,7 +211,7 @@ export function SupplierDetailPage() {
                 <div className={`${styles.infoCardIcon} ${styles.infoCardIconInfo}`}>
                   <FiPhone />
                 </div>
-                <div className={styles.infoCardContent}>
+                <div className={styles.infoCard__content}>
                   <span className={styles.infoCardLabel}>Телефон</span>
                   <span className={styles.infoCardValue}>{supplier.phone}</span>
                 </div>

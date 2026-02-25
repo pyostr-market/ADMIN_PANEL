@@ -3,6 +3,10 @@
 .productTypeDetailPage {
   display: flex;
   flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-6);
+  max-width: 1200px;
+  margin: 0 auto;
   min-height: 100vh;
   background: var(--surface-subtle);
 }
@@ -13,67 +17,27 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
-  padding: var(--space-4);
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  min-height: 40px;
 }
 
-.productTypeDetailPageTitle {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--text);
+.backButton {
+  flex-shrink: 0;
+  padding: var(--space-2) var(--space-3);
+  font-size: 14px;
 }
 
-.productTypeDetailPageControls {
+.productTypeDetailPageActions {
   display: flex;
-  gap: var(--space-2);
+  align-items: center;
+  gap: var(--space-3);
+  margin-left: auto;
 }
 
 /* Content */
 .productTypeDetailPageContent {
-  padding: var(--space-4);
-  flex: 1;
-}
-
-.productTypeDetailPageCard {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: var(--space-4);
-}
-
-.productTypeDetailPageCardTitle {
-  margin: 0 0 var(--space-3);
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-}
-
-.productTypeDetailPageGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--space-4);
-}
-
-.productTypeDetailPageField {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
-}
-
-.productTypeDetailPageFieldLabel {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.productTypeDetailPageFieldValue {
-  font-size: 14px;
-  color: var(--text);
+  gap: var(--space-5);
 }
 
 /* Loading & Error states */
@@ -115,20 +79,78 @@
 
 /* Responsive - Mobile */
 @media (max-width: 768px) {
-  .productTypeDetailPageHeader {
-    padding: var(--space-3);
-    gap: var(--space-2);
+  .productTypeDetailPage {
+    padding: 0 !important;
+    gap: 0;
+    background: var(--surface-subtle);
   }
 
-  .productTypeDetailPageTitle {
-    font-size: 16px;
+  .productTypeDetailPageHeader {
+    padding: 12px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .backButton {
+    height: 32px;
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .productTypeDetailPageActions {
+    gap: 8px;
+  }
+
+  .productTypeDetailPageActions > button {
+    height: 32px;
+    padding: 6px 12px;
+    font-size: 12px;
   }
 
   .productTypeDetailPageContent {
-    padding: var(--space-3);
+    padding: 12px 16px;
+  }
+
+  .productTypeDetailPagePanel {
+    border-radius: 8px;
+  }
+
+  .panelHeader {
+    padding: 12px 16px;
+  }
+
+  .panelTitle {
+    font-size: 14px;
   }
 
   .productTypeDetailPageGrid {
     grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 0;
+  }
+
+  .infoCard {
+    padding: 12px;
+  }
+
+  .infoCardIcon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .infoCardIcon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .infoCardLabel {
+    font-size: 11px;
+  }
+
+  .infoCardValue {
+    font-size: 13px;
   }
 }

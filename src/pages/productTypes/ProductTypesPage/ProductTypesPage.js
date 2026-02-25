@@ -57,9 +57,9 @@ export function ProductTypesPage() {
     if (result) setProductTypeToDelete(null);
   };
 
-  const handleViewProductType = (productType) => navigate(`/product-types/${productType.id}`);
-  const handleEditProductType = (productType) => navigate(`/product-types/${productType.id}/edit`);
-  const handleCreateProductType = () => navigate('/product-types/create');
+  const handleViewProductType = (productType) => navigate(`/catalog/device_type/${productType.id}`);
+  const handleEditProductType = (productType) => navigate(`/catalog/device_type/${productType.id}/edit`);
+  const handleCreateProductType = () => navigate('/catalog/device_type/create');
 
   return (
     <>

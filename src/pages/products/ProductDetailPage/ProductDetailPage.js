@@ -4,6 +4,7 @@ import { FiEdit2, FiTrash2, FiBox, FiDollarSign, FiTag, FiPackage, FiFileText, F
 import { Button } from '../../../shared/ui/Button/Button';
 import { Modal } from '../../../shared/ui/Modal/Modal';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
+import { InfoBlock } from '../../../shared/ui/InfoBlock/InfoBlock';
 import { getApiErrorMessage } from '../../../shared/api/apiError';
 import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import {
@@ -158,6 +159,14 @@ export function ProductDetailPage() {
     navigate(`/catalog/products/${productId}/edit`);
   };
 
+  const handleViewAudit = () => {
+    navigate(`/catalog/products/${productId}/audit`);
+  };
+
+  const handleBack = () => {
+    navigate('/catalog/products');
+  };
+
   const handleDeleteProduct = async () => {
     setIsDeleting(true);
     try {
@@ -189,7 +198,7 @@ export function ProductDetailPage() {
         <div className={styles.productDetailPageError}>
           <h2>Товар не найден</h2>
           <p>Запрошенный товар не существует или был удален</p>
-          <Button variant="primary" onClick={() => navigate('/catalog/products')}>
+          <Button variant="primary" onClick={handleBack}>
             К списку товаров
           </Button>
         </div>
@@ -200,7 +209,7 @@ export function ProductDetailPage() {
   return (
     <section className={styles.productDetailPage}>
       <header className={styles.productDetailPageHeader}>
-        <Button variant="ghost" onClick={() => navigate('/catalog/products')} className={styles.backButton}>
+        <Button variant="ghost" onClick={handleBack} className={styles.backButton}>
           ← Назад
         </Button>
         <div className={styles.productDetailPageActions}>
@@ -244,83 +253,44 @@ export function ProductDetailPage() {
 
           {/* Правая колонка - Информация */}
           <div className={styles.productDetailPagePanel}>
-            <div className={styles.panelHeader}>
-              <div className={styles.panelHeaderContent}>
-                <h2 className={styles.panelTitle}>
-                  <FiBox className={styles.panelTitleIcon} />
-                  Информация
-                </h2>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<FiClock />}
-                  onClick={() => navigate(`/catalog/products/${productId}/audit`)}
-                >
-                  История
-                </Button>
-              </div>
-            </div>
-            <div className={styles.panelContent}>
-              <div className={styles.productInfoGrid}>
-                <div className={`${styles.infoCard} ${styles.infoCardHighlight}`}>
-                  <div className={`${styles.infoCardIcon} ${styles.infoCardIconPrimary}`}>
-                    <FiDollarSign />
-                  </div>
-                  <div className={styles.infoCardContent}>
-                    <span className={styles.infoCardLabel}>Цена</span>
-                    <span className={`${styles.infoCardValue} ${styles.infoCardValueLarge}`}>
-                      {product.price?.toLocaleString('ru-RU')} ₽
-                    </span>
-                  </div>
-                </div>
-
-                <div className={styles.infoCard}>
-                  <div className={`${styles.infoCardIcon} ${styles.infoCardIconSecondary}`}>
-                    <FiTag />
-                  </div>
-                  <div className={styles.infoCardContent}>
-                    <span className={styles.infoCardLabel}>ID товара</span>
-                    <span className={styles.infoCardValue}>{product.id}</span>
-                  </div>
-                </div>
-
-                {product.category && (
-                  <div className={styles.infoCard}>
-                    <div className={`${styles.infoCardIcon} ${styles.infoCardIconAccent}`}>
-                      <FiTag />
-                    </div>
-                    <div className={styles.infoCardContent}>
-                      <span className={styles.infoCardLabel}>Категория</span>
-                      <span className={styles.infoCardValue}>{product.category.name}</span>
-                    </div>
-                  </div>
-                )}
-
-                {product.product_type && (
-                  <div className={styles.infoCard}>
-                    <div className={`${styles.infoCardIcon} ${styles.infoCardIconInfo}`}>
-                      <FiPackage />
-                    </div>
-                    <div className={styles.infoCardContent}>
-                      <span className={styles.infoCardLabel}>Тип продукта</span>
-                      <span className={styles.infoCardValue}>{product.product_type.name}</span>
-                    </div>
-                  </div>
-                )}
-
-                {product.supplier && (
-                  <div className={styles.infoCard}>
-                    <div className={`${styles.infoCardIcon} ${styles.infoCardIconSuccess}`}>
-                      <FiBox />
-                    </div>
-                    <div className={styles.infoCardContent}>
-                      <span className={styles.infoCardLabel}>Поставщик</span>
-                      <span className={styles.infoCardValue}>{product.supplier.name}</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+            <InfoBlock
+              title="Информация"
+              headerIcon={<FiBox />}
+              items={[
+                {
+                  label: 'Цена',
+                  value: `${product.price?.toLocaleString('ru-RU')} ₽`,
+                  icon: <FiDollarSign />,
+                  iconVariant: 'primary',
+                },
+                {
+                  label: 'ID товара',
+                  value: product.id,
+                  icon: <FiTag />,
+                  iconVariant: 'secondary',
+                },
+                {
+                  label: 'Категория',
+                  value: product.category?.name || '—',
+                  icon: <FiTag />,
+                  iconVariant: 'accent',
+                },
+                {
+                  label: 'Тип продукта',
+                  value: product.product_type?.name || '—',
+                  icon: <FiPackage />,
+                  iconVariant: 'info',
+                },
+                {
+                  label: 'Поставщик',
+                  value: product.supplier?.name || '—',
+                  icon: <FiBox />,
+                  iconVariant: 'success',
+                },
+              ]}
+              auditUrl={`/catalog/products/${productId}/audit`}
+              onAuditClick={handleViewAudit}
+            />
           </div>
         </div>
 

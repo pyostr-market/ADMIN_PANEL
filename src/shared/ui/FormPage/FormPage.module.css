@@ -15,6 +15,9 @@
   justify-content: space-between;
   gap: var(--space-3);
   min-height: 40px;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--space-3);
 }
 
 .formPageBackButton {

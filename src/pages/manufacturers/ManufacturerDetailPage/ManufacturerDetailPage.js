@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FiEdit2, FiTrash2, FiBox, FiClock } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiBox, FiClock, FiArrowLeft } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { Modal } from '../../../shared/ui/Modal/Modal';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
+import { InfoBlock } from '../../../shared/ui/InfoBlock/InfoBlock';
 import { getApiErrorMessage } from '../../../shared/api/apiError';
 import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import {
@@ -82,6 +83,14 @@ export function ManufacturerDetailPage() {
     navigate(`/catalog/manufacturers/${manufacturerId}/edit`);
   };
 
+  const handleViewAudit = () => {
+    navigate(`/catalog/manufacturers/${manufacturerId}/audit`);
+  };
+
+  const handleBack = () => {
+    navigate('/catalog/manufacturers');
+  };
+
   const handleDeleteManufacturer = async () => {
     setIsDeleting(true);
     try {
@@ -110,11 +119,11 @@ export function ManufacturerDetailPage() {
   if (!manufacturer) {
     return (
       <section className={styles.manufacturerDetailPage}>
-        <div className="manufacturer-detail-page__error">
+        <div className={styles.errorState}>
           <h2>Производитель не найден</h2>
           <p>Запрошенный производитель не существует или был удален</p>
-          <Button variant="primary" onClick={() => navigate('/catalog/manufacturers')}>
-            К списку производителей
+          <Button variant="primary" leftIcon={<FiArrowLeft />} onClick={handleBack}>
+            Назад к списку
           </Button>
         </div>
       </section>
@@ -124,7 +133,7 @@ export function ManufacturerDetailPage() {
   return (
     <section className={styles.manufacturerDetailPage}>
       <header className={styles.manufacturerDetailPageHeader}>
-        <Button variant="ghost" onClick={() => navigate('/catalog/manufacturers')} className={styles.backButton}>
+        <Button variant="ghost" onClick={handleBack} className={styles.backButton}>
           ← Назад
         </Button>
         <div className={styles.manufacturerDetailPageActions}>
@@ -150,15 +159,18 @@ export function ManufacturerDetailPage() {
       </header>
 
       <div className={styles.manufacturerDetailPageContent}>
-        <div className="manufacturer-detail-page__panel">
-          <div className="panel-header">
-            <div className="panel-header__content">
-              <h2 className="panel-title">Информация</h2>
+        <div className={styles.manufacturerDetailPagePanel}>
+          <div className={styles.panelHeader}>
+            <div className={styles.panelHeaderContent}>
+              <h2 className={styles.panelTitle}>
+                <FiBox className={styles.panelTitleIcon} />
+                Информация
+              </h2>
               <Button
                 variant="secondary"
                 size="sm"
                 leftIcon={<FiClock />}
-                onClick={() => navigate(`/catalog/manufacturers/${manufacturerId}/audit`)}
+                onClick={handleViewAudit}
               >
                 История
               </Button>
@@ -166,34 +178,34 @@ export function ManufacturerDetailPage() {
           </div>
 
           <div className={styles.manufacturerInfoGrid}>
-            <div className="info-card">
-              <div className={`info-card__icon info-card__icon--primary`}>
+            <div className={styles.infoCard}>
+              <div className={`${styles.infoCardIcon} ${styles.infoCardIconPrimary}`}>
                 <FiBox />
               </div>
-              <div className="info-card__content">
-                <span className="info-card__label">ID производителя</span>
-                <span className="info-card__value">{manufacturer.id}</span>
+              <div className={styles.infoCard__content}>
+                <span className={styles.infoCardLabel}>ID производителя</span>
+                <span className={styles.infoCardValue}>{manufacturer.id}</span>
               </div>
             </div>
 
-            <div className="info-card">
-              <div className={`info-card__icon info-card__icon--secondary`}>
-                <span>🏭</span>
+            <div className={styles.infoCard}>
+              <div className={`${styles.infoCardIcon} ${styles.infoCardIconSecondary}`}>
+                <FiBox />
               </div>
-              <div className="info-card__content">
-                <span className="info-card__label">Название</span>
-                <span className="info-card__value">{manufacturer.name || '—'}</span>
+              <div className={styles.infoCard__content}>
+                <span className={styles.infoCardLabel}>Название</span>
+                <span className={styles.infoCardValue}>{manufacturer.name || '—'}</span>
               </div>
             </div>
 
             {manufacturer.description && (
-              <div className={`info-card info-card--full`}>
-                <div className={`info-card__icon info-card__icon--info`}>
-                  <span>📝</span>
+              <div className={`${styles.infoCard} ${styles.infoCardFull}`}>
+                <div className={`${styles.infoCardIcon} ${styles.infoCardIconInfo}`}>
+                  <FiBox />
                 </div>
-                <div className="info-card__content">
-                  <span className="info-card__label">Описание</span>
-                  <span className="info-card__value">{manufacturer.description}</span>
+                <div className={styles.infoCard__content}>
+                  <span className={styles.infoCardLabel}>Описание</span>
+                  <span className={styles.infoCardValue}>{manufacturer.description}</span>
                 </div>
               </div>
             )}

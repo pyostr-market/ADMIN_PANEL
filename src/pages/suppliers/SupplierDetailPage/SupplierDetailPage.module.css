@@ -68,11 +68,12 @@
 
 .panelHeader {
   margin-bottom: var(--space-5);
-  padding-bottom: var(--space-4);
+  padding: var(--space-4);
   border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: linear-gradient(90deg, var(--surface) 0%, var(--surface-subtle) 100%);
 }
 
 .panelHeaderContent {

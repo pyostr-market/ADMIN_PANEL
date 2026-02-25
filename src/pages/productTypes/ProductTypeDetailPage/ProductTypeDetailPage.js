@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FiEdit2, FiTrash2, FiBox, FiClock } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiBox, FiClock, FiArrowLeft } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { Modal } from '../../../shared/ui/Modal/Modal';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
+import { InfoBlock } from '../../../shared/ui/InfoBlock/InfoBlock';
 import { getApiErrorMessage } from '../../../shared/api/apiError';
 import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import {
@@ -79,6 +80,14 @@ export function ProductTypeDetailPage() {
     navigate(`/catalog/device_type/${productTypeId}/edit`);
   };
 
+  const handleViewAudit = () => {
+    navigate(`/catalog/device_type/${productTypeId}/audit`);
+  };
+
+  const handleBack = () => {
+    navigate('/catalog/device_type');
+  };
+
   const handleDeleteProductType = async () => {
     try {
       await deleteProductTypeRequest(productTypeId);
@@ -106,8 +115,8 @@ export function ProductTypeDetailPage() {
         <div className={styles.errorState}>
           <h2>Тип продукта не найден</h2>
           <p>Запрошенный тип продукта не существует или был удален</p>
-          <Button variant="primary" onClick={() => navigate('/catalog/device_type')}>
-            К списку типов продуктов
+          <Button variant="primary" leftIcon={<FiArrowLeft />} onClick={handleBack}>
+            Назад к списку
           </Button>
         </div>
       </section>
@@ -117,10 +126,10 @@ export function ProductTypeDetailPage() {
   return (
     <section className={styles.productTypeDetailPage}>
       <header className={styles.productTypeDetailPageHeader}>
-        <h1 className={styles.productTypeDetailPageTitle}>
-          {productType.name || `Тип продукта #${productType.id}`}
-        </h1>
-        <div className={styles.productTypeDetailPageControls}>
+        <Button variant="ghost" onClick={handleBack} className={styles.backButton}>
+          ← Назад
+        </Button>
+        <div className={styles.productTypeDetailPageActions}>
           <PermissionGate permission={['product_type:update']} fallback={null}>
             <Button
               variant="secondary"
@@ -143,36 +152,36 @@ export function ProductTypeDetailPage() {
       </header>
 
       <div className={styles.productTypeDetailPageContent}>
-        <div className={styles.productTypeDetailPageCard}>
-          <h2 className={styles.productTypeDetailPageCardTitle}>
-            <FiClock style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-            Информация
-          </h2>
-          <div className={styles.productTypeDetailPageGrid}>
-            <div className={styles.productTypeDetailPageField}>
-              <span className={styles.productTypeDetailPageFieldLabel}>ID</span>
-              <span className={styles.productTypeDetailPageFieldValue}>{productType.id}</span>
-            </div>
-            <div className={styles.productTypeDetailPageField}>
-              <span className={styles.productTypeDetailPageFieldLabel}>Название</span>
-              <span className={styles.productTypeDetailPageFieldValue}>{productType.name || '—'}</span>
-            </div>
-            {productType.parent_id && (
-              <div className={styles.productTypeDetailPageField}>
-                <span className={styles.productTypeDetailPageFieldLabel}>Родительский тип</span>
-                <span className={styles.productTypeDetailPageFieldValue}>ID: {productType.parent_id}</span>
-              </div>
-            )}
-            {productType.created_at && (
-              <div className={styles.productTypeDetailPageField}>
-                <span className={styles.productTypeDetailPageFieldLabel}>Создан</span>
-                <span className={styles.productTypeDetailPageFieldValue}>
-                  {new Date(productType.created_at).toLocaleDateString('ru-RU')}
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
+        <InfoBlock
+          title="Информация"
+          headerIcon={<FiBox />}
+          items={[
+            {
+              label: 'ID типа продукта',
+              value: productType.id,
+              iconVariant: 'primary',
+            },
+            {
+              label: 'Название',
+              value: productType.name || '—',
+              iconVariant: 'secondary',
+            },
+            {
+              label: 'Родительский тип',
+              value: productType.parent_id ? `ID: ${productType.parent_id}` : '—',
+              iconVariant: 'accent',
+            },
+            {
+              label: 'Создан',
+              value: productType.created_at
+                ? new Date(productType.created_at).toLocaleDateString('ru-RU')
+                : '—',
+              iconVariant: 'info',
+            },
+          ]}
+          auditUrl={`/catalog/device_type/${productTypeId}/audit`}
+          onAuditClick={handleViewAudit}
+        />
       </div>
 
       {isDeleteModalOpen && (

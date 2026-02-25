@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FiEdit2, FiTrash2, FiTag, FiClock } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiTag, FiClock, FiArrowLeft } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { Modal } from '../../../shared/ui/Modal/Modal';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
@@ -82,6 +82,14 @@ export function AttributeDetailPage() {
     navigate(`/catalog/attributes/${attributeId}/edit`);
   };
 
+  const handleViewAudit = () => {
+    navigate(`/catalog/attributes/${attributeId}/audit`);
+  };
+
+  const handleBack = () => {
+    navigate('/catalog/attributes');
+  };
+
   const handleDeleteAttribute = async () => {
     setIsDeleting(true);
     try {
@@ -110,11 +118,11 @@ export function AttributeDetailPage() {
   if (!attribute) {
     return (
       <section className={styles.attributeDetailPage}>
-        <div className={styles.attributeDetailPageError}>
+        <div className={styles.errorState}>
           <h2>Атрибут не найден</h2>
           <p>Запрошенный атрибут не существует или был удален</p>
-          <Button variant="primary" onClick={() => navigate('/catalog/attributes')}>
-            К списку атрибутов
+          <Button variant="primary" leftIcon={<FiArrowLeft />} onClick={handleBack}>
+            Назад к списку
           </Button>
         </div>
       </section>
@@ -124,7 +132,7 @@ export function AttributeDetailPage() {
   return (
     <section className={styles.attributeDetailPage}>
       <header className={styles.attributeDetailPageHeader}>
-        <Button variant="ghost" onClick={() => navigate('/catalog/attributes')} className={styles.backButton}>
+        <Button variant="ghost" onClick={handleBack} className={styles.backButton}>
           ← Назад
         </Button>
         <div className={styles.attributeDetailPageActions}>
@@ -151,14 +159,17 @@ export function AttributeDetailPage() {
 
       <div className={styles.attributeDetailPageContent}>
         <div className={styles.attributeDetailPagePanel}>
-          <div className="panel-header">
-            <div className="panel-header__content">
-              <h2 className="panel-title">Информация</h2>
+          <div className={styles.panelHeader}>
+            <div className={styles.panelHeaderContent}>
+              <h2 className={styles.panelTitle}>
+                <FiTag className={styles.panelTitleIcon} />
+                Информация
+              </h2>
               <Button
                 variant="secondary"
                 size="sm"
                 leftIcon={<FiClock />}
-                onClick={() => navigate(`/catalog/attributes/${attribute.id}/audit`)}
+                onClick={handleViewAudit}
               >
                 История
               </Button>
@@ -178,7 +189,7 @@ export function AttributeDetailPage() {
 
             <div className={styles.infoCard}>
               <div className={`${styles.infoCardIcon} ${styles.infoCardIconSecondary}`}>
-                <span>🏷️</span>
+                <FiTag />
               </div>
               <div className={styles.infoCard__content}>
                 <span className={styles.infoCardLabel}>Название</span>
@@ -188,7 +199,7 @@ export function AttributeDetailPage() {
 
             <div className={styles.infoCard}>
               <div className={`${styles.infoCardIcon} ${styles.infoCardIconInfo}`}>
-                <span>📝</span>
+                <FiTag />
               </div>
               <div className={styles.infoCard__content}>
                 <span className={styles.infoCardLabel}>Значение</span>
@@ -198,7 +209,7 @@ export function AttributeDetailPage() {
 
             <div className={styles.infoCard}>
               <div className={`${styles.infoCardIcon} ${styles.infoCardIconSuccess}`}>
-                <span>🔍</span>
+                <FiTag />
               </div>
               <div className={styles.infoCard__content}>
                 <span className={styles.infoCardLabel}>Фильтруемый</span>
