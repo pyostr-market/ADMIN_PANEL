@@ -48,6 +48,11 @@ import { StockPage } from '../../pages/warehouse/StockPage';
 import { StockMovementsPage } from '../../pages/warehouse/StockMovementsPage';
 import { InventoryPage } from '../../pages/warehouse/InventoryPage';
 
+// Billing
+import { CategoryPricingPoliciesPage } from '../../pages/billing/CategoryPricingPoliciesPage';
+import { CategoryPricingPolicyDetailPage } from '../../pages/billing/CategoryPricingPolicyDetailPage';
+import { CategoryPricingPolicyFormPage } from '../../pages/billing/CategoryPricingPolicyFormPage';
+
 function ErrorPageByCode() {
   const { code } = useParams();
   return <ErrorPage code={code} />;
@@ -142,6 +147,14 @@ export function AppRouter() {
           <Route path="/warehouse/stock" element={<StockPage />} />
           <Route path="/warehouse/movements" element={<StockMovementsPage />} />
           <Route path="/warehouse/inventory" element={<InventoryPage />} />
+
+          {/* Billing Routes */}
+          <Route element={<PrivateRoute permission={['billing']} mode="any" />}>
+            <Route path="/billing/pricing-policies" element={<CategoryPricingPoliciesPage />} />
+            <Route path="/billing/pricing-policies/create" element={<CategoryPricingPolicyFormPage />} />
+            <Route path="/billing/pricing-policies/:pricingPolicyId/edit" element={<CategoryPricingPolicyFormPage />} />
+            <Route path="/billing/pricing-policies/:pricingPolicyId" element={<CategoryPricingPolicyDetailPage />} />
+          </Route>
         </Route>
       </Route>
 

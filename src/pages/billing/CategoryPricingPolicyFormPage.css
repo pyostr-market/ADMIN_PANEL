@@ -1,0 +1,63 @@
+.category-pricing-policy-form-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.category-pricing-policy-form-page__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 900px;
+}
+
+.category-pricing-policy-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.category-pricing-policy-form__label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.category-pricing-policy-form__field input[type="number"],
+.category-pricing-policy-form__field input[type="text"] {
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+  background: var(--color-bg-input);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.category-pricing-policy-form__field input[type="number"]:focus,
+.category-pricing-policy-form__field input[type="text"]:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.category-pricing-policy-form__hint {
+  font-size: 0.8rem;
+  color: var(--color-text-tertiary);
+  margin-top: 0.25rem;
+}
+
+.category-pricing-policy-form__error {
+  font-size: 0.8rem;
+  color: var(--color-danger);
+  margin-top: 0.25rem;
+}
+
+.input-error {
+  border-color: var(--color-danger) !important;
+}
+
+.input-error:focus {
+  box-shadow: 0 0 0 3px var(--color-danger-light) !important;
+}

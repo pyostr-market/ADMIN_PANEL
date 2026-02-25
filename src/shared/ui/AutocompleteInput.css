@@ -147,7 +147,7 @@
 
 .autocomplete-input__option:hover,
 .autocomplete-input__option--highlighted {
-  background: var(--color-primary, var(--primary));
+  background: var(--border-strong);
   color: white;
 }
 

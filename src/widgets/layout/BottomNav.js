@@ -69,11 +69,20 @@ export function BottomNav({ currentPath }) {
               <span className="bottom-nav__label">{NAVIGATION_CONFIG.warehouse.title}</span>
             </button>
           </li>
+          <li className="bottom-nav__item">
+            <button
+              className={`bottom-nav__button ${activeMenu === 'billing' ? 'bottom-nav__button--active' : ''}`}
+              onClick={() => toggleMenu('billing')}
+            >
+              {renderIcon('billing', 22)}
+              <span className="bottom-nav__label">{NAVIGATION_CONFIG.billing.title}</span>
+            </button>
+          </li>
         </ul>
       </nav>
 
       {/* Мобильные сайдбары */}
-      {['crm', 'catalog', 'warehouse'].map((menuKey) => {
+      {['crm', 'catalog', 'warehouse', 'billing'].map((menuKey) => {
         const menu = NAVIGATION_CONFIG[menuKey];
         return (
           <div

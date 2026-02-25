@@ -96,6 +96,19 @@ export const NAVIGATION_CONFIG = {
     ],
   },
 
+  // Биллинг разделы
+  billing: {
+    title: 'Биллинг',
+    icon: 'billing',
+    items: [
+      {
+        label: 'Тарифы категорий',
+        path: '/billing/pricing-policies',
+        icon: 'pricing',
+      },
+    ],
+  },
+
   // Дополнительные разделы (для ПК навигации)
   additional: [
     {

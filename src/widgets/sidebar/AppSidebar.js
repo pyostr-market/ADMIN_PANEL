@@ -2,12 +2,35 @@ import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { FiChevronDown, FiChevronLeft, FiChevronRight, FiMoon, FiSun } from 'react-icons/fi';
 import { useSession } from '../../entities/session/model/SessionProvider';
-import { NAVIGATION_CONFIG, isActivePath } from '../../shared/config/navigation';
+import { NAVIGATION_CONFIG } from '../../shared/config/navigation';
 import { Icons } from '../../shared/config/navigation-icons';
+import { hasPermission } from '../../shared/lib/permissions/permissions';
 import './AppSidebar.css';
 
 const SIDEBAR_COLLAPSED_STORAGE_KEY = 'market-admin:sidebar-collapsed';
 const THEME_STORAGE_KEY = 'market-admin:theme';
+
+// Конфигурация прав для групп меню
+const MENU_PERMISSIONS = {
+  crm: ['users', 'users:view', 'admin:user', 'admin:user:view', 'permission', 'permission:view', 'admin:group:create', 'admin:group:update', 'admin:group:delete', 'admin:group:view'],
+  catalog: ['product', 'product:view', 'manufacturer', 'manufacturer:view', 'device_type', 'device-type:view', 'product_type', 'product_type:view'],
+  warehouse: ['warehouse', 'warehouse:view'],
+  billing: ['billing'],
+};
+
+/**
+ * Проверяет, есть ли у пользователя доступ к группе меню
+ */
+function hasMenuPermission(userPermissions, groupKey) {
+  const requiredPermissions = MENU_PERMISSIONS[groupKey];
+  
+  // Если прав нет в конфиге, показываем всегда
+  if (!requiredPermissions) {
+    return true;
+  }
+  
+  return hasPermission(userPermissions, requiredPermissions, 'any');
+}
 
 function SidebarItemLink({ to, label, Icon, collapsed }) {
   return (
@@ -62,6 +85,7 @@ export function AppSidebar({ collapsed, onCollapse }) {
       }
     });
     setExpandedGroups(newExpanded);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   useEffect(() => {
@@ -122,9 +146,14 @@ export function AppSidebar({ collapsed, onCollapse }) {
           collapsed={collapsed}
         />
 
-        {/* Динамические группы меню */}
+        {/* Динамические группы меню с проверкой прав */}
         {Object.keys(NAVIGATION_CONFIG).map((groupKey) => {
           if (groupKey === 'footer' || groupKey === 'additional') return null;
+
+          // Проверяем права доступа к группе
+          if (!hasMenuPermission(permissions, groupKey)) {
+            return null;
+          }
 
           const group = NAVIGATION_CONFIG[groupKey];
           const isOpen = expandedGroups[groupKey] || false;

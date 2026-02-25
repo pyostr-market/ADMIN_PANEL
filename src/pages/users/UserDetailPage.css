@@ -177,7 +177,7 @@
 }
 
 .user-detail-page__tabs .tab--active .tab-badge {
-  background: var(--surface-subtle);
+  background: var(--primary-hover);
 }
 
 /* Content */

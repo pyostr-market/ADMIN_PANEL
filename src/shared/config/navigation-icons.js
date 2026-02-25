@@ -21,12 +21,15 @@ import {
   FiClipboard,
   FiRepeat,
   FiCheckSquare,
+  FiPercent,
 } from 'react-icons/fi';
 
 export const Icons = {
   crm: FiUsers,
   catalog: FiGrid,
   warehouse: FiBox,
+  billing: FiDollarSign,
+  pricing: FiPercent,
   users: FiUsers,
   orders: FiFileText,
   customers: FiUsers,
