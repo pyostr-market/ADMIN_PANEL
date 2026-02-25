@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FiSave, FiX, FiPlus, FiTrash2, FiImage, FiTag, FiFileText } from 'react-icons/fi';
+import { FiImage, FiTag, FiFileText, FiTrash2, FiPlus } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
+import { FormPage } from '../../../shared/ui/FormPage';
+import { FormSection } from '../../../shared/ui/FormSection/FormSection';
+import { FormGrid } from '../../../shared/ui/FormGrid/FormGrid';
 import { Tabs, Tab } from '../../../shared/ui/Tabs/Tabs';
 import { ImageCarousel } from '../../../shared/ui/ImageCarousel/ImageCarousel';
 import { AutocompleteInput } from '../../../shared/ui/AutocompleteInput/AutocompleteInput';
@@ -196,11 +199,7 @@ export function ProductFormPage() {
     );
   }, []);
 
-  const handleSubmit = async (e, stayOnPage = false) => {
-    if (e) {
-      e.preventDefault();
-    }
-
+  const handleSubmit = async (stayOnPage = false) => {
     if (!validateForm()) {
       notificationsRef.current?.error('Исправьте ошибки в форме');
       return;
@@ -394,26 +393,22 @@ export function ProductFormPage() {
     }
   }, []);
 
-  if (isLoading) {
-    return (
-      <section className={styles.productFormPage}>
-        <div className={styles.productFormPageLoading}>
-          <div className="loading-spinner" />
-          <p>Загрузка данных товара...</p>
-        </div>
-      </section>
-    );
-  }
+  const handleBack = () => {
+    navigate(isEditMode ? `/catalog/products/${productId}` : '/catalog/products');
+  };
 
   return (
-    <section className={styles.productFormPage}>
-      <header className={styles.productFormPageHeader}>
-        <Button variant="ghost" onClick={() => navigate(isEditMode ? `/catalog/products/${productId}` : '/catalog/products')} className={styles.backButton}>
-          ← Назад
-        </Button>
-
-      </header>
-
+    <FormPage
+      title={isEditMode ? 'Редактирование товара' : 'Создание товара'}
+      backUrl={isEditMode ? `/catalog/products/${productId}` : '/catalog/products'}
+      isLoading={isLoading}
+      isSubmitting={isSubmitting}
+      onBack={handleBack}
+      onSubmit={() => handleSubmit(false)}
+      onSubmitAndStay={() => handleSubmit(true)}
+      showSubmitStay={true}
+      submitText={isEditMode ? 'Сохранить' : 'Создать'}
+    >
       <div className={styles.productFormPageTabs}>
         <Tabs>
           <Tab
@@ -437,318 +432,214 @@ export function ProductFormPage() {
         </Tabs>
       </div>
 
-      <form className={styles.productFormPageForm} onSubmit={handleSubmit}>
-        {activeTab === TABS.MAIN && (
-          <div className={styles.productForm}>
-            <div className={styles.productFormSection}>
-              <div className={styles.productFormSectionHeader}>
-                <div className={`${styles.productFormSectionIcon} ${styles.productFormSectionIconPrimary}`}>
-                  <FiTag />
-                </div>
-                <div>
-                  <h2 className={styles.productFormSectionTitle}>Основная информация</h2>
-                  <p className={styles.productFormSectionDescription}>Базовые данные о товаре</p>
-                </div>
-              </div>
-
-              <div className={styles.productFormGrid}>
-                <div className={`${styles.productFormField} ${styles.productFormFieldFull}`}>
-                  <label className={styles.productFormLabel}>
-                    Название <span className={styles.required}>*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => handleChange('name', e.target.value)}
-                    placeholder="Введите название товара"
-                    className={errors.name ? styles.inputError : ''}
-                  />
-                  {errors.name && (
-                    <span className={styles.productFormError}>{errors.name}</span>
-                  )}
-                </div>
-
-                <div className={styles.productFormField}>
-                  <label className={styles.productFormLabel}>
-                    Цена <span className={styles.required}>*</span>
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={formData.price}
-                    onChange={(e) => handleChange('price', e.target.value)}
-                    placeholder="0.00"
-                    className={errors.price ? styles.inputError : ''}
-                  />
-                  {errors.price && (
-                    <span className={styles.productFormError}>{errors.price}</span>
-                  )}
-                </div>
-              </div>
+      {activeTab === TABS.MAIN && (
+        <FormSection
+          icon={<FiTag />}
+          iconVariant="primary"
+          title="Основная информация"
+          description="Базовые данные о товаре"
+        >
+          <FormGrid columns={2}>
+            <div className={styles.productFormField}>
+              <label className={styles.productFormLabel}>
+                Название <span className={styles.required}>*</span>
+              </label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => handleChange('name', e.target.value)}
+                placeholder="Введите название товара"
+                className={errors.name ? styles.inputError : ''}
+              />
+              {errors.name && (
+                <span className={styles.productFormError}>{errors.name}</span>
+              )}
             </div>
 
-            <div className={styles.productFormSection}>
-              <div className={styles.productFormSectionHeader}>
-                <div className={`${styles.productFormSectionIcon} ${styles.productFormSectionIconSecondary}`}>
-                  <FiPackage />
-                </div>
-                <div>
-                  <h2 className={styles.productFormSectionTitle}>Классификация</h2>
-                  <p className={styles.productFormSectionDescription}>Категория, тип продукта и поставщики</p>
-                </div>
-              </div>
-
-              <div className={styles.productFormGrid}>
-                <div className={styles.productFormField}>
-                  <AutocompleteInput
-                    label="Категория"
-                    value={formData.category_id}
-                    onChange={(value) => handleChange('category_id', value)}
-                    fetchOptions={getCategoriesForAutocompleteRequest}
-                    placeholder="Начните ввод для поиска категории..."
-                    selectedOption={selectedCategory}
-                  />
-                </div>
-
-                <div className={styles.productFormField}>
-                  <AutocompleteInput
-                    label="Тип продукта"
-                    value={formData.product_type_id}
-                    onChange={(value) => handleChange('product_type_id', value)}
-                    fetchOptions={getProductTypesForAutocompleteRequest}
-                    placeholder="Начните ввод для поиска типа продукта..."
-                    selectedOption={selectedProductType}
-                  />
-                </div>
-
-                <div className={styles.productFormField}>
-                  <AutocompleteInput
-                    label="Поставщик"
-                    value={formData.supplier_id}
-                    onChange={(value) => handleChange('supplier_id', value)}
-                    fetchOptions={getSuppliersForAutocompleteRequest}
-                    placeholder="Начните ввод для поиска поставщика..."
-                    selectedOption={selectedSupplier}
-                  />
-                </div>
-              </div>
+            <div className={styles.productFormField}>
+              <label className={styles.productFormLabel}>
+                Цена <span className={styles.required}>*</span>
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                min="0"
+                value={formData.price}
+                onChange={(e) => handleChange('price', e.target.value)}
+                placeholder="0.00"
+                className={errors.price ? styles.inputError : ''}
+              />
+              {errors.price && (
+                <span className={styles.productFormError}>{errors.price}</span>
+              )}
             </div>
 
-            <div className={`${styles.productFormSection} ${styles.productFormSectionDescriptionSection}`}>
-              <div className={styles.productFormSectionHeader}>
-                <div className={`${styles.productFormSectionIcon} ${styles.productFormSectionIconInfo}`}>
-                  <FiFileText />
-                </div>
-                <div>
-                  <h2 className={styles.productFormSectionTitle}>Описание товара</h2>
-                  <p className={styles.productFormSectionDescription}>
-                    Подробное описание товара с возможностью форматирования текста
-                  </p>
-                </div>
-              </div>
-
-              <div className={`${styles.productFormField} ${styles.productFormFieldFull}`}>
-                <RichTextEditor
-                  value={formData.description}
-                  onChange={(html) => handleChange('description', html)}
-                  placeholder="Введите описание товара..."
-                  disabled={isSubmitting}
-                />
-                {errors.description && (
-                  <span className={styles.productFormError}>{errors.description}</span>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === TABS.IMAGES && (
-          <div className={styles.productForm}>
-            <div className={styles.productFormSection}>
-              <div className={styles.productFormSectionHeader}>
-                <div className={`${styles.productFormSectionIcon} ${styles.productFormSectionIconAccent}`}>
-                  <FiImage />
-                </div>
-                <div>
-                  <h2 className={styles.productFormSectionTitle}>Изображения товара</h2>
-                  <p className={styles.productFormSectionDescription}>
-                    Загрузите изображения товара. Перетаскивайте для изменения порядка. Первое изображение будет главным.
-                  </p>
-                </div>
-              </div>
-
-              <ImageCarousel
-                images={images}
-                onImagesChange={handleImagesChange}
-                multiple
-                showDelete
-                disabled={isSubmitting}
-                folder="products"
+            <div className={styles.productFormField}>
+              <AutocompleteInput
+                label="Категория"
+                value={formData.category_id}
+                onChange={(value) => handleChange('category_id', value)}
+                fetchOptions={getCategoriesForAutocompleteRequest}
+                placeholder="Начните ввод для поиска категории..."
+                selectedOption={selectedCategory}
               />
             </div>
+
+            <div className={styles.productFormField}>
+              <AutocompleteInput
+                label="Тип продукта"
+                value={formData.product_type_id}
+                onChange={(value) => handleChange('product_type_id', value)}
+                fetchOptions={getProductTypesForAutocompleteRequest}
+                placeholder="Начните ввод для поиска типа продукта..."
+                selectedOption={selectedProductType}
+              />
+            </div>
+
+            <div className={styles.productFormField}>
+              <AutocompleteInput
+                label="Поставщик"
+                value={formData.supplier_id}
+                onChange={(value) => handleChange('supplier_id', value)}
+                fetchOptions={getSuppliersForAutocompleteRequest}
+                placeholder="Начните ввод для поиска поставщика..."
+                selectedOption={selectedSupplier}
+              />
+            </div>
+
+            <div className={`${styles.productFormField} ${styles.productFormFieldFull}`}>
+              <label className={styles.productFormLabel}>Описание товара</label>
+              <RichTextEditor
+                value={formData.description}
+                onChange={(html) => handleChange('description', html)}
+                placeholder="Введите описание товара..."
+                disabled={isSubmitting}
+              />
+              {errors.description && (
+                <span className={styles.productFormError}>{errors.description}</span>
+              )}
+            </div>
+          </FormGrid>
+        </FormSection>
+      )}
+
+      {activeTab === TABS.IMAGES && (
+        <FormSection
+          icon={<FiImage />}
+          iconVariant="secondary"
+          title="Изображения товара"
+          description="Загрузите изображения товара. Перетаскивайте для изменения порядка. Первое изображение будет главным."
+        >
+          <ImageCarousel
+            images={images}
+            onImagesChange={handleImagesChange}
+            multiple
+            showDelete
+            disabled={isSubmitting}
+            folder="products"
+          />
+        </FormSection>
+      )}
+
+      {activeTab === TABS.ATTRIBUTES && (
+        <FormSection
+          icon={<FiFileText />}
+          iconVariant="info"
+          title="Атрибуты товара"
+          description="Добавьте характеристики товара (размер, цвет, материал и т.д.)"
+        >
+          {/* Форма добавления нового атрибута */}
+          <div className={styles.attributesForm}>
+            <div className={styles.attributesFormRow}>
+              <input
+                type="text"
+                value={newAttribute.name}
+                onChange={(e) => setNewAttribute((prev) => ({ ...prev, name: e.target.value }))}
+                placeholder="Название атрибута (например, Цвет)"
+                className={styles.attributesFormInput}
+              />
+              <input
+                type="text"
+                value={newAttribute.value}
+                onChange={(e) => setNewAttribute((prev) => ({ ...prev, value: e.target.value }))}
+                placeholder="Значение (например, Красный)"
+                className={styles.attributesFormInput}
+              />
+              <label className={styles.attributesFormCheckbox}>
+                <input
+                  type="checkbox"
+                  checked={newAttribute.is_filterable}
+                  onChange={(e) => setNewAttribute((prev) => ({ ...prev, is_filterable: e.target.checked }))}
+                />
+                <span>Фильтруемый</span>
+              </label>
+              <Button
+                type="button"
+                variant="primary"
+                size="sm"
+                leftIcon={<FiPlus />}
+                onClick={handleAddAttribute}
+              >
+                Добавить
+              </Button>
+            </div>
           </div>
-        )}
 
-        {activeTab === TABS.ATTRIBUTES && (
-          <div className={styles.productForm}>
-            <div className={styles.productFormSection}>
-              <div className={styles.productFormSectionHeader}>
-                <div className={`${styles.productFormSectionIcon} ${styles.productFormSectionIconInfo}`}>
-                  <FiFileText />
-                </div>
-                <div>
-                  <h2 className={styles.productFormSectionTitle}>Атрибуты товара</h2>
-                  <p className={styles.productFormSectionDescription}>
-                    Добавьте характеристики товара (размер, цвет, материал и т.д.)
-                  </p>
-                </div>
+          {/* Список атрибутов */}
+          {attributes.length > 0 ? (
+            <div className={styles.attributesList}>
+              <div className={styles.attributesListHeader}>
+                <span className={`${styles.attributesListCol}`}>Название</span>
+                <span className={`${styles.attributesListCol}`}>Значение</span>
+                <span className={`${styles.attributesListCol} ${styles.attributesListColCheckbox}`}>Фильтруемый</span>
+                <span className={`${styles.attributesListCol} ${styles.attributesListColActions}`}>Действия</span>
               </div>
-
-              {/* Форма добавления нового атрибута */}
-              <div className={styles.attributesForm}>
-                <div className={styles.attributesFormRow}>
+              {attributes.map((attr, index) => (
+                <div key={index} className={styles.attributesListRow}>
                   <input
                     type="text"
-                    value={newAttribute.name}
-                    onChange={(e) => setNewAttribute((prev) => ({ ...prev, name: e.target.value }))}
-                    placeholder="Название атрибута (например, Цвет)"
-                    className={styles.attributesFormInput}
+                    value={attr.name}
+                    onChange={(e) => handleAttributeChange(index, 'name', e.target.value)}
+                    className={styles.attributesListInput}
+                    placeholder="Название"
                   />
                   <input
                     type="text"
-                    value={newAttribute.value}
-                    onChange={(e) => setNewAttribute((prev) => ({ ...prev, value: e.target.value }))}
-                    placeholder="Значение (например, Красный)"
-                    className={styles.attributesFormInput}
+                    value={attr.value}
+                    onChange={(e) => handleAttributeChange(index, 'value', e.target.value)}
+                    className={styles.attributesListInput}
+                    placeholder="Значение"
                   />
-                  <label className={styles.attributesFormCheckbox}>
+                  <label className={styles.attributesListCheckbox}>
                     <input
                       type="checkbox"
-                      checked={newAttribute.is_filterable}
-                      onChange={(e) => setNewAttribute((prev) => ({ ...prev, is_filterable: e.target.checked }))}
+                      checked={attr.is_filterable}
+                      onChange={(e) => handleAttributeChange(index, 'is_filterable', e.target.checked)}
                     />
-                    <span>Фильтруемый</span>
                   </label>
                   <Button
                     type="button"
-                    variant="primary"
-                    size="sm"
-                    leftIcon={<FiPlus />}
-                    onClick={handleAddAttribute}
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleRemoveAttribute(index)}
+                    className={styles.attributesListDelete}
                   >
-                    Добавить
+                    <FiTrash2 />
                   </Button>
                 </div>
-              </div>
-
-              {/* Список атрибутов */}
-              {attributes.length > 0 ? (
-                <div className={styles.attributesList}>
-                  <div className={styles.attributesListHeader}>
-                    <span className={`${styles.attributesListCol}`}>Название</span>
-                    <span className={`${styles.attributesListCol}`}>Значение</span>
-                    <span className={`${styles.attributesListCol} ${styles.attributesListColCheckbox}`}>Фильтруемый</span>
-                    <span className={`${styles.attributesListCol} ${styles.attributesListColActions}`}>Действия</span>
-                  </div>
-                  {attributes.map((attr, index) => (
-                    <div key={index} className={styles.attributesListRow}>
-                      <input
-                        type="text"
-                        value={attr.name}
-                        onChange={(e) => handleAttributeChange(index, 'name', e.target.value)}
-                        className={styles.attributesListInput}
-                        placeholder="Название"
-                      />
-                      <input
-                        type="text"
-                        value={attr.value}
-                        onChange={(e) => handleAttributeChange(index, 'value', e.target.value)}
-                        className={styles.attributesListInput}
-                        placeholder="Значение"
-                      />
-                      <label className={styles.attributesListCheckbox}>
-                        <input
-                          type="checkbox"
-                          checked={attr.is_filterable}
-                          onChange={(e) => handleAttributeChange(index, 'is_filterable', e.target.checked)}
-                        />
-                      </label>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleRemoveAttribute(index)}
-                        className={styles.attributesListDelete}
-                      >
-                        <FiTrash2 />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className={styles.attributesListEmpty}>
-                  <FiFileText size={48} />
-                  <p>Атрибуты не добавлены</p>
-                  <span className={styles.attributesListEmptyHint}>
-                    Добавьте характеристики товара с помощью формы выше
-                  </span>
-                </div>
-              )}
+              ))}
             </div>
-          </div>
-        )}
-
-        <div className={styles.productFormPageActions}>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => navigate('/catalog/products')}
-            leftIcon={<FiX />}
-          >
-            Отмена
-          </Button>
-          <Button
-            type="button"
-            variant="primary"
-            leftIcon={<FiSave />}
-            loading={isSubmitting}
-            size="lg"
-            onClick={() => handleSubmit(null, true)}
-          >
-            Сохранить и продолжить редактирование
-          </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            leftIcon={<FiSave />}
-            loading={isSubmitting}
-            size="lg"
-          >
-            {isEditMode ? 'Сохранить' : 'Создать'}
-          </Button>
-        </div>
-      </form>
-    </section>
-  );
-}
-
-function FiPackage({ size = 20, className = '' }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-      <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-      <line x1="12" y1="22.08" x2="12" y2="12" />
-    </svg>
+          ) : (
+            <div className={styles.attributesListEmpty}>
+              <FiFileText size={48} />
+              <p>Атрибуты не добавлены</p>
+              <span className={styles.attributesListEmptyHint}>
+                Добавьте характеристики товара с помощью формы выше
+              </span>
+            </div>
+          )}
+        </FormSection>
+      )}
+    </FormPage>
   );
 }
