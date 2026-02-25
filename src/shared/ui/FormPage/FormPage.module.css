@@ -109,8 +109,20 @@
     width: 100%;
   }
 
+  .formPageFooterLeft > button {
+    width: 100%;
+    height: 44px;
+    justify-content: center;
+  }
+
+  .formPageFooterRight {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
   .formPageFooterRight > button {
     width: 100%;
     justify-content: center;
+    height: 44px;
   }
 }

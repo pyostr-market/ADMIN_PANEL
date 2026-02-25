@@ -550,38 +550,67 @@ export function ProductFormPage() {
         >
           {/* Форма добавления нового атрибута */}
           <div className={styles.attributesForm}>
-            <div className={styles.attributesFormRow}>
-              <input
-                type="text"
-                value={newAttribute.name}
-                onChange={(e) => setNewAttribute((prev) => ({ ...prev, name: e.target.value }))}
-                placeholder="Название атрибута (например, Цвет)"
-                className={styles.attributesFormInput}
-              />
-              <input
-                type="text"
-                value={newAttribute.value}
-                onChange={(e) => setNewAttribute((prev) => ({ ...prev, value: e.target.value }))}
-                placeholder="Значение (например, Красный)"
-                className={styles.attributesFormInput}
-              />
-              <label className={styles.attributesFormCheckbox}>
-                <input
-                  type="checkbox"
-                  checked={newAttribute.is_filterable}
-                  onChange={(e) => setNewAttribute((prev) => ({ ...prev, is_filterable: e.target.checked }))}
-                />
-                <span>Фильтруемый</span>
-              </label>
-              <Button
-                type="button"
-                variant="primary"
-                size="sm"
-                leftIcon={<FiPlus />}
-                onClick={handleAddAttribute}
-              >
-                Добавить
-              </Button>
+            <div className={styles.attributesFormCard}>
+              <div className={styles.attributesFormRow}>
+                <div className={styles.attributesFormField}>
+                  <label className={styles.attributesFormLabel}>Название</label>
+                  <input
+                    type="text"
+                    value={newAttribute.name}
+                    onChange={(e) => setNewAttribute((prev) => ({ ...prev, name: e.target.value }))}
+                    placeholder="Например: Цвет"
+                    className={styles.attributesFormInput}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleAddAttribute();
+                      }
+                    }}
+                  />
+                </div>
+                <div className={styles.attributesFormField}>
+                  <label className={styles.attributesFormLabel}>Значение</label>
+                  <input
+                    type="text"
+                    value={newAttribute.value}
+                    onChange={(e) => setNewAttribute((prev) => ({ ...prev, value: e.target.value }))}
+                    placeholder="Например: Красный"
+                    className={styles.attributesFormInput}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleAddAttribute();
+                      }
+                    }}
+                  />
+                </div>
+                <div className={styles.attributesFormField}>
+                  <label className={styles.attributesFormLabel}>
+                    <input
+                      type="checkbox"
+                      checked={newAttribute.is_filterable}
+                      onChange={(e) => setNewAttribute((prev) => ({ ...prev, is_filterable: e.target.checked }))}
+                      className={styles.attributesFormCheckboxInput}
+                    />
+                    Фильтруемый
+                  </label>
+                  <span className={styles.attributesFormHint}>
+                    Показывать в фильтрах
+                  </span>
+                </div>
+                <div className={styles.attributesFormButtonWrapper}>
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="md"
+                    leftIcon={<FiPlus />}
+                    onClick={handleAddAttribute}
+                    className={styles.attributesFormAddButton}
+                  >
+                    Добавить
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -589,50 +618,67 @@ export function ProductFormPage() {
           {attributes.length > 0 ? (
             <div className={styles.attributesList}>
               <div className={styles.attributesListHeader}>
-                <span className={`${styles.attributesListCol}`}>Название</span>
-                <span className={`${styles.attributesListCol}`}>Значение</span>
-                <span className={`${styles.attributesListCol} ${styles.attributesListColCheckbox}`}>Фильтруемый</span>
-                <span className={`${styles.attributesListCol} ${styles.attributesListColActions}`}>Действия</span>
+                <span className={`${styles.attributesListCol} ${styles.attributesListColName}`}>Название</span>
+                <span className={`${styles.attributesListCol} ${styles.attributesListColValue}`}>Значение</span>
+                <span className={`${styles.attributesListCol} ${styles.attributesListColFilter}`}>В фильтрах</span>
+                <span className={`${styles.attributesListCol} ${styles.attributesListColActions}`}></span>
               </div>
-              {attributes.map((attr, index) => (
-                <div key={index} className={styles.attributesListRow}>
-                  <input
-                    type="text"
-                    value={attr.name}
-                    onChange={(e) => handleAttributeChange(index, 'name', e.target.value)}
-                    className={styles.attributesListInput}
-                    placeholder="Название"
-                  />
-                  <input
-                    type="text"
-                    value={attr.value}
-                    onChange={(e) => handleAttributeChange(index, 'value', e.target.value)}
-                    className={styles.attributesListInput}
-                    placeholder="Значение"
-                  />
-                  <label className={styles.attributesListCheckbox}>
-                    <input
-                      type="checkbox"
-                      checked={attr.is_filterable}
-                      onChange={(e) => handleAttributeChange(index, 'is_filterable', e.target.checked)}
-                    />
-                  </label>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleRemoveAttribute(index)}
-                    className={styles.attributesListDelete}
-                  >
-                    <FiTrash2 />
-                  </Button>
-                </div>
-              ))}
+              <div className={styles.attributesListBody}>
+                {attributes.map((attr, index) => (
+                  <div key={index} className={styles.attributesListRow}>
+                    <div className={styles.attributesListCell}>
+                      <input
+                        type="text"
+                        value={attr.name}
+                        onChange={(e) => handleAttributeChange(index, 'name', e.target.value)}
+                        className={styles.attributesListInput}
+                        placeholder="Название"
+                      />
+                    </div>
+                    <div className={styles.attributesListCell}>
+                      <input
+                        type="text"
+                        value={attr.value}
+                        onChange={(e) => handleAttributeChange(index, 'value', e.target.value)}
+                        className={styles.attributesListInput}
+                        placeholder="Значение"
+                      />
+                    </div>
+                    <div className={styles.attributesListCell}>
+                      <label className={styles.attributesListCheckbox}>
+                        <input
+                          type="checkbox"
+                          checked={attr.is_filterable}
+                          onChange={(e) => handleAttributeChange(index, 'is_filterable', e.target.checked)}
+                          className={styles.attributesListCheckboxInput}
+                        />
+                        <span className={styles.attributesListCheckboxText}>
+                          {attr.is_filterable ? 'Да' : 'Нет'}
+                        </span>
+                      </label>
+                    </div>
+                    <div className={styles.attributesListCell}>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleRemoveAttribute(index)}
+                        className={styles.attributesListDelete}
+                        title="Удалить атрибут"
+                      >
+                        <FiTrash2 />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           ) : (
             <div className={styles.attributesListEmpty}>
-              <FiFileText size={48} />
-              <p>Атрибуты не добавлены</p>
+              <div className={styles.attributesListEmptyIcon}>
+                <FiFileText size={48} />
+              </div>
+              <p className={styles.attributesListEmptyTitle}>Атрибуты не добавлены</p>
               <span className={styles.attributesListEmptyHint}>
                 Добавьте характеристики товара с помощью формы выше
               </span>
