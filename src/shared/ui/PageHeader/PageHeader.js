@@ -1,6 +1,6 @@
-import { Button } from '../Button';
+import { Button } from '../Button/Button';
 import { FiArrowLeft } from 'react-icons/fi';
-import './PageHeader.css';
+import styles from './PageHeader.module.css';
 
 export function PageHeader({
   title,
@@ -21,24 +21,24 @@ export function PageHeader({
   const showBack = onBack || backUrl;
 
   return (
-    <header className={`page-header ${className}`}>
-      <div className="page-header__left">
+    <header className={`${styles.pageHeader} ${className}`}>
+      <div className={styles.pageHeaderLeft}>
         {showBack && (
           <Button
             variant="ghost"
             onClick={handleBack}
-            className="page-header__back-button"
+            className={styles.pageHeaderBackButton}
             leftIcon={<FiArrowLeft />}
           >
             Назад
           </Button>
         )}
-        <div className="page-header__title-wrapper">
-          <h1 className="page-header__title">{title}</h1>
-          {subtitle && <p className="page-header__subtitle">{subtitle}</p>}
+        <div className={styles.pageHeaderTitleWrapper}>
+          <h1 className={styles.pageHeaderTitle}>{title}</h1>
+          {subtitle && <p className={styles.pageHeaderSubtitle}>{subtitle}</p>}
         </div>
       </div>
-      {actions && <div className="page-header__actions">{actions}</div>}
+      {actions && <div className={styles.pageHeaderActions}>{actions}</div>}
     </header>
   );
 }

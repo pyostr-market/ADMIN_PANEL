@@ -1,0 +1,109 @@
+.manufacturerDetailPage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.manufacturerDetailPageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 40px;
+}
+
+.manufacturerDetailPageHeader .backButton {
+  flex-shrink: 0;
+}
+
+.manufacturerDetailPageActions {
+  display: flex;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .manufacturerDetailPage {
+    padding: 0;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .manufacturerDetailPageHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+  }
+
+  .manufacturerDetailPageHeader .backButton {
+    flex-shrink: 0;
+    height: 32px;
+    padding: 6px 8px;
+    font-size: 12px;
+    min-width: auto;
+    margin-right: auto;
+  }
+
+  .manufacturerDetailPageActions {
+    flex-shrink: 0;
+    display: flex;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .manufacturerDetailPageActions button {
+    height: 32px;
+    padding: 6px 8px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .manufacturerDetailPageContent {
+    gap: 12px;
+    padding: 12px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .manufacturerInfoGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .infoCard {
+    flex-direction: column;
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .infoCardIcon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    border-radius: 8px;
+  }
+
+  .infoCardLabel {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .infoCardValue {
+    font-size: 14px;
+  }
+}

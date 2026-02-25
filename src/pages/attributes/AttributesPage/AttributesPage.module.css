@@ -1,0 +1,416 @@
+/* AttributesPage - стиль как у UsersListPage */
+.attributesPage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Header */
+.attributesPageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 40px;
+}
+
+.attributesPageTitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.attributesPageControls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 180px;
+}
+
+/* Filters */
+.attributesPageFilters {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+  transition: opacity 0.2s ease;
+}
+
+.attributesPageFiltersLoading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Entity List Item */
+.attributesPageItemContent {
+  display: flex;
+  flex: 1;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: var(--space-2);
+  margin: calc(-1 * var(--space-2));
+  border-radius: var(--radius-md);
+}
+
+.attributesPageItemContent:hover {
+  background: var(--surface-subtle);
+}
+
+.attributesPageItemMain {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  width: 100%;
+}
+
+.attributesPageAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  color: white;
+  background: var(--gradient-avatar);
+  transition: transform 0.2s;
+}
+
+.attributesPageItemContent:hover .attributesPageAvatar {
+  transform: scale(1.05);
+}
+
+.attributesPageItemInfo {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.attributesPageItemHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.attributesPageItemTitle {
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0;
+  color: var(--text);
+}
+
+.attributesPageItemBadges {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.attributesPageBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+}
+
+.attributesPageBadge--verified {
+  background: var(--success);
+  color: white;
+}
+
+.attributesPageItemMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.attributesPageMetaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.attributesPageMetaIcon {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.attributesPageMetaLabel {
+  font-weight: 500;
+}
+
+.attributesPageSeparator {
+  color: var(--border-strong);
+}
+
+/* Item Actions */
+.attributesPageItemActions {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.btnDelete:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* Modal confirm text */
+.modalConfirmText {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.modalConfirmText strong {
+  color: var(--text);
+}
+
+.modalConfirmNote {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: var(--space-2);
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .attributesPage {
+    padding: 0 !important;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Header - название слева, кнопка справа */
+  .attributesPageHeader {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .attributesPageTitle {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+    flex: 0 1 auto;
+  }
+
+  .attributesPageControls {
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  .attributesPageControls button {
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  /* Filters */
+  .attributesPageFilters {
+    grid-template-columns: 1fr;
+    padding: 10px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    gap: 8px;
+    box-sizing: border-box;
+  }
+
+  .attributesPageFiltersLoading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  /* Entity List */
+  .attributesPageList,
+  .entityList {
+    padding: 0;
+  }
+
+  .attributesPageItem {
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid var(--border);
+    width: 100%;
+  }
+
+  .attributesPageItem:last-child {
+    border-bottom: none;
+  }
+
+  /* Item content - на всю ширину */
+  .attributesPageItemContent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 60px;
+  }
+
+  .attributesPageItemMain {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .attributesPageAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    color: white;
+    background: var(--gradient-avatar);
+  }
+
+  .attributesPageItemContent:hover .attributesPageAvatar {
+    transform: none;
+  }
+
+  .attributesPageItemInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    flex: 1;
+    width: 100%;
+  }
+
+  .attributesPageItemHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+    height: 24px;
+    width: 100%;
+  }
+
+  .attributesPageItemTitle {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .attributesPageItemBadges {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .attributesPageBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .attributesPageItemMeta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    overflow: hidden;
+    font-size: 11px;
+    color: var(--text-muted);
+    width: 100%;
+    line-height: 1.4;
+  }
+
+  .attributesPageItemMeta:empty {
+    display: none;
+  }
+
+  .attributesPageMetaItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+  }
+
+  .attributesPageMetaItem:empty {
+    display: none;
+  }
+
+  .attributesPageMetaIcon {
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  .attributesPageSeparator {
+    color: var(--border-strong);
+    flex-shrink: 0;
+  }
+
+  /* Item actions - на всю ширину */
+  .attributesPageItemActions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 8px 12px;
+    border-top: 1px solid var(--border);
+    background: var(--surface-subtle);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .attributesPageItemActions button {
+    height: 32px;
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+
+  .attributesPageItemActions .btnDelete {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    min-width: 32px;
+  }
+
+  /* Pagination */
+  .attributesPagePagination {
+    padding: 10px 12px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    width: 100%;
+    box-sizing: border-box;
+  }
+}

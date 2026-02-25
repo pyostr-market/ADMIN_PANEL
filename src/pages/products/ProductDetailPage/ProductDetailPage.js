@@ -1,17 +1,16 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FiEdit2, FiTrash2, FiBox, FiDollarSign, FiTag, FiPackage, FiFileText, FiClock, FiImage, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import { Button } from '../../../shared/ui/Button';
-import { Modal } from '../../../shared/ui/Modal';
-import { PermissionGate } from '../../../shared/ui/PermissionGate';
+import { Button } from '../../../shared/ui/Button/Button';
+import { Modal } from '../../../shared/ui/Modal/Modal';
+import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
 import { getApiErrorMessage } from '../../../shared/api/apiError';
 import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import {
   getProductByIdRequest,
   deleteProductRequest,
 } from './api/productsApi';
-import './ProductDetailPage.css';
-import './ProductDetailPage-Mobile.css';
+import styles from './ProductDetailPage.module.css';
 
 function DeleteProductModal({ product, onClose, onSubmit, isSubmitting }) {
   if (!product) return null;
@@ -35,11 +34,11 @@ function DeleteProductModal({ product, onClose, onSubmit, isSubmitting }) {
         </>
       )}
     >
-      <p className="modal-confirm-text">
+      <p className={styles.modalConfirmText}>
         Вы уверены, что хотите удалить товар{' '}
         <strong>{product.name || `ID: ${product.id}`}</strong>?
       </p>
-      <p className="modal-confirm-note">
+      <p className={styles.modalConfirmNote}>
         Это действие нельзя отменить.
       </p>
     </Modal>
@@ -51,7 +50,7 @@ function ImageGallery({ images }) {
 
   if (!images || images.length === 0) {
     return (
-      <div className="product-images__empty">
+      <div className={styles.productImagesEmpty}>
         <FiImage size={48} />
         <p>Нет изображений</p>
       </div>
@@ -67,25 +66,25 @@ function ImageGallery({ images }) {
   };
 
   return (
-    <div className="product-images">
-      <div className="product-images__main">
+    <div className={styles.productImages}>
+      <div className={styles.productImagesMain}>
         <img
           src={images[currentIndex]?.image_url}
           alt={`Изображение ${currentIndex + 1}`}
-          className="product-images__main-image"
+          className={styles.productImagesMainImage}
         />
         {images.length > 1 && (
           <>
             <button
               type="button"
-              className="product-images__nav product-images__nav--prev"
+              className={`${styles.productImagesNav} ${styles.productImagesNavPrev}`}
               onClick={goToPrevious}
             >
               <FiChevronLeft />
             </button>
             <button
               type="button"
-              className="product-images__nav product-images__nav--next"
+              className={`${styles.productImagesNav} ${styles.productImagesNavNext}`}
               onClick={goToNext}
             >
               <FiChevronRight />
@@ -93,29 +92,29 @@ function ImageGallery({ images }) {
           </>
         )}
         {images[currentIndex]?.is_main && (
-          <span className="product-images__main-badge">Главное</span>
+          <span className={styles.productImagesMainBadge}>Главное</span>
         )}
       </div>
 
       {images.length > 1 && (
-        <div className="product-images__thumbnails">
+        <div className={styles.productImagesThumbnails}>
           {images.map((image, index) => (
             <button
               key={index}
               type="button"
-              className={`product-images__thumbnail ${
-                index === currentIndex ? 'product-images__thumbnail--active' : ''
-              } ${image.is_main ? 'product-images__thumbnail--main' : ''}`}
+              className={`${styles.productImagesThumbnail} ${
+                index === currentIndex ? styles.productImagesThumbnailActive : ''
+              } ${image.is_main ? styles.productImagesThumbnailMain : ''}`}
               onClick={() => setCurrentIndex(index)}
             >
               <img src={image.image_url} alt={`Миниатюра ${index + 1}`} />
-              {image.is_main && <span className="product-images__thumbnail-badge">★</span>}
+              {image.is_main && <span className={styles.productImagesThumbnailBadge}>★</span>}
             </button>
           ))}
         </div>
       )}
 
-      <div className="product-images__counter">
+      <div className={styles.productImagesCounter}>
         {currentIndex + 1} из {images.length}
       </div>
     </div>
@@ -175,8 +174,8 @@ export function ProductDetailPage() {
 
   if (isLoading) {
     return (
-      <section className="product-detail-page">
-        <div className="product-detail-page__loading">
+      <section className={styles.productDetailPage}>
+        <div className={styles.productDetailPageLoading}>
           <div className="loading-spinner" />
           <p>Загрузка данных товара...</p>
         </div>
@@ -186,8 +185,8 @@ export function ProductDetailPage() {
 
   if (!product) {
     return (
-      <section className="product-detail-page">
-        <div className="product-detail-page__error">
+      <section className={styles.productDetailPage}>
+        <div className={styles.productDetailPageError}>
           <h2>Товар не найден</h2>
           <p>Запрошенный товар не существует или был удален</p>
           <Button variant="primary" onClick={() => navigate('/catalog/products')}>
@@ -199,12 +198,12 @@ export function ProductDetailPage() {
   }
 
   return (
-    <section className="product-detail-page">
-      <header className="product-detail-page__header">
-        <Button variant="ghost" onClick={() => navigate('/catalog/products')} className="back-button">
+    <section className={styles.productDetailPage}>
+      <header className={styles.productDetailPageHeader}>
+        <Button variant="ghost" onClick={() => navigate('/catalog/products')} className={styles.backButton}>
           ← Назад
         </Button>
-        <div className="product-detail-page__actions">
+        <div className={styles.productDetailPageActions}>
           <PermissionGate permission={['product:update']} fallback={null}>
             <Button
               variant="secondary"
@@ -226,29 +225,29 @@ export function ProductDetailPage() {
         </div>
       </header>
 
-      <div className="product-detail-page__content">
-        <div className="product-detail-page__grid">
+      <div className={styles.productDetailPageContent}>
+        <div className={styles.productDetailPageGrid}>
           {/* Левая колонка - Изображения */}
-          <div className="product-detail-page__panel">
-            <div className="panel-header">
-              <div className="panel-header__content">
-                <h2 className="panel-title">
-                  <FiImage className="panel-title__icon" />
+          <div className={styles.productDetailPagePanel}>
+            <div className={styles.panelHeader}>
+              <div className={styles.panelHeaderContent}>
+                <h2 className={styles.panelTitle}>
+                  <FiImage className={styles.panelTitleIcon} />
                   Изображения
                 </h2>
               </div>
             </div>
-            <div className="panel-content">
+            <div className={styles.panelContent}>
               <ImageGallery images={product.images} />
             </div>
           </div>
 
           {/* Правая колонка - Информация */}
-          <div className="product-detail-page__panel">
-            <div className="panel-header">
-              <div className="panel-header__content">
-                <h2 className="panel-title">
-                  <FiBox className="panel-title__icon" />
+          <div className={styles.productDetailPagePanel}>
+            <div className={styles.panelHeader}>
+              <div className={styles.panelHeaderContent}>
+                <h2 className={styles.panelTitle}>
+                  <FiBox className={styles.panelTitleIcon} />
                   Информация
                 </h2>
                 <Button
@@ -261,62 +260,62 @@ export function ProductDetailPage() {
                 </Button>
               </div>
             </div>
-            <div className="panel-content">
-              <div className="product-info-grid">
-                <div className="info-card info-card--highlight">
-                  <div className="info-card__icon info-card__icon--primary">
+            <div className={styles.panelContent}>
+              <div className={styles.productInfoGrid}>
+                <div className={`${styles.infoCard} ${styles.infoCardHighlight}`}>
+                  <div className={`${styles.infoCardIcon} ${styles.infoCardIconPrimary}`}>
                     <FiDollarSign />
                   </div>
-                  <div className="info-card__content">
-                    <span className="info-card__label">Цена</span>
-                    <span className="info-card__value info-card__value--large">
+                  <div className={styles.infoCardContent}>
+                    <span className={styles.infoCardLabel}>Цена</span>
+                    <span className={`${styles.infoCardValue} ${styles.infoCardValueLarge}`}>
                       {product.price?.toLocaleString('ru-RU')} ₽
                     </span>
                   </div>
                 </div>
 
-                <div className="info-card">
-                  <div className="info-card__icon info-card__icon--secondary">
+                <div className={styles.infoCard}>
+                  <div className={`${styles.infoCardIcon} ${styles.infoCardIconSecondary}`}>
                     <FiTag />
                   </div>
-                  <div className="info-card__content">
-                    <span className="info-card__label">ID товара</span>
-                    <span className="info-card__value">{product.id}</span>
+                  <div className={styles.infoCardContent}>
+                    <span className={styles.infoCardLabel}>ID товара</span>
+                    <span className={styles.infoCardValue}>{product.id}</span>
                   </div>
                 </div>
 
                 {product.category && (
-                  <div className="info-card">
-                    <div className="info-card__icon info-card__icon--accent">
+                  <div className={styles.infoCard}>
+                    <div className={`${styles.infoCardIcon} ${styles.infoCardIconAccent}`}>
                       <FiTag />
                     </div>
-                    <div className="info-card__content">
-                      <span className="info-card__label">Категория</span>
-                      <span className="info-card__value">{product.category.name}</span>
+                    <div className={styles.infoCardContent}>
+                      <span className={styles.infoCardLabel}>Категория</span>
+                      <span className={styles.infoCardValue}>{product.category.name}</span>
                     </div>
                   </div>
                 )}
 
                 {product.product_type && (
-                  <div className="info-card">
-                    <div className="info-card__icon info-card__icon--info">
+                  <div className={styles.infoCard}>
+                    <div className={`${styles.infoCardIcon} ${styles.infoCardIconInfo}`}>
                       <FiPackage />
                     </div>
-                    <div className="info-card__content">
-                      <span className="info-card__label">Тип продукта</span>
-                      <span className="info-card__value">{product.product_type.name}</span>
+                    <div className={styles.infoCardContent}>
+                      <span className={styles.infoCardLabel}>Тип продукта</span>
+                      <span className={styles.infoCardValue}>{product.product_type.name}</span>
                     </div>
                   </div>
                 )}
 
                 {product.supplier && (
-                  <div className="info-card">
-                    <div className="info-card__icon info-card__icon--success">
+                  <div className={styles.infoCard}>
+                    <div className={`${styles.infoCardIcon} ${styles.infoCardIconSuccess}`}>
                       <FiBox />
                     </div>
-                    <div className="info-card__content">
-                      <span className="info-card__label">Поставщик</span>
-                      <span className="info-card__value">{product.supplier.name}</span>
+                    <div className={styles.infoCardContent}>
+                      <span className={styles.infoCardLabel}>Поставщик</span>
+                      <span className={styles.infoCardValue}>{product.supplier.name}</span>
                     </div>
                   </div>
                 )}
@@ -326,29 +325,29 @@ export function ProductDetailPage() {
         </div>
 
         {/* Нижняя секция: Атрибуты и Описание */}
-        <div className="product-detail-page__bottom-grid">
+        <div className={styles.productDetailPageBottomGrid}>
           {/* Атрибуты */}
           {product.attributes && product.attributes.length > 0 && (
-            <div className="product-detail-page__panel">
-              <div className="panel-header">
-                <div className="panel-header__content">
-                  <h2 className="panel-title">
-                    <FiFileText className="panel-title__icon" />
+            <div className={styles.productDetailPagePanel}>
+              <div className={styles.panelHeader}>
+                <div className={styles.panelHeaderContent}>
+                  <h2 className={styles.panelTitle}>
+                    <FiFileText className={styles.panelTitleIcon} />
                     Атрибуты
                   </h2>
                 </div>
               </div>
-              <div className="panel-content">
-                <div className="attributes-grid">
+              <div className={styles.panelContent}>
+                <div className={styles.attributesGrid}>
                   {product.attributes.map((attr, index) => (
-                    <div key={index} className="attribute-card">
-                      <div className="attribute-card__header">
-                        <span className="attribute-card__name">{attr.name}</span>
+                    <div key={index} className={styles.attributeCard}>
+                      <div className={styles.attributeCardHeader}>
+                        <span className={styles.attributeCardName}>{attr.name}</span>
                         {attr.is_filterable && (
-                          <span className="attribute-card__filterable">Фильтруемый</span>
+                          <span className={styles.attributeCardFilterable}>Фильтруемый</span>
                         )}
                       </div>
-                      <span className="attribute-card__value">{attr.value}</span>
+                      <span className={styles.attributeCardValue}>{attr.value}</span>
                     </div>
                   ))}
                 </div>
@@ -358,18 +357,18 @@ export function ProductDetailPage() {
 
           {/* Описание */}
           {product.description && (
-            <div className="product-detail-page__panel">
-              <div className="panel-header">
-                <div className="panel-header__content">
-                  <h2 className="panel-title">
-                    <FiFileText className="panel-title__icon" />
+            <div className={styles.productDetailPagePanel}>
+              <div className={styles.panelHeader}>
+                <div className={styles.panelHeaderContent}>
+                  <h2 className={styles.panelTitle}>
+                    <FiFileText className={styles.panelTitleIcon} />
                     Описание
                   </h2>
                 </div>
               </div>
-              <div className="panel-content">
-                <div 
-                  className="product-description__text"
+              <div className={styles.panelContent}>
+                <div
+                  className={styles.productDescriptionText}
                   dangerouslySetInnerHTML={{ __html: product.description }}
                 />
               </div>

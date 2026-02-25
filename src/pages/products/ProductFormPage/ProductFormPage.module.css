@@ -1,0 +1,522 @@
+.productFormPage {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.productFormPageHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+}
+
+.productFormPageHeader .backButton {
+  flex-shrink: 0;
+  height: 40px;
+  padding: 8px 12px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.productFormPageTitle {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--color-text, #333);
+}
+
+.productFormPageTabs {
+  border-bottom: 1px solid var(--color-border, #e0e0e0);
+}
+
+.productFormPageForm {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.productFormPageActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border, #e0e0e0);
+}
+
+.productFormPageLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: var(--color-text-secondary, #9e9e9e);
+}
+
+/* Product Form Sections */
+.productForm {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.productFormSection {
+  background: var(--color-background, #fff);
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.productFormSectionHeader {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.productFormSectionIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.productFormSectionIconPrimary {
+  background: var(--color-primary-light, #e3f2fd);
+  color: var(--color-primary, #2196f3);
+}
+
+.productFormSectionIconSecondary {
+  background: var(--color-background-secondary, #f5f5f5);
+  color: var(--color-text, #333);
+}
+
+.productFormSectionIconAccent {
+  background: var(--color-accent-light, #fce4ec);
+  color: var(--color-accent, #e91e63);
+}
+
+.productFormSectionIconInfo {
+  background: var(--color-info-light, #fff3e0);
+  color: var(--color-info, #ff9800);
+}
+
+.productFormSectionTitle {
+  margin: 0 0 4px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text, #333);
+}
+
+.productFormSectionDescription {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-text-secondary, #666);
+}
+
+/* Секция описания товара */
+.productFormSectionDescriptionSection {
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  border-color: #e3e8ef;
+}
+
+.productFormGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.productFormField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.productFormFieldFull {
+  grid-column: 1 / -1;
+}
+
+.productFormLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text, #333);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.productFormLabelIcon {
+  font-size: 16px;
+  color: var(--color-text-secondary, #9e9e9e);
+}
+
+.productForm input[type="text"],
+.productForm input[type="number"],
+.productForm textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--color-text, #333);
+  background: var(--color-background, #fff);
+  transition: all 0.2s ease;
+  outline: none;
+  font-family: inherit;
+}
+
+.productForm input[type="text"]:focus,
+.productForm input[type="number"]:focus,
+.productForm textarea:focus {
+  border-color: var(--color-primary, var(--primary));
+  box-shadow: 0 0 0 3px var(--focus-ring-primary);
+}
+
+.productForm input[type="text"].inputError,
+.productForm input[type="number"].inputError,
+.productForm textarea.inputError {
+  border-color: var(--color-error, var(--danger));
+}
+
+.productForm textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.productFormError {
+  font-size: 12px;
+  color: var(--color-error, #f44336);
+}
+
+.required {
+  color: var(--color-error, #f44336);
+}
+
+/* Attributes Form */
+.attributesForm {
+  margin-bottom: 20px;
+}
+
+.attributesFormRow {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.attributesFormInput {
+  flex: 1;
+  min-width: 150px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--color-text, #333);
+  background: var(--color-background, #fff);
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.attributesFormInput:focus {
+  border-color: var(--color-primary, var(--primary));
+  box-shadow: 0 0 0 3px var(--focus-ring-primary);
+}
+
+.attributesFormCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--color-text, #333);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.attributesFormCheckbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Attributes List */
+.attributesList {
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.attributesListHeader {
+  display: grid;
+  grid-template-columns: 1fr 1fr 120px 60px;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--color-background-secondary, #f5f5f5);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text, #333);
+  border-bottom: 1px solid var(--color-border, #e0e0e0);
+}
+
+.attributesListCol {
+  display: flex;
+  align-items: center;
+}
+
+.attributesListColCheckbox {
+  justify-content: center;
+}
+
+.attributesListColActions {
+  justify-content: center;
+}
+
+.attributesListRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 120px 60px;
+  gap: 12px;
+  padding: 12px 16px;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border, #e0e0e0);
+  transition: background 0.2s ease;
+}
+
+.attributesListRow:last-child {
+  border-bottom: none;
+}
+
+.attributesListRow:hover {
+  background: var(--color-background-secondary, #f5f5f5);
+}
+
+.attributesListInput {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 4px;
+  font-size: 14px;
+  color: var(--color-text, #333);
+  background: var(--color-background, #fff);
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.attributesListInput:focus {
+  border-color: var(--color-primary, var(--primary));
+  box-shadow: 0 0 0 2px var(--focus-ring-primary);
+}
+
+.attributesListCheckbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.attributesListCheckbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.attributesListDelete {
+  justify-self: center;
+}
+
+.attributesListEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--color-text-secondary, #9e9e9e);
+  border: 1px dashed var(--color-border, #e0e0e0);
+  border-radius: 8px;
+}
+
+.attributesListEmpty svg {
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.attributesListEmpty p {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+}
+
+.attributesListEmptyHint {
+  font-size: 13px;
+  color: var(--color-text-secondary, #9e9e9e);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .productFormPage {
+    padding: 0 !important;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .productFormPageHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 48px;
+  }
+
+  .productFormPageHeader .backButton {
+    flex-shrink: 0;
+    height: 32px;
+    padding: 6px 8px;
+    font-size: 12px;
+    min-width: auto;
+  }
+
+  .productFormPageTitle {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .productFormPageHeader .productFormPageActions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .productFormPageHeader .productFormPageActions button {
+    height: 32px;
+    padding: 6px 8px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .productFormPageForm {
+    gap: 0;
+    padding: 0;
+  }
+
+  .productFormPageActions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-radius: 0;
+    box-shadow: none;
+    position: sticky;
+    bottom: 0;
+    z-index: 99;
+  }
+
+  .productFormPageActions button {
+    width: 100%;
+    height: 44px;
+    font-size: 14px;
+  }
+
+  /* Form sections */
+  .productForm {
+    gap: 0;
+  }
+
+  .productFormSection {
+    background: var(--surface);
+    border: none;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    padding: 16px;
+    box-shadow: none;
+  }
+
+  .productFormSection:last-child {
+    border-bottom: none;
+  }
+
+  .productFormSectionHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .productFormSectionIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    font-size: 18px;
+  }
+
+  .productFormSectionTitle {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .productFormSectionDescription {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin: 2px 0 0;
+  }
+
+  /* Grid */
+  .productFormGrid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr;
+  }
+
+  /* Fields */
+  .productFormField {
+    gap: 8px;
+  }
+
+  .productFormLabel {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .productFormLabel .required {
+    color: var(--danger);
+  }
+
+  .productForm input,
+  .productForm textarea {
+    height: 40px;
+    padding: 8px 12px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+
+  .productForm textarea {
+    min-height: 80px;
+    height: auto;
+  }
+
+  .productFormError {
+    font-size: 11px;
+  }
+}

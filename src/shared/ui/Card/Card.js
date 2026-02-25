@@ -1,4 +1,4 @@
-import './Card.css';
+import styles from './Card.module.css';
 
 export function Card({
   children,
@@ -6,8 +6,12 @@ export function Card({
   padding = 'md',
   className = '',
 }) {
+  const paddingClass = padding === 'none' 
+    ? styles.cardPaddingNone 
+    : styles[`cardPadding${padding.charAt(0).toUpperCase() + padding.slice(1)}`];
+    
   return (
-    <div className={`card card--${variant} card--padding-${padding} ${className}`}>
+    <div className={`${styles.card} ${styles[`card${variant.charAt(0).toUpperCase() + variant.slice(1)}`]} ${paddingClass} ${className}`}>
       {children}
     </div>
   );

@@ -1,6 +1,6 @@
 import { FiAlertTriangle } from 'react-icons/fi';
-import { Button } from '../Button';
-import './ErrorState.css';
+import { Button } from '../Button/Button';
+import styles from './ErrorState.module.css';
 
 export function ErrorState({
   message = 'Произошла ошибка',
@@ -9,16 +9,16 @@ export function ErrorState({
   className = '',
 }) {
   return (
-    <div className={`error-state ${className}`}>
-      <div className="error-state__icon">
+    <div className={`${styles.errorState} ${className}`}>
+      <div className={styles.errorStateIcon}>
         <FiAlertTriangle />
       </div>
-      {message && <p className="error-state__message">{message}</p>}
+      {message && <p className={styles.errorStateMessage}>{message}</p>}
       {onRetry && (
         <Button
           variant="primary"
           onClick={onRetry}
-          className="error-state__retry"
+          className={styles.errorStateRetry}
         >
           {retryLabel}
         </Button>

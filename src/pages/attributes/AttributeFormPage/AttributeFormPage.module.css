@@ -1,0 +1,99 @@
+/* AttributeFormPage - специфичные стили страницы */
+.attributeFormPage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.attributeFormPageForm {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Стили для полей формы */
+.attributeFormField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.attributeFormFieldFull {
+  grid-column: 1 / -1;
+}
+
+.attributeFormFieldCheckbox {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.attributeFormLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.attributeFormField input[type="text"],
+.attributeFormField input[type="number"],
+.attributeFormField input[type="email"],
+.attributeFormField input[type="tel"],
+.attributeFormField textarea {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  font-size: 15px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.attributeFormField input:focus,
+.attributeFormField textarea:focus {
+  outline: none;
+  border-color: var(--primary-default);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.attributeFormField .inputError {
+  border-color: var(--error-default);
+}
+
+.attributeFormField .inputError:focus {
+  box-shadow: 0 0 0 3px var(--error-light);
+}
+
+.attributeFormError {
+  font-size: 13px;
+  color: var(--error-default);
+}
+
+.attributeFormHint {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.attributeFormCheckboxLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 15px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.attributeFormCheckboxLabel input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--primary-default);
+}
+
+.required {
+  color: var(--error-default);
+}

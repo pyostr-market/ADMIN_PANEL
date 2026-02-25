@@ -32,16 +32,16 @@
 ### Базовый пример
 
 ```javascript
-import { CrudPageTemplate } from '../../shared/ui/CrudPageTemplate';
-import { manufacturersConfig } from '../../shared/config/crudConfigs';
+import {CrudPageTemplate} from './CrudPageTemplate';
+import {manufacturersConfig} from '../../shared/config/crudConfigs';
 
 export function ManufacturersPage() {
-  return (
-    <CrudPageTemplate
-      title="Производители"
-      config={manufacturersConfig}
-    />
-  );
+    return (
+        <CrudPageTemplate
+            title="Производители"
+            config={manufacturersConfig}
+        />
+    );
 }
 ```
 
@@ -285,16 +285,16 @@ const modal = useCrudModal();
 ### Простая страница (ManufacturersPage)
 
 ```javascript
-import { CrudPageTemplate } from '../../shared/ui/CrudPageTemplate';
-import { manufacturersConfig } from '../../shared/config/crudConfigs';
+import {CrudPageTemplate} from './CrudPageTemplate';
+import {manufacturersConfig} from '../../shared/config/crudConfigs';
 
 export function ManufacturersPage() {
-  return (
-    <CrudPageTemplate
-      title="Производители"
-      config={manufacturersConfig}
-    />
-  );
+    return (
+        <CrudPageTemplate
+            title="Производители"
+            config={manufacturersConfig}
+        />
+    );
 }
 ```
 

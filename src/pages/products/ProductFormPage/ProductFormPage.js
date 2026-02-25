@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FiSave, FiX, FiPlus, FiTrash2, FiImage, FiTag, FiFileText } from 'react-icons/fi';
-import { Button } from '../../../shared/ui/Button';
-import { Tabs, Tab } from '../../../shared/ui/Tabs';
-import { ImageCarousel } from '../../../shared/ui/ImageCarousel';
-import { AutocompleteInput } from '../../../shared/ui/AutocompleteInput';
-import { RichTextEditor } from '../../../shared/ui/RichTextEditor';
+import { Button } from '../../../shared/ui/Button/Button';
+import { Tabs, Tab } from '../../../shared/ui/Tabs/Tabs';
+import { ImageCarousel } from '../../../shared/ui/ImageCarousel/ImageCarousel';
+import { AutocompleteInput } from '../../../shared/ui/AutocompleteInput/AutocompleteInput';
+import { RichTextEditor } from '../../../shared/ui/RichTextEditor/RichTextEditor';
 import { getApiErrorMessage } from '../../../shared/api/apiError';
 import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import {
@@ -16,8 +16,7 @@ import {
   getSuppliersForAutocompleteRequest,
   getProductTypesForAutocompleteRequest,
 } from './api/productsApi';
-import './ProductFormPage.css';
-import './ProductFormPage-Mobile.css';
+import styles from './ProductFormPage.module.css';
 
 // Вкладки формы
 const TABS = {
@@ -63,7 +62,7 @@ export function ProductFormPage() {
 
   const loadProduct = useCallback(async () => {
     if (!productId) return;
-    
+
     setIsLoading(true);
     try {
       const data = await getProductByIdRequest(productId);
@@ -102,12 +101,12 @@ export function ProductFormPage() {
           toDelete: false,
         };
       }) || [];
-      
+
       // Проверка: сколько главных изображений вернул сервер
       const mainCount = processedImages.filter(img => img.is_main).length;
       console.log('[ProductForm] Обработанные изображения:', processedImages);
       console.log('[ProductForm] Главных изображений из API:', mainCount);
-      
+
       if (mainCount > 1) {
         console.warn('[ProductForm] СЕРВЕР вернул несколько главных изображений! Устанавливаем только первое.');
         processedImages.forEach((img, idx) => {
@@ -117,7 +116,7 @@ export function ProductFormPage() {
         console.warn('[ProductForm] СЕРВЕР не вернул главное изображение! Устанавливаем первое.');
         processedImages[0].is_main = true;
       }
-      
+
       setImages(processedImages);
       setAttributes(data.attributes?.map(attr => ({
         id: attr.id,
@@ -322,7 +321,7 @@ export function ProductFormPage() {
         console.log('[ProductForm] Ответ от updateProductRequest:', responseData);
         handleApiResponse(responseData);
         notificationsRef.current?.info('Товар обновлен');
-        
+
         if (stayOnPage) {
           // При обновлении с stayOnPage просто обновляем данные формы из ответа
           if (responseData) {
@@ -354,7 +353,7 @@ export function ProductFormPage() {
         console.log('[ProductForm] Ответ от createProductRequest:', responseData);
         handleApiResponse(responseData);
         notificationsRef.current?.info('Товар создан');
-        
+
         if (stayOnPage) {
           // После создания перенаправляем на страницу редактирования с новым ID
           const newProductId = responseData?.id || responseData?.product_id;
@@ -397,8 +396,8 @@ export function ProductFormPage() {
 
   if (isLoading) {
     return (
-      <section className="product-form-page">
-        <div className="product-form-page__loading">
+      <section className={styles.productFormPage}>
+        <div className={styles.productFormPageLoading}>
           <div className="loading-spinner" />
           <p>Загрузка данных товара...</p>
         </div>
@@ -407,17 +406,17 @@ export function ProductFormPage() {
   }
 
   return (
-    <section className="product-form-page">
-      <header className="product-form-page__header">
-        <Button variant="ghost" onClick={() => navigate(isEditMode ? `/catalog/products/${productId}` : '/catalog/products')} className="back-button">
+    <section className={styles.productFormPage}>
+      <header className={styles.productFormPageHeader}>
+        <Button variant="ghost" onClick={() => navigate(isEditMode ? `/catalog/products/${productId}` : '/catalog/products')} className={styles.backButton}>
           ← Назад
         </Button>
-        <h1 className="product-form-page__title">
+        <h1 className={styles.productFormPageTitle}>
           {isEditMode ? 'Редактирование товара' : 'Создание товара'}
         </h1>
       </header>
 
-      <div className="product-form-page__tabs">
+      <div className={styles.productFormPageTabs}>
         <Tabs>
           <Tab
             active={activeTab === TABS.MAIN}
@@ -440,40 +439,40 @@ export function ProductFormPage() {
         </Tabs>
       </div>
 
-      <form className="product-form-page__form" onSubmit={handleSubmit}>
+      <form className={styles.productFormPageForm} onSubmit={handleSubmit}>
         {activeTab === TABS.MAIN && (
-          <div className="product-form">
-            <div className="product-form__section">
-              <div className="product-form__section-header">
-                <div className="product-form__section-icon product-form__section-icon--primary">
+          <div className={styles.productForm}>
+            <div className={styles.productFormSection}>
+              <div className={styles.productFormSectionHeader}>
+                <div className={`${styles.productFormSectionIcon} ${styles.productFormSectionIconPrimary}`}>
                   <FiTag />
                 </div>
                 <div>
-                  <h2 className="product-form__section-title">Основная информация</h2>
-                  <p className="product-form__section-description">Базовые данные о товаре</p>
+                  <h2 className={styles.productFormSectionTitle}>Основная информация</h2>
+                  <p className={styles.productFormSectionDescription}>Базовые данные о товаре</p>
                 </div>
               </div>
 
-              <div className="product-form__grid">
-                <div className="product-form__field product-form__field--full">
-                  <label className="product-form__label">
-                    Название <span className="required">*</span>
+              <div className={styles.productFormGrid}>
+                <div className={`${styles.productFormField} ${styles.productFormFieldFull}`}>
+                  <label className={styles.productFormLabel}>
+                    Название <span className={styles.required}>*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => handleChange('name', e.target.value)}
                     placeholder="Введите название товара"
-                    className={errors.name ? 'input-error' : ''}
+                    className={errors.name ? styles.inputError : ''}
                   />
                   {errors.name && (
-                    <span className="product-form__error">{errors.name}</span>
+                    <span className={styles.productFormError}>{errors.name}</span>
                   )}
                 </div>
 
-                <div className="product-form__field">
-                  <label className="product-form__label">
-                    Цена <span className="required">*</span>
+                <div className={styles.productFormField}>
+                  <label className={styles.productFormLabel}>
+                    Цена <span className={styles.required}>*</span>
                   </label>
                   <input
                     type="number"
@@ -482,28 +481,28 @@ export function ProductFormPage() {
                     value={formData.price}
                     onChange={(e) => handleChange('price', e.target.value)}
                     placeholder="0.00"
-                    className={errors.price ? 'input-error' : ''}
+                    className={errors.price ? styles.inputError : ''}
                   />
                   {errors.price && (
-                    <span className="product-form__error">{errors.price}</span>
+                    <span className={styles.productFormError}>{errors.price}</span>
                   )}
                 </div>
               </div>
             </div>
 
-            <div className="product-form__section">
-              <div className="product-form__section-header">
-                <div className="product-form__section-icon product-form__section-icon--secondary">
+            <div className={styles.productFormSection}>
+              <div className={styles.productFormSectionHeader}>
+                <div className={`${styles.productFormSectionIcon} ${styles.productFormSectionIconSecondary}`}>
                   <FiPackage />
                 </div>
                 <div>
-                  <h2 className="product-form__section-title">Классификация</h2>
-                  <p className="product-form__section-description">Категория, тип продукта и поставщики</p>
+                  <h2 className={styles.productFormSectionTitle}>Классификация</h2>
+                  <p className={styles.productFormSectionDescription}>Категория, тип продукта и поставщики</p>
                 </div>
               </div>
 
-              <div className="product-form__grid">
-                <div className="product-form__field">
+              <div className={styles.productFormGrid}>
+                <div className={styles.productFormField}>
                   <AutocompleteInput
                     label="Категория"
                     value={formData.category_id}
@@ -514,7 +513,7 @@ export function ProductFormPage() {
                   />
                 </div>
 
-                <div className="product-form__field">
+                <div className={styles.productFormField}>
                   <AutocompleteInput
                     label="Тип продукта"
                     value={formData.product_type_id}
@@ -525,7 +524,7 @@ export function ProductFormPage() {
                   />
                 </div>
 
-                <div className="product-form__field">
+                <div className={styles.productFormField}>
                   <AutocompleteInput
                     label="Поставщик"
                     value={formData.supplier_id}
@@ -538,20 +537,20 @@ export function ProductFormPage() {
               </div>
             </div>
 
-            <div className="product-form__section product-form__section--description">
-              <div className="product-form__section-header">
-                <div className="product-form__section-icon product-form__section-icon--info">
+            <div className={`${styles.productFormSection} ${styles.productFormSectionDescriptionSection}`}>
+              <div className={styles.productFormSectionHeader}>
+                <div className={`${styles.productFormSectionIcon} ${styles.productFormSectionIconInfo}`}>
                   <FiFileText />
                 </div>
                 <div>
-                  <h2 className="product-form__section-title">Описание товара</h2>
-                  <p className="product-form__section-description">
+                  <h2 className={styles.productFormSectionTitle}>Описание товара</h2>
+                  <p className={styles.productFormSectionDescription}>
                     Подробное описание товара с возможностью форматирования текста
                   </p>
                 </div>
               </div>
 
-              <div className="product-form__field product-form__field--full">
+              <div className={`${styles.productFormField} ${styles.productFormFieldFull}`}>
                 <RichTextEditor
                   value={formData.description}
                   onChange={(html) => handleChange('description', html)}
@@ -559,7 +558,7 @@ export function ProductFormPage() {
                   disabled={isSubmitting}
                 />
                 {errors.description && (
-                  <span className="product-form__error">{errors.description}</span>
+                  <span className={styles.productFormError}>{errors.description}</span>
                 )}
               </div>
             </div>
@@ -567,15 +566,15 @@ export function ProductFormPage() {
         )}
 
         {activeTab === TABS.IMAGES && (
-          <div className="product-form">
-            <div className="product-form__section">
-              <div className="product-form__section-header">
-                <div className="product-form__section-icon product-form__section-icon--accent">
+          <div className={styles.productForm}>
+            <div className={styles.productFormSection}>
+              <div className={styles.productFormSectionHeader}>
+                <div className={`${styles.productFormSectionIcon} ${styles.productFormSectionIconAccent}`}>
                   <FiImage />
                 </div>
                 <div>
-                  <h2 className="product-form__section-title">Изображения товара</h2>
-                  <p className="product-form__section-description">
+                  <h2 className={styles.productFormSectionTitle}>Изображения товара</h2>
+                  <p className={styles.productFormSectionDescription}>
                     Загрузите изображения товара. Перетаскивайте для изменения порядка. Первое изображение будет главным.
                   </p>
                 </div>
@@ -594,38 +593,38 @@ export function ProductFormPage() {
         )}
 
         {activeTab === TABS.ATTRIBUTES && (
-          <div className="product-form">
-            <div className="product-form__section">
-              <div className="product-form__section-header">
-                <div className="product-form__section-icon product-form__section-icon--info">
+          <div className={styles.productForm}>
+            <div className={styles.productFormSection}>
+              <div className={styles.productFormSectionHeader}>
+                <div className={`${styles.productFormSectionIcon} ${styles.productFormSectionIconInfo}`}>
                   <FiFileText />
                 </div>
                 <div>
-                  <h2 className="product-form__section-title">Атрибуты товара</h2>
-                  <p className="product-form__section-description">
+                  <h2 className={styles.productFormSectionTitle}>Атрибуты товара</h2>
+                  <p className={styles.productFormSectionDescription}>
                     Добавьте характеристики товара (размер, цвет, материал и т.д.)
                   </p>
                 </div>
               </div>
 
               {/* Форма добавления нового атрибута */}
-              <div className="attributes-form">
-                <div className="attributes-form__row">
+              <div className={styles.attributesForm}>
+                <div className={styles.attributesFormRow}>
                   <input
                     type="text"
                     value={newAttribute.name}
                     onChange={(e) => setNewAttribute((prev) => ({ ...prev, name: e.target.value }))}
                     placeholder="Название атрибута (например, Цвет)"
-                    className="attributes-form__input"
+                    className={styles.attributesFormInput}
                   />
                   <input
                     type="text"
                     value={newAttribute.value}
                     onChange={(e) => setNewAttribute((prev) => ({ ...prev, value: e.target.value }))}
                     placeholder="Значение (например, Красный)"
-                    className="attributes-form__input"
+                    className={styles.attributesFormInput}
                   />
-                  <label className="attributes-form__checkbox">
+                  <label className={styles.attributesFormCheckbox}>
                     <input
                       type="checkbox"
                       checked={newAttribute.is_filterable}
@@ -647,30 +646,30 @@ export function ProductFormPage() {
 
               {/* Список атрибутов */}
               {attributes.length > 0 ? (
-                <div className="attributes-list">
-                  <div className="attributes-list__header">
-                    <span className="attributes-list__col">Название</span>
-                    <span className="attributes-list__col">Значение</span>
-                    <span className="attributes-list__col attributes-list__col--checkbox">Фильтруемый</span>
-                    <span className="attributes-list__col attributes-list__col--actions">Действия</span>
+                <div className={styles.attributesList}>
+                  <div className={styles.attributesListHeader}>
+                    <span className={`${styles.attributesListCol}`}>Название</span>
+                    <span className={`${styles.attributesListCol}`}>Значение</span>
+                    <span className={`${styles.attributesListCol} ${styles.attributesListColCheckbox}`}>Фильтруемый</span>
+                    <span className={`${styles.attributesListCol} ${styles.attributesListColActions}`}>Действия</span>
                   </div>
                   {attributes.map((attr, index) => (
-                    <div key={index} className="attributes-list__row">
+                    <div key={index} className={styles.attributesListRow}>
                       <input
                         type="text"
                         value={attr.name}
                         onChange={(e) => handleAttributeChange(index, 'name', e.target.value)}
-                        className="attributes-list__input"
+                        className={styles.attributesListInput}
                         placeholder="Название"
                       />
                       <input
                         type="text"
                         value={attr.value}
                         onChange={(e) => handleAttributeChange(index, 'value', e.target.value)}
-                        className="attributes-list__input"
+                        className={styles.attributesListInput}
                         placeholder="Значение"
                       />
-                      <label className="attributes-list__checkbox">
+                      <label className={styles.attributesListCheckbox}>
                         <input
                           type="checkbox"
                           checked={attr.is_filterable}
@@ -682,7 +681,7 @@ export function ProductFormPage() {
                         variant="ghost"
                         size="icon"
                         onClick={() => handleRemoveAttribute(index)}
-                        className="attributes-list__delete"
+                        className={styles.attributesListDelete}
                       >
                         <FiTrash2 />
                       </Button>
@@ -690,10 +689,10 @@ export function ProductFormPage() {
                   ))}
                 </div>
               ) : (
-                <div className="attributes-list__empty">
+                <div className={styles.attributesListEmpty}>
                   <FiFileText size={48} />
                   <p>Атрибуты не добавлены</p>
-                  <span className="attributes-list__empty-hint">
+                  <span className={styles.attributesListEmptyHint}>
                     Добавьте характеристики товара с помощью формы выше
                   </span>
                 </div>
@@ -702,7 +701,7 @@ export function ProductFormPage() {
           </div>
         )}
 
-        <div className="product-form-page__actions">
+        <div className={styles.productFormPageActions}>
           <Button
             type="button"
             variant="secondary"

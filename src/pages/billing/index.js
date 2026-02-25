@@ -1,3 +1,3 @@
-export { CategoryPricingPoliciesPage } from './CategoryPricingPoliciesPage';
-export { CategoryPricingPolicyDetailPage } from './CategoryPricingPolicyDetailPage';
-export { CategoryPricingPolicyFormPage } from './CategoryPricingPolicyFormPage';
+export { CategoryPricingPoliciesPage } from './CategoryPricingPoliciesPage/CategoryPricingPoliciesPage';
+export { CategoryPricingPolicyDetailPage } from './CategoryPricingPolicyDetailPage/CategoryPricingPolicyDetailPage';
+export { CategoryPricingPolicyFormPage } from './CategoryPricingPolicyFormPage/CategoryPricingPolicyFormPage';

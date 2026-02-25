@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import './FormField.css';
+import styles from './FormField.module.css';
 
 export const FormField = forwardRef(function FormField(
   {
@@ -21,16 +21,16 @@ export const FormField = forwardRef(function FormField(
   const hasError = Boolean(error);
 
   return (
-    <div className={`form-field ${className} ${hasError ? 'form-field--error' : ''}`}>
+    <div className={`${styles.formField} ${className} ${hasError ? styles.formFieldError : ''}`}>
       {label && (
-        <label className="form-field__label">
+        <label className={styles.formFieldLabel}>
           {label}
-          {required && <span className="form-field__required">*</span>}
+          {required && <span className={styles.formFieldRequired}>*</span>}
         </label>
       )}
       {children}
-      {hint && !hasError && <span className="form-field__hint">{hint}</span>}
-      {error && <span className="form-field__error">{error}</span>}
+      {hint && !hasError && <span className={styles.formFieldHint}>{hint}</span>}
+      {error && <span className={styles.formFieldErrorText}>{error}</span>}
     </div>
   );
 });

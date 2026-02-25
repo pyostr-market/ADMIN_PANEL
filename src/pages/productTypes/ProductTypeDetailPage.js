@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FiEdit2, FiTrash2, FiBox, FiClock } from 'react-icons/fi';
-import { Button } from '../../shared/ui/Button';
-import { Modal } from '../../shared/ui/Modal';
-import { PermissionGate } from '../../shared/ui/PermissionGate';
+import { Button } from '../../shared/ui/Button/Button';
+import { Modal } from '../../shared/ui/Modal/Modal';
+import { PermissionGate } from '../../shared/ui/PermissionGate/PermissionGate';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import {

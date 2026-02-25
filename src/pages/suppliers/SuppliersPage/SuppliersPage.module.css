@@ -1,0 +1,416 @@
+/* SuppliersPage - стиль как у UsersListPage */
+.suppliersPage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Header */
+.suppliersPageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 40px;
+}
+
+.suppliersPageTitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.suppliersPageControls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 180px;
+}
+
+/* Filters */
+.suppliersPageFilters {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+  transition: opacity 0.2s ease;
+}
+
+.suppliersPageFiltersLoading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Entity List Item */
+.suppliersPageItemContent {
+  display: flex;
+  flex: 1;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: var(--space-2);
+  margin: calc(-1 * var(--space-2));
+  border-radius: var(--radius-md);
+}
+
+.suppliersPageItemContent:hover {
+  background: var(--surface-subtle);
+}
+
+.suppliersPageItemMain {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  width: 100%;
+}
+
+.suppliersPageAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  color: white;
+  background: var(--gradient-avatar);
+  transition: transform 0.2s;
+}
+
+.suppliersPageItemContent:hover .suppliersPageAvatar {
+  transform: scale(1.05);
+}
+
+.suppliersPageItemInfo {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.suppliersPageItemHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.suppliersPageItemTitle {
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0;
+  color: var(--text);
+}
+
+.suppliersPageItemBadges {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.suppliersPageBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+}
+
+.suppliersPageBadgeVerified {
+  background: var(--success);
+  color: white;
+}
+
+.suppliersPageItemMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.suppliersPageMetaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.suppliersPageMetaIcon {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.suppliersPageMetaLabel {
+  font-weight: 500;
+}
+
+.suppliersPageSeparator {
+  color: var(--border-strong);
+}
+
+/* Item Actions */
+.suppliersPageItemActions {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.btnDelete:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* Modal confirm text */
+.modalConfirmText {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.modalConfirmText strong {
+  color: var(--text);
+}
+
+.modalConfirmNote {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: var(--space-2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .suppliersPage {
+    padding: 0 !important;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Header - название слева, кнопка справа */
+  .suppliersPageHeader {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .suppliersPageTitle {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+    flex: 0 1 auto;
+  }
+
+  .suppliersPageControls {
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  .suppliersPageControls button {
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  /* Filters */
+  .suppliersPageFilters {
+    grid-template-columns: 1fr;
+    padding: 10px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    gap: 8px;
+    box-sizing: border-box;
+  }
+
+  .suppliersPageFiltersLoading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  /* Entity List */
+  .suppliersPageList,
+  .entityList {
+    padding: 0;
+  }
+
+  .suppliersPageItem {
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid var(--border);
+    width: 100%;
+  }
+
+  .suppliersPageItem:last-child {
+    border-bottom: none;
+  }
+
+  /* Item content - на всю ширину */
+  .suppliersPageItemContent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 60px;
+  }
+
+  .suppliersPageItemMain {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .suppliersPageAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    color: white;
+    background: var(--gradient-avatar);
+  }
+
+  .suppliersPageItemContent:hover .suppliersPageAvatar {
+    transform: none;
+  }
+
+  .suppliersPageItemInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    flex: 1;
+    width: 100%;
+  }
+
+  .suppliersPageItemHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+    height: 24px;
+    width: 100%;
+  }
+
+  .suppliersPageItemTitle {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .suppliersPageItemBadges {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .suppliersPageBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .suppliersPageItemMeta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    overflow: hidden;
+    font-size: 11px;
+    color: var(--text-muted);
+    width: 100%;
+    line-height: 1.4;
+  }
+
+  .suppliersPageItemMeta:empty {
+    display: none;
+  }
+
+  .suppliersPageMetaItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+  }
+
+  .suppliersPageMetaItem:empty {
+    display: none;
+  }
+
+  .suppliersPageMetaIcon {
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  .suppliersPageSeparator {
+    color: var(--border-strong);
+    flex-shrink: 0;
+  }
+
+  /* Item actions - на всю ширину */
+  .suppliersPageItemActions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 8px 12px;
+    border-top: 1px solid var(--border);
+    background: var(--surface-subtle);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .suppliersPageItemActions button {
+    height: 32px;
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+
+  .suppliersPageItemActions .btnDelete {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    min-width: 32px;
+  }
+
+  /* Pagination */
+  .suppliersPagePagination {
+    padding: 10px 12px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    width: 100%;
+    box-sizing: border-box;
+  }
+}

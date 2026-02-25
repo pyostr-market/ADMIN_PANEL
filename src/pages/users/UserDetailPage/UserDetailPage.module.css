@@ -1,0 +1,895 @@
+/* UserDetailPage - обновлённый дизайн */
+.userDetailPage {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Loading & Error states */
+.userDetailPageLoading,
+.userDetailPageError {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: var(--space-4);
+  text-align: center;
+}
+
+.loadingSpinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.userDetailPageError h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 20px;
+}
+
+.userDetailPageError p {
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Header */
+.userDetailPageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.userDetailPageHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.backButton {
+  flex-shrink: 0;
+}
+
+.userDetailPageUserInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.userDetailPageAvatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+  color: white;
+}
+
+.userDetailPageAvatarActive {
+  background: var(--gradient-success);
+}
+
+.userDetailPageAvatarInactive {
+  background: var(--gradient-danger);
+}
+
+.userDetailPageHeaderText {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.userDetailPageTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.userDetailPageBadges {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.userDetailPageBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.userDetailPageBadgeInactive {
+  background: var(--danger);
+  color: white;
+}
+
+.userDetailPageBadgeVerified {
+  background: var(--success);
+  color: white;
+}
+
+.userDetailPageBadgeGroup {
+  background: #4c4c4c;
+  color: white;
+}
+
+.userDetailPageActions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+/* user */
+.userDetailPageTabs {
+  display: flex;
+  gap: var(--space-1);
+  background: var(--surface);
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+
+}
+
+.userDetailPageTabs .tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.userDetailPageTabs .tabActive {
+  background: var(--bg-active-tab);
+  color: white;
+}
+
+.tabBadge {
+  background: var(--surface-muted);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.userDetailPageTabs .tabActive .tabBadge {
+  background: var(--primary-hover);
+}
+
+/* Content */
+.userDetailPageContent {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Panel */
+.userDetailPagePanel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: grid;
+  gap: var(--space-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.userDetailPagePanelLarge {
+  padding: var(--space-5);
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.panelTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Empty state */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.emptyStateIcon {
+  font-size: 48px;
+  margin-bottom: var(--space-3);
+  opacity: 0.5;
+}
+
+.emptyState p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* User Info Grid */
+.userInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-3);
+}
+
+.infoCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: all 0.2s;
+}
+
+.infoCard:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-muted);
+}
+
+.infoCardFull {
+  grid-column: 1 / -1;
+}
+
+.infoCardIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.infoCardIcon,
+.infoCardIcon svg,
+.infoCardIcon span {
+  color: white;
+}
+
+.infoCardIconPrimary {
+  background: var(--gradient-avatar);
+}
+
+.infoCardIconSecondary {
+  background: var(--gradient-secondary);
+}
+
+.infoCardIconSuccess {
+  background: var(--gradient-success);
+}
+
+.infoCardIconInfo {
+  background: var(--gradient-info);
+}
+
+.infoCardContent {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.infoCardLabel {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.infoCardValue {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  word-break: break-word;
+}
+
+.infoCardValue.code {
+  font-family: var(--font-family-mono);
+  font-size: 12px;
+}
+
+.infoCardStatus {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.statusActive {
+  color: var(--success);
+}
+
+.statusInactive {
+  color: var(--danger);
+}
+
+/* Sessions */
+.sessionsList {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.sessionCard {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.sessionCard:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.sessionCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3);
+  background: var(--surface-subtle);
+  border-bottom: 1px solid var(--border);
+}
+
+.sessionCardTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.sessionCardStatus {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.sessionCardBadge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.sessionCardBadgeActive {
+  background: var(--success-bg);
+  color: var(--accent-green);
+}
+
+.sessionCardBadgeInactive {
+  background: var(--accent-red-bg);
+  color: var(--accent-red);
+}
+
+.sessionCardBody {
+  padding: var(--space-3);
+  display: grid;
+  gap: var(--space-2);
+}
+
+.sessionCardInfo {
+  display: flex;
+  gap: var(--space-2);
+  font-size: 13px;
+}
+
+.sessionCardLabel {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.sessionCardValue {
+  color: var(--text);
+}
+
+/* Permissions */
+.permissionsSearch {
+  max-width: 400px;
+}
+
+.permissionsSearch input {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+}
+
+.permissionsSearch input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.permissionsList {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.permissionsSection {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.permissionsSectionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: capitalize;
+  margin: 0;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.permissionsSectionItems {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.permissionCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  gap: var(--space-2);
+  transition: all 0.2s;
+}
+
+.permissionCard:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-subtle);
+}
+
+.permissionCardContent {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.permissionCardName {
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.permissionCardDescription {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.permissionCardAction {
+  flex-shrink: 0;
+}
+
+/* Groups */
+.groupsList {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.groupCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: all 0.2s;
+}
+
+.groupCard:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-subtle);
+}
+
+.groupCardIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--gradient-avatar);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.groupCardContent {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.groupCardName {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.groupCardDescription {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.groupCardMeta {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.groupCardActions {
+  display: flex;
+  gap: var(--space-1);
+}
+
+/* Modal styles */
+.modalText {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.terminateSessionNote {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: var(--space-2);
+}
+
+/* Assign Modal */
+.assignModalTabs {
+  margin-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--space-2);
+}
+
+.assignModalContent {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.assignModalSearch {
+  margin-bottom: var(--space-3);
+}
+
+.assignModalSearch input {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+}
+
+.assignModalEmpty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: var(--space-4);
+}
+
+.assignModalSection {
+  margin-bottom: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.assignModalSectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-subtle);
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+
+.assignModalSectionHeader:hover {
+  background: var(--surface-muted);
+}
+
+.assignModalSectionTitle {
+  text-transform: capitalize;
+}
+
+.assignModalSectionCount {
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--surface);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.assignModalSectionItems {
+  display: grid;
+}
+
+.assignModalPermissionItem {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 13px;
+}
+
+.assignModalPermissionItem:hover {
+  background: var(--surface-subtle);
+}
+
+.assignModalPermissionItem input[type="checkbox"] {
+  margin-top: 2px;
+}
+
+.assignModalPermissionName {
+  font-weight: 500;
+}
+
+.assignModalPermissionDesc {
+  grid-column: 2;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.assignModalGroups {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.assignModalGroupItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  transition: background 0.2s;
+  border-radius: var(--radius-md);
+}
+
+.assignModalGroupItem:hover {
+  background: var(--surface-subtle);
+}
+
+.assignModalGroupItem input[type="radio"] {
+  margin-top: 2px;
+}
+
+.assignModalGroupInfo {
+  display: grid;
+  gap: 2px;
+}
+
+.assignModalGroupInfo strong {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.assignModalGroupInfo span {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Edit User Form */
+.editUserForm {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.editUserFormField {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.editUserFormLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.editUserFormField select {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.editUserFormField select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .userDetailPage {
+    padding: 0 !important;
+    gap: 0;
+  }
+
+  .userDetailPageHeader {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    top: 0;
+    z-index: 10;
+  }
+
+  .userDetailPageHeaderLeft {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .userDetailPageUserInfo {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .userDetailPageAvatar {
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+  }
+
+  .userDetailPageTitle {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .userDetailPageBadges {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .userDetailPageActions {
+    width: 100%;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .userDetailPageActions button {
+    flex: 1;
+    min-width: 100px;
+    height: 38px;
+    font-size: 13px;
+  }
+
+  .userDetailPageTabs {
+    width: 100%;
+    overflow-x: auto;
+    padding: 0;
+  }
+
+  .userDetailPageTabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .userDetailPageTabs .tab {
+    height: 42px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .userDetailPageContent {
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .userDetailPagePanel {
+    padding: 16px;
+    border-radius: 8px;
+  }
+
+  .userInfoGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .infoCard {
+    flex-direction: column;
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .infoCardIcon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    border-radius: 8px;
+  }
+
+  .infoCardValue {
+    font-size: 14px;
+  }
+
+  .permissionsSearch input {
+    height: 40px;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .permissionCard {
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .permissionCardName {
+    font-size: 13px;
+  }
+
+  .permissionCardDescription {
+    font-size: 11px;
+  }
+
+  .permissionCardAction button {
+    height: 34px;
+    min-width: 34px;
+    font-size: 12px;
+  }
+
+  .groupCard {
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .groupCardIcon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    border-radius: 8px;
+  }
+
+  .editUserFormField select {
+    height: 40px;
+    font-size: 14px;
+  }
+}

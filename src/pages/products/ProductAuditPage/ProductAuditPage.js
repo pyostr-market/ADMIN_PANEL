@@ -1,16 +1,15 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FiEye } from 'react-icons/fi';
-import { Button } from '../../../shared/ui/Button';
-import { Pagination } from '../../../shared/ui/Pagination';
-import { Modal } from '../../../shared/ui/Modal';
+import { Button } from '../../../shared/ui/Button/Button';
+import { Pagination } from '../../../shared/ui/Pagination/Pagination';
+import { Modal } from '../../../shared/ui/Modal/Modal';
 import { getApiErrorMessage } from '../../../shared/api/apiError';
 import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import { getProductAuditRequest } from './api/productsApi';
 import { getUsersInfo, formatUserDisplay } from '../../../shared/lib/user/userInfo';
 import { withRetry } from '../../../shared/lib/retry';
-import './ProductAuditPage.css';
-import './ProductAuditPage-Mobile.css';
+import styles from './ProductAuditPage.module.css';
 
 function AuditDetailModal({ auditRecord, onClose, userInfo }) {
   if (!auditRecord) return null;
@@ -22,9 +21,9 @@ function AuditDetailModal({ auditRecord, onClose, userInfo }) {
   const renderDataBlock = (data, title) => {
     if (!data || typeof data !== 'object') {
       return (
-        <div className="audit-data-block">
-          <h4 className="audit-data-block__title">{title}</h4>
-          <pre className="audit-data-block__value">
+        <div className={styles.auditDataBlock}>
+          <h4 className={styles.auditDataBlockTitle}>{title}</h4>
+          <pre className={styles.auditDataBlockValue}>
             {JSON.stringify(data, null, 2)}
           </pre>
         </div>
@@ -34,21 +33,21 @@ function AuditDetailModal({ auditRecord, onClose, userInfo }) {
     const entries = Object.entries(data);
     if (entries.length === 0) {
       return (
-        <div className="audit-data-block">
-          <h4 className="audit-data-block__title">{title}</h4>
-          <span className="audit-data-block__empty">Нет данных</span>
+        <div className={styles.auditDataBlock}>
+          <h4 className={styles.auditDataBlockTitle}>{title}</h4>
+          <span className={styles.auditDataBlockEmpty}>Нет данных</span>
         </div>
       );
     }
 
     return (
-      <div className="audit-data-block">
-        <h4 className="audit-data-block__title">{title}</h4>
-        <div className="audit-data-block__content">
+      <div className={styles.auditDataBlock}>
+        <h4 className={styles.auditDataBlockTitle}>{title}</h4>
+        <div className={styles.auditDataBlockContent}>
           {entries.map(([key, value]) => (
-            <div key={key} className="audit-data-row">
-              <span className="audit-data-row__key">{key}:</span>
-              <span className="audit-data-row__value">
+            <div key={key} className={styles.auditDataRow}>
+              <span className={styles.auditDataRowKey}>{key}:</span>
+              <span className={styles.auditDataRowValue}>
                 {renderValue(value)}
               </span>
             </div>
@@ -60,24 +59,24 @@ function AuditDetailModal({ auditRecord, onClose, userInfo }) {
 
   const renderValue = (value) => {
     if (value === null || value === undefined) {
-      return <span className="audit-value-null">null</span>;
+      return <span className={styles.auditValueNull}>null</span>;
     }
 
     if (Array.isArray(value)) {
       if (value.length === 0) {
-        return <span className="audit-value-empty">[]</span>;
+        return <span className={styles.auditValueEmpty}>[]</span>;
       }
       return (
-        <div className="audit-value-array">
+        <div className={styles.auditValueArray}>
           {value.map((item, index) => (
-            <div key={index} className="audit-array-item">
-              <span className="audit-array-item__index">[{index}]</span>
+            <div key={index} className={styles.auditArrayItem}>
+              <span className={styles.auditArrayItemIndex}>[{index}]</span>
               {typeof item === 'object' && item !== null ? (
-                <div className="audit-array-item__content">
+                <div className={styles.auditArrayItemContent}>
                   {Object.entries(item).map(([k, v]) => (
-                    <div key={k} className="audit-data-row audit-data-row--nested">
-                      <span className="audit-data-row__key">{k}:</span>
-                      <span className="audit-data-row__value">{renderValue(v)}</span>
+                    <div key={k} className={`${styles.auditDataRow} ${styles.auditDataRowNested}`}>
+                      <span className={styles.auditDataRowKey}>{k}:</span>
+                      <span className={styles.auditDataRowValue}>{renderValue(v)}</span>
                     </div>
                   ))}
                 </div>
@@ -92,11 +91,11 @@ function AuditDetailModal({ auditRecord, onClose, userInfo }) {
 
     if (typeof value === 'object') {
       return (
-        <div className="audit-value-object">
+        <div className={styles.auditValueObject}>
           {Object.entries(value).map(([k, v]) => (
-            <div key={k} className="audit-data-row audit-data-row--nested">
-              <span className="audit-data-row__key">{k}:</span>
-              <span className="audit-data-row__value">{renderValue(v)}</span>
+            <div key={k} className={`${styles.auditDataRow} ${styles.auditDataRowNested}`}>
+              <span className={styles.auditDataRowKey}>{k}:</span>
+              <span className={styles.auditDataRowValue}>{renderValue(v)}</span>
             </div>
           ))}
         </div>
@@ -104,14 +103,14 @@ function AuditDetailModal({ auditRecord, onClose, userInfo }) {
     }
 
     if (typeof value === 'boolean') {
-      return <span className={value ? 'audit-value-true' : 'audit-value-false'}>{String(value)}</span>;
+      return <span className={value ? styles.auditValueTrue : styles.auditValueFalse}>{String(value)}</span>;
     }
 
     if (typeof value === 'number') {
-      return <span className="audit-value-number">{value}</span>;
+      return <span className={styles.auditValueNumber}>{value}</span>;
     }
 
-    return <span className="audit-value-string">{String(value)}</span>;
+    return <span className={styles.auditValueString}>{String(value)}</span>;
   };
 
   return (
@@ -126,27 +125,27 @@ function AuditDetailModal({ auditRecord, onClose, userInfo }) {
         </Button>
       }
     >
-      <div className="audit-detail-modal">
-        <div className="audit-detail-modal__header">
-          <div className="audit-detail-row">
-            <span className="audit-detail-label">Действие:</span>
-            <span className={`audit-detail-value audit-action-${auditRecord.action}`}>
+      <div className={styles.auditDetailModal}>
+        <div className={styles.auditDetailModalHeader}>
+          <div className={styles.auditDetailRow}>
+            <span className={styles.auditDetailLabel}>Действие:</span>
+            <span className={`${styles.auditDetailValue} ${styles[`auditAction${auditRecord.action.charAt(0).toUpperCase() + auditRecord.action.slice(1)}`]}`}>
               {auditRecord.action}
             </span>
           </div>
-          <div className="audit-detail-row">
-            <span className="audit-detail-label">Пользователь:</span>
-            <span className="audit-detail-value">{userDisplay}</span>
+          <div className={styles.auditDetailRow}>
+            <span className={styles.auditDetailLabel}>Пользователь:</span>
+            <span className={styles.auditDetailValue}>{userDisplay}</span>
           </div>
-          <div className="audit-detail-row">
-            <span className="audit-detail-label">Время:</span>
-            <span className="audit-detail-value">
+          <div className={styles.auditDetailRow}>
+            <span className={styles.auditDetailLabel}>Время:</span>
+            <span className={styles.auditDetailValue}>
               {new Date(auditRecord.created_at).toLocaleString('ru-RU')}
             </span>
           </div>
         </div>
 
-        <div className="audit-detail-modal__data">
+        <div className={styles.auditDetailModalData}>
           {renderDataBlock(auditRecord.old_data, 'Старые данные')}
           {renderDataBlock(auditRecord.new_data, 'Новые данные')}
         </div>
@@ -254,8 +253,8 @@ export function ProductAuditPage() {
 
   if (isLoading) {
     return (
-      <section className="product-audit-page">
-        <div className="product-audit-page__loading">
+      <section className={styles.productAuditPage}>
+        <div className={styles.productAuditPageLoading}>
           <div className="loading-spinner" />
           <p>Загрузка истории...</p>
         </div>
@@ -264,36 +263,36 @@ export function ProductAuditPage() {
   }
 
   return (
-    <section className="product-audit-page">
-      <header className="product-audit-page__header">
-        <div className="product-audit-page__header-left">
+    <section className={styles.productAuditPage}>
+      <header className={styles.productAuditPageHeader}>
+        <div className={styles.productAuditPageHeaderLeft}>
           <Button
             variant="ghost"
             onClick={() => navigate(`/catalog/products/${productId}`)}
-            className="back-button"
+            className={styles.backButton}
           >
             ← Назад
           </Button>
-          <h1 className="product-audit-page__title">История изменений товара</h1>
+          <h1 className={styles.productAuditPageTitle}>История изменений товара</h1>
         </div>
       </header>
 
-      <div className="product-audit-page__content">
-        <div className="product-audit-page__panel">
+      <div className={styles.productAuditPageContent}>
+        <div className={styles.productAuditPagePanel}>
           {auditData.length === 0 ? (
-            <div className="product-audit-page__empty">
+            <div className={styles.productAuditPageEmpty}>
               <p>История изменений пуста</p>
             </div>
           ) : (
             <>
-              <div className="audit-table-wrapper">
-                <table className="audit-table">
+              <div className={styles.auditTableWrapper}>
+                <table className={styles.auditTable}>
                   <thead>
                     <tr>
-                      <th className="audit-table__header">Действие</th>
-                      <th className="audit-table__header">Пользователь</th>
-                      <th className="audit-table__header">Дата</th>
-                      <th className="audit-table__header audit-table__header--actions">Действия</th>
+                      <th className={styles.auditTableHeader}>Действие</th>
+                      <th className={styles.auditTableHeader}>Пользователь</th>
+                      <th className={styles.auditTableHeader}>Дата</th>
+                      <th className={`${styles.auditTableHeader} ${styles.auditTableHeaderActions}`}>Действия</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -304,23 +303,23 @@ export function ProductAuditPage() {
                         : `ID: ${record.user_id}`;
 
                       return (
-                        <tr key={record.id} className="audit-table__row">
-                          <td className="audit-table__cell">
-                            <span className={`audit-action-badge audit-action-badge--${record.action}`}>
+                        <tr key={record.id} className={styles.auditTableRow}>
+                          <td className={styles.auditTableCell}>
+                            <span className={`${styles.auditActionBadge} ${styles[`auditActionBadge${record.action.charAt(0).toUpperCase() + record.action.slice(1)}`]}`}>
                               {record.action}
                             </span>
                           </td>
-                          <td className="audit-table__cell">
-                            <span className="audit-user-info" title={userDisplay}>
+                          <td className={styles.auditTableCell}>
+                            <span className={styles.auditUserInfo} title={userDisplay}>
                               {userDisplay}
                             </span>
                           </td>
-                          <td className="audit-table__cell">
-                            <span className="audit-date">
+                          <td className={styles.auditTableCell}>
+                            <span className={styles.auditDate}>
                               {new Date(record.created_at).toLocaleString('ru-RU')}
                             </span>
                           </td>
-                          <td className="audit-table__cell audit-table__cell--actions">
+                          <td className={`${styles.auditTableCell} ${styles.auditTableCellActions}`}>
                             <Button
                               variant="secondary"
                               size="sm"
@@ -344,7 +343,7 @@ export function ProductAuditPage() {
                   totalItems={total}
                   onPageChange={handlePageChange}
                   loading={isLoading}
-                  className="product-audit-page__pagination"
+                  className={styles.productAuditPagePagination}
                 />
               )}
             </>

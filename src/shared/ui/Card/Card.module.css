@@ -1,0 +1,88 @@
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+
+.cardDefault {
+  background: var(--surface);
+}
+
+.cardSecondary {
+  background: var(--surface-subtle);
+}
+
+.cardMuted {
+  background: var(--surface-muted);
+}
+
+.cardNoShadow {
+  box-shadow: none;
+}
+
+.cardNoBorder {
+  border: none;
+}
+
+.cardPaddingSm {
+  padding: var(--space-3);
+}
+
+.cardPaddingMd {
+  padding: var(--space-5);
+}
+
+.cardPaddingLg {
+  padding: var(--space-6);
+}
+
+.cardPaddingNone {
+  padding: 0;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--space-4);
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.cardSubtitle {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.cardContent {
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+  margin-top: var(--space-4);
+}
+
+@media (max-width: 768px) {
+  .card {
+    border-radius: var(--radius-lg);
+  }
+
+  .cardPaddingLg {
+    padding: var(--space-4);
+  }
+}

@@ -1,0 +1,137 @@
+.inputWrapper {
+  display: grid;
+  gap: var(--space-1);
+  width: 100%;
+}
+
+.inputLabel {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.inputContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  height: 36px;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  box-sizing: border-box;
+}
+
+.input:hover:not(:disabled) {
+  border-color: var(--border-strong);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.input:disabled {
+  background: var(--surface-muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+.inputIcon {
+  position: absolute;
+  display: inline-grid;
+  place-items: center;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.inputIconLeft {
+  left: var(--space-3);
+}
+
+.inputIconRight {
+  right: var(--space-3);
+}
+
+.inputIconLeft + .input {
+  padding-left: 36px;
+}
+
+.inputIconRight + .input {
+  padding-right: 36px;
+}
+
+.inputError {
+  font-size: 12px;
+  color: var(--danger);
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .input {
+    height: 36px;
+    padding: 6px 10px;
+    font-size: 13px;
+    border-radius: var(--radius-lg);
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+
+  .input:hover:not(:disabled) {
+    border-color: var(--border-strong);
+  }
+
+  .input:focus {
+    border-color: var(--primary);
+  }
+
+  .inputIconLeft + .input {
+    padding-left: 32px;
+  }
+
+  .inputIconRight + .input {
+    padding-right: 32px;
+  }
+
+  .inputIcon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .inputIconLeft {
+    left: var(--space-2);
+  }
+
+  .inputIconRight {
+    right: var(--space-2);
+  }
+
+  .inputWrapper {
+    gap: var(--space-1);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .inputLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .inputError {
+    font-size: 10px;
+    word-break: break-word;
+  }
+}

@@ -1,0 +1,100 @@
+.formSection {
+  padding: var(--space-6);
+  background: var(--surface);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-6);
+}
+
+.formSection:last-child {
+  margin-bottom: 0;
+}
+
+.formSectionHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.formSectionIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.formSectionIconPrimary {
+  background: var(--gradient-avatar);
+  color: var(--surface);
+}
+
+.formSectionIconSecondary {
+  background: var(--gradient-danger);
+  color: var(--surface);
+}
+
+.formSectionIconSuccess {
+  background: var(--gradient-success);
+  color: var(--surface);
+}
+
+.formSectionIconInfo {
+  background: var(--gradient-info);
+  color: var(--surface);
+}
+
+.formSectionIconWarning {
+  background: var(--gradient-warning);
+  color: var(--surface);
+}
+
+.formSectionIconAccent {
+  background: var(--accent-orange-bg);
+  color: var(--accent-orange);
+}
+
+.formSectionTitle {
+  margin: 0 0 var(--space-1) 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.formSectionDescription {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.formSectionContent {
+}
+
+@media (max-width: 768px) {
+  .formSection {
+    padding: var(--space-4);
+    border-radius: var(--radius-xl);
+  }
+
+  .formSectionHeader {
+    gap: var(--space-3);
+  }
+
+  .formSectionIcon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .formSectionTitle {
+    font-size: 16px;
+  }
+
+  .formSectionDescription {
+    font-size: 13px;
+  }
+}

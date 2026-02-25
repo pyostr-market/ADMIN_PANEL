@@ -1,10 +1,8 @@
 @import './shared/styles/tokens.css';
-@import './shared/ui/EntityList.css';
-@import './shared/ui/CrudPageTemplate.css';
-@import './shared/styles/BottomNav.css';
-@import './shared/styles/form-pages-mobile.css';
-@import './shared/styles/audit.css';
-@import './shared/styles/entity-list-page.css';
+/*@import './shared/styles/BottomNav.css';*/
+/*@import './shared/styles/form-pages-mobile.css';*/
+/*@import './shared/styles/audit.css';*/
+/*@import './shared/styles/entity-list-page.css';*/
 
 /* Фиксация ширины скролл-бара для предотвращения сдвига контента */
 html {
@@ -58,59 +56,59 @@ html {
 }
 
 /* Mobile styles imports */
-@import './widgets/layout/AppLayout-Mobile.css';
-@import './widgets/layout/NotificationsPanel-Mobile.css';
-@import './widgets/sidebar/AppSidebar-Mobile.css';
+/*@import './widgets/layout/AppLayout-Mobile.css';*/
+/*@import './widgets/layout/NotificationsPanel-Mobile.css';*/
+/*@import './widgets/sidebar/AppSidebar-Mobile.css';*/
 
-/* Page Mobile styles - Detail, Audit, List pages */
-@import './pages/manufacturers/ManufacturersPage-Mobile.css';
-@import './pages/manufacturers/ManufacturerDetailPage-Mobile.css';
-@import './pages/manufacturers/ManufacturerAuditPage-Mobile.css';
+/*!* Page Mobile styles - Detail, Audit, List pages *!*/
+/*@import './pages/manufacturers/ManufacturersPage-Mobile.css';*/
+/*@import './pages/manufacturers/ManufacturerDetailPage-Mobile.css';*/
+/*@import './pages/manufacturers/ManufacturerAuditPage-Mobile.css';*/
 
-@import './pages/suppliers/SuppliersPage-Mobile.css';
-@import './pages/suppliers/SupplierDetailPage-Mobile.css';
-@import './pages/suppliers/SupplierAuditPage-Mobile.css';
+/*@import './pages/suppliers/SuppliersPage-Mobile.css';*/
+/*@import './pages/suppliers/SupplierDetailPage-Mobile.css';*/
+/*@import './pages/suppliers/SupplierAuditPage-Mobile.css';*/
 
-@import './pages/productTypes/ProductTypesPage-Mobile.css';
-@import './pages/productTypes/ProductTypeDetailPage-Mobile.css';
-@import './pages/productTypes/ProductTypeAuditPage-Mobile.css';
+/*@import './pages/productTypes/ProductTypesPage-Mobile.css';*/
+/*@import './pages/productTypes/ProductTypeDetailPage-Mobile.css';*/
+/*@import './pages/productTypes/ProductTypeAuditPage-Mobile.css';*/
 
-@import './pages/attributes/AttributesPage-Mobile.css';
-@import './pages/attributes/AttributeDetailPage-Mobile.css';
-@import './pages/attributes/AttributeAuditPage-Mobile.css';
+/*@import './pages/attributes/AttributesPage-Mobile.css';*/
+/*@import './pages/attributes/AttributeDetailPage-Mobile.css';*/
+/*@import './pages/attributes/AttributeAuditPage-Mobile.css';*/
 
-@import './pages/products/ProductsPage/ProductsPage-Mobile.css';
-@import './pages/products/ProductDetailPage/ProductDetailPage-Mobile.css';
-@import './pages/products/ProductFormPage/ProductFormPage-Mobile.css';
-@import './pages/products/ProductAuditPage/ProductAuditPage-Mobile.css';
+/*@import './pages/products/ProductsPage/ProductsPage-Mobile.css';*/
+/*@import './pages/products/ProductDetailPage/ProductDetailPage-Mobile.css';*/
+/*@import './pages/products/ProductFormPage/ProductFormPage-Mobile.css';*/
+/*@import './pages/products/ProductAuditPage/ProductAuditPage-Mobile.css';*/
 
-@import './pages/users/UsersListPage-Mobile.css';
-@import './pages/users/UserDetailPage-Mobile.css';
+/*@import './pages/users/UsersListPage-Mobile.css';*/
+/*@import './pages/users/UserDetailPage-Mobile.css';*/
 
-@import './pages/profile/ProfilePage-Mobile.css';
-@import './pages/login/LoginPage-Mobile.css';
-@import './pages/permissionsGroups/PermissionsGroupsPage-Mobile.css';
-@import './pages/catalog/CatalogPage/CatalogPage-Mobile.css';
-@import './pages/categories/CategoriesPage-Mobile.css';
-@import './pages/categories/CategoryDetailPage-Mobile.css';
-@import './pages/categories/CategoryAuditPage-Mobile.css';
+/*@import './pages/profile/ProfilePage-Mobile.css';*/
+/*@import './pages/login/LoginPage-Mobile.css';*/
+/*@import './pages/permissionsGroups/PermissionsGroupsPage-Mobile.css';*/
+/*@import './pages/catalog/CatalogPage/CatalogPage-Mobile.css';*/
+/*@import './pages/categories/CategoriesPage-Mobile.css';*/
+/*@import './pages/categories/CategoryDetailPage-Mobile.css';*/
+/*@import './pages/categories/CategoryAuditPage-Mobile.css';*/
 
-@import './pages/billing/CategoryPricingPoliciesPage-Mobile.css';
-@import './pages/billing/CategoryPricingPolicyDetailPage-Mobile.css';
-@import './pages/billing/CategoryPricingPolicyFormPage-Mobile.css';
-@import './pages/support/SupportPage-Mobile.css';
-@import './pages/dashboard/DashboardPage-Mobile.css';
-@import './pages/errors/ErrorPage-Mobile.css';
+/*@import './pages/billing/CategoryPricingPoliciesPage-Mobile.css';*/
+/*@import './pages/billing/CategoryPricingPolicyDetailPage-Mobile.css';*/
+/*@import './pages/billing/CategoryPricingPolicyFormPage-Mobile.css';*/
+/*@import './pages/support/SupportPage-Mobile.css';*/
+/*@import './pages/dashboard/DashboardPage-Mobile.css';*/
+/*@import './pages/errors/ErrorPage-Mobile.css';*/
 
-/* UI Component Mobile styles */
-@import './shared/ui/CrudPageTemplate-Mobile.css';
-@import './shared/ui/Modal-Mobile.css';
-@import './shared/ui/Pagination-Mobile.css';
-@import './shared/ui/EntityList-Mobile.css';
-@import './shared/ui/Button-Mobile.css';
-@import './shared/ui/Input-Mobile.css';
-@import './shared/ui/Select-Mobile.css';
-@import './shared/ui/Tabs-Mobile.css';
-@import './shared/ui/SearchInput-Mobile.css';
-@import './shared/ui/AutocompleteInput-Mobile.css';
-@import './shared/ui/ImageCarousel-Mobile.css';
+/*!* UI Component Mobile styles *!*/
+/*@import './shared/ui/CrudPageTemplate-Mobile.css';*/
+/*@import './shared/ui/Modal-Mobile.css';*/
+/*@import './shared/ui/Pagination-Mobile.css';*/
+/*@import './shared/ui/EntityList-Mobile.css';*/
+/*@import './shared/ui/Button-Mobile.css';*/
+/*@import './shared/ui/Input-Mobile.css';*/
+/*@import './shared/ui/Select-Mobile.css';*/
+/*@import './shared/ui/Tabs-Mobile.css';*/
+/*@import './shared/ui/SearchInput-Mobile.css';*/
+/*@import './shared/ui/AutocompleteInput-Mobile.css';*/
+/*@import './shared/ui/ImageCarousel-Mobile.css';*/

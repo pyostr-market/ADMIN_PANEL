@@ -1,7 +1,7 @@
 import {useState, useEffect, useRef, useCallback} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiUser, FiEdit2, FiSave, FiX, FiShield, FiPhone, FiCalendar, FiCheckCircle } from 'react-icons/fi';
-import { Button } from '../../shared/ui/Button';
+import { Button } from '../../shared/ui/Button/Button';
 import { Card } from '../../shared/ui/Card/Card';
 import { LoadingState } from '../../shared/ui/LoadingState/LoadingState';
 import { getApiErrorMessage } from '../../shared/api/apiError';

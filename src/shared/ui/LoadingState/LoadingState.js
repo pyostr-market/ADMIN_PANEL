@@ -1,4 +1,4 @@
-import './LoadingState.css';
+import styles from './LoadingState.module.css';
 
 export function LoadingState({
   message = 'Загрузка...',
@@ -6,9 +6,9 @@ export function LoadingState({
   className = '',
 }) {
   return (
-    <div className={`loading-state loading-state--${size} ${className}`}>
-      <div className="loading-state__spinner" />
-      {message && <p className="loading-state__message">{message}</p>}
+    <div className={`${styles.loadingState} ${styles[`loadingState${size.charAt(0).toUpperCase() + size.slice(1)}`]} ${className}`}>
+      <div className={styles.loadingStateSpinner} />
+      {message && <p className={styles.loadingStateMessage}>{message}</p>}
     </div>
   );
 }

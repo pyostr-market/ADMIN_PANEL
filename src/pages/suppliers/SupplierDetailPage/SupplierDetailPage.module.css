@@ -1,0 +1,350 @@
+.supplierDetailPage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.supplierDetailPageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 40px;
+}
+
+.supplierDetailPageHeader .backButton {
+  flex-shrink: 0;
+}
+
+.supplierDetailPageActions {
+  display: flex;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.supplierDetailPageActions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.supplierDetailPageLoading,
+.supplierDetailPageError {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: var(--space-4);
+  text-align: center;
+}
+
+.supplierDetailPageError h2 {
+  font-size: 20px;
+  color: var(--text);
+  margin: 0;
+}
+
+.supplierDetailPageError p {
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.supplierDetailPageContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.supplierDetailPagePanel {
+  background: var(--surface);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+}
+
+.supplierDetailPagePanelLarge {
+  min-height: 300px;
+}
+
+.panelHeader {
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panelHeaderContent {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.panelTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+.supplierInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4);
+}
+
+.infoCard {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
+  background-color: var(--card-bg);
+}
+
+.infoCardFull {
+  grid-column: 1 / -1;
+}
+
+.infoCardIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.infoCardIcon,
+.infoCardIcon svg,
+.infoCardIcon span {
+  color: white;
+}
+
+.infoCardIconPrimary {
+  background: var(--gradient-avatar);
+}
+
+.infoCardIconSecondary {
+  background: var(--gradient-secondary);
+}
+
+.infoCardIconSuccess {
+  background: var(--gradient-success);
+}
+
+.infoCardIconInfo {
+  background: var(--gradient-info);
+}
+
+.infoCardContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+}
+
+.infoCardLabel {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.infoCardValue {
+  font-size: 15px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.infoCardValueCode {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.infoCardStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.infoCardStatusActive {
+  background-color: var(--success-bg);
+  color: var(--accent-green);
+}
+
+.infoCardStatusInactive {
+  background-color: var(--accent-red-bg);
+  color: var(--accent-red);
+}
+
+.editSupplierForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.editSupplierFormField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.editSupplierFormLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.editSupplierForm input,
+.editSupplierForm textarea {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  font-size: 15px;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.editSupplierForm input:focus,
+.editSupplierForm textarea:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px var(--focus-ring-blue);
+}
+
+.editSupplierForm textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.modalConfirmText {
+  font-size: 15px;
+  color: var(--text);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.modalConfirmText strong {
+  color: var(--text);
+}
+
+.modalConfirmNote {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent-blue);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.backButton {
+  padding: var(--space-2) var(--space-3);
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .supplierDetailPage {
+    padding: 0;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .supplierDetailPageHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+  }
+
+  .supplierDetailPageHeader .backButton {
+    flex-shrink: 0;
+    height: 32px;
+    padding: 6px 8px;
+    font-size: 12px;
+    min-width: auto;
+    margin-right: auto;
+  }
+
+  .supplierDetailPageActions {
+    flex-shrink: 0;
+    display: flex;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .supplierDetailPageActions button {
+    height: 32px;
+    padding: 6px 8px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .supplierDetailPageContent {
+    gap: 12px;
+    padding: 12px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .supplierInfoGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .infoCard {
+    flex-direction: column;
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .infoCardIcon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    border-radius: 8px;
+  }
+
+  .infoCardLabel {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .infoCardValue {
+    font-size: 14px;
+  }
+}

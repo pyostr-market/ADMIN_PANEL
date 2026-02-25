@@ -1,0 +1,272 @@
+.autocompleteInputWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.autocompleteInputLabel {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text, var(--text));
+}
+
+.autocompleteInput {
+  position: relative;
+  width: 100%;
+}
+
+.autocompleteInputField {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.autocompleteInputIcon {
+  position: absolute;
+  left: 12px;
+  color: var(--color-text-secondary, var(--text-secondary));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.autocompleteInput .autocompleteInputFieldInput {
+  width: 100%;
+  padding: var(--space-3) 40px var(--space-3) 35px !important;
+  border: 1px solid var(--color-border, var(--border));
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  color: var(--color-text, var(--text));
+  background: var(--color-background, var(--surface));
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.autocompleteInputFieldInput:focus {
+  border-color: var(--color-primary, var(--primary));
+  box-shadow: 0 0 0 3px var(--focus-ring-primary);
+}
+
+.autocompleteInputFieldInputError {
+  border-color: var(--color-error, var(--danger));
+}
+
+.autocompleteInputFieldInput:disabled {
+  background: var(--color-background-secondary, var(--surface-subtle));
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.autocompleteInputClear {
+  position: absolute;
+  right: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary, var(--text-secondary));
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.autocompleteInputClear:hover {
+  background: var(--color-background-secondary, var(--surface-subtle));
+  color: var(--color-text, var(--text));
+}
+
+.autocompleteInputClear:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.autocompleteInputToggle {
+  position: absolute;
+  right: var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary, var(--text-secondary));
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.autocompleteInputToggle:hover {
+  background: var(--color-background-secondary, var(--surface-subtle));
+}
+
+.autocompleteInputToggleOpen {
+  transform: rotate(180deg);
+}
+
+.autocompleteInputToggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.autocompleteInputError {
+  display: block;
+  margin-top: var(--space-2);
+  font-size: 12px;
+  color: var(--color-error, var(--danger));
+}
+
+.autocompleteInputDropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  background: var(--color-background, var(--surface));
+  border: 1px solid var(--color-border, var(--border));
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  z-index: 1000;
+}
+
+.autocompleteInputOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.autocompleteInputOption:hover,
+.autocompleteInputOptionHighlighted {
+  background: var(--border-strong);
+  color: white;
+}
+
+.autocompleteInputOptionSelected {
+  background: var(--primary-hover);
+  color: white;
+}
+
+.autocompleteInputOptionLoading,
+.autocompleteInputOptionEmpty {
+  justify-content: center;
+  color: var(--color-text-secondary, var(--text-secondary));
+  cursor: default;
+}
+
+.autocompleteInputOptionLoading:hover,
+.autocompleteInputOptionEmpty:hover {
+  background: transparent;
+  color: var(--color-text-secondary, var(--text-secondary));
+}
+
+.autocompleteInputOptionLabel {
+  flex: 1;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: var(--space-4);
+}
+
+.autocompleteInputOptionValue {
+  font-size: 12px;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+.autocompleteInputOptionSelected .autocompleteInputOptionValue,
+.autocompleteInputOptionHighlighted .autocompleteInputOptionValue {
+  opacity: 0.9;
+}
+
+.autocompleteInputLoadMore {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3) var(--space-4);
+  font-size: 13px;
+  color: var(--color-text-secondary, var(--text-secondary));
+  background: var(--color-background, var(--surface));
+}
+
+@media (max-width: 768px) {
+  .autocompleteInputFieldInput {
+    height: 48px;
+    padding: 12px 46px 12px 42px;
+    font-size: 16px;
+    border-radius: var(--radius-md);
+    border-width: 1.5px;
+  }
+
+  .autocompleteInputFieldInput:focus {
+    border-width: 2px;
+    box-shadow: 0 0 0 3px var(--focus-ring-primary);
+  }
+
+  .autocompleteInputIcon {
+    left: 14px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .autocompleteInputClear {
+    right: 42px;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+  }
+
+  .autocompleteInputToggle {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    right: 10px;
+  }
+
+  .autocompleteInputDropdown {
+    max-height: 300px;
+    max-height: calc(50vh - 100px);
+    border-radius: var(--radius-md);
+    border-width: 1.5px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  }
+
+  .autocompleteInputOption {
+    padding: 14px 12px;
+    min-height: 52px;
+    font-size: 15px;
+  }
+
+  .autocompleteInputOption:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+
+  .autocompleteInputOptionLabel {
+    font-size: 15px;
+  }
+
+  .autocompleteInputLabel {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .autocompleteInputError {
+    font-size: 12px;
+    padding-left: var(--space-2);
+  }
+}

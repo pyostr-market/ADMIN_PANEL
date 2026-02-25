@@ -1,4 +1,4 @@
-import './PageActions.css';
+import styles from './PageActions.module.css';
 
 export function PageActions({
   children,
@@ -6,7 +6,7 @@ export function PageActions({
   className = '',
 }) {
   return (
-    <div className={`page-actions page-actions--${align} ${className}`}>
+    <div className={`${styles.pageActions} ${styles[`pageActions${align.charAt(0).toUpperCase() + align.slice(1)}`]} ${className}`}>
       {children}
     </div>
   );

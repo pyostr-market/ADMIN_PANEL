@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiPackage, FiPlus, FiTrash2, FiEye, FiEdit2, FiTag } from 'react-icons/fi';
-import { PermissionGate } from '../../../shared/ui/PermissionGate';
-import { Button } from '../../../shared/ui/Button';
-import { SearchInput } from '../../../shared/ui/SearchInput';
-import { Pagination } from '../../../shared/ui/Pagination';
-import { EntityList } from '../../../shared/ui/EntityList';
-import { Modal } from '../../../shared/ui/Modal';
-import { Select } from '../../../shared/ui/Select';
+import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
+import { Button } from '../../../shared/ui/Button/Button';
+import { SearchInput } from '../../../shared/ui/SearchInput/SearchInput';
+import { Pagination } from '../../../shared/ui/Pagination/Pagination';
+import { EntityList } from '../../../shared/ui/EntityList/EntityList';
+import { Modal } from '../../../shared/ui/Modal/Modal';
+import { Select } from '../../../shared/ui/Select/Select';
 import { useCrudList } from '../../../shared/lib/crud';
 import {
   getProductsRequest,
@@ -15,8 +15,7 @@ import {
   getCategoriesForAutocompleteRequest,
   getProductTypesForAutocompleteRequest,
 } from './api/productsApi';
-import './ProductsPage.css';
-import './ProductsPage-Mobile.css';
+import styles from './ProductsPage.module.css';
 
 const PAGE_LIMIT = 20;
 
@@ -42,11 +41,11 @@ function DeleteProductModal({ product, onClose, onSubmit, isSubmitting }) {
         </>
       )}
     >
-      <p className="modal-confirm-text">
+      <p className={styles.modalConfirmText}>
         Вы уверены, что хотите удалить товар{' '}
         <strong>{product.name || `ID: ${product.id}`}</strong>?
       </p>
-      <p className="modal-confirm-note">
+      <p className={styles.modalConfirmNote}>
         Это действие нельзя отменить.
       </p>
     </Modal>
@@ -118,10 +117,10 @@ export function ProductsPage() {
   };
 
   return (
-    <section className="products-page">
-      <header className="products-page__header">
-        <h1 className="products-page__title">Товары</h1>
-        <div className="products-page__controls">
+    <section className={styles.productsPage}>
+      <header className={styles.productsPageHeader}>
+        <h1 className={styles.productsPageTitle}>Товары</h1>
+        <div className={styles.productsPageControls}>
           <PermissionGate permission={['product:create']} fallback={null}>
             <Button
               variant="primary"
@@ -134,9 +133,9 @@ export function ProductsPage() {
         </div>
       </header>
 
-      <div className={`products-page__filters${productsCrud.isLoading ? ' products-page__filters--loading' : ''}`}>
-        <div className="products-page__filters-row">
-          <div className="products-page__search-wrapper">
+      <div className={`${styles.productsPageFilters}${productsCrud.isLoading ? ` ${styles.productsPageFiltersLoading}` : ''}`}>
+        <div className={styles.productsPageFiltersRow}>
+          <div className={styles.productsPageSearchWrapper}>
             <SearchInput
               value={productsCrud.search}
               onChange={(e) => productsCrud.setSearch(e.target.value)}
@@ -144,20 +143,20 @@ export function ProductsPage() {
               loading={productsCrud.isLoading}
             />
           </div>
-          <div className="products-page__filters-group">
+          <div className={styles.productsPageFiltersGroup}>
             <Select
               value={filters.category_id}
               onChange={(e) => handleFilterChange('category_id', e.target.value || null)}
               options={categoryOptions}
               placeholder="Категория"
-              wrapperClassName="products-page__filter-select"
+              wrapperClassName={styles.productsPageFilterSelect}
             />
             <Select
               value={filters.product_type_id}
               onChange={(e) => handleFilterChange('product_type_id', e.target.value || null)}
               options={productTypeOptions}
               placeholder="Тип продукта"
-              wrapperClassName="products-page__filter-select"
+              wrapperClassName={styles.productsPageFilterSelect}
             />
             {(filters.category_id || filters.product_type_id) && (
               <Button
@@ -179,56 +178,56 @@ export function ProductsPage() {
         items={productsCrud.items}
         renderItem={(product) => (
           <>
-            <div className="products-page__item-content" onClick={() => handleViewProduct(product)}>
-              <div className="products-page__item-main">
-                <div className="products-page__item-image">
+            <div className={styles.productsPageItemContent} onClick={() => handleViewProduct(product)}>
+              <div className={styles.productsPageItemMain}>
+                <div className={styles.productsPageItemImage}>
                   {mainImage(product) ? (
-                    <img src={mainImage(product)} alt={product.name} className="products-page__item-img" />
+                    <img src={mainImage(product)} alt={product.name} className={styles.productsPageItemImg} />
                   ) : (
-                    <div className="products-page__item-avatar">
+                    <div className={styles.productsPageItemAvatar}>
                       <FiPackage />
                     </div>
                   )}
                 </div>
-                <div className="products-page__item-info">
-                  <div className="products-page__item-header">
-                    <p className="products-page__item-title">
+                <div className={styles.productsPageItemInfo}>
+                  <div className={styles.productsPageItemHeader}>
+                    <p className={styles.productsPageItemTitle}>
                       {product.name || 'Без названия'}
                     </p>
                   </div>
-                  <div className="products-page__item-meta">
-                    <span className="products-page__meta-item products-page__meta-item--price">
+                  <div className={styles.productsPageItemMeta}>
+                    <span className={`${styles.productsPageMetaItem} ${styles.productsPageMetaItemPrice}`}>
                       {product.price?.toLocaleString('ru-RU')} ₽
                     </span>
                     {product.category && (
                       <>
-                        <span className="products-page__separator">•</span>
-                        <span className="products-page__meta-item">
-                          <FiTag className="products-page__meta-icon" />
+                        <span className={styles.productsPageSeparator}>•</span>
+                        <span className={styles.productsPageMetaItem}>
+                          <FiTag className={styles.productsPageMetaIcon} />
                           Категория: {product.category.name}
                         </span>
                       </>
                     )}
                     {product.product_type && (
                       <>
-                        <span className="products-page__separator">•</span>
-                        <span className="products-page__meta-item">
-                          <FiPackage className="products-page__meta-icon" />
+                        <span className={styles.productsPageSeparator}>•</span>
+                        <span className={styles.productsPageMetaItem}>
+                          <FiPackage className={styles.productsPageMetaIcon} />
                           Тип: {product.product_type.name}
                         </span>
                       </>
                     )}
                     {product.supplier && (
                       <>
-                        <span className="products-page__separator">•</span>
-                        <span className="products-page__meta-item">
+                        <span className={styles.productsPageSeparator}>•</span>
+                        <span className={styles.productsPageMetaItem}>
                           Поставщик: {product.supplier.name}
                         </span>
                       </>
                     )}
                   </div>
                   {product.description && (
-                    <p className="products-page__item-description">
+                    <p className={styles.productsPageItemDescription}>
                       {product.description.length > 150
                         ? `${product.description.substring(0, 150)}...`
                         : product.description}
@@ -237,7 +236,7 @@ export function ProductsPage() {
                 </div>
               </div>
             </div>
-            <div className="products-page__item-actions">
+            <div className={styles.productsPageItemActions}>
               <PermissionGate permission={['product:update']} fallback={null}>
                 <Button
                   variant="secondary"
@@ -267,7 +266,7 @@ export function ProductsPage() {
                   onClick={() => setProductToDelete(product)}
                   disabled={productsCrud.isSubmitting}
                   aria-label="Удалить товар"
-                  className="btn-delete"
+                  className={styles.btnDelete}
                 >
                   <FiTrash2 />
                 </Button>

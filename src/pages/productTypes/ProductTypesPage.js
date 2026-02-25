@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiPlus, FiTrash2, FiEye, FiEdit2, FiBox } from 'react-icons/fi';
-import { PermissionGate } from '../../shared/ui/PermissionGate';
-import { Button } from '../../shared/ui/Button';
-import { SearchInput } from '../../shared/ui/SearchInput';
-import { Pagination } from '../../shared/ui/Pagination';
-import { EntityList } from '../../shared/ui/EntityList';
-import { Modal } from '../../shared/ui/Modal';
+import { PermissionGate } from '../../shared/ui/PermissionGate/PermissionGate';
+import { Button } from '../../shared/ui/Button/Button';
+import { SearchInput } from '../../shared/ui/SearchInput/SearchInput';
+import { Pagination } from '../../shared/ui/Pagination/Pagination';
+import { EntityList } from '../../shared/ui/EntityList/EntityList';
+import { Modal } from '../../shared/ui/Modal/Modal';
 import { useCrudList } from '../../shared/lib/crud';
 import {
   getProductTypesRequest,

@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FiSave, FiX } from 'react-icons/fi';
-import { Button } from '../../shared/ui/Button';
+import { Button } from '../../shared/ui/Button/Button';
 import { PageHeader } from '../../shared/ui/PageHeader/PageHeader';
 import { FormSection } from '../../shared/ui/FormSection/FormSection';
 import { FormGrid } from '../../shared/ui/FormGrid/FormGrid';
 import { PageActions } from '../../shared/ui/PageActions/PageActions';
 import { LoadingState } from '../../shared/ui/LoadingState/LoadingState';
-import { AutocompleteInput } from '../../shared/ui/AutocompleteInput';
+import { AutocompleteInput } from '../../shared/ui/AutocompleteInput/AutocompleteInput';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import {

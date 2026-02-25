@@ -1,0 +1,486 @@
+.manufacturerAuditPage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.manufacturerAuditPageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.manufacturerAuditPageHeaderLeft {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.manufacturerAuditPageTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.manufacturerAuditPageContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.manufacturerAuditPagePanel {
+  background: var(--surface);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+}
+
+.manufacturerAuditPageLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: var(--space-4);
+}
+
+.manufacturerAuditPageEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.manufacturerAuditPagePagination {
+  margin-top: var(--space-5);
+  display: flex;
+  justify-content: center;
+}
+
+/* Audit Table */
+.auditTableWrapper {
+  overflow-x: auto;
+}
+
+.auditTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.auditTableHeader {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--border);
+}
+
+.auditTableHeaderActions {
+  text-align: right;
+}
+
+.auditTableRow {
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.2s ease;
+}
+
+.auditTableRow:hover {
+  background-color: var(--card-bg);
+}
+
+.auditTableRow:last-child {
+  border-bottom: none;
+}
+
+.auditTableCell {
+  padding: var(--space-4);
+  font-size: 14px;
+  color: var(--text);
+  vertical-align: middle;
+}
+
+.auditTableCellActions {
+  text-align: right;
+}
+
+/* Audit Action Badge */
+.auditActionBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.auditActionBadgeCreate {
+  background-color: var(--success-bg);
+  color: var(--accent-green);
+}
+
+.auditActionBadgeUpdate {
+  background-color: var(--accent-blue-bg);
+  color: var(--accent-blue);
+}
+
+.auditActionBadgeDelete {
+  background-color: var(--accent-red-bg);
+  color: var(--accent-red);
+}
+
+.auditUserId,
+.auditUserInfo {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.auditUserInfo {
+  display: inline-block;
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.auditDate {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* Audit Detail Modal */
+.auditDetailModal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.auditDetailModalHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.auditDetailRow {
+  display: flex;
+  gap: var(--space-3);
+  align-items: baseline;
+}
+
+.auditDetailLabel {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 500;
+  min-width: 120px;
+}
+
+.auditDetailValue {
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.auditActionCreate {
+  color: var(--accent-green);
+}
+
+.auditActionUpdate {
+  color: var(--accent-blue);
+}
+
+.auditActionDelete {
+  color: var(--accent-red);
+}
+
+.auditDetailModalData {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Audit Data Block */
+.auditDataBlock {
+  background-color: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+
+.auditDataBlockTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 var(--space-3) 0;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.auditDataBlockContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.auditDataBlockEmpty {
+  color: var(--text-muted);
+  font-size: 14px;
+  font-style: italic;
+}
+
+.auditDataBlockValue {
+  background-color: var(--surface);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: var(--text);
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Audit Data Row */
+.auditDataRow {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.auditDataRowNested {
+  padding-left: var(--space-4);
+}
+
+.auditDataRowKey {
+  font-weight: 600;
+  color: var(--accent-blue);
+  min-width: 150px;
+  flex-shrink: 0;
+}
+
+.auditDataRowValue {
+  color: var(--text);
+  word-break: break-word;
+}
+
+/* Value Types */
+.auditValueNull,
+.auditValueEmpty {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.auditValueTrue {
+  color: var(--accent-green);
+  font-weight: 600;
+}
+
+.auditValueFalse {
+  color: var(--accent-red);
+  font-weight: 600;
+}
+
+.auditValueNumber {
+  color: var(--accent-purple);
+  font-weight: 500;
+}
+
+.auditValueString {
+  color: var(--text);
+}
+
+/* Array Value */
+.auditValueArray {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.auditArrayItem {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--surface);
+  border-radius: var(--radius-md);
+}
+
+.auditArrayItemIndex {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.auditArrayItemContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+}
+
+/* Object Value */
+.auditValueObject {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* Loading Spinner */
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent-blue);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Back Button */
+.backButton {
+  padding: var(--space-2) var(--space-3);
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .manufacturerAuditPage,
+  .productAuditPage,
+  .supplierAuditPage,
+  .productTypeAuditPage,
+  .attributeAuditPage {
+    padding: 0 !important;
+    gap: 0;
+  }
+
+  .manufacturerAuditPageHeader,
+  .productAuditPageHeader,
+  .supplierAuditPageHeader,
+  .productTypeAuditPageHeader,
+  .attributeAuditPageHeader {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .manufacturerAuditPageHeaderLeft,
+  .productAuditPageHeaderLeft,
+  .supplierAuditPageHeaderLeft,
+  .productTypeAuditPageHeaderLeft,
+  .attributeAuditPageHeaderLeft {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .manufacturerAuditPageTitle,
+  .productAuditPageTitle,
+  .supplierAuditPageTitle,
+  .productTypeAuditPageTitle,
+  .attributeAuditPageTitle {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .manufacturerAuditPageContent,
+  .productAuditPageContent,
+  .supplierAuditPageContent,
+  .productTypeAuditPageContent,
+  .attributeAuditPageContent {
+    padding: 12px 16px;
+  }
+
+  .manufacturerAuditPagePanel,
+  .productAuditPagePanel,
+  .supplierAuditPagePanel,
+  .productTypeAuditPagePanel,
+  .attributeAuditPagePanel {
+    padding: 16px;
+    border-radius: 8px;
+  }
+
+  .auditTableWrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .auditTable {
+    min-width: 600px;
+  }
+
+  .auditTableHeader,
+  .auditTableCell {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .auditActionBadge {
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .auditDetailModalHeader {
+    gap: 8px;
+  }
+
+  .auditDetailRow {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .auditDetailLabel {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .auditDetailValue {
+    font-size: 13px;
+  }
+
+  .auditDataBlock {
+    padding: 12px;
+    border-radius: 6px;
+  }
+
+  .auditDataBlockTitle {
+    font-size: 12px;
+  }
+
+  .auditDataBlockValue {
+    font-size: 11px;
+    padding: 8px;
+  }
+
+  .backButton {
+    width: 100%;
+    height: 38px;
+    font-size: 13px;
+    justify-content: center;
+  }
+}

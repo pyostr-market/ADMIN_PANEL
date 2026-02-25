@@ -1,0 +1,143 @@
+.entityList {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.entityListItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  padding: var(--space-3);
+  transition: box-shadow 0.15s ease;
+}
+
+.entityListItem:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.entityListMessage {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  text-align: center;
+  padding: var(--space-4);
+}
+
+.entityItem {
+  flex: 1;
+  min-width: 0;
+}
+
+.entityItemTitle {
+  margin: 0 0 var(--space-1);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.entityItemDescription {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.entityItemMeta {
+  margin-top: var(--space-1);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.entityActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .entityList {
+    gap: 0;
+    padding: 0 !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .entityListItem {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    border-radius: 0;
+    border-width: 1px;
+    border-left: none;
+    border-right: none;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .entityListItem:first-child {
+    border-top: none;
+  }
+
+  .entityListItem:last-child {
+    border-bottom: none;
+  }
+
+  .entityListItem:active {
+    background: var(--surface-subtle);
+  }
+
+  .entityItem {
+    width: 100%;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .entityItemTitle {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 var(--space-1);
+    word-break: break-word;
+    width: 100%;
+  }
+
+  .entityItemDescription {
+    font-size: 12px;
+    line-height: 1.4;
+    margin: 0;
+    word-break: break-word;
+    width: 100%;
+  }
+
+  .entityItemMeta {
+    font-size: 11px;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    margin-top: var(--space-1);
+    width: 100%;
+  }
+
+  .entityActions {
+    width: 100%;
+    justify-content: stretch;
+    padding-top: var(--space-2);
+    margin-top: 0;
+    border-top: 1px solid var(--border);
+    gap: var(--space-2);
+    box-sizing: border-box;
+  }
+
+  .entityActions button {
+    flex: 1;
+    min-width: 80px;
+    height: 34px;
+    font-size: 12px;
+  }
+}

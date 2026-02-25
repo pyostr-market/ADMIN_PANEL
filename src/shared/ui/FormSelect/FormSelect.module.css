@@ -1,0 +1,37 @@
+.formSelectWrapper {
+  display: grid;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.formSelectLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.formSelectRequired {
+  color: var(--danger);
+}
+
+.formSelectHint {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.formSelectErrorText {
+  font-size: 13px;
+  color: var(--danger);
+}
+
+.formSelectError {
+  border-color: var(--danger) !important;
+}
+
+.formSelectError:focus {
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 3px var(--focus-ring-danger) !important;
+}

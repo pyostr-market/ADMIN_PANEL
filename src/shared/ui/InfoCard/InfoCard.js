@@ -1,4 +1,4 @@
-import './InfoCard.css';
+import styles from './InfoCard.module.css';
 
 export function InfoCard({
   label,
@@ -8,11 +8,11 @@ export function InfoCard({
   className = '',
 }) {
   return (
-    <div className={`info-card info-card--${variant} ${className}`}>
-      {icon && <div className="info-card__icon">{icon}</div>}
-      <div className="info-card__content">
-        {label && <div className="info-card__label">{label}</div>}
-        <div className="info-card__value">{value}</div>
+    <div className={`${styles.infoCard} ${styles[`infoCard${variant.charAt(0).toUpperCase() + variant.slice(1)}`]} ${className}`}>
+      {icon && <div className={styles.infoCardIcon}>{icon}</div>}
+      <div className={styles.infoCardContent}>
+        {label && <div className={styles.infoCardLabel}>{label}</div>}
+        <div className={styles.infoCardValue}>{value}</div>
       </div>
     </div>
   );

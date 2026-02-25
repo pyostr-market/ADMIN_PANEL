@@ -1,4 +1,4 @@
-import './FormGrid.css';
+import styles from './FormGrid.module.css';
 
 export function FormGrid({
   children,
@@ -7,7 +7,7 @@ export function FormGrid({
 }) {
   return (
     <div
-      className={`form-grid form-grid--${columns}-col ${className}`}
+      className={`${styles.formGrid} ${styles[`formGrid${columns}Col`]} ${className}`}
       style={{ '--grid-columns': columns }}
     >
       {children}

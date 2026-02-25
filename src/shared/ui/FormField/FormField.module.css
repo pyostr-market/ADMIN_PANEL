@@ -1,0 +1,46 @@
+.formField {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.formFieldFull {
+  grid-column: 1 / -1;
+}
+
+.formFieldLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.formFieldRequired {
+  color: var(--danger);
+}
+
+.formFieldHint {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.formFieldErrorText {
+  font-size: 13px;
+  color: var(--danger);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.formFieldError input,
+.formFieldError textarea,
+.formFieldError select {
+  border-color: var(--danger) !important;
+}
+
+.formFieldError input:focus,
+.formFieldError textarea:focus,
+.formFieldError select:focus {
+  box-shadow: 0 0 0 3px var(--focus-ring-danger) !important;
+}

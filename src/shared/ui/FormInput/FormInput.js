@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
-import { Input as BaseInput } from '../Input';
-import './FormInput.css';
+import { Input as BaseInput } from '../Input/Input';
+import styles from './FormInput.module.css';
 
 export const FormInput = forwardRef(function FormInput(
   {
@@ -17,7 +17,7 @@ export const FormInput = forwardRef(function FormInput(
   ref,
 ) {
   return (
-    <div className={`form-input-wrapper ${wrapperClassName}`}>
+    <div className={`${styles.formInputWrapper} ${wrapperClassName}`}>
       <BaseInput
         ref={ref}
         label={label}

@@ -1,5 +1,5 @@
 import { FiInbox } from 'react-icons/fi';
-import './EmptyState.css';
+import styles from './EmptyState.module.css';
 
 export function EmptyState({
   icon,
@@ -11,13 +11,13 @@ export function EmptyState({
   const IconComponent = icon || FiInbox;
 
   return (
-    <div className={`empty-state ${className}`}>
-      <div className="empty-state__icon">
+    <div className={`${styles.emptyState} ${className}`}>
+      <div className={styles.emptyStateIcon}>
         <IconComponent />
       </div>
-      {title && <h3 className="empty-state__title">{title}</h3>}
-      {description && <p className="empty-state__description">{description}</p>}
-      {action && <div className="empty-state__action">{action}</div>}
+      {title && <h3 className={styles.emptyStateTitle}>{title}</h3>}
+      {description && <p className={styles.emptyStateDescription}>{description}</p>}
+      {action && <div className={styles.emptyStateAction}>{action}</div>}
     </div>
   );
 }

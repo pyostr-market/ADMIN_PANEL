@@ -1,4 +1,4 @@
-import './FormSection.css';
+import styles from './FormSection.module.css';
 
 export function FormSection({
   icon,
@@ -9,19 +9,19 @@ export function FormSection({
   className = '',
 }) {
   return (
-    <section className={`form-section ${className}`}>
-      <div className="form-section__header">
+    <section className={`${styles.formSection} ${className}`}>
+      <div className={styles.formSectionHeader}>
         {icon && (
-          <div className={`form-section__icon form-section__icon--${iconVariant}`}>
+          <div className={`${styles.formSectionIcon} ${styles[`formSectionIcon${iconVariant.charAt(0).toUpperCase() + iconVariant.slice(1)}`]}`}>
             {icon}
           </div>
         )}
         <div>
-          {title && <h2 className="form-section__title">{title}</h2>}
-          {description && <p className="form-section__description">{description}</p>}
+          {title && <h2 className={styles.formSectionTitle}>{title}</h2>}
+          {description && <p className={styles.formSectionDescription}>{description}</p>}
         </div>
       </div>
-      <div className="form-section__content">
+      <div className={styles.formSectionContent}>
         {children}
       </div>
     </section>

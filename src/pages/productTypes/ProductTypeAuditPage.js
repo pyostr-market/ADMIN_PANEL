@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FiEye } from 'react-icons/fi';
-import { Button } from '../../shared/ui/Button';
-import { Pagination } from '../../shared/ui/Pagination';
-import { Modal } from '../../shared/ui/Modal';
+import { Button } from '../../shared/ui/Button/Button';
+import { Pagination } from '../../shared/ui/Pagination/Pagination';
+import { Modal } from '../../shared/ui/Modal/Modal';
 import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import { getProductTypeAuditRequest } from './api/productTypesApi';

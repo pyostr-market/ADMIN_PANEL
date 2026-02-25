@@ -1,7 +1,7 @@
-import { Button } from '../Button';
-import { Modal } from '../Modal';
+import { Button } from '../Button/Button';
+import { Modal } from '../Modal/Modal';
 import { FiAlertTriangle } from 'react-icons/fi';
-import './DeleteConfirmModal.css';
+import styles from './DeleteConfirmModal.module.css';
 
 export function DeleteConfirmModal({
   isOpen,
@@ -35,15 +35,15 @@ export function DeleteConfirmModal({
         </>
       }
     >
-      <div className="delete-confirm-modal">
-        <div className="delete-confirm-modal__icon">
+      <div className={styles.deleteConfirmModal}>
+        <div className={styles.deleteConfirmModalIcon}>
           <FiAlertTriangle />
         </div>
-        <div className="delete-confirm-modal__content">
-          <p className="delete-confirm-modal__text">
+        <div className={styles.deleteConfirmModalContent}>
+          <p className={styles.deleteConfirmModalText}>
             Вы уверены, что хотите удалить <strong>{entityTitle || entityName}</strong>?
           </p>
-          <p className="delete-confirm-modal__note">
+          <p className={styles.deleteConfirmModalNote}>
             Это действие нельзя отменить. Все связанные данные также будут удалены.
           </p>
         </div>

@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import './FormTextarea.css';
+import styles from './FormTextarea.module.css';
 
 export const FormTextarea = forwardRef(function FormTextarea(
   {
@@ -14,21 +14,21 @@ export const FormTextarea = forwardRef(function FormTextarea(
   ref,
 ) {
   return (
-    <div className={`form-textarea-wrapper ${className}`}>
+    <div className={`${styles.formTextareaWrapper} ${className}`}>
       {label && (
-        <label className="form-textarea__label">
+        <label className={styles.formTextareaLabel}>
           {label}
-          {required && <span className="form-textarea__required">*</span>}
+          {required && <span className={styles.formTextareaRequired}>*</span>}
         </label>
       )}
       <textarea
         ref={ref}
         rows={rows}
-        className={`form-textarea ${error ? 'form-textarea--error' : ''}`}
+        className={`${styles.formTextarea} ${error ? styles.formTextareaError : ''}`}
         {...props}
       />
-      {hint && !error && <span className="form-textarea__hint">{hint}</span>}
-      {error && <span className="form-textarea__error">{error}</span>}
+      {hint && !error && <span className={styles.formTextareaHint}>{hint}</span>}
+      {error && <span className={styles.formTextareaErrorText}>{error}</span>}
     </div>
   );
 });
