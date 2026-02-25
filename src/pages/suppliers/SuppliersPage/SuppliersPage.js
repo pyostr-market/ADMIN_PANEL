@@ -61,9 +61,9 @@ export function SuppliersPage() {
     if (result) setSupplierToDelete(null);
   };
 
-  const handleViewSupplier = (supplier) => navigate(`/catalog/suppliers/${supplier.id}`);
-  const handleEditSupplier = (supplier) => navigate(`/catalog/suppliers/${supplier.id}/edit`);
-  const handleCreateSupplier = () => navigate('/catalog/suppliers/create');
+  const handleViewSupplier = (supplier) => navigate(`/suppliers/${supplier.id}`);
+  const handleEditSupplier = (supplier) => navigate(`/suppliers/${supplier.id}/edit`);
+  const handleCreateSupplier = () => navigate('/suppliers/create');
 
   return (
     <>
