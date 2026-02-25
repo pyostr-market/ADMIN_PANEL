@@ -8,7 +8,9 @@
 
 /* Основной layout без фильтров (на всю ширину) */
 .crudListLayoutNoFilters {
-  display: block;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
 }
 
 /* Header на всю ширину */

@@ -110,3 +110,32 @@ export async function getCategoriesForAutocompleteRequest({
   const data = unwrapResponse(response);
   return Array.isArray(data?.items) ? data.items : [];
 }
+
+/**
+ * Получение аудита политик ценообразования категорий
+ * @param {Object} params - Параметры запроса
+ * @param {number | null} params.pricing_policy_id - Фильтр по ID политики ценообразования
+ * @param {number | null} params.user_id - Фильтр по ID пользователя
+ * @param {string | null} params.action - Фильтр по действию
+ * @param {number} params.limit - Количество элементов
+ * @param {number} params.offset - Смещение
+ */
+export async function getCategoryPricingPolicyAuditRequest({
+  pricing_policy_id,
+  user_id,
+  action,
+  limit = 20,
+  offset = 0,
+} = {}) {
+  const params = { limit, offset };
+  if (pricing_policy_id !== undefined && pricing_policy_id !== null) params.pricing_policy_id = pricing_policy_id;
+  if (user_id !== undefined && user_id !== null) params.user_id = user_id;
+  if (action) params.action = action;
+
+  const response = await productApi.get('/category-pricing-policy/admin/audit', { params });
+  const data = unwrapResponse(response);
+  const items = Array.isArray(data?.items) ? data.items : [];
+  const total = data?.total ?? items.length;
+
+  return { items, total };
+}

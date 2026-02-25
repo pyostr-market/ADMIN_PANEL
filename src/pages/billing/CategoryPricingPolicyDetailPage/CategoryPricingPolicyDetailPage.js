@@ -37,6 +37,10 @@ export function CategoryPricingPolicyDetailPage() {
     navigate(`/billing/pricing-policies/${pricingPolicyId}/edit`);
   };
 
+  const handleViewAudit = () => {
+    navigate(`/billing/pricing-policies/${pricingPolicyId}/audit`);
+  };
+
   const handleBack = () => {
     navigate('/billing/pricing-policies');
   };
@@ -135,6 +139,8 @@ export function CategoryPricingPolicyDetailPage() {
               iconVariant: 'danger',
             },
           ]}
+          auditUrl={`/billing/pricing-policies/${pricingPolicyId}/audit`}
+          onAuditClick={handleViewAudit}
         />
 
         <div className={styles.policyDetailPagePanel}>

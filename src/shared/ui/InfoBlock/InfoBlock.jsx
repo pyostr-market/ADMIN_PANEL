@@ -75,7 +75,7 @@ export function InfoBlock({
         <div className={styles.infoBlockHeader}>
           <div className={styles.infoBlockHeaderContent}>
             <h2 className={styles.infoBlockTitle}>
-              {headerIcon || <DefaultIcon className={styles.infoBlockTitleIcon} />}
+              {/*{headerIcon || <DefaultIcon className={styles.infoBlockTitleIcon} />}*/}
               {title}
             </h2>
             {auditUrl && (
