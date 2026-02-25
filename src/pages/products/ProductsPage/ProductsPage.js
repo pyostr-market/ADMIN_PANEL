@@ -13,7 +13,7 @@ import {
   deleteProductRequest,
   getCategoriesForAutocompleteRequest,
   getProductTypesForAutocompleteRequest,
-} from './api/productsApi';
+} from '../api/productsApi';
 import styles from './ProductsPage.module.css';
 
 const PAGE_LIMIT = 20;

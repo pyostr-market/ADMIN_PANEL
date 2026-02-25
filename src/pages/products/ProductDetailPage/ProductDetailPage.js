@@ -9,7 +9,7 @@ import { useNotifications } from '../../../shared/lib/notifications/Notification
 import {
   getProductByIdRequest,
   deleteProductRequest,
-} from './api/productsApi';
+} from '../api/productsApi';
 import styles from './ProductDetailPage.module.css';
 
 function DeleteProductModal({ product, onClose, onSubmit, isSubmitting }) {

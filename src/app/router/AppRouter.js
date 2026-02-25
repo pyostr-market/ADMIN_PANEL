@@ -30,10 +30,10 @@ import { CategoryDetailPage } from '../../pages/categories/CategoryDetailPage/Ca
 import { CategoryAuditPage } from '../../pages/categories/CategoryAuditPage/CategoryAuditPage';
 import { PermissionsGroupsPage } from '../../pages/permissionsGroups/permissionsGroupsPage/PermissionsGroupsPage';
 import { PrivateRoute, PublicOnlyRoute } from './routeGuards';
-import { ProductsPage } from '../../pages/products/ProductsPage';
-import { ProductFormPage } from '../../pages/products/ProductFormPage';
-import { ProductDetailPage } from '../../pages/products/ProductDetailPage';
-import { ProductAuditPage } from '../../pages/products/ProductAuditPage';
+import { ProductsPage } from '../../pages/products/ProductsPage/ProductsPage';
+import { ProductFormPage } from '../../pages/products/ProductFormPage/ProductFormPage';
+import { ProductDetailPage } from '../../pages/products/ProductDetailPage/ProductDetailPage';
+import { ProductAuditPage } from '../../pages/products/ProductAuditPage/ProductAuditPage';
 import { CatalogPage } from '../../pages/catalog/CatalogPage';
 
 // CRM

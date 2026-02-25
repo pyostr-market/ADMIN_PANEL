@@ -15,7 +15,7 @@ import {
   getCategoriesForAutocompleteRequest,
   getSuppliersForAutocompleteRequest,
   getProductTypesForAutocompleteRequest,
-} from './api/productsApi';
+} from '../api/productsApi';
 import styles from './ProductFormPage.module.css';
 
 // Вкладки формы

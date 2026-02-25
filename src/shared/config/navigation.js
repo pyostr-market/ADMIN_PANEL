@@ -51,7 +51,7 @@ export const NAVIGATION_CONFIG = {
         icon: 'categories',
       },
       {
-        label: 'Бренды',
+        label: 'Производители',
         path: '/catalog/manufacturers',
         icon: 'manufacturers',
       },

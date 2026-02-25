@@ -84,15 +84,6 @@ export function CategoryDetailPage() {
               Редактировать
             </Button>
           </PermissionGate>
-          <PermissionGate permission={['category:audit']} fallback={null}>
-            <Button
-              variant="secondary"
-              leftIcon={<FiClock />}
-              onClick={handleViewAudit}
-            >
-              История
-            </Button>
-          </PermissionGate>
         </div>
       </header>
 
