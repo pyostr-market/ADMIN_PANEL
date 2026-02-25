@@ -131,6 +131,14 @@
   align-items: center;
 }
 
+@media (max-width: 1500px) {
+
+  .productsPageItemActions {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+}
 .btnDelete:hover {
   color: var(--danger);
   border-color: var(--danger);
@@ -352,6 +360,8 @@
     width: 100%;
     box-sizing: border-box;
     justify-content: flex-end;
+    flex-direction: row;
+
   }
 
   .productsPageItemActions button {

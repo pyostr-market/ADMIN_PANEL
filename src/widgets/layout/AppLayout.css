@@ -52,7 +52,7 @@
   padding: var(--space-4);
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1350px) {
   .app-shell__content {
     max-width: 100%;
   }
