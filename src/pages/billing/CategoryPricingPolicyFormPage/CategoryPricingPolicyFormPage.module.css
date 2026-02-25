@@ -1,0 +1,28 @@
+/* CategoryPricingPolicyFormPage - стили для страницы создания/редактирования тарифа категории */
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.formLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.formError {
+  font-size: 13px;
+  color: var(--danger);
+}
+
+.formHint {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: var(--space-1);
+}
+
+.inputError {
+  border-color: var(--danger) !important;
+}

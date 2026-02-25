@@ -1,23 +1,19 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FiSave, FiX, FiDollarSign } from 'react-icons/fi';
-import { Button } from '../../../shared/ui/Button/Button';
-import { PageHeader } from '../../../shared/ui/PageHeader/PageHeader';
+import { FiSave, FiDollarSign } from 'react-icons/fi';
+import { FormPage } from '../../../shared/ui/FormPage';
 import { FormSection } from '../../../shared/ui/FormSection/FormSection';
 import { FormGrid } from '../../../shared/ui/FormGrid/FormGrid';
-import { PageActions } from '../../../shared/ui/PageActions/PageActions';
-import { LoadingState } from '../../../shared/ui/LoadingState/LoadingState';
+import { AutocompleteInput } from '../../../shared/ui/AutocompleteInput/AutocompleteInput';
 import { getApiErrorMessage } from '../../../shared/api/apiError';
 import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
-import { AutocompleteInput } from '../../../shared/ui/AutocompleteInput/AutocompleteInput';
 import {
   getCategoryPricingPolicyByIdRequest,
   createCategoryPricingPolicyRequest,
   updateCategoryPricingPolicyRequest,
   getCategoriesForAutocompleteRequest,
 } from '../api/categoryPricingPolicyApi';
-import './CategoryPricingPolicyFormPage.css';
-import './CategoryPricingPolicyFormPage-Mobile.css';
+import styles from './CategoryPricingPolicyFormPage.module.css';
 
 export function CategoryPricingPolicyFormPage() {
   const navigate = useNavigate();
@@ -120,11 +116,7 @@ export function CategoryPricingPolicyFormPage() {
     }
   };
 
-  const handleSubmit = async (e, stayOnPage = false) => {
-    if (e) {
-      e.preventDefault();
-    }
-
+  const handleSubmit = async (stayOnPage = false) => {
     if (!validateForm()) {
       notificationsRef.current?.error('Исправьте ошибки в форме');
       return;
@@ -180,189 +172,158 @@ export function CategoryPricingPolicyFormPage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <section className="category-pricing-policy-form-page">
-        <LoadingState message="Загрузка данных тарифа..." size="lg" />
-      </section>
-    );
-  }
+  const handleBack = () => {
+    navigate(isEditMode ? `/billing/pricing-policies/${pricingPolicyId}` : '/billing/pricing-policies');
+  };
 
   return (
-    <section className="category-pricing-policy-form-page">
-      <PageHeader
-        title={isEditMode ? 'Редактирование тарифа категории' : 'Создание тарифа категории'}
-        onBack={() => navigate(isEditMode ? `/billing/pricing-policies/${pricingPolicyId}` : '/billing/pricing-policies')}
-      />
-
-      <form className="category-pricing-policy-form-page__form" onSubmit={handleSubmit}>
-        <FormSection
-          icon={<FiDollarSign />}
-          iconVariant="primary"
-          title="Параметры тарифа"
-          description="Настройте параметры ценообразования для категории"
-        >
-          <FormGrid columns={2}>
-            <div className="category-pricing-policy-form__field">
-              <AutocompleteInput
-                label="Категория"
-                value={formData.category_id}
-                onChange={(value) => handleChange('category_id', value)}
-                fetchOptions={getCategoriesForAutocompleteRequest}
-                placeholder="Начните ввод для поиска категории..."
-                selectedOption={selectedCategory}
-                disabled={isEditMode}
-              />
-              {errors.category_id && (
-                <span className="category-pricing-policy-form__error">{errors.category_id}</span>
-              )}
-              {isEditMode && (
-                <span className="category-pricing-policy-form__hint">
-                  Категория не может быть изменена после создания
-                </span>
-              )}
-            </div>
-
-            <div className="category-pricing-policy-form__field">
-              <label className="category-pricing-policy-form__label">
-                Фиксированная наценка (₽)
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                value={formData.markup_fixed}
-                onChange={(e) => handleChange('markup_fixed', e.target.value)}
-                placeholder="0.00"
-                className={errors.markup_fixed ? 'input-error' : ''}
-              />
-              {errors.markup_fixed && (
-                <span className="category-pricing-policy-form__error">{errors.markup_fixed}</span>
-              )}
-              <span className="category-pricing-policy-form__hint">
-                Фиксированная сумма, добавляемая к цене товара
+    <FormPage
+      title={isEditMode ? 'Редактирование тарифа категории' : 'Создание тарифа категории'}
+      backUrl={isEditMode ? `/billing/pricing-policies/${pricingPolicyId}` : '/billing/pricing-policies'}
+      isLoading={isLoading}
+      isSubmitting={isSubmitting}
+      onBack={handleBack}
+      onSubmit={() => handleSubmit(false)}
+      onSubmitAndStay={() => handleSubmit(true)}
+      showSubmitStay={true}
+      submitText={isEditMode ? 'Сохранить' : 'Создать'}
+    >
+      <FormSection
+        icon={<FiDollarSign />}
+        iconVariant="primary"
+        title="Параметры тарифа"
+        description="Настройте параметры ценообразования для категории"
+      >
+        <FormGrid columns={2}>
+          <div className={styles.formField}>
+            <AutocompleteInput
+              label="Категория"
+              value={formData.category_id}
+              onChange={(value) => handleChange('category_id', value)}
+              fetchOptions={getCategoriesForAutocompleteRequest}
+              placeholder="Начните ввод для поиска категории..."
+              selectedOption={selectedCategory}
+              disabled={isEditMode}
+            />
+            {errors.category_id && (
+              <span className={styles.formError}>{errors.category_id}</span>
+            )}
+            {isEditMode && (
+              <span className={styles.formHint}>
+                Категория не может быть изменена после создания
               </span>
-            </div>
+            )}
+          </div>
 
-            <div className="category-pricing-policy-form__field">
-              <label className="category-pricing-policy-form__label">
-                Наценка %
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                min="0"
-                max="100"
-                value={formData.markup_percent}
-                onChange={(e) => handleChange('markup_percent', e.target.value)}
-                placeholder="0"
-                className={errors.markup_percent ? 'input-error' : ''}
-              />
-              {errors.markup_percent && (
-                <span className="category-pricing-policy-form__error">{errors.markup_percent}</span>
-              )}
-              <span className="category-pricing-policy-form__hint">
-                Процент наценки на товар (0-100)
-              </span>
-            </div>
+          <div className={styles.formField}>
+            <label className={styles.formLabel}>
+              Фиксированная наценка (₽)
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              value={formData.markup_fixed}
+              onChange={(e) => handleChange('markup_fixed', e.target.value)}
+              placeholder="0.00"
+              className={errors.markup_fixed ? styles.inputError : ''}
+            />
+            {errors.markup_fixed && (
+              <span className={styles.formError}>{errors.markup_fixed}</span>
+            )}
+            <span className={styles.formHint}>
+              Фиксированная сумма, добавляемая к цене товара
+            </span>
+          </div>
 
-            <div className="category-pricing-policy-form__field">
-              <label className="category-pricing-policy-form__label">
-                Комиссия %
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                min="0"
-                max="100"
-                value={formData.commission_percent}
-                onChange={(e) => handleChange('commission_percent', e.target.value)}
-                placeholder="0"
-                className={errors.commission_percent ? 'input-error' : ''}
-              />
-              {errors.commission_percent && (
-                <span className="category-pricing-policy-form__error">{errors.commission_percent}</span>
-              )}
-              <span className="category-pricing-policy-form__hint">
-                Комиссия маркетплейса (0-100)
-              </span>
-            </div>
+          <div className={styles.formField}>
+            <label className={styles.formLabel}>
+              Наценка %
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              max="100"
+              value={formData.markup_percent}
+              onChange={(e) => handleChange('markup_percent', e.target.value)}
+              placeholder="0"
+              className={errors.markup_percent ? styles.inputError : ''}
+            />
+            {errors.markup_percent && (
+              <span className={styles.formError}>{errors.markup_percent}</span>
+            )}
+            <span className={styles.formHint}>
+              Процент наценки на товар (0-100)
+            </span>
+          </div>
 
-            <div className="category-pricing-policy-form__field">
-              <label className="category-pricing-policy-form__label">
-                Скидка %
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                min="0"
-                max="100"
-                value={formData.discount_percent}
-                onChange={(e) => handleChange('discount_percent', e.target.value)}
-                placeholder="0"
-                className={errors.discount_percent ? 'input-error' : ''}
-              />
-              {errors.discount_percent && (
-                <span className="category-pricing-policy-form__error">{errors.discount_percent}</span>
-              )}
-              <span className="category-pricing-policy-form__hint">
-                Скидка категории (0-100)
-              </span>
-            </div>
+          <div className={styles.formField}>
+            <label className={styles.formLabel}>
+              Комиссия %
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              max="100"
+              value={formData.commission_percent}
+              onChange={(e) => handleChange('commission_percent', e.target.value)}
+              placeholder="0"
+              className={errors.commission_percent ? styles.inputError : ''}
+            />
+            {errors.commission_percent && (
+              <span className={styles.formError}>{errors.commission_percent}</span>
+            )}
+            <span className={styles.formHint}>
+              Комиссия маркетплейса (0-100)
+            </span>
+          </div>
 
-            <div className="category-pricing-policy-form__field">
-              <label className="category-pricing-policy-form__label">
-                Ставка НДС %
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                min="0"
-                max="100"
-                value={formData.tax_rate}
-                onChange={(e) => handleChange('tax_rate', e.target.value)}
-                placeholder="0"
-                className={errors.tax_rate ? 'input-error' : ''}
-              />
-              {errors.tax_rate && (
-                <span className="category-pricing-policy-form__error">{errors.tax_rate}</span>
-              )}
-              <span className="category-pricing-policy-form__hint">
-                Ставка налога на добавленную стоимость (0-100)
-              </span>
-            </div>
-          </FormGrid>
-        </FormSection>
+          <div className={styles.formField}>
+            <label className={styles.formLabel}>
+              Скидка %
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              max="100"
+              value={formData.discount_percent}
+              onChange={(e) => handleChange('discount_percent', e.target.value)}
+              placeholder="0"
+              className={errors.discount_percent ? styles.inputError : ''}
+            />
+            {errors.discount_percent && (
+              <span className={styles.formError}>{errors.discount_percent}</span>
+            )}
+            <span className={styles.formHint}>
+              Скидка категории (0-100)
+            </span>
+          </div>
 
-        <PageActions>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => navigate('/billing/pricing-policies')}
-            leftIcon={<FiX />}
-          >
-            Отмена
-          </Button>
-          <Button
-            type="button"
-            variant="primary"
-            leftIcon={<FiSave />}
-            loading={isSubmitting}
-            size="lg"
-            onClick={() => handleSubmit(null, true)}
-          >
-            Сохранить и продолжить редактирование
-          </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            leftIcon={<FiSave />}
-            loading={isSubmitting}
-            size="lg"
-          >
-            {isEditMode ? 'Сохранить' : 'Создать'}
-          </Button>
-        </PageActions>
-      </form>
-    </section>
+          <div className={styles.formField}>
+            <label className={styles.formLabel}>
+              Ставка НДС %
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              max="100"
+              value={formData.tax_rate}
+              onChange={(e) => handleChange('tax_rate', e.target.value)}
+              placeholder="0"
+              className={errors.tax_rate ? styles.inputError : ''}
+            />
+            {errors.tax_rate && (
+              <span className={styles.formError}>{errors.tax_rate}</span>
+            )}
+            <span className={styles.formHint}>
+              Ставка налога на добавленную стоимость (0-100)
+            </span>
+          </div>
+        </FormGrid>
+      </FormSection>
+    </FormPage>
   );
 }

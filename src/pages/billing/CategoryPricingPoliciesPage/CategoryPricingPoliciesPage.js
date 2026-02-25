@@ -3,17 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { FiDollarSign, FiPlus, FiTrash2, FiEye, FiEdit2 } from 'react-icons/fi';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
 import { Button } from '../../../shared/ui/Button/Button';
-import { SearchInput } from '../../../shared/ui/SearchInput/SearchInput';
 import { Pagination } from '../../../shared/ui/Pagination/Pagination';
 import { EntityList } from '../../../shared/ui/EntityList/EntityList';
 import { Modal } from '../../../shared/ui/Modal/Modal';
+import { CrudListLayout } from '../../../shared/ui/CrudListLayout/CrudListLayout';
 import { useCrudList } from '../../../shared/lib/crud';
 import {
   getCategoryPricingPoliciesRequest,
   deleteCategoryPricingPolicyRequest,
 } from '../api/categoryPricingPolicyApi';
-import './CategoryPricingPoliciesPage.css';
-import './CategoryPricingPoliciesPage-Mobile.css';
+import styles from './CategoryPricingPoliciesPage.module.css';
 
 const PAGE_LIMIT = 20;
 
@@ -39,11 +38,11 @@ function DeleteCategoryPricingPolicyModal({ policy, onClose, onSubmit, isSubmitt
         </>
       )}
     >
-      <p className="modal-confirm-text">
+      <p className={styles.modalConfirmText}>
         Вы уверены, что хотите удалить тариф для категории{' '}
         <strong>ID: {policy.category_id}</strong>?
       </p>
-      <p className="modal-confirm-note">
+      <p className={styles.modalConfirmNote}>
         Это действие нельзя отменить.
       </p>
     </Modal>
@@ -100,119 +99,123 @@ export function CategoryPricingPoliciesPage() {
   };
 
   return (
-    <section className="category-pricing-policies-page">
-      <header className="category-pricing-policies-page__header">
-        <h1 className="category-pricing-policies-page__title">Тарифы категорий</h1>
-        <div className="category-pricing-policies-page__controls">
-          <PermissionGate permission={['category_pricing_policy:create']} fallback={null}>
-            <Button
-              variant="primary"
-              leftIcon={<FiPlus />}
-              onClick={handleCreatePolicy}
-            >
-              Создать тариф
-            </Button>
-          </PermissionGate>
-        </div>
-      </header>
-
-      <div className={`category-pricing-policies-page__filters${policiesCrud.isLoading ? ' category-pricing-policies-page__filters--loading' : ''}`}>
-        <SearchInput
-          value={policiesCrud.search}
-          onChange={(e) => policiesCrud.setSearch(e.target.value)}
-          placeholder="Поиск по ID категории..."
-          loading={policiesCrud.isLoading}
-        />
-      </div>
-
-      <EntityList
-        items={policiesCrud.items}
-        renderItem={(policy) => (
+    <>
+      <CrudListLayout
+        header={(
           <>
-            <div className="category-pricing-policies-page__item-content" onClick={() => handleViewPolicy(policy)}>
-              <div className="category-pricing-policies-page__item-main">
-                <div className="category-pricing-policies-page__item-avatar">
-                  <FiDollarSign />
-                </div>
-                <div className="category-pricing-policies-page__item-info">
-                  <div className="category-pricing-policies-page__item-header">
-                    <p className="category-pricing-policies-page__item-title">
-                      Категория ID: {policy.category_id}
-                    </p>
-                  </div>
-                  <div className="category-pricing-policies-page__item-meta">
-                    <span className="category-pricing-policies-page__meta-item">
-                      <span className="category-pricing-policies-page__meta-label">Наценка:</span> {formatCurrency(policy.markup_fixed)}
-                    </span>
-                    <span className="category-pricing-policies-page__separator">•</span>
-                    <span className="category-pricing-policies-page__meta-item">
-                      <span className="category-pricing-policies-page__meta-label">Наценка %:</span> {formatPercent(policy.markup_percent)}
-                    </span>
-                    <span className="category-pricing-policies-page__separator">•</span>
-                    <span className="category-pricing-policies-page__meta-item">
-                      <span className="category-pricing-policies-page__meta-label">Комиссия:</span> {formatPercent(policy.commission_percent)}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="category-pricing-policies-page__item-actions">
-              <PermissionGate permission={['category_pricing_policy:update']} fallback={null}>
+            <h1 className={styles.policiesPageTitle}>Тарифы категорий</h1>
+            <div className={styles.policiesPageControls}>
+              <PermissionGate permission={['category_pricing_policy:create']} fallback={null}>
                 <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<FiEdit2 />}
-                  onClick={() => handleEditPolicy(policy)}
-                  aria-label={`Редактировать тариф категории ${policy.id}`}
+                  variant="primary"
+                  leftIcon={<FiPlus />}
+                  onClick={handleCreatePolicy}
                 >
-                  Редактировать
-                </Button>
-              </PermissionGate>
-
-              <Button
-                variant="secondary"
-                size="sm"
-                leftIcon={<FiEye />}
-                onClick={() => handleViewPolicy(policy)}
-                aria-label={`Просмотреть тариф категории ${policy.id}`}
-              >
-                Просмотр
-              </Button>
-
-              <PermissionGate permission={['category_pricing_policy:delete']} fallback={null}>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setPolicyToDelete(policy)}
-                  disabled={policiesCrud.isSubmitting}
-                  aria-label="Удалить тариф категории"
-                  className="btn-delete"
-                >
-                  <FiTrash2 />
+                  Создать тариф
                 </Button>
               </PermissionGate>
             </div>
           </>
         )}
-        emptyMessage={
-          policiesCrud.isLoading
-            ? 'Загрузка тарифов...'
-            : policiesCrud.search
-              ? 'По вашему запросу ничего не найдено.'
-              : 'Тарифы не найдены.'
-        }
-        loading={policiesCrud.isLoading}
-      />
+        showSearch={true}
+        searchValue={policiesCrud.search}
+        onSearchChange={policiesCrud.setSearch}
+        searchLoading={policiesCrud.isLoading}
+        searchPlaceholder="Поиск по ID категории..."
 
-      {!policiesCrud.isLoading && policiesCrud.items && policiesCrud.items.length > 0 && (
-        <Pagination
-          currentPage={policiesCrud.page}
-          totalPages={policiesCrud.pagination.pages}
-          totalItems={policiesCrud.pagination.total}
-          onPageChange={policiesCrud.setPage}
+        showFilters={false}
+
+        pagination={
+          !policiesCrud.isLoading && policiesCrud.items && policiesCrud.items.length > 0 ? (
+            <Pagination
+              currentPage={policiesCrud.page}
+              totalPages={policiesCrud.pagination.pages}
+              totalItems={policiesCrud.pagination.total}
+              onPageChange={policiesCrud.setPage}
+              loading={policiesCrud.isLoading}
+            />
+          ) : null
+        }
+      >
+        <EntityList
+          items={policiesCrud.items}
+          renderItem={(policy) => (
+            <>
+              <div className={styles.policiesPageItemContent} onClick={() => handleViewPolicy(policy)}>
+                <div className={styles.policiesPageItemMain}>
+                  <div className={styles.policiesPageItemAvatar}>
+                    <FiDollarSign />
+                  </div>
+                  <div className={styles.policiesPageItemInfo}>
+                    <div className={styles.policiesPageItemHeader}>
+                      <p className={styles.policiesPageItemTitle}>
+                        Категория ID: {policy.category_id}
+                      </p>
+                    </div>
+                    <div className={styles.policiesPageItemMeta}>
+                      <span className={styles.policiesPageMetaItem}>
+                        <span className={styles.policiesPageMetaLabel}>Наценка:</span> {formatCurrency(policy.markup_fixed)}
+                      </span>
+                      <span className={styles.policiesPageSeparator}>•</span>
+                      <span className={styles.policiesPageMetaItem}>
+                        <span className={styles.policiesPageMetaLabel}>Наценка %:</span> {formatPercent(policy.markup_percent)}
+                      </span>
+                      <span className={styles.policiesPageSeparator}>•</span>
+                      <span className={styles.policiesPageMetaItem}>
+                        <span className={styles.policiesPageMetaLabel}>Комиссия:</span> {formatPercent(policy.commission_percent)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.policiesPageItemActions}>
+                <PermissionGate permission={['category_pricing_policy:update']} fallback={null}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<FiEdit2 />}
+                    onClick={() => handleEditPolicy(policy)}
+                    aria-label={`Редактировать тариф категории ${policy.id}`}
+                  >
+                    Редактировать
+                  </Button>
+                </PermissionGate>
+
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<FiEye />}
+                  onClick={() => handleViewPolicy(policy)}
+                  aria-label={`Просмотреть тариф категории ${policy.id}`}
+                >
+                  Просмотр
+                </Button>
+
+                <PermissionGate permission={['category_pricing_policy:delete']} fallback={null}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setPolicyToDelete(policy)}
+                    disabled={policiesCrud.isSubmitting}
+                    aria-label="Удалить тариф категории"
+                    className={styles.btnDelete}
+                  >
+                    <FiTrash2 />
+                  </Button>
+                </PermissionGate>
+              </div>
+            </>
+          )}
+          emptyMessage={
+            policiesCrud.isLoading
+              ? 'Загрузка тарифов...'
+              : policiesCrud.search
+                ? 'По вашему запросу ничего не найдено.'
+                : 'Тарифы не найдены.'
+          }
           loading={policiesCrud.isLoading}
         />
-      )}
+      </CrudListLayout>
 
       {policyToDelete && (
         <DeleteCategoryPricingPolicyModal
@@ -222,6 +225,6 @@ export function CategoryPricingPoliciesPage() {
           isSubmitting={policiesCrud.isSubmitting}
         />
       )}
-    </section>
+    </>
   );
 }

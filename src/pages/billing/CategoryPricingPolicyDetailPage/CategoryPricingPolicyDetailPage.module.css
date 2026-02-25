@@ -1,0 +1,184 @@
+/* CategoryPricingPolicyDetailPage - стили страницы просмотра тарифа категории */
+
+.policyDetailPage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.policyDetailPageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 40px;
+}
+
+.policyDetailPageHeader .backButton {
+  flex-shrink: 0;
+}
+
+.policyDetailPageActions {
+  display: flex;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.policyDetailPageContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Panel - используется для секций */
+.policyDetailPagePanel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.panelHeaderContent {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.panelTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.panelContent {
+  padding: var(--space-3);
+}
+
+.pricingCalculationInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.pricingCalculationInfoText {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.pricingCalculationInfoFormula {
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  overflow-x: auto;
+}
+
+.pricingCalculationInfoFormula code {
+  font-family: 'Monaco', 'Consolas', monospace;
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* Loading & Empty states */
+.policyDetailPageLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-10);
+}
+
+.policyDetailPageLoading p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.policyDetailPageEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-10);
+  text-align: center;
+}
+
+.policyDetailPageEmpty h1 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text);
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .policyDetailPage {
+    padding: 0;
+    gap: 0;
+  }
+
+  .policyDetailPageHeader {
+    padding: 12px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .policyDetailPageHeader .backButton {
+    height: 32px;
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .policyDetailPageActions button {
+    height: 32px;
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+
+  .policyDetailPageContent {
+    padding: 12px 16px;
+  }
+
+  .policyDetailPagePanel {
+    border-radius: 8px;
+  }
+
+  .panelHeader {
+    padding: 12px 16px;
+  }
+
+  .panelTitle {
+    font-size: 14px;
+  }
+
+  .panelContent {
+    padding: 12px;
+  }
+
+  .pricingCalculationInfoFormula {
+    padding: var(--space-2);
+  }
+
+  .pricingCalculationInfoFormula code {
+    font-size: 11px;
+    white-space: normal;
+  }
+}
