@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { FiTag, FiPlus, FiTrash2, FiEye, FiEdit2 } from 'react-icons/fi';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
 import { Button } from '../../../shared/ui/Button/Button';
-import { SearchInput } from '../../../shared/ui/SearchInput/SearchInput';
 import { Pagination } from '../../../shared/ui/Pagination/Pagination';
 import { EntityList } from '../../../shared/ui/EntityList/EntityList';
 import { Modal } from '../../../shared/ui/Modal/Modal';
+import { CrudListLayout } from '../../../shared/ui/CrudListLayout/CrudListLayout';
 import { useCrudList } from '../../../shared/lib/crud';
 import {
   getCategoriesRequest,
@@ -38,11 +38,11 @@ function DeleteCategoryModal({ category, onClose, onSubmit, isSubmitting }) {
         </>
       )}
     >
-      <p className="modal-confirm-text">
+      <p className={styles.modalConfirmText}>
         Вы уверены, что хотите удалить категорию{' '}
         <strong>{category.name || `ID: ${category.id}`}</strong>?
       </p>
-      <p className="modal-confirm-note">
+      <p className={styles.modalConfirmNote}>
         Это действие нельзя отменить.
       </p>
     </Modal>
@@ -90,143 +90,147 @@ export function CategoriesPage() {
   };
 
   return (
-    <section className={styles.categoriesPage}>
-      <header className={styles.categoriesPageHeader}>
-        <h1 className={styles.categoriesPageTitle}>Категории</h1>
-        <div className={styles.categoriesPageControls}>
-          <PermissionGate permission={['category:create']} fallback={null}>
-            <Button
-              variant="primary"
-              leftIcon={<FiPlus />}
-              onClick={handleCreateCategory}
-            >
-              Создать категорию
-            </Button>
-          </PermissionGate>
-        </div>
-      </header>
-
-      <div className={`${styles.categoriesPageFilters}${categoriesCrud.isLoading ? ` ${styles.categoriesPageFiltersLoading}` : ''}`}>
-        <SearchInput
-          value={categoriesCrud.search}
-          onChange={(e) => categoriesCrud.setSearch(e.target.value)}
-          placeholder="Поиск по названию или описанию..."
-          loading={categoriesCrud.isLoading}
-        />
-      </div>
-
-      <EntityList
-        items={categoriesCrud.items}
-        renderItem={(category) => (
+    <>
+      <CrudListLayout
+        header={(
           <>
-            <div className={styles.categoriesPageItemContent} onClick={() => handleViewCategory(category)}>
-              <div className={styles.categoriesPageItemMain}>
-                <div className={styles.categoriesPageAvatar}>
-                  <FiTag />
-                </div>
-                <div className={styles.categoriesPageItemInfo}>
-                  <div className={styles.categoriesPageItemHeader}>
-                    <p className={styles.categoriesPageItemTitle}>
-                      {category.name || 'Без названия'}
-                    </p>
-                  </div>
-                  <div className={styles.categoriesPageItemMeta}>
-                    <span className={styles.categoriesPageMetaItem}>
-                      <span className={styles.categoriesPageMetaLabel}>ID:</span> {category.id}
-                    </span>
-                    {category.parent_id && (
-                      <>
-                        <span className={styles.categoriesPageSeparator}>•</span>
-                        <span className={styles.categoriesPageMetaItem}>
-                          Родитель: ID {category.parent_id}
-                        </span>
-                      </>
-                    )}
-                    {category.manufacturer_id && (
-                      <>
-                        <span className={styles.categoriesPageSeparator}>•</span>
-                        <span className={styles.categoriesPageMetaItem}>
-                          Производитель: ID {category.manufacturer_id}
-                        </span>
-                      </>
-                    )}
-                    {category.description && (
-                      <>
-                        <span className={styles.categoriesPageSeparator}>•</span>
-                        <span className={styles.categoriesPageMetaItem}>
-                          {category.description}
-                        </span>
-                      </>
-                    )}
-                    {category.images && category.images.length > 0 && (
-                      <>
-                        <span className={styles.categoriesPageSeparator}>•</span>
-                        <span className={styles.categoriesPageMetaItem}>
-                          Изображений: {category.images.length}
-                        </span>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className={styles.categoriesPageItemActions}>
-              <PermissionGate permission={['category:update']} fallback={null}>
+            <h1 className={styles.categoriesPageTitle}>Категории</h1>
+            <div className={styles.categoriesPageControls}>
+              <PermissionGate permission={['category:create']} fallback={null}>
                 <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<FiEdit2 />}
-                  onClick={() => handleEditCategory(category)}
-                  aria-label={`Редактировать категорию ${category.name || category.id}`}
+                  variant="primary"
+                  leftIcon={<FiPlus />}
+                  onClick={handleCreateCategory}
                 >
-                  Редактировать
-                </Button>
-              </PermissionGate>
-
-              <Button
-                variant="secondary"
-                size="sm"
-                leftIcon={<FiEye />}
-                onClick={() => handleViewCategory(category)}
-                aria-label={`Просмотреть категорию ${category.name || category.id}`}
-              >
-                Просмотр
-              </Button>
-
-              <PermissionGate permission={['category:delete']} fallback={null}>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setCategoryToDelete(category)}
-                  disabled={categoriesCrud.isSubmitting}
-                  aria-label="Удалить категорию"
-                  className={styles.btnDelete}
-                >
-                  <FiTrash2 />
+                  Создать категорию
                 </Button>
               </PermissionGate>
             </div>
           </>
         )}
-        emptyMessage={
-          categoriesCrud.isLoading
-            ? 'Загрузка категорий...'
-            : categoriesCrud.search
-              ? 'По вашему запросу ничего не найдено.'
-              : 'Категории не найдены.'
-        }
-        loading={categoriesCrud.isLoading}
-      />
+        showSearch={true}
+        searchValue={categoriesCrud.search}
+        onSearchChange={categoriesCrud.setSearch}
+        searchLoading={categoriesCrud.isLoading}
+        searchPlaceholder="Поиск по названию или описанию..."
 
-      {!categoriesCrud.isLoading && categoriesCrud.items && categoriesCrud.items.length > 0 && (
-        <Pagination
-          currentPage={categoriesCrud.page}
-          totalPages={categoriesCrud.pagination.pages}
-          totalItems={categoriesCrud.pagination.total}
-          onPageChange={categoriesCrud.setPage}
+        showFilters={false}
+
+        pagination={
+          !categoriesCrud.isLoading && categoriesCrud.items && categoriesCrud.items.length > 0 ? (
+            <Pagination
+              currentPage={categoriesCrud.page}
+              totalPages={categoriesCrud.pagination.pages}
+              totalItems={categoriesCrud.pagination.total}
+              onPageChange={categoriesCrud.setPage}
+              loading={categoriesCrud.isLoading}
+            />
+          ) : null
+        }
+      >
+        <EntityList
+          items={categoriesCrud.items}
+          renderItem={(category) => (
+            <>
+              <div className={styles.categoriesPageItemContent} onClick={() => handleViewCategory(category)}>
+                <div className={styles.categoriesPageItemMain}>
+                  <div className={styles.categoriesPageAvatar}>
+                    <FiTag />
+                  </div>
+                  <div className={styles.categoriesPageItemInfo}>
+                    <div className={styles.categoriesPageItemHeader}>
+                      <p className={styles.categoriesPageItemTitle}>
+                        {category.name || 'Без названия'}
+                      </p>
+                    </div>
+                    <div className={styles.categoriesPageItemMeta}>
+                      <span className={styles.categoriesPageMetaItem}>
+                        <span className={styles.categoriesPageMetaLabel}>ID:</span> {category.id}
+                      </span>
+                      {category.parent_id && (
+                        <>
+                          <span className={styles.categoriesPageSeparator}>•</span>
+                          <span className={styles.categoriesPageMetaItem}>
+                            Родитель: ID {category.parent_id}
+                          </span>
+                        </>
+                      )}
+                      {category.manufacturer_id && (
+                        <>
+                          <span className={styles.categoriesPageSeparator}>•</span>
+                          <span className={styles.categoriesPageMetaItem}>
+                            Производитель: ID {category.manufacturer_id}
+                          </span>
+                        </>
+                      )}
+                      {category.description && (
+                        <>
+                          <span className={styles.categoriesPageSeparator}>•</span>
+                          <span className={styles.categoriesPageMetaItem}>
+                            {category.description}
+                          </span>
+                        </>
+                      )}
+                      {category.images && category.images.length > 0 && (
+                        <>
+                          <span className={styles.categoriesPageSeparator}>•</span>
+                          <span className={styles.categoriesPageMetaItem}>
+                            Изображений: {category.images.length}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.categoriesPageItemActions}>
+                <PermissionGate permission={['category:update']} fallback={null}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<FiEdit2 />}
+                    onClick={() => handleEditCategory(category)}
+                    aria-label={`Редактировать категорию ${category.name || category.id}`}
+                  >
+                    Редактировать
+                  </Button>
+                </PermissionGate>
+
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<FiEye />}
+                  onClick={() => handleViewCategory(category)}
+                  aria-label={`Просмотреть категорию ${category.name || category.id}`}
+                >
+                  Просмотр
+                </Button>
+
+                <PermissionGate permission={['category:delete']} fallback={null}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setCategoryToDelete(category)}
+                    disabled={categoriesCrud.isSubmitting}
+                    aria-label="Удалить категорию"
+                    className={styles.btnDelete}
+                  >
+                    <FiTrash2 />
+                  </Button>
+                </PermissionGate>
+              </div>
+            </>
+          )}
+          emptyMessage={
+            categoriesCrud.isLoading
+              ? 'Загрузка категорий...'
+              : categoriesCrud.search
+                ? 'По вашему запросу ничего не найдено.'
+                : 'Категории не найдены.'
+          }
           loading={categoriesCrud.isLoading}
         />
-      )}
+      </CrudListLayout>
 
       {categoryToDelete && (
         <DeleteCategoryModal
@@ -236,6 +240,6 @@ export function CategoriesPage() {
           isSubmitting={categoriesCrud.isSubmitting}
         />
       )}
-    </section>
+    </>
   );
 }

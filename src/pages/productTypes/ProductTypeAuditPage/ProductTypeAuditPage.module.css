@@ -1,0 +1,361 @@
+/* ProductTypeAuditPage - стили для страницы аудита типа продукта */
+
+.productTypeAuditPage {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--surface-subtle);
+}
+
+/* Header */
+.productTypeAuditPageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.productTypeAuditPageTitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.productTypeAuditPageBackButton {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* Content */
+.productTypeAuditPageContent {
+  padding: var(--space-4);
+  flex: 1;
+}
+
+/* Audit List */
+.productTypeAuditList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.productTypeAuditItem {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  transition: box-shadow 0.2s;
+}
+
+.productTypeAuditItem:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.productTypeAuditItemHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.productTypeAuditItemAction {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.productTypeAuditItemAction--create {
+  background: var(--success-subtle);
+  color: var(--success);
+}
+
+.productTypeAuditItemAction--update {
+  background: var(--info-subtle);
+  color: var(--info);
+}
+
+.productTypeAuditItemAction--delete {
+  background: var(--danger-subtle);
+  color: var(--danger);
+}
+
+.productTypeAuditItemMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.productTypeAuditItemTimestamp {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.productTypeAuditItemUser {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.productTypeAuditItemChanges {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border);
+}
+
+.productTypeAuditItemChangesTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: var(--space-2);
+}
+
+.productTypeAuditChangesList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.productTypeAuditChange {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  background: var(--surface-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.productTypeAuditChangeKey {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: capitalize;
+}
+
+.productTypeAuditChangeValue {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.productTypeAuditChangeValue--old {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.productTypeAuditChangeValue--new {
+  color: var(--success);
+}
+
+/* Loading & Empty states */
+.loadingState,
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* Modal */
+.auditDetailModal {
+  max-width: 600px;
+}
+
+.auditDataBlock {
+  margin-bottom: var(--space-4);
+}
+
+.auditDataBlockTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 var(--space-2);
+}
+
+.auditDataBlockValue {
+  background: var(--surface-subtle);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  overflow-x: auto;
+  margin: 0;
+}
+
+.auditDataBlockEmpty {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.auditDataBlockContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.auditDataRow {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-1) 0;
+  font-size: 13px;
+}
+
+.auditDataRowNested {
+  padding-left: var(--space-4);
+}
+
+.auditDataRowKey {
+  font-weight: 600;
+  color: var(--text-muted);
+  min-width: 120px;
+}
+
+.auditDataRowValue {
+  color: var(--text);
+  flex: 1;
+}
+
+.auditValueNull,
+.auditValueEmpty {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.auditValueTrue {
+  color: var(--success);
+  font-weight: 500;
+}
+
+.auditValueFalse {
+  color: var(--danger);
+  font-weight: 500;
+}
+
+.auditValueNumber {
+  color: var(--info);
+  font-weight: 500;
+}
+
+.auditValueString {
+  color: var(--text);
+}
+
+.auditValueArray,
+.auditValueObject {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-left: var(--space-2);
+}
+
+.auditArrayItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  background: var(--surface-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.auditArrayItemIndex {
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.auditArrayItemContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.auditDetailHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.auditDetailRow {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.auditDetailLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  min-width: 100px;
+}
+
+.auditDetailValue {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.auditDetailData {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.auditActionCreate {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.auditActionUpdate {
+  color: var(--info);
+  font-weight: 600;
+}
+
+.auditActionDelete {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .productTypeAuditPageHeader {
+    padding: var(--space-3);
+    gap: var(--space-2);
+  }
+
+  .productTypeAuditPageTitle {
+    font-size: 16px;
+  }
+
+  .productTypeAuditPageContent {
+    padding: var(--space-3);
+  }
+
+  .productTypeAuditItemHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .productTypeAuditItemMeta {
+    flex-wrap: wrap;
+  }
+
+  .auditDetailGrid {
+    grid-template-columns: 1fr;
+  }
+}

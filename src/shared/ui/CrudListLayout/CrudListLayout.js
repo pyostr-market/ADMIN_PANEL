@@ -100,7 +100,7 @@ export function CrudListLayout({
 
   return (
     <>
-      <section className={styles.crudListLayout}>
+      <section className={`${styles.crudListLayout}${!showFilters ? ` ${styles.crudListLayoutNoFilters}` : ''}`}>
         {/* Header */}
         {header && (
           <header className={styles.crudListHeader}>

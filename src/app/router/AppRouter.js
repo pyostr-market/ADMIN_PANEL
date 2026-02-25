@@ -16,10 +16,10 @@ import { ManufacturersPage } from '../../pages/manufacturers/ManufacturersPage/M
 import { ManufacturerFormPage } from '../../pages/manufacturers/ManufacturerFormPage/ManufacturerFormPage';
 import { ManufacturerDetailPage } from '../../pages/manufacturers/ManufacturerDetailPage/ManufacturerDetailPage';
 import { ManufacturerAuditPage } from '../../pages/manufacturers/ManufacturerAuditPage/ManufacturerAuditPage';
-import { ProductTypesPage } from '../../pages/productTypes/ProductTypesPage';
-import { ProductTypeFormPage } from '../../pages/productTypes/ProductTypeFormPage';
-import { ProductTypeDetailPage } from '../../pages/productTypes/ProductTypeDetailPage';
-import { ProductTypeAuditPage } from '../../pages/productTypes/ProductTypeAuditPage';
+import { ProductTypesPage } from '../../pages/productTypes/ProductTypesPage/ProductTypesPage';
+import { ProductTypeFormPage } from '../../pages/productTypes/ProductTypeFormPage/ProductTypeFormPage';
+import { ProductTypeDetailPage } from '../../pages/productTypes/ProductTypeDetailPage/ProductTypeDetailPage';
+import { ProductTypeAuditPage } from '../../pages/productTypes/ProductTypeAuditPage/ProductTypeAuditPage';
 import { AttributesPage } from '../../pages/attributes/AttributesPage/AttributesPage';
 import { AttributeFormPage } from '../../pages/attributes/AttributeFormPage/AttributeFormPage';
 import { AttributeDetailPage } from '../../pages/attributes/AttributeDetailPage/AttributeDetailPage';

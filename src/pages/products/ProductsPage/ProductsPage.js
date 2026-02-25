@@ -1,13 +1,12 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiPackage, FiPlus, FiTrash2, FiEye, FiEdit2, FiTag } from 'react-icons/fi';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
 import { Button } from '../../../shared/ui/Button/Button';
-import { SearchInput } from '../../../shared/ui/SearchInput/SearchInput';
 import { Pagination } from '../../../shared/ui/Pagination/Pagination';
 import { EntityList } from '../../../shared/ui/EntityList/EntityList';
 import { Modal } from '../../../shared/ui/Modal/Modal';
-import { Select } from '../../../shared/ui/Select/Select';
+import { CrudListLayout } from '../../../shared/ui/CrudListLayout/CrudListLayout';
 import { useCrudList } from '../../../shared/lib/crud';
 import {
   getProductsRequest,
@@ -60,6 +59,9 @@ export function ProductsPage() {
     category_id: '',
     product_type_id: '',
   });
+  const [categories, setCategories] = useState([]);
+  const [productTypes, setProductTypes] = useState([]);
+  const [isLoadingOptions, setIsLoadingOptions] = useState(false);
 
   const productsCrud = useCrudList({
     fetchFn: async ({ page = 1, limit = PAGE_LIMIT, search } = {}) => {
@@ -67,7 +69,7 @@ export function ProductsPage() {
         page,
         limit,
         name: search,
-        category_id: filters.name || null,
+        category_id: filters.category_id || null,
         product_type_id: filters.product_type_id || null,
       });
       return data;
@@ -76,6 +78,22 @@ export function ProductsPage() {
     entityName: 'Товар',
     defaultLimit: PAGE_LIMIT,
   });
+
+  const loadFilterOptions = useCallback(async () => {
+    if ((categories.length > 0 && productTypes.length > 0) || isLoadingOptions) return;
+
+    setIsLoadingOptions(true);
+    try {
+      const [cats, types] = await Promise.all([
+        getCategoriesForAutocompleteRequest(),
+        getProductTypesForAutocompleteRequest(),
+      ]);
+      setCategories(cats || []);
+      setProductTypes(types || []);
+    } finally {
+      setIsLoadingOptions(false);
+    }
+  }, [categories.length, productTypes.length, isLoadingOptions]);
 
   const handleDeleteProduct = async () => {
     if (!productToDelete) return;
@@ -98,18 +116,62 @@ export function ProductsPage() {
     navigate('/catalog/products/create');
   };
 
-  const handleFilterChange = (field, value) => {
-    setFilters((prev) => ({ ...prev, [field]: value }));
-    productsCrud.setPage(1);
-  };
+  const handleFilterChange = useCallback((key, value) => {
+    const newFilters = { ...filters, [key]: value };
+    setFilters(newFilters);
 
-  // Опции для селектов (загружаются из API продуктов)
-  const categoryOptions = [
-    { value: '', label: 'Все категории' },
-  ];
-  const productTypeOptions = [
-    { value: '', label: 'Все типы продуктов' },
-  ];
+    const apiFilters = {};
+    if (newFilters.category_id && newFilters.category_id !== 'all') {
+      apiFilters.category_id = newFilters.category_id;
+    }
+    if (newFilters.product_type_id && newFilters.product_type_id !== 'all') {
+      apiFilters.product_type_id = newFilters.product_type_id;
+    }
+
+    productsCrud.setFilters(apiFilters);
+    productsCrud.setPage(1);
+
+    // Загружаем опции при первом изменении фильтра
+    if ((key === 'category_id' || key === 'product_type_id') && 
+        categories.length === 0 && 
+        !isLoadingOptions) {
+      loadFilterOptions();
+    }
+  }, [filters, productsCrud, categories.length, isLoadingOptions, loadFilterOptions]);
+
+  const handleResetFilters = useCallback(() => {
+    setFilters({ category_id: '', product_type_id: '' });
+    productsCrud.setFilters({});
+    productsCrud.setPage(1);
+  }, [productsCrud]);
+
+  const hasActiveFilters = useMemo(() => {
+    return filters.category_id || filters.product_type_id;
+  }, [filters]);
+
+  // Конфигурация фильтров для CrudListLayout
+  const filterConfigs = useMemo(() => [
+    {
+      key: 'category_id',
+      label: 'Категория',
+      options: [
+        { value: 'all', label: 'Все категории' },
+        ...categories.map((cat) => ({ value: String(cat.id), label: cat.name })),
+      ],
+      onFocus: loadFilterOptions,
+      disabled: isLoadingOptions,
+    },
+    {
+      key: 'product_type_id',
+      label: 'Тип продукта',
+      options: [
+        { value: 'all', label: 'Все типы продуктов' },
+        ...productTypes.map((type) => ({ value: String(type.id), label: type.name })),
+      ],
+      onFocus: loadFilterOptions,
+      disabled: isLoadingOptions,
+    },
+  ], [categories, productTypes, isLoadingOptions, loadFilterOptions]);
 
   const mainImage = (product) => {
     const main = product.images?.find(img => img.is_main);
@@ -117,182 +179,160 @@ export function ProductsPage() {
   };
 
   return (
-    <section className={styles.productsPage}>
-      <header className={styles.productsPageHeader}>
-        <h1 className={styles.productsPageTitle}>Товары</h1>
-        <div className={styles.productsPageControls}>
-          <PermissionGate permission={['product:create']} fallback={null}>
-            <Button
-              variant="primary"
-              leftIcon={<FiPlus />}
-              onClick={handleCreateProduct}
-            >
-              Создать товар
-            </Button>
-          </PermissionGate>
-        </div>
-      </header>
-
-      <div className={`${styles.productsPageFilters}${productsCrud.isLoading ? ` ${styles.productsPageFiltersLoading}` : ''}`}>
-        <div className={styles.productsPageFiltersRow}>
-          <div className={styles.productsPageSearchWrapper}>
-            <SearchInput
-              value={productsCrud.search}
-              onChange={(e) => productsCrud.setSearch(e.target.value)}
-              placeholder="Поиск по названию..."
-              loading={productsCrud.isLoading}
-            />
-          </div>
-          <div className={styles.productsPageFiltersGroup}>
-            <Select
-              value={filters.category_id}
-              onChange={(e) => handleFilterChange('category_id', e.target.value || null)}
-              options={categoryOptions}
-              placeholder="Категория"
-              wrapperClassName={styles.productsPageFilterSelect}
-            />
-            <Select
-              value={filters.product_type_id}
-              onChange={(e) => handleFilterChange('product_type_id', e.target.value || null)}
-              options={productTypeOptions}
-              placeholder="Тип продукта"
-              wrapperClassName={styles.productsPageFilterSelect}
-            />
-            {(filters.category_id || filters.product_type_id) && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  setFilters({ category_id: '', product_type_id: '' });
-                  productsCrud.setPage(1);
-                }}
-              >
-                Сбросить фильтры
-              </Button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <EntityList
-        items={productsCrud.items}
-        renderItem={(product) => (
+    <>
+      <CrudListLayout
+        header={(
           <>
-            <div className={styles.productsPageItemContent} onClick={() => handleViewProduct(product)}>
-              <div className={styles.productsPageItemMain}>
-                <div className={styles.productsPageItemImage}>
-                  {mainImage(product) ? (
-                    <img src={mainImage(product)} alt={product.name} className={styles.productsPageItemImg} />
-                  ) : (
-                    <div className={styles.productsPageItemAvatar}>
-                      <FiPackage />
-                    </div>
-                  )}
-                </div>
-                <div className={styles.productsPageItemInfo}>
-                  <div className={styles.productsPageItemHeader}>
-                    <p className={styles.productsPageItemTitle}>
-                      {product.name || 'Без названия'}
-                    </p>
-                  </div>
-                  <div className={styles.productsPageItemMeta}>
-                    <span className={`${styles.productsPageMetaItem} ${styles.productsPageMetaItemPrice}`}>
-                      {product.price?.toLocaleString('ru-RU')} ₽
-                    </span>
-                    {product.category && (
-                      <>
-                        <span className={styles.productsPageSeparator}>•</span>
-                        <span className={styles.productsPageMetaItem}>
-                          <FiTag className={styles.productsPageMetaIcon} />
-                          Категория: {product.category.name}
-                        </span>
-                      </>
-                    )}
-                    {product.product_type && (
-                      <>
-                        <span className={styles.productsPageSeparator}>•</span>
-                        <span className={styles.productsPageMetaItem}>
-                          <FiPackage className={styles.productsPageMetaIcon} />
-                          Тип: {product.product_type.name}
-                        </span>
-                      </>
-                    )}
-                    {product.supplier && (
-                      <>
-                        <span className={styles.productsPageSeparator}>•</span>
-                        <span className={styles.productsPageMetaItem}>
-                          Поставщик: {product.supplier.name}
-                        </span>
-                      </>
-                    )}
-                  </div>
-                  {product.description && (
-                    <p className={styles.productsPageItemDescription}>
-                      {product.description.length > 150
-                        ? `${product.description.substring(0, 150)}...`
-                        : product.description}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className={styles.productsPageItemActions}>
-              <PermissionGate permission={['product:update']} fallback={null}>
+            <h1 className={styles.productsPageTitle}>Товары</h1>
+            <div className={styles.productsPageControls}>
+              <PermissionGate permission={['product:create']} fallback={null}>
                 <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<FiEdit2 />}
-                  onClick={() => handleEditProduct(product)}
-                  aria-label={`Редактировать товар ${product.name || product.id}`}
+                  variant="primary"
+                  leftIcon={<FiPlus />}
+                  onClick={handleCreateProduct}
                 >
-                  Редактировать
-                </Button>
-              </PermissionGate>
-
-              <Button
-                variant="secondary"
-                size="sm"
-                leftIcon={<FiEye />}
-                onClick={() => handleViewProduct(product)}
-                aria-label={`Просмотреть товар ${product.name || product.id}`}
-              >
-                Просмотр
-              </Button>
-
-              <PermissionGate permission={['product:delete']} fallback={null}>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setProductToDelete(product)}
-                  disabled={productsCrud.isSubmitting}
-                  aria-label="Удалить товар"
-                  className={styles.btnDelete}
-                >
-                  <FiTrash2 />
+                  Создать товар
                 </Button>
               </PermissionGate>
             </div>
           </>
         )}
-        emptyMessage={
-          productsCrud.isLoading
-            ? 'Загрузка товаров...'
-            : productsCrud.search || filters.category_id || filters.product_type_id
-              ? 'По вашему запросу ничего не найдено.'
-              : 'Товары не найдены.'
-        }
-        loading={productsCrud.isLoading}
-      />
+        showSearch={true}
+        searchValue={productsCrud.search}
+        onSearchChange={productsCrud.setSearch}
+        searchLoading={productsCrud.isLoading}
+        searchPlaceholder="Поиск по названию..."
 
-      {!productsCrud.isLoading && productsCrud.items && productsCrud.items.length > 0 && (
-        <Pagination
-          currentPage={productsCrud.page}
-          totalPages={productsCrud.pagination.pages}
-          totalItems={productsCrud.pagination.total}
-          onPageChange={productsCrud.setPage}
+        showFilters={true}
+        filters={filters}
+        filterConfigs={filterConfigs}
+        onFilterChange={handleFilterChange}
+        onResetFilters={handleResetFilters}
+        hasActiveFilters={hasActiveFilters}
+        filtersLoading={productsCrud.isLoading || isLoadingOptions}
+
+        pagination={
+          !productsCrud.isLoading && productsCrud.items && productsCrud.items.length > 0 ? (
+            <Pagination
+              currentPage={productsCrud.page}
+              totalPages={productsCrud.pagination.pages}
+              totalItems={productsCrud.pagination.total}
+              onPageChange={productsCrud.setPage}
+              loading={productsCrud.isLoading}
+            />
+          ) : null
+        }
+      >
+        <EntityList
+          items={productsCrud.items}
+          renderItem={(product) => (
+            <>
+              <div className={styles.productsPageItemContent} onClick={() => handleViewProduct(product)}>
+                <div className={styles.productsPageItemMain}>
+                  <div className={styles.productsPageItemImage}>
+                    {mainImage(product) ? (
+                      <img src={mainImage(product)} alt={product.name} className={styles.productsPageItemImg} />
+                    ) : (
+                      <div className={styles.productsPageItemAvatar}>
+                        <FiPackage />
+                      </div>
+                    )}
+                  </div>
+                  <div className={styles.productsPageItemInfo}>
+                    <div className={styles.productsPageItemHeader}>
+                      <p className={styles.productsPageItemTitle}>
+                        {product.name || 'Без названия'}
+                      </p>
+                    </div>
+                    <div className={styles.productsPageItemMeta}>
+                      <span className={`${styles.productsPageMetaItem} ${styles.productsPageMetaItemPrice}`}>
+                        {product.price?.toLocaleString('ru-RU')} ₽
+                      </span>
+                      {product.category && (
+                        <>
+                          <span className={styles.productsPageSeparator}>•</span>
+                          <span className={styles.productsPageMetaItem}>
+                            <FiTag className={styles.productsPageMetaIcon} />
+                            Категория: {product.category.name}
+                          </span>
+                        </>
+                      )}
+                      {product.product_type && (
+                        <>
+                          <span className={styles.productsPageSeparator}>•</span>
+                          <span className={styles.productsPageMetaItem}>
+                            <FiPackage className={styles.productsPageMetaIcon} />
+                            Тип: {product.product_type.name}
+                          </span>
+                        </>
+                      )}
+                      {product.supplier && (
+                        <>
+                          <span className={styles.productsPageSeparator}>•</span>
+                          <span className={styles.productsPageMetaItem}>
+                            Поставщик: {product.supplier.name}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                    {product.description && (
+                      <p className={styles.productsPageItemDescription}>
+                        {product.description.length > 150
+                          ? `${product.description.substring(0, 150)}...`
+                          : product.description}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className={styles.productsPageItemActions}>
+                <PermissionGate permission={['product:update']} fallback={null}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<FiEdit2 />}
+                    onClick={() => handleEditProduct(product)}
+                    aria-label={`Редактировать товар ${product.name || product.id}`}
+                  >
+                    Редактировать
+                  </Button>
+                </PermissionGate>
+
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<FiEye />}
+                  onClick={() => handleViewProduct(product)}
+                  aria-label={`Просмотреть товар ${product.name || product.id}`}
+                >
+                  Просмотр
+                </Button>
+
+                <PermissionGate permission={['product:delete']} fallback={null}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setProductToDelete(product)}
+                    disabled={productsCrud.isSubmitting}
+                    aria-label="Удалить товар"
+                    className={styles.btnDelete}
+                  >
+                    <FiTrash2 />
+                  </Button>
+                </PermissionGate>
+              </div>
+            </>
+          )}
+          emptyMessage={
+            productsCrud.isLoading
+              ? 'Загрузка товаров...'
+              : productsCrud.search || hasActiveFilters
+                ? 'По вашему запросу ничего не найдено.'
+                : 'Товары не найдены.'
+          }
           loading={productsCrud.isLoading}
         />
-      )}
+      </CrudListLayout>
 
       {productToDelete && (
         <DeleteProductModal
@@ -302,6 +342,6 @@ export function ProductsPage() {
           isSubmitting={productsCrud.isSubmitting}
         />
       )}
-    </section>
+    </>
   );
 }

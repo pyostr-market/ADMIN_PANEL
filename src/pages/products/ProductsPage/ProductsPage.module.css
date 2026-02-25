@@ -1,19 +1,6 @@
-/* ProductsPage - стиль как у UsersListPage */
-.productsPage {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
+/* ProductsPage - стили для страницы товаров */
 
-/* Header */
-.productsPageHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  min-height: 40px;
-}
-
+/* Заголовок и кнопки */
 .productsPageTitle {
   margin: 0;
   font-size: 20px;
@@ -27,44 +14,6 @@
   align-items: center;
   justify-content: flex-end;
   min-width: 180px;
-}
-
-/* Filters */
-.productsPageFilters {
-  display: grid;
-  align-items: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-3);
-  transition: opacity 0.2s ease;
-}
-
-.productsPageFiltersLoading {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-.productsPageFiltersRow {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: var(--space-3);
-  align-items: center;
-}
-
-.productsPageSearchWrapper {
-  min-width: 0;
-}
-
-.productsPageFiltersGroup {
-  display: flex;
-  gap: var(--space-2);
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.productsPageFilterSelect {
-  min-width: 150px;
-  height: 34px;
-  font-size: 13px;
 }
 
 /* Entity List Item */
@@ -164,10 +113,6 @@
   color: var(--text-muted);
 }
 
-.productsPageMetaLabel {
-  font-weight: 500;
-}
-
 .productsPageSeparator {
   color: var(--border-strong);
 }
@@ -207,17 +152,9 @@
   margin-top: var(--space-2);
 }
 
-/* Responsive */
+/* Responsive - Mobile */
 @media (max-width: 768px) {
-  .productsPage {
-    padding: 0 !important;
-    gap: 0;
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
-  /* Header - название слева, кнопка справа */
+  /* Header */
   .productsPageHeader {
     flex-direction: row;
     align-items: center;
@@ -250,54 +187,6 @@
     height: 34px;
     padding: 6px 12px;
     font-size: 12px;
-  }
-
-  /* Filters */
-  .productsPageFilters {
-    padding: 10px 12px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    gap: 8px;
-    box-sizing: border-box;
-  }
-
-  .productsPageFiltersLoading {
-    opacity: 0.6;
-    pointer-events: none;
-  }
-
-  .productsPageFiltersRow {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
-    padding: 0;
-    background: transparent;
-  }
-
-  .productsPageSearchWrapper {
-    width: 100%;
-  }
-
-  .productsPageSearchWrapper input {
-    height: 36px;
-    font-size: 13px;
-    padding: 6px 10px;
-    box-sizing: border-box;
-  }
-
-  .productsPageFiltersGroup {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    width: 100%;
-  }
-
-  .productsPageFilterSelect {
-    width: 100%;
-    height: 36px;
-    font-size: 13px;
-    box-sizing: border-box;
   }
 
   /* Entity List */
@@ -339,7 +228,7 @@
     flex: 1;
   }
 
-  /* Изображение товара - компактное, круглое */
+  /* Изображение товара - компактное, квадратное */
   .productsPageItemImage {
     flex: 0 0 50px;
     width: 50px;
@@ -401,12 +290,6 @@
     width: 100%;
   }
 
-  .productsPageMainBadge {
-    padding: 2px 6px;
-    font-size: 10px;
-    flex-shrink: 0;
-  }
-
   .productsPageItemMeta {
     display: flex;
     align-items: center;
@@ -444,10 +327,6 @@
     flex-shrink: 0;
   }
 
-  .productsPageMetaLabel {
-    font-weight: 500;
-  }
-
   .productsPageSeparator {
     color: var(--border-strong);
     flex-shrink: 0;
@@ -460,10 +339,6 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-  }
-
-  .productsPageItemAttributes {
-    display: none;
   }
 
   /* Item actions - кнопки справа */

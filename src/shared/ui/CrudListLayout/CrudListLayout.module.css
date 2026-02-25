@@ -6,6 +6,11 @@
   align-items: start;
 }
 
+/* Основной layout без фильтров (на всю ширину) */
+.crudListLayoutNoFilters {
+  display: block;
+}
+
 /* Header на всю ширину */
 .crudListHeader {
   grid-column: 1 / -1;

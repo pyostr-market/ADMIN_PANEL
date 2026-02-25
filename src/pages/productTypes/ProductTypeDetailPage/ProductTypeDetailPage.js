@@ -1,16 +1,16 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FiEdit2, FiTrash2, FiBox, FiClock } from 'react-icons/fi';
-import { Button } from '../../shared/ui/Button/Button';
-import { Modal } from '../../shared/ui/Modal/Modal';
-import { PermissionGate } from '../../shared/ui/PermissionGate/PermissionGate';
-import { getApiErrorMessage } from '../../shared/api/apiError';
-import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
+import { Button } from '../../../shared/ui/Button/Button';
+import { Modal } from '../../../shared/ui/Modal/Modal';
+import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
+import { getApiErrorMessage } from '../../../shared/api/apiError';
+import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import {
   getProductTypeByIdRequest,
   deleteProductTypeRequest,
-} from './api/productTypesApi';
-import './ProductTypeDetailPage.css';
+} from '../api/productTypesApi';
+import styles from './ProductTypeDetailPage.module.css';
 
 function DeleteProductTypeModal({ productType, onClose, onSubmit, isSubmitting }) {
   if (!productType) return null;
@@ -34,11 +34,11 @@ function DeleteProductTypeModal({ productType, onClose, onSubmit, isSubmitting }
         </>
       )}
     >
-      <p className="modal-confirm-text">
+      <p className={styles.modalConfirmText}>
         Вы уверены, что хотите удалить тип продукта{' '}
         <strong>{productType.name || `ID: ${productType.id}`}</strong>?
       </p>
-      <p className="modal-confirm-note">
+      <p className={styles.modalConfirmNote}>
         Это действие нельзя отменить.
       </p>
     </Modal>
@@ -50,15 +50,13 @@ export function ProductTypeDetailPage() {
   const navigate = useNavigate();
   const notifications = useNotifications();
   const notificationsRef = useRef(notifications);
+  const [productType, setProductType] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   useEffect(() => {
     notificationsRef.current = notifications;
   }, [notifications]);
-
-  const [productType, setProductType] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const loadProductType = useCallback(async () => {
     setIsLoading(true);
@@ -75,15 +73,13 @@ export function ProductTypeDetailPage() {
 
   useEffect(() => {
     loadProductType();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productTypeId]);
+  }, [loadProductType]);
 
   const handleEditProductType = () => {
     navigate(`/catalog/device_type/${productTypeId}/edit`);
   };
 
   const handleDeleteProductType = async () => {
-    setIsDeleting(true);
     try {
       await deleteProductTypeRequest(productTypeId);
       notificationsRef.current?.info('Тип продукта удален');
@@ -91,16 +87,13 @@ export function ProductTypeDetailPage() {
     } catch (error) {
       const message = getApiErrorMessage(error);
       notificationsRef.current?.error(message);
-    } finally {
-      setIsDeleting(false);
     }
   };
 
   if (isLoading) {
     return (
-      <section className="product-type-detail-page">
-        <div className="product-type-detail-page__loading">
-          <div className="loading-spinner" />
+      <section className={styles.productTypeDetailPage}>
+        <div className={styles.loadingState}>
           <p>Загрузка данных типа продукта...</p>
         </div>
       </section>
@@ -109,8 +102,8 @@ export function ProductTypeDetailPage() {
 
   if (!productType) {
     return (
-      <section className="product-type-detail-page">
-        <div className="product-type-detail-page__error">
+      <section className={styles.productTypeDetailPage}>
+        <div className={styles.errorState}>
           <h2>Тип продукта не найден</h2>
           <p>Запрошенный тип продукта не существует или был удален</p>
           <Button variant="primary" onClick={() => navigate('/catalog/device_type')}>
@@ -122,12 +115,12 @@ export function ProductTypeDetailPage() {
   }
 
   return (
-    <section className="product-type-detail-page">
-      <header className="product-type-detail-page__header">
-        <Button variant="ghost" onClick={() => navigate('/catalog/device_type')} className="back-button">
-          ← Назад
-        </Button>
-        <div className="product-type-detail-page__actions">
+    <section className={styles.productTypeDetailPage}>
+      <header className={styles.productTypeDetailPageHeader}>
+        <h1 className={styles.productTypeDetailPageTitle}>
+          {productType.name || `Тип продукта #${productType.id}`}
+        </h1>
+        <div className={styles.productTypeDetailPageControls}>
           <PermissionGate permission={['product_type:update']} fallback={null}>
             <Button
               variant="secondary"
@@ -149,52 +142,33 @@ export function ProductTypeDetailPage() {
         </div>
       </header>
 
-      <div className="product-type-detail-page__content">
-        <div className="product-type-detail-page__panel">
-          <div className="panel-header">
-            <div className="panel-header__content">
-              <h2 className="panel-title">Информация</h2>
-              <Button
-                variant="secondary"
-                size="sm"
-                leftIcon={<FiClock />}
-                onClick={() => navigate(`/catalog/device_type/${productType.id}/audit`)}
-              >
-                История
-              </Button>
+      <div className={styles.productTypeDetailPageContent}>
+        <div className={styles.productTypeDetailPageCard}>
+          <h2 className={styles.productTypeDetailPageCardTitle}>
+            <FiClock style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+            Информация
+          </h2>
+          <div className={styles.productTypeDetailPageGrid}>
+            <div className={styles.productTypeDetailPageField}>
+              <span className={styles.productTypeDetailPageFieldLabel}>ID</span>
+              <span className={styles.productTypeDetailPageFieldValue}>{productType.id}</span>
             </div>
-          </div>
-
-          <div className="product-type-info-grid">
-            <div className="info-card">
-              <div className="info-card__icon info-card__icon--primary">
-                <FiBox />
-              </div>
-              <div className="info-card__content">
-                <span className="info-card__label">ID типа продукта</span>
-                <span className="info-card__value">{productType.id}</span>
-              </div>
+            <div className={styles.productTypeDetailPageField}>
+              <span className={styles.productTypeDetailPageFieldLabel}>Название</span>
+              <span className={styles.productTypeDetailPageFieldValue}>{productType.name || '—'}</span>
             </div>
-
-            <div className="info-card">
-              <div className="info-card__icon info-card__icon--secondary">
-                <span>🏷️</span>
-              </div>
-              <div className="info-card__content">
-                <span className="info-card__label">Название</span>
-                <span className="info-card__value">{productType.name || '—'}</span>
-              </div>
-            </div>
-
             {productType.parent_id && (
-              <div className="info-card">
-                <div className="info-card__icon info-card__icon--info">
-                  <span>🔗</span>
-                </div>
-                <div className="info-card__content">
-                  <span className="info-card__label">Родительский тип</span>
-                  <span className="info-card__value">ID: {productType.parent_id}</span>
-                </div>
+              <div className={styles.productTypeDetailPageField}>
+                <span className={styles.productTypeDetailPageFieldLabel}>Родительский тип</span>
+                <span className={styles.productTypeDetailPageFieldValue}>ID: {productType.parent_id}</span>
+              </div>
+            )}
+            {productType.created_at && (
+              <div className={styles.productTypeDetailPageField}>
+                <span className={styles.productTypeDetailPageFieldLabel}>Создан</span>
+                <span className={styles.productTypeDetailPageFieldValue}>
+                  {new Date(productType.created_at).toLocaleDateString('ru-RU')}
+                </span>
               </div>
             )}
           </div>
@@ -206,7 +180,6 @@ export function ProductTypeDetailPage() {
           productType={productType}
           onClose={() => setIsDeleteModalOpen(false)}
           onSubmit={handleDeleteProductType}
-          isSubmitting={isDeleting}
         />
       )}
     </section>

@@ -1,7 +1,7 @@
-/* ManufacturersPage - стили для страницы производителей */
+/* ProductTypesPage - стили для страницы типов продуктов */
 
 /* Заголовок и кнопки */
-.manufacturersPageTitle {
+.productTypesPageTitle {
   margin: 0;
   font-size: 20px;
   font-weight: 600;
@@ -9,7 +9,7 @@
   white-space: nowrap;
 }
 
-.manufacturersPageControls {
+.productTypesPageControls {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -17,7 +17,7 @@
 }
 
 /* Entity List Item */
-.manufacturersPageItemContent {
+.productTypesPageItemContent {
   display: flex;
   flex: 1;
   cursor: pointer;
@@ -27,18 +27,18 @@
   border-radius: var(--radius-md);
 }
 
-.manufacturersPageItemContent:hover {
+.productTypesPageItemContent:hover {
   background: var(--surface-subtle);
 }
 
-.manufacturersPageItemMain {
+.productTypesPageItemMain {
   display: flex;
   gap: var(--space-3);
   align-items: center;
   width: 100%;
 }
 
-.manufacturersPageAvatar {
+.productTypesPageAvatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -52,51 +52,31 @@
   transition: transform 0.2s;
 }
 
-.manufacturersPageItemContent:hover .manufacturersPageAvatar {
+.productTypesPageItemContent:hover .productTypesPageAvatar {
   transform: scale(1.05);
 }
 
-.manufacturersPageItemInfo {
+.productTypesPageItemInfo {
   display: grid;
   gap: var(--space-1);
   min-width: 0;
 }
 
-.manufacturersPageItemHeader {
+.productTypesPageItemHeader {
   display: flex;
   align-items: center;
   gap: var(--space-2);
   flex-wrap: wrap;
 }
 
-.manufacturersPageItemTitle {
+.productTypesPageItemTitle {
   font-weight: 600;
   font-size: 14px;
   margin: 0;
   color: var(--text);
 }
 
-.manufacturersPageItemBadges {
-  display: flex;
-  gap: var(--space-1);
-}
-
-.manufacturersPageBadge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 15px;
-  height: 15px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-}
-
-.manufacturersPageBadgeVerified {
-  background: var(--success);
-  color: white;
-}
-
-.manufacturersPageItemMeta {
+.productTypesPageItemMeta {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -105,27 +85,22 @@
   color: var(--text-muted);
 }
 
-.manufacturersPageMetaItem {
+.productTypesPageMetaItem {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
 }
 
-.manufacturersPageMetaIcon {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.manufacturersPageMetaLabel {
+.productTypesPageMetaLabel {
   font-weight: 500;
 }
 
-.manufacturersPageSeparator {
+.productTypesPageSeparator {
   color: var(--border-strong);
 }
 
 /* Item Actions */
-.manufacturersPageItemActions {
+.productTypesPageItemActions {
   display: flex;
   gap: var(--space-1);
   align-items: center;
@@ -155,7 +130,7 @@
 /* Responsive - Mobile */
 @media (max-width: 768px) {
   /* Header */
-  .manufacturersPageHeader {
+  .productTypesPageHeader {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
@@ -170,7 +145,7 @@
     box-sizing: border-box;
   }
 
-  .manufacturersPageTitle {
+  .productTypesPageTitle {
     font-size: 16px;
     font-weight: 600;
     margin: 0;
@@ -178,36 +153,36 @@
     flex: 0 1 auto;
   }
 
-  .manufacturersPageControls {
+  .productTypesPageControls {
     flex-shrink: 0;
     margin-left: auto;
   }
 
-  .manufacturersPageControls button {
+  .productTypesPageControls button {
     height: 34px;
     padding: 6px 12px;
     font-size: 12px;
   }
 
   /* Entity List */
-  .manufacturersPageList,
+  .productTypesPageList,
   .entityList {
     padding: 0;
   }
 
-  .manufacturersPageItem {
+  .productTypesPageItem {
     padding: 0;
     margin: 0;
     border-bottom: 1px solid var(--border);
     width: 100%;
   }
 
-  .manufacturersPageItem:last-child {
+  .productTypesPageItem:last-child {
     border-bottom: none;
   }
 
   /* Item content - на всю ширину */
-  .manufacturersPageItemContent {
+  .productTypesPageItemContent {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -218,7 +193,7 @@
     min-height: 60px;
   }
 
-  .manufacturersPageItemMain {
+  .productTypesPageItemMain {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -228,7 +203,7 @@
     flex: 1;
   }
 
-  .manufacturersPageAvatar {
+  .productTypesPageAvatar {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -241,11 +216,11 @@
     background: var(--gradient-avatar);
   }
 
-  .manufacturersPageItemContent:hover .manufacturersPageAvatar {
+  .productTypesPageItemContent:hover .productTypesPageAvatar {
     transform: none;
   }
 
-  .manufacturersPageItemInfo {
+  .productTypesPageItemInfo {
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -254,7 +229,7 @@
     width: 100%;
   }
 
-  .manufacturersPageItemHeader {
+  .productTypesPageItemHeader {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -263,7 +238,7 @@
     width: 100%;
   }
 
-  .manufacturersPageItemTitle {
+  .productTypesPageItemTitle {
     font-size: 14px;
     font-weight: 600;
     margin: 0;
@@ -275,24 +250,7 @@
     width: 100%;
   }
 
-  .manufacturersPageItemBadges {
-    display: flex;
-    gap: 4px;
-    flex-shrink: 0;
-  }
-
-  .manufacturersPageBadge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 4px;
-    font-size: 12px;
-    flex-shrink: 0;
-  }
-
-  .manufacturersPageItemMeta {
+  .productTypesPageItemMeta {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -304,33 +262,32 @@
     line-height: 1.4;
   }
 
-  .manufacturersPageItemMeta:empty {
+  .productTypesPageItemMeta:empty {
     display: none;
   }
 
-  .manufacturersPageMetaItem {
+  .productTypesPageMetaItem {
     display: inline-flex;
     align-items: center;
     gap: 3px;
     white-space: nowrap;
   }
 
-  .manufacturersPageMetaItem:empty {
+  .productTypesPageMetaItem:empty {
     display: none;
   }
 
-  .manufacturersPageMetaIcon {
-    font-size: 10px;
-    flex-shrink: 0;
+  .productTypesPageMetaLabel {
+    font-weight: 500;
   }
 
-  .manufacturersPageSeparator {
+  .productTypesPageSeparator {
     color: var(--border-strong);
     flex-shrink: 0;
   }
 
   /* Item actions - кнопки справа */
-  .manufacturersPageItemActions {
+  .productTypesPageItemActions {
     display: flex;
     gap: 4px;
     align-items: center;
@@ -342,14 +299,14 @@
     justify-content: flex-end;
   }
 
-  .manufacturersPageItemActions button {
+  .productTypesPageItemActions button {
     height: 32px;
     font-size: 11px;
     padding: 6px 8px;
     flex: 0 0 auto;
   }
 
-  .manufacturersPageItemActions .btnDelete {
+  .productTypesPageItemActions .btnDelete {
     width: 32px;
     height: 32px;
     padding: 0;
@@ -357,7 +314,7 @@
   }
 
   /* Pagination */
-  .manufacturersPagePagination {
+  .productTypesPagePagination {
     padding: 10px 12px;
     background: var(--surface);
     border-top: 1px solid var(--border);
