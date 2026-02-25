@@ -159,58 +159,30 @@ export function ManufacturerDetailPage() {
       </header>
 
       <div className={styles.manufacturerDetailPageContent}>
-        <div className={styles.manufacturerDetailPagePanel}>
-          <div className={styles.panelHeader}>
-            <div className={styles.panelHeaderContent}>
-              <h2 className={styles.panelTitle}>
-                <FiBox className={styles.panelTitleIcon} />
-                Информация
-              </h2>
-              <Button
-                variant="secondary"
-                size="sm"
-                leftIcon={<FiClock />}
-                onClick={handleViewAudit}
-              >
-                История
-              </Button>
-            </div>
-          </div>
-
-          <div className={styles.manufacturerInfoGrid}>
-            <div className={styles.infoCard}>
-              <div className={`${styles.infoCardIcon} ${styles.infoCardIconPrimary}`}>
-                <FiBox />
-              </div>
-              <div className={styles.infoCard__content}>
-                <span className={styles.infoCardLabel}>ID производителя</span>
-                <span className={styles.infoCardValue}>{manufacturer.id}</span>
-              </div>
-            </div>
-
-            <div className={styles.infoCard}>
-              <div className={`${styles.infoCardIcon} ${styles.infoCardIconSecondary}`}>
-                <FiBox />
-              </div>
-              <div className={styles.infoCard__content}>
-                <span className={styles.infoCardLabel}>Название</span>
-                <span className={styles.infoCardValue}>{manufacturer.name || '—'}</span>
-              </div>
-            </div>
-
-            {manufacturer.description && (
-              <div className={`${styles.infoCard} ${styles.infoCardFull}`}>
-                <div className={`${styles.infoCardIcon} ${styles.infoCardIconInfo}`}>
-                  <FiBox />
-                </div>
-                <div className={styles.infoCard__content}>
-                  <span className={styles.infoCardLabel}>Описание</span>
-                  <span className={styles.infoCardValue}>{manufacturer.description}</span>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+        <InfoBlock
+          title="Информация"
+          headerIcon={<FiBox />}
+          items={[
+            {
+              label: 'ID производителя',
+              value: manufacturer.id,
+              iconVariant: 'primary',
+            },
+            {
+              label: 'Название',
+              value: manufacturer.name || '—',
+              iconVariant: 'secondary',
+            },
+            {
+              label: 'Описание',
+              value: manufacturer.description,
+              iconVariant: 'info',
+              fullWidth: !!manufacturer.description,
+            },
+          ]}
+          auditUrl={`/catalog/manufacturers/${manufacturerId}/audit`}
+          onAuditClick={handleViewAudit}
+        />
       </div>
 
       {isDeleteModalOpen && (

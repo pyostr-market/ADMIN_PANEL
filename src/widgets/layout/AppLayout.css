@@ -51,3 +51,9 @@
   margin: 0 auto;
   padding: var(--space-4);
 }
+
+@media (max-width: 1200px) {
+  .app-shell__content {
+    max-width: 100%;
+  }
+}

@@ -4,6 +4,7 @@ import { FiEdit2, FiTrash2, FiMail, FiPhone, FiBox, FiClock, FiArrowLeft } from 
 import { Button } from '../../../shared/ui/Button/Button';
 import { Modal } from '../../../shared/ui/Modal/Modal';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
+import { InfoBlock } from '../../../shared/ui/InfoBlock/InfoBlock';
 import { getApiErrorMessage } from '../../../shared/api/apiError';
 import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import {
@@ -158,67 +159,36 @@ export function SupplierDetailPage() {
       </header>
 
       <div className={styles.supplierDetailPageContent}>
-        <div className={styles.supplierDetailPagePanel}>
-          <div className={styles.panelHeader}>
-            <div className={styles.panelHeaderContent}>
-              <h2 className={styles.panelTitle}>Информация</h2>
-              <Button
-                variant="secondary"
-                size="sm"
-                leftIcon={<FiClock />}
-                onClick={() => navigate(`/suppliers/${supplier.id}/audit`)}
-              >
-                История
-              </Button>
-            </div>
-          </div>
-
-          <div className={styles.supplierInfoGrid}>
-            <div className={styles.infoCard}>
-              <div className={`${styles.infoCardIcon} ${styles.infoCardIconPrimary}`}>
-                <FiBox />
-              </div>
-              <div className={styles.infoCard__content}>
-                <span className={styles.infoCardLabel}>ID поставщика</span>
-                <span className={styles.infoCardValue}>{supplier.id}</span>
-              </div>
-            </div>
-
-            <div className={styles.infoCard}>
-              <div className={`${styles.infoCardIcon} ${styles.infoCardIconSecondary}`}>
-                <FiBox />
-              </div>
-              <div className={styles.infoCard__content}>
-                <span className={styles.infoCardLabel}>Название</span>
-                <span className={styles.infoCardValue}>{supplier.name || '—'}</span>
-              </div>
-            </div>
-
-            {supplier.contact_email && (
-              <div className={styles.infoCard}>
-                <div className={`${styles.infoCardIcon} ${styles.infoCardIconSuccess}`}>
-                  <FiMail />
-                </div>
-                <div className={styles.infoCard__content}>
-                  <span className={styles.infoCardLabel}>Email</span>
-                  <span className={styles.infoCardValue}>{supplier.contact_email}</span>
-                </div>
-              </div>
-            )}
-
-            {supplier.phone && (
-              <div className={styles.infoCard}>
-                <div className={`${styles.infoCardIcon} ${styles.infoCardIconInfo}`}>
-                  <FiPhone />
-                </div>
-                <div className={styles.infoCard__content}>
-                  <span className={styles.infoCardLabel}>Телефон</span>
-                  <span className={styles.infoCardValue}>{supplier.phone}</span>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+        <InfoBlock
+          title="Информация"
+          headerIcon={<FiBox />}
+          items={[
+            {
+              label: 'ID поставщика',
+              value: supplier.id,
+              iconVariant: 'primary',
+            },
+            {
+              label: 'Название',
+              value: supplier.name || '—',
+              iconVariant: 'secondary',
+            },
+            {
+              label: 'Email',
+              value: supplier.contact_email,
+              icon: <FiMail />,
+              iconVariant: 'success',
+            },
+            {
+              label: 'Телефон',
+              value: supplier.phone,
+              icon: <FiPhone />,
+              iconVariant: 'info',
+            },
+          ]}
+          auditUrl={`/suppliers/${supplierId}/audit`}
+          onAuditClick={handleViewAudit}
+        />
       </div>
 
       {isDeleteModalOpen && (

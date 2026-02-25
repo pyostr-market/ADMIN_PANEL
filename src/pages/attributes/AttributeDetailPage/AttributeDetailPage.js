@@ -4,6 +4,7 @@ import { FiEdit2, FiTrash2, FiTag, FiClock, FiArrowLeft } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { Modal } from '../../../shared/ui/Modal/Modal';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
+import { InfoBlock } from '../../../shared/ui/InfoBlock/InfoBlock';
 import { getApiErrorMessage } from '../../../shared/api/apiError';
 import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import {
@@ -158,66 +159,34 @@ export function AttributeDetailPage() {
       </header>
 
       <div className={styles.attributeDetailPageContent}>
-        <div className={styles.attributeDetailPagePanel}>
-          <div className={styles.panelHeader}>
-            <div className={styles.panelHeaderContent}>
-              <h2 className={styles.panelTitle}>
-                <FiTag className={styles.panelTitleIcon} />
-                Информация
-              </h2>
-              <Button
-                variant="secondary"
-                size="sm"
-                leftIcon={<FiClock />}
-                onClick={handleViewAudit}
-              >
-                История
-              </Button>
-            </div>
-          </div>
-
-          <div className={styles.attributeInfoGrid}>
-            <div className={styles.infoCard}>
-              <div className={`${styles.infoCardIcon} ${styles.infoCardIconPrimary}`}>
-                <FiTag />
-              </div>
-              <div className={styles.infoCard__content}>
-                <span className={styles.infoCardLabel}>ID атрибута</span>
-                <span className={styles.infoCardValue}>{attribute.id}</span>
-              </div>
-            </div>
-
-            <div className={styles.infoCard}>
-              <div className={`${styles.infoCardIcon} ${styles.infoCardIconSecondary}`}>
-                <FiTag />
-              </div>
-              <div className={styles.infoCard__content}>
-                <span className={styles.infoCardLabel}>Название</span>
-                <span className={styles.infoCardValue}>{attribute.name || '—'}</span>
-              </div>
-            </div>
-
-            <div className={styles.infoCard}>
-              <div className={`${styles.infoCardIcon} ${styles.infoCardIconInfo}`}>
-                <FiTag />
-              </div>
-              <div className={styles.infoCard__content}>
-                <span className={styles.infoCardLabel}>Значение</span>
-                <span className={styles.infoCardValue}>{attribute.value || '—'}</span>
-              </div>
-            </div>
-
-            <div className={styles.infoCard}>
-              <div className={`${styles.infoCardIcon} ${styles.infoCardIconSuccess}`}>
-                <FiTag />
-              </div>
-              <div className={styles.infoCard__content}>
-                <span className={styles.infoCardLabel}>Фильтруемый</span>
-                <span className={styles.infoCardValue}>{attribute.is_filterable ? 'Да' : 'Нет'}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <InfoBlock
+          title="Информация"
+          headerIcon={<FiTag />}
+          items={[
+            {
+              label: 'ID атрибута',
+              value: attribute.id,
+              iconVariant: 'primary',
+            },
+            {
+              label: 'Название',
+              value: attribute.name || '—',
+              iconVariant: 'secondary',
+            },
+            {
+              label: 'Значение',
+              value: attribute.value || '—',
+              iconVariant: 'info',
+            },
+            {
+              label: 'Фильтруемый',
+              value: attribute.is_filterable ? 'Да' : 'Нет',
+              iconVariant: 'success',
+            },
+          ]}
+          auditUrl={`/catalog/attributes/${attributeId}/audit`}
+          onAuditClick={handleViewAudit}
+        />
       </div>
 
       {isDeleteModalOpen && (

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { FiEdit, FiClock, FiArrowLeft, FiTag, FiFileText, FiBox, FiImage } from 'react-icons/fi';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
 import { Button } from '../../../shared/ui/Button/Button';
+import { InfoBlock } from '../../../shared/ui/InfoBlock/InfoBlock';
 import { getApiErrorMessage } from '../../../shared/api/apiError';
 import { getCategoryByIdRequest } from '../api/categoryApi';
 import styles from './CategoryDetailPage.module.css';
@@ -88,65 +89,35 @@ export function CategoryDetailPage() {
       </header>
 
       <div className={styles.categoryDetailPageContent}>
-        <div className={styles.categoryDetailPagePanel}>
-          <div className={styles.panelHeader}>
-            <div className={styles.panelHeaderContent}>
-              <h2 className={styles.panelTitle}>Информация</h2>
-              <Button
-                variant="secondary"
-                size="sm"
-                leftIcon={<FiClock />}
-                onClick={handleViewAudit}
-              >
-                История
-              </Button>
-            </div>
-          </div>
-
-          <div className={styles.categoryInfoGrid}>
-            <div className={styles.infoCard}>
-              <div className={`${styles.infoCardIcon} ${styles.infoCardIconPrimary}`}>
-                <FiTag />
-              </div>
-              <div className={styles.infoCardContent}>
-                <span className={styles.infoCardLabel}>Название</span>
-                <span className={styles.infoCardValue}>{category.name || '—'}</span>
-              </div>
-            </div>
-
-            <div className={styles.infoCard}>
-              <div className={`${styles.infoCardIcon} ${styles.infoCardIconSecondary}`}>
-                <FiBox />
-              </div>
-              <div className={styles.infoCardContent}>
-                <span className={styles.infoCardLabel}>Родительская категория</span>
-                <span className={styles.infoCardValue}>{category.parent?.name || '—'}</span>
-              </div>
-            </div>
-
-            <div className={styles.infoCard}>
-              <div className={`${styles.infoCardIcon} ${styles.infoCardIconAccent}`}>
-                <FiImage />
-              </div>
-              <div className={styles.infoCardContent}>
-                <span className={styles.infoCardLabel}>Производитель</span>
-                <span className={styles.infoCardValue}>{category.manufacturer?.name || '—'}</span>
-              </div>
-            </div>
-
-            {category.description && (
-              <div className={`${styles.infoCard} ${styles.infoCardFull}`}>
-                <div className={`${styles.infoCardIcon} ${styles.infoCardIconInfo}`}>
-                  <FiFileText />
-                </div>
-                <div className={styles.infoCardContent}>
-                  <span className={styles.infoCardLabel}>Описание</span>
-                  <span className={styles.infoCardValue}>{category.description}</span>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+        <InfoBlock
+          title="Информация"
+          headerIcon={<FiTag />}
+          items={[
+            {
+              label: 'Название',
+              value: category.name || '—',
+              iconVariant: 'primary',
+            },
+            {
+              label: 'Родительская категория',
+              value: category.parent?.name || '—',
+              iconVariant: 'secondary',
+            },
+            {
+              label: 'Производитель',
+              value: category.manufacturer?.name || '—',
+              iconVariant: 'accent',
+            },
+            {
+              label: 'Описание',
+              value: category.description,
+              iconVariant: 'info',
+              fullWidth: !!category.description,
+            },
+          ]}
+          auditUrl={`/categories/${categoryId}/audit`}
+          onAuditClick={handleViewAudit}
+        />
 
         {category.images && category.images.length > 0 && (
           <div className={styles.categoryDetailPagePanel}>
