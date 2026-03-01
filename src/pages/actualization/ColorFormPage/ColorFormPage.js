@@ -97,9 +97,6 @@ export function ColorFormPage() {
     if (!newAssign.key.trim()) {
       newErrors.key = 'Введите ключ назначения';
     }
-    if (!newAssign.color.trim()) {
-      newErrors.color = 'Введите цвет';
-    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(prev => ({ ...prev, ...newErrors }));
@@ -110,7 +107,7 @@ export function ColorFormPage() {
     try {
       const payload = {
         key: newAssign.key.trim(),
-        color: newAssign.color.trim(),
+        color: formData.name.trim(), // Всегда используем название текущего цвета
       };
 
       await createColorAssignRequest(payload);
@@ -272,22 +269,18 @@ export function ColorFormPage() {
                 <label className={styles.assignFormLabel}>Цвет (color)</label>
                 <input
                   type="text"
-                  value={newAssign.color}
-                  onChange={(e) => handleAssignChange('color', e.target.value)}
-                  placeholder="Введите цвет"
-                  className={errors.color ? 'input-error' : ''}
-                  disabled={isSubmittingAssign}
+                  value={formData.name}
+                  disabled
+                  className={styles.inlineInputDisabled}
                 />
-                {errors.color && (
-                  <span className={styles.colorFormError}>{errors.color}</span>
-                )}
+
               </div>
 
               <Button
                 variant="primary"
                 onClick={handleAddAssign}
                 loading={isSubmittingAssign}
-                disabled={!newAssign.key.trim() || !newAssign.color.trim()}
+                disabled={!newAssign.key.trim() || !formData.name.trim()}
                 className={styles.btnAddAssign}
               >
                 Добавить
