@@ -49,6 +49,7 @@ export function ProductTypesPage() {
     deleteFn: deleteProductTypeRequest,
     entityName: 'Тип продукта',
     defaultLimit: PAGE_LIMIT,
+    syncWithUrl: true,
   });
 
   const handleDeleteProductType = async () => {

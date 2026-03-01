@@ -77,6 +77,7 @@ export function ProductsPage() {
     deleteFn: deleteProductRequest,
     entityName: 'Товар',
     defaultLimit: PAGE_LIMIT,
+    syncWithUrl: true,
   });
 
   const loadFilterOptions = useCallback(async () => {

@@ -66,6 +66,7 @@ export function CategoriesPage() {
     deleteFn: deleteCategoryRequest,
     entityName: 'Категория',
     defaultLimit: PAGE_LIMIT,
+    syncWithUrl: true,
   });
 
   const handleDeleteCategory = async () => {

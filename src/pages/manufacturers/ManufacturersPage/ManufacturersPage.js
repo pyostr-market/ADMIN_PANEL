@@ -66,6 +66,7 @@ export function ManufacturersPage() {
     deleteFn: deleteManufacturerRequest,
     entityName: 'Производитель',
     defaultLimit: PAGE_LIMIT,
+    syncWithUrl: true,
   });
 
   const handleDeleteManufacturer = async () => {

@@ -116,6 +116,7 @@ export function UsersListPage() {
     deleteFn: deleteUserRequest,
     entityName: 'Пользователь',
     defaultLimit: PAGE_LIMIT,
+    syncWithUrl: true,
   });
 
   const handleFilterChange = (key, value) => {

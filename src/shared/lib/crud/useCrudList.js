@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { getApiErrorMessage } from '../../api/apiError';
 import { useNotifications } from '../notifications/NotificationProvider';
 import { PRODUCT_SERVICE_BASE_URL, USER_SERVICE_BASE_URL } from '../../config/env';
@@ -12,6 +13,15 @@ const NO_RETRY_STATUSES = [404, 405];
 
 /**
  * Хук для управления CRUD-списком
+ * @param {Object} options - Опции хука
+ * @param {Function} options.fetchFn - Функция для получения данных
+ * @param {Function} [options.createFn] - Функция для создания
+ * @param {Function} [options.updateFn] - Функция для обновления
+ * @param {Function} [options.deleteFn] - Функция для удаления
+ * @param {number} [options.defaultLimit=20] - Лимит элементов на странице
+ * @param {string} [options.entityName='Запись'] - Название сущности для уведомлений
+ * @param {Function} [options.normalizeFn=(data) => data] - Функция нормализации данных
+ * @param {boolean} [options.syncWithUrl=false] - Синхронизировать параметры с URL
  */
 export function useCrudList({
   fetchFn,
@@ -21,6 +31,7 @@ export function useCrudList({
   defaultLimit = 20,
   entityName = 'Запись',
   normalizeFn = (data) => data,
+  syncWithUrl = false,
 }) {
   const notifications = useNotifications();
   const notificationsRef = useRef(notifications);
@@ -29,8 +40,14 @@ export function useCrudList({
     notificationsRef.current = notifications;
   }, [notifications]);
 
+  // Инициализация параметров из URL при включенной синхронизации
+  const [searchParams] = useSearchParams();
+  const initialPage = syncWithUrl
+    ? parseInt(searchParams.get('page') || '1', 10)
+    : 1;
+
   const [items, setItems] = useState([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(initialPage);
   const [limit] = useState(defaultLimit);
   const [pagination, setPagination] = useState(EMPTY_PAGINATION);
   const [search, setSearch] = useState('');
@@ -76,6 +93,27 @@ export function useCrudList({
   useEffect(() => {
     normalizeFnRef.current = normalizeFn;
   }, [normalizeFn]);
+
+  // Синхронизация page с URL
+  useEffect(() => {
+    if (!syncWithUrl) return;
+
+    const currentParams = new URLSearchParams(window.location.search);
+    const currentPage = currentParams.get('page');
+
+    if (page !== 1) {
+      currentParams.set('page', String(page));
+    } else {
+      currentParams.delete('page');
+    }
+
+    const newSearch = currentParams.toString();
+    const newUrl = `${window.location.pathname}${newSearch ? `?${newSearch}` : ''}`;
+
+    if (window.location.search !== newSearch) {
+      window.history.replaceState({}, '', newUrl);
+    }
+  }, [page, syncWithUrl]);
 
   const getServiceName = useCallback(() => {
     try {

@@ -560,6 +560,7 @@ export function PermissionsGroupsPage() {
     entityName: 'Право',
     entityNamePlural: 'Права',
     defaultLimit: PAGE_LIMIT,
+    syncWithUrl: true,
   });
 
   const groupsCrud = useCrudList({
@@ -583,6 +584,7 @@ export function PermissionsGroupsPage() {
     entityName: 'Группа',
     entityNamePlural: 'Группы',
     defaultLimit: PAGE_LIMIT,
+    syncWithUrl: true,
   });
 
   const hasLoadedPermissionsForModalRef = useRef(false);

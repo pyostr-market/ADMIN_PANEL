@@ -39,6 +39,7 @@ export function AttributesPage() {
     deleteFn: deleteAttributeRequest,
     entityName: 'Атрибут',
     defaultLimit: PAGE_LIMIT,
+    syncWithUrl: true,
   });
 
   const handleDeleteAttribute = async () => {

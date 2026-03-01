@@ -65,6 +65,7 @@ export function CategoryPricingPoliciesPage() {
     deleteFn: deleteCategoryPricingPolicyRequest,
     entityName: 'Тариф',
     defaultLimit: PAGE_LIMIT,
+    syncWithUrl: true,
   });
 
   const handleDeletePolicy = async () => {

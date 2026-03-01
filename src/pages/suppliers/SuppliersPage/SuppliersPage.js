@@ -53,6 +53,7 @@ export function SuppliersPage() {
     deleteFn: deleteSupplierRequest,
     entityName: 'Поставщик',
     defaultLimit: PAGE_LIMIT,
+    syncWithUrl: true,
   });
 
   const handleDeleteSupplier = async () => {
