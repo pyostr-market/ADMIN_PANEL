@@ -1,0 +1,120 @@
+.colorDetailPage {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.colorDetailPageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.backButton {
+  color: var(--color-text-primary, #333);
+}
+
+.colorDetailPageActions {
+  display: flex;
+  gap: 12px;
+}
+
+.colorDetailPageContent {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.colorDetailPageLoading,
+.colorDetailPageEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 24px;
+}
+
+.colorDetailPageLoading p,
+.colorDetailPageEmpty p {
+  margin: 0;
+  color: var(--color-text-secondary, #666);
+}
+
+.colorDetailPageEmpty h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-text-primary, #333);
+}
+
+/* Panel Styles */
+.colorDetailPagePanel {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.panelHeader {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border, #e0e0e0);
+}
+
+.panelHeaderContent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.panelIcon {
+  font-size: 20px;
+  color: var(--color-primary, #667eea);
+}
+
+.panelTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary, #333);
+}
+
+.panelContent {
+  padding: 20px;
+}
+
+.emptyMessage {
+  margin: 0;
+  color: var(--color-text-secondary, #666);
+  font-size: 14px;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Table Styles */
+.colorAssignsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.colorAssignsTable th,
+.colorAssignsTable td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border, #e0e0e0);
+}
+
+.colorAssignsTable th {
+  font-weight: 600;
+  color: var(--color-text-primary, #333);
+  background-color: var(--color-bg-secondary, #f5f5f5);
+}
+
+.colorAssignsTable td {
+  color: var(--color-text-secondary, #666);
+}
+
+.colorAssignsTable tbody tr:hover {
+  background-color: var(--color-bg-hover, #f9f9f9);
+}

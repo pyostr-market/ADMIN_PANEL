@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { USER_SERVICE_BASE_URL, PRODUCT_SERVICE_BASE_URL, API_ENDPOINTS } from '../config/env';
+import { USER_SERVICE_BASE_URL, PRODUCT_SERVICE_BASE_URL, PRICING_ENGINE_BASE_URL, API_ENDPOINTS } from '../config/env';
 
 export const publicApi = axios.create({
   baseURL: USER_SERVICE_BASE_URL,
@@ -13,6 +13,11 @@ export const authorizedApi = axios.create({
 
 export const productApi = axios.create({
   baseURL: PRODUCT_SERVICE_BASE_URL,
+  timeout: 15000,
+});
+
+export const pricingApi = axios.create({
+  baseURL: PRICING_ENGINE_BASE_URL,
   timeout: 15000,
 });
 
@@ -32,6 +37,22 @@ productApi.interceptors.request.use(
   },
   (error) => {
     console.error('[productApi] Request error:', error);
+    return Promise.reject(error);
+  }
+);
+
+// Interceptor для pricingApi
+pricingApi.interceptors.request.use(
+  (config) => {
+    console.log('[pricingApi] Request:', {
+      url: config.baseURL + config.url,
+      method: config.method,
+      headers: config.headers,
+    });
+    return config;
+  },
+  (error) => {
+    console.error('[pricingApi] Request error:', error);
     return Promise.reject(error);
   }
 );
@@ -57,6 +78,7 @@ export function setupAuthorizedApiInterceptors({
   const publicRequestId = publicApi.interceptors.request.use(attachToken);
   const requestId = authorizedApi.interceptors.request.use(attachToken);
   const productRequestId = productApi.interceptors.request.use(attachToken);
+  const pricingRequestId = pricingApi.interceptors.request.use(attachToken);
 
   const responseId = authorizedApi.interceptors.response.use(
     (response) => response,
@@ -138,11 +160,52 @@ export function setupAuthorizedApiInterceptors({
     },
   );
 
+  const pricingResponseId = pricingApi.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      const { response, config } = error;
+
+      if (!response || !config || response.status !== 401) {
+        return Promise.reject(error);
+      }
+
+      if (config._retry) {
+        onUnauthorized();
+        return Promise.reject(error);
+      }
+
+      const refreshToken = getRefreshToken();
+
+      if (!refreshToken) {
+        onUnauthorized();
+        return Promise.reject(error);
+      }
+
+      try {
+        if (!refreshPromise) {
+          refreshPromise = refreshAccessToken(refreshToken).finally(() => {
+            refreshPromise = null;
+          });
+        }
+
+        await refreshPromise;
+
+        config._retry = true;
+        return pricingApi(config);
+      } catch (refreshError) {
+        onUnauthorized();
+        return Promise.reject(refreshError);
+      }
+    },
+  );
+
   return () => {
     publicApi.interceptors.request.eject(publicRequestId);
     authorizedApi.interceptors.request.eject(requestId);
     productApi.interceptors.request.eject(productRequestId);
+    pricingApi.interceptors.request.eject(pricingRequestId);
     authorizedApi.interceptors.response.eject(responseId);
     productApi.interceptors.response.eject(productResponseId);
+    pricingApi.interceptors.response.eject(pricingResponseId);
   };
 }

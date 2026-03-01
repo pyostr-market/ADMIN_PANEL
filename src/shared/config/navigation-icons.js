@@ -21,6 +21,7 @@ import {
   FiRepeat,
   FiCheckSquare,
   FiPercent,
+  FiDisc,
 } from 'react-icons/fi';
 
 export const Icons = {
@@ -41,6 +42,7 @@ export const Icons = {
   suppliers: FiTruck,
   'product-types': FiLayers,
   attributes: FiLayers,
+  colors: FiDisc,
   'warehouse-products': FiBox,
   movements: FiRepeat,
   inventory: FiCheckSquare,

@@ -2,6 +2,7 @@ export const USER_SERVICE_BASE_URL = 'https://market-user.open-gpt.ru';
 // export const USER_SERVICE_BASE_URL = 'http://0.0.0.0:8000';
 export const PRODUCT_SERVICE_BASE_URL = 'https://market-product.open-gpt.ru';
 // export const PRODUCT_SERVICE_BASE_URL = 'http://0.0.0.0:8000';
+export const PRICING_ENGINE_BASE_URL = 'https://pricing-engine.demo-market.ru';
 
 export const API_ENDPOINTS = {
   // User service - Auth

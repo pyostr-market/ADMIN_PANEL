@@ -1,0 +1,108 @@
+.colorFormField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.colorFormLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary, #333);
+}
+
+.colorFormError {
+  font-size: 13px;
+  color: var(--color-danger, #dc3545);
+  margin-top: 4px;
+}
+
+.colorFormHint {
+  font-size: 13px;
+  color: var(--color-text-secondary, #666);
+  margin-top: 4px;
+}
+
+/* Assign Form Styles */
+.assignForm {
+  margin-bottom: 24px;
+}
+
+.assignFormRow {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.assignFormField {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.assignFormLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary, #333);
+}
+
+.btnAddAssign {
+  min-width: 120px;
+}
+
+/* Assigns List Styles */
+.assignsList {
+  margin-top: 16px;
+}
+
+.assignsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.assignsTable th,
+.assignsTable td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border, #e0e0e0);
+}
+
+.assignsTable th {
+  font-weight: 600;
+  color: var(--color-text-primary, #333);
+  background-color: var(--color-bg-secondary, #f5f5f5);
+}
+
+.assignsTable td {
+  color: var(--color-text-secondary, #666);
+}
+
+.inlineInput {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: white;
+  transition: border-color 0.2s;
+}
+
+.inlineInput:hover {
+  border-color: var(--color-primary, #667eea);
+}
+
+.inlineInput:focus {
+  outline: none;
+  border-color: var(--color-primary, #667eea);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.btnDeleteAssign {
+  color: var(--color-danger, #dc3545);
+  padding: 6px;
+}
+
+.btnDeleteAssign:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+}

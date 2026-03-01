@@ -54,6 +54,12 @@ import { CategoryPricingPolicyDetailPage } from '../../pages/billing/CategoryPri
 import { CategoryPricingPolicyFormPage } from '../../pages/billing/CategoryPricingPolicyFormPage/CategoryPricingPolicyFormPage';
 import { CategoryPricingPolicyAuditPage } from '../../pages/billing/CategoryPricingPolicyAuditPage/CategoryPricingPolicyAuditPage';
 
+// Actualization
+import { ActualizationPage } from '../../pages/actualization/ActualizationPage/ActualizationPage';
+import { ColorsListPage } from '../../pages/actualization/ColorsListPage/ColorsListPage';
+import { ColorFormPage } from '../../pages/actualization/ColorFormPage/ColorFormPage';
+import { ColorDetailPage } from '../../pages/actualization/ColorDetailPage/ColorDetailPage';
+
 function ErrorPageByCode() {
   const { code } = useParams();
   return <ErrorPage code={code} />;
@@ -142,6 +148,13 @@ export function AppRouter() {
           <Route path="/crm/orders" element={<OrdersPage />} />
           <Route path="/crm/customers" element={<CustomersPage />} />
           <Route path="/crm/tickets" element={<TicketsPage />} />
+
+          {/* Actualization Routes */}
+          <Route path="/actualization" element={<ActualizationPage />} />
+          <Route path="/actualization/colors" element={<ColorsListPage />} />
+          <Route path="/actualization/colors/create" element={<ColorFormPage />} />
+          <Route path="/actualization/colors/:colorName/edit" element={<ColorFormPage />} />
+          <Route path="/actualization/colors/:colorName" element={<ColorDetailPage />} />
 
           {/* Warehouse Routes */}
           <Route path="/warehouse" element={<WarehousePage />} />

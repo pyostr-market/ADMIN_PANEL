@@ -1,0 +1,79 @@
+.colorsPageTitle {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--color-text-primary, #333);
+}
+
+.colorsPageControls {
+  display: flex;
+  gap: 12px;
+}
+
+.colorsPageItemContent {
+  flex: 1;
+  cursor: pointer;
+}
+
+.colorsPageItemMain {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.colorsPageAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.colorsPageItemInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.colorsPageItemHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.colorsPageItemTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary, #333);
+}
+
+.colorsPageItemActions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btnDelete {
+  color: var(--color-danger, #dc3545);
+}
+
+.btnDelete:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+.modalConfirmText {
+  margin: 0 0 12px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.modalConfirmNote {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-text-secondary, #666);
+}

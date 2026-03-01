@@ -32,6 +32,11 @@ export const NAVIGATION_CONFIG = {
         path: '/users/permissions-groups',
         icon: 'permissions',
       },
+      {
+        label: 'Актуализация',
+        path: '/actualization',
+        icon: 'colors',
+      },
     ],
   },
 
