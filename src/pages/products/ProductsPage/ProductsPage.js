@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiPackage, FiPlus, FiTrash2, FiEye, FiEdit2, FiTag } from 'react-icons/fi';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
@@ -64,13 +64,13 @@ export function ProductsPage() {
   const [isLoadingOptions, setIsLoadingOptions] = useState(false);
 
   const productsCrud = useCrudList({
-    fetchFn: async ({ page = 1, limit = PAGE_LIMIT, search } = {}) => {
+    fetchFn: async ({ page = 1, limit = PAGE_LIMIT, search, category_id, product_type_id } = {}) => {
       const data = await getProductsRequest({
         page,
         limit,
         name: search,
-        category_id: filters.category_id || null,
-        product_type_id: filters.product_type_id || null,
+        category_id: category_id || null,
+        product_type_id: product_type_id || null,
       });
       return data;
     },
@@ -79,6 +79,15 @@ export function ProductsPage() {
     defaultLimit: PAGE_LIMIT,
     syncWithUrl: true,
   });
+
+  // Ref для хранения актуального setFilters и setPage
+  const setFiltersRef = useRef(productsCrud.setFilters);
+  const setPageRef = useRef(productsCrud.setPage);
+
+  useEffect(() => {
+    setFiltersRef.current = productsCrud.setFilters;
+    setPageRef.current = productsCrud.setPage;
+  }, [productsCrud.setFilters, productsCrud.setPage]);
 
   const loadFilterOptions = useCallback(async () => {
     if ((categories.length > 0 && productTypes.length > 0) || isLoadingOptions) return;
@@ -129,25 +138,26 @@ export function ProductsPage() {
       apiFilters.product_type_id = newFilters.product_type_id;
     }
 
-    productsCrud.setFilters(apiFilters);
-    productsCrud.setPage(1);
+    setFiltersRef.current(apiFilters);
+    setPageRef.current(1);
 
     // Загружаем опции при первом изменении фильтра
-    if ((key === 'category_id' || key === 'product_type_id') && 
-        categories.length === 0 && 
+    if ((key === 'category_id' || key === 'product_type_id') &&
+        categories.length === 0 &&
         !isLoadingOptions) {
       loadFilterOptions();
     }
-  }, [filters, productsCrud, categories.length, isLoadingOptions, loadFilterOptions]);
+  }, [filters, categories.length, isLoadingOptions, loadFilterOptions]);
 
   const handleResetFilters = useCallback(() => {
     setFilters({ category_id: '', product_type_id: '' });
-    productsCrud.setFilters({});
-    productsCrud.setPage(1);
-  }, [productsCrud]);
+    setFiltersRef.current({});
+    setPageRef.current(1);
+  }, []);
 
   const hasActiveFilters = useMemo(() => {
-    return filters.category_id || filters.product_type_id;
+    return (filters.category_id && filters.category_id !== 'all') ||
+           (filters.product_type_id && filters.product_type_id !== 'all');
   }, [filters]);
 
   // Конфигурация фильтров для CrudListLayout

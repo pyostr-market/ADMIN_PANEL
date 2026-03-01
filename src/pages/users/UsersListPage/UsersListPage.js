@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiCheck, FiPlus, FiTrash2, FiUser, FiUserCheck, FiUserX, FiEye } from 'react-icons/fi';
 import { useCrudList } from '../../../shared/lib/crud';
@@ -119,6 +119,15 @@ export function UsersListPage() {
     syncWithUrl: true,
   });
 
+  // Ref для хранения актуального setFilters и setPage
+  const setFiltersRef = useRef(usersCrud.setFilters);
+  const setPageRef = useRef(usersCrud.setPage);
+
+  useEffect(() => {
+    setFiltersRef.current = usersCrud.setFilters;
+    setPageRef.current = usersCrud.setPage;
+  }, [usersCrud.setFilters, usersCrud.setPage]);
+
   const handleFilterChange = (key, value) => {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
@@ -136,9 +145,9 @@ export function UsersListPage() {
     }
 
     // Передаем только активные фильтры в useCrudList
-    usersCrud.setFilters(apiFilters);
-    usersCrud.setPage(1);
-    
+    setFiltersRef.current(apiFilters);
+    setPageRef.current(1);
+
     // Загружаем группы при первом изменении фильтра группы
     if (key === 'group' && groups.length === 0 && !isLoadingGroups) {
       loadGroups();
@@ -162,9 +171,9 @@ export function UsersListPage() {
 
   const handleResetFilters = useCallback(() => {
     setFilters({ is_active: 'all', is_verified: 'all', group: 'all' });
-    usersCrud.setFilters({});
-    usersCrud.setPage(1);
-  }, [usersCrud]);
+    setFiltersRef.current({});
+    setPageRef.current(1);
+  }, []);
 
   const handleBanUser = async () => {
     if (!userToBan) return;
