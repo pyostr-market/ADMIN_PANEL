@@ -7,12 +7,12 @@
 .colorFormLabel {
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-text-primary, #333);
+  color: var(--text, #333);
 }
 
 .colorFormError {
   font-size: 13px;
-  color: var(--color-danger, #dc3545);
+  color: var(--danger, #dc3545);
   margin-top: 4px;
 }
 
@@ -43,7 +43,7 @@
 .assignFormLabel {
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-text-primary, #333);
+  color: var(--text, #333);
 }
 
 .btnAddAssign {
@@ -70,8 +70,8 @@
 
 .assignsTable th {
   font-weight: 600;
-  color: var(--color-text-primary, #333);
-  background-color: var(--color-bg-secondary, #f5f5f5);
+  color: var(--text, #333);
+  background-color: var(--bg, #f5f5f5);
 }
 
 .assignsTable td {
@@ -84,7 +84,7 @@
   border: 1px solid var(--color-border, #e0e0e0);
   border-radius: 6px;
   font-size: 14px;
-  background-color: white;
+  background-color: var(--bg);
   transition: border-color 0.2s;
 }
 
@@ -104,13 +104,13 @@
   border: 1px solid var(--color-border, #e0e0e0);
   border-radius: 6px;
   font-size: 14px;
-  background-color: var(--color-bg-secondary, #f5f5f5);
+  background-color: var(--bg, #f5f5f5);
   color: var(--color-text-secondary, #666);
   cursor: not-allowed;
 }
 
 .btnDeleteAssign {
-  color: var(--color-danger, #dc3545);
+  color: var(--danger, #dc3545);
   padding: 6px;
 }
 

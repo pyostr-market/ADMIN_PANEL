@@ -23,6 +23,11 @@ export const NAVIGATION_CONFIG = {
         icon: 'tickets',
       },
       {
+        label: 'Актуализация',
+        path: '/actualization',
+        icon: 'colors',
+      },
+      {
         label: 'Пользователи',
         path: '/users',
         icon: 'users',
@@ -32,11 +37,7 @@ export const NAVIGATION_CONFIG = {
         path: '/users/permissions-groups',
         icon: 'permissions',
       },
-      {
-        label: 'Актуализация',
-        path: '/actualization',
-        icon: 'colors',
-      },
+
     ],
   },
 

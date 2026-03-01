@@ -6,13 +6,41 @@
 
 .actualizationTabs {
   display: flex;
-  gap: 8px;
-  border-bottom: 1px solid var(--color-border, #e0e0e0);
-  padding-bottom: 0;
+  gap: 4px;
+  background: var(--surface-subtle, #f5f5f5);
+  padding: 4px;
+  border-radius: 8px;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.actualizationTabs .tab {
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-secondary, #666);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.actualizationTabs .tab:hover {
+  background: var(--surface, #ffffff);
+  color: var(--color-text-primary, #333);
+}
+
+.actualizationTabs .tabActive {
+  background: var(--surface, #ffffff);
+  color: var(--color-text-primary, #333);
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .tabContent {
-  padding: 24px 0;
+  padding: 8px 0;
 }
 
 .emptyState {
@@ -35,4 +63,20 @@
 .emptyState p {
   margin: 0;
   font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .actualizationTabs {
+    width: 100%;
+    gap: 2px;
+    padding: 2px;
+    border-radius: 6px;
+  }
+
+  .actualizationTabs .tab {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 13px;
+    text-align: center;
+  }
 }

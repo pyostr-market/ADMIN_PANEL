@@ -320,13 +320,8 @@ export function ColorFormPage() {
                         <input
                           type="text"
                           defaultValue={assign.color}
-                          onBlur={(e) => {
-                            if (e.target.value !== assign.color) {
-                              handleUpdateAssign(assign.id, { color: e.target.value });
-                            }
-                          }}
-                          className={styles.inlineInput}
-                          disabled={isSubmittingAssign}
+                          disabled
+                          className={styles.inlineInputDisabled}
                         />
                       </td>
                       <td>
