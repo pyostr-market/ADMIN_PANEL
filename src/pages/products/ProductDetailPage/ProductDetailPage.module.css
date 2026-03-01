@@ -371,6 +371,11 @@
   font-size: 14px;
   color: var(--text);
   line-height: 1.6;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .productDescriptionText b,
@@ -380,12 +385,35 @@
 
 .productDescriptionText div {
   margin-bottom: var(--space-2);
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .productDescriptionText br {
   display: block;
   content: "";
   margin: var(--space-2) 0;
+}
+
+.productDescriptionText img {
+  max-width: 100%;
+  height: auto;
+}
+
+.productDescriptionText table {
+  max-width: 100%;
+  overflow-x: auto;
+  display: block;
+}
+
+.productDescriptionText pre,
+.productDescriptionText code {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 /* Responsive */
@@ -437,6 +465,18 @@
     white-space: nowrap;
   }
 
+  .panelHeader {
+    padding: var(--space-2) var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .panelTitle {
+    font-size: 15px;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
   .productDetailPageContent {
     gap: 12px;
     padding: 12px;
@@ -475,5 +515,47 @@
 
   .productDetailPageBottomGrid {
     grid-template-columns: 1fr !important;
+  }
+
+  .productDetailPagePanel {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .panelContent {
+    padding: var(--space-3);
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .productDescriptionText {
+    font-size: 14px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .productDescriptionText div {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .attributesGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+
+  .attributeCard {
+    padding: var(--space-3);
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .attributeCardValue {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
   }
 }
