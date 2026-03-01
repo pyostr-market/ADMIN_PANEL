@@ -150,11 +150,14 @@ export function AppRouter() {
           <Route path="/crm/tickets" element={<TicketsPage />} />
 
           {/* Actualization Routes */}
-          <Route path="/actualization" element={<ActualizationPage />} />
-          <Route path="/actualization/colors" element={<ColorsListPage />} />
-          <Route path="/actualization/colors/create" element={<ColorFormPage />} />
-          <Route path="/actualization/colors/:colorName/edit" element={<ColorFormPage />} />
-          <Route path="/actualization/colors/:colorName" element={<ColorDetailPage />} />
+          <Route path="/actualization" element={<ActualizationPage />}>
+            <Route index element={null} />
+            <Route path="colors" element={<ColorsListPage />} />
+            <Route path="colors/create" element={<ColorFormPage />} />
+            <Route path="colors/:colorName/edit" element={<ColorFormPage />} />
+            <Route path="colors/:colorName" element={<ColorDetailPage />} />
+            <Route path="logs" element={null} />
+          </Route>
 
           {/* Warehouse Routes */}
           <Route path="/warehouse" element={<WarehousePage />} />
