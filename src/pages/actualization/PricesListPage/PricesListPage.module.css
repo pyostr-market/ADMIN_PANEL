@@ -1,0 +1,103 @@
+.pricesPageTitle {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.pricesPageControls {
+  display: flex;
+  gap: 12px;
+}
+
+.pricesPageItemContent {
+  flex: 1;
+  cursor: pointer;
+}
+
+.pricesPageItemMain {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.pricesPageAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--color-primary-50, #eff6ff);
+  color: var(--color-primary-600, #2563eb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.pricesPageItemInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.pricesPageItemHeader {
+  margin-bottom: 8px;
+}
+
+.pricesPageItemTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-gray-900, #111827);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.pricesPageItemMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-gray-500, #6b7280);
+}
+
+.pricesPageMetaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pricesPageMetaLabel {
+  font-weight: 500;
+  color: var(--color-gray-600, #4b5563);
+}
+
+.pricesPageSeparator {
+  color: var(--color-gray-300, #d1d5db);
+}
+
+.pricesPageItemActions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btnDelete {
+  color: var(--color-gray-400, #9ca3af);
+  transition: color 0.2s;
+}
+
+.btnDelete:hover {
+  color: var(--color-danger-600, #dc2626);
+}
+
+.modalConfirmText {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--color-gray-700, #374151);
+  line-height: 1.5;
+}
+
+.modalConfirmNote {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-gray-500, #6b7280);
+}

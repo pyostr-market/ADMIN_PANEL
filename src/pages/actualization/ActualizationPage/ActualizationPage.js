@@ -1,10 +1,11 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { Tabs, Tab } from '../../../shared/ui/Tabs/Tabs';
 import styles from './ActualizationPage.module.css';
 
 const TABS = [
   { id: 'actualization', label: 'Актуализация', path: '/actualization' },
+  { id: 'prices', label: 'Прайсы', path: '/actualization/prices' },
   { id: 'colors', label: 'Цвета', path: '/actualization/colors' },
   { id: 'logs', label: 'Логи', path: '/actualization/logs' },
 ];
@@ -28,6 +29,22 @@ export function ActualizationPage() {
 
   const currentTab = activeTab();
 
+  // Перенаправляем на вкладку прайсов при открытии раздела актуализации
+  useEffect(() => {
+    if (location.pathname === '/actualization') {
+      navigate('/actualization/prices', { replace: true });
+      return;
+    }
+  }, [location.pathname, navigate]);
+
+  // Если мы на главной странице актуализации, не рендерим контент (ждём редиректа)
+  if (location.pathname === '/actualization') {
+    return null;
+  }
+
+  // Показываем заглушку только для вкладки логов
+  const showPlaceholder = currentTab === 'logs';
+
   return (
     <section className={styles.actualizationPage}>
       <Tabs className={styles.actualizationTabs}>
@@ -42,16 +59,7 @@ export function ActualizationPage() {
         ))}
       </Tabs>
 
-      {currentTab === 'actualization' && (
-        <div className={styles.tabContent}>
-          <div className={styles.emptyState}>
-            <h2>Актуализация</h2>
-            <p>Страница находится в разработке</p>
-          </div>
-        </div>
-      )}
-
-      {currentTab === 'logs' && (
+      {showPlaceholder && (
         <div className={styles.tabContent}>
           <div className={styles.emptyState}>
             <h2>Логи</h2>

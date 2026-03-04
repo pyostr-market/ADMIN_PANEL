@@ -1,0 +1,27 @@
+.priceFormField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.priceFormFieldFull {
+  grid-column: 1 / -1;
+}
+
+.priceFormLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-gray-700, #374151);
+}
+
+.priceFormError {
+  font-size: 12px;
+  color: var(--color-danger-600, #dc2626);
+  margin-top: 4px;
+}
+
+.priceFormHint {
+  font-size: 12px;
+  color: var(--color-gray-500, #6b7280);
+  margin-top: 4px;
+}
