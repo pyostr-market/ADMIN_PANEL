@@ -54,7 +54,16 @@ export function ColorsListPage() {
   const colorsCrud = useCrudList({
     fetchFn: async () => {
       const data = await getColorsRequest();
-      return { items: data, pagination: { page: 1, limit: 100, total: data.length, pages: 1 } };
+      // data уже является массивом items благодаря обновлению в API
+      return { 
+        items: data, 
+        pagination: { 
+          page: 1, 
+          limit: 100, 
+          total: data.length,
+          pages: Math.ceil(data.length / 100)
+        } 
+      };
     },
     deleteFn: async (name) => {
       await deleteColorRequest(name);

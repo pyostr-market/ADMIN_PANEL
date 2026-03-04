@@ -12,6 +12,10 @@ function unwrapResponse(response) {
 export async function getColorsRequest() {
   const response = await pricingApi.get('/color/');
   const data = unwrapResponse(response);
+  // Новый формат: { items: [...], total: N }
+  if (data && Array.isArray(data.items)) {
+    return data.items;
+  }
   return Array.isArray(data) ? data : [];
 }
 
@@ -67,6 +71,10 @@ export async function getColorAssignsRequest({ color } = {}) {
 
   const response = await pricingApi.get('/color-assign/', { params });
   const data = unwrapResponse(response);
+  // Новый формат: { items: [...], total: N }
+  if (data && Array.isArray(data.items)) {
+    return data.items;
+  }
   return Array.isArray(data) ? data : [];
 }
 
