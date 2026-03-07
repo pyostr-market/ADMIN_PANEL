@@ -1,60 +1,24 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { FiPackage, FiPlus, FiTrash2, FiEye, FiEdit2, FiTag } from 'react-icons/fi';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
 import { Button } from '../../../shared/ui/Button/Button';
 import { Pagination } from '../../../shared/ui/Pagination/Pagination';
 import { EntityList } from '../../../shared/ui/EntityList/EntityList';
-import { Modal } from '../../../shared/ui/Modal/Modal';
+import { EntityCard, EntityCardMetaItem } from '../../../shared/ui/EntityCard/EntityCard';
+import { DeleteConfirmModal } from '../../../shared/ui/DeleteConfirmModal/DeleteConfirmModal';
 import { CrudListLayout } from '../../../shared/ui/CrudListLayout/CrudListLayout';
-import { useCrudList } from '../../../shared/lib/crud';
+import { useCrudList, useEntityActions } from '../../../shared/lib/crud';
 import {
   getProductsRequest,
   deleteProductRequest,
   getCategoriesForAutocompleteRequest,
   getProductTypesForAutocompleteRequest,
-} from '../api/productsApi';
+} from '../../../shared/api/modules/productsApi';
 import styles from './ProductsPage.module.css';
-import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
 const PAGE_LIMIT = 20;
 
-function DeleteProductModal({ product, onClose, onSubmit, isSubmitting }) {
-  if (!product) return null;
-
-  return (
-    <Modal
-      isOpen
-      onClose={onClose}
-      title="Удаление товара"
-      size="sm"
-      footer={(
-        <>
-          <Button variant="secondary" onClick={onClose}>Отмена</Button>
-          <Button
-            variant="danger"
-            onClick={onSubmit}
-            loading={isSubmitting}
-          >
-            Удалить
-          </Button>
-        </>
-      )}
-    >
-      <p className={styles.modalConfirmText}>
-        Вы уверены, что хотите удалить товар{' '}
-        <strong>{product.name || `ID: ${product.id}`}</strong>?
-      </p>
-      <p className={styles.modalConfirmNote}>
-        Это действие нельзя отменить.
-      </p>
-    </Modal>
-  );
-}
-
 export function ProductsPage() {
-  const navigate = useNavigate();
-
   const [productToDelete, setProductToDelete] = useState(null);
   const [filters, setFilters] = useState({
     category_id: '',
@@ -79,6 +43,15 @@ export function ProductsPage() {
     entityName: 'Товар',
     defaultLimit: PAGE_LIMIT,
     syncWithUrl: true,
+  });
+
+  const actions = useEntityActions({
+    baseUrl: '/catalog/products',
+    onSuccess: (action) => {
+      if (action === 'delete') {
+        setProductToDelete(null);
+      }
+    },
   });
 
   // Ref для хранения актуального setFilters и setPage
@@ -108,23 +81,7 @@ export function ProductsPage() {
 
   const handleDeleteProduct = async () => {
     if (!productToDelete) return;
-
-    const result = await productsCrud.delete(productToDelete.id);
-    if (result) {
-      setProductToDelete(null);
-    }
-  };
-
-  const handleViewProduct = (product) => {
-    navigate(`/catalog/products/${product.id}`);
-  };
-
-  const handleEditProduct = (product) => {
-    navigate(`/catalog/products/${product.id}/edit`);
-  };
-
-  const handleCreateProduct = () => {
-    navigate('/catalog/products/create');
+    await actions.remove(productToDelete.id);
   };
 
   const handleFilterChange = useCallback((key, value) => {
@@ -201,7 +158,7 @@ export function ProductsPage() {
                 <Button
                   variant="primary"
                   leftIcon={<FiPlus />}
-                  onClick={handleCreateProduct}
+                  onClick={actions.create}
                 >
                   Создать товар
                 </Button>
@@ -238,104 +195,76 @@ export function ProductsPage() {
         <EntityList
           items={productsCrud.items}
           renderItem={(product) => (
-            <>
-              <div className={entityListStyles.entityItemContent} onClick={() => handleViewProduct(product)}>
-                <div className={entityListStyles.entityItemMain}>
-                  <div className={entityListStyles.entityItemImage}>
-                    {mainImage(product) ? (
-                      <img src={mainImage(product)} alt={product.name} className={entityListStyles.entityItemImg} />
-                    ) : (
-                      <div className={entityListStyles['entityItemAvatar--image']}>
-                        <FiPackage />
-                      </div>
-                    )}
-                  </div>
-                  <div className={entityListStyles.entityItemInfo}>
-                    <div className={entityListStyles.entityItemHeader}>
-                      <p className={entityListStyles.entityItemTitle}>
-                        {product.name || 'Без названия'}
-                      </p>
-                    </div>
-                    <div className={entityListStyles.entityItemMeta}>
-                      <span className={`${entityListStyles.entityItemMetaItem} ${entityListStyles.entityItemMetaPrice}`}>
-                        {product.price?.toLocaleString('ru-RU')} ₽
-                      </span>
-                      {product.category && (
-                        <>
-                          <span className={entityListStyles.entityItemSeparator}>•</span>
-                          <span className={entityListStyles.entityItemMetaItem}>
-                            <FiTag className={entityListStyles.entityItemMetaIcon} />
-                            Категория: {product.category.name}
-                          </span>
-                        </>
-                      )}
-                      {product.product_type && (
-                        <>
-                          <span className={entityListStyles.entityItemSeparator}>•</span>
-                          <span className={entityListStyles.entityItemMetaItem}>
-                            <FiPackage className={entityListStyles.entityItemMetaIcon} />
-                            Тип: {product.product_type.name}
-                          </span>
-                        </>
-                      )}
-                      {product.supplier && (
-                        <>
-                          <span className={entityListStyles.entityItemSeparator}>•</span>
-                          <span className={entityListStyles.entityItemMetaItem}>
-                            Поставщик: {product.supplier.name}
-                          </span>
-                        </>
-                      )}
-                    </div>
-                    {product.description && (
-                      <p className={entityListStyles.entityItemDescription}>
-                        {product.description.length > 150
-                          ? `${product.description.substring(0, 150)}...`
-                          : product.description}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className={entityListStyles.entityActions}>
-                <PermissionGate permission={['product:update']} fallback={null}>
+            <EntityCard
+              image={mainImage(product)}
+              icon={<FiPackage />}
+              title={product.name || 'Без названия'}
+              onClick={() => actions.view(product.id)}
+              meta={(
+                <>
+                  <EntityCardMetaItem className={styles.productPrice}>
+                    {product.price?.toLocaleString('ru-RU')} ₽
+                  </EntityCardMetaItem>
+                  {product.category && (
+                    <EntityCardMetaItem icon={<FiTag />}>
+                      Категория: {product.category.name}
+                    </EntityCardMetaItem>
+                  )}
+                  {product.product_type && (
+                    <EntityCardMetaItem icon={<FiPackage />}>
+                      Тип: {product.product_type.name}
+                    </EntityCardMetaItem>
+                  )}
+                  {product.supplier && (
+                    <EntityCardMetaItem>
+                      Поставщик: {product.supplier.name}
+                    </EntityCardMetaItem>
+                  )}
+                </>
+              )}
+              description={
+                product.description && product.description.length > 150
+                  ? `${product.description.substring(0, 150)}...`
+                  : product.description
+              }
+              actions={(
+                <>
+                  <PermissionGate permission={['product:update']} fallback={null}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<FiEdit2 />}
+                      onClick={() => actions.edit(product.id)}
+                      aria-label={`Редактировать товар ${product.name || product.id}`}
+                    >
+                      Редактировать
+                    </Button>
+                  </PermissionGate>
+
                   <Button
                     variant="secondary"
                     size="sm"
-                    leftIcon={<FiEdit2 />}
-                    onClick={() => handleEditProduct(product)}
-                    aria-label={`Редактировать товар ${product.name || product.id}`}
-                    className={entityListStyles.btnEdit}
+                    leftIcon={<FiEye />}
+                    onClick={() => actions.view(product.id)}
+                    aria-label={`Просмотреть товар ${product.name || product.id}`}
                   >
-                    Редактировать
+                    Просмотр
                   </Button>
-                </PermissionGate>
 
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<FiEye />}
-                  onClick={() => handleViewProduct(product)}
-                  aria-label={`Просмотреть товар ${product.name || product.id}`}
-                  className={entityListStyles.btnView}
-                >
-                  Просмотр
-                </Button>
-
-                <PermissionGate permission={['product:delete']} fallback={null}>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setProductToDelete(product)}
-                    disabled={productsCrud.isSubmitting}
-                    aria-label="Удалить товар"
-                    className={entityListStyles.btnDelete}
-                  >
-                    <FiTrash2 />
-                  </Button>
-                </PermissionGate>
-              </div>
-            </>
+                  <PermissionGate permission={['product:delete']} fallback={null}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setProductToDelete(product)}
+                      disabled={productsCrud.isSubmitting}
+                      aria-label="Удалить товар"
+                    >
+                      <FiTrash2 />
+                    </Button>
+                  </PermissionGate>
+                </>
+              )}
+            />
           )}
           emptyMessage={
             productsCrud.isLoading
@@ -349,11 +278,13 @@ export function ProductsPage() {
       </CrudListLayout>
 
       {productToDelete && (
-        <DeleteProductModal
-          product={productToDelete}
+        <DeleteConfirmModal
+          isOpen
           onClose={() => setProductToDelete(null)}
           onSubmit={handleDeleteProduct}
           isSubmitting={productsCrud.isSubmitting}
+          entityName="товар"
+          entityTitle={productToDelete.name || `ID: ${productToDelete.id}`}
         />
       )}
     </>

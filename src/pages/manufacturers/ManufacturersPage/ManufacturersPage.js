@@ -1,58 +1,22 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { FiBox, FiPlus, FiTrash2, FiEye, FiEdit2 } from 'react-icons/fi';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
 import { Button } from '../../../shared/ui/Button/Button';
 import { Pagination } from '../../../shared/ui/Pagination/Pagination';
 import { EntityList } from '../../../shared/ui/EntityList/EntityList';
-import { Modal } from '../../../shared/ui/Modal/Modal';
+import { EntityCard, EntityCardMetaItem } from '../../../shared/ui/EntityCard/EntityCard';
+import { DeleteConfirmModal } from '../../../shared/ui/DeleteConfirmModal/DeleteConfirmModal';
 import { CrudListLayout } from '../../../shared/ui/CrudListLayout/CrudListLayout';
-import { useCrudList } from '../../../shared/lib/crud';
+import { useCrudList, useEntityActions } from '../../../shared/lib/crud';
 import {
   getManufacturersRequest,
   deleteManufacturerRequest,
-} from '../api/manufacturersApi';
+} from '../../../shared/api/modules/manufacturersApi';
 import styles from './ManufacturersPage.module.css';
-import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
 const PAGE_LIMIT = 20;
 
-function DeleteManufacturerModal({ manufacturer, onClose, onSubmit, isSubmitting }) {
-  if (!manufacturer) return null;
-
-  return (
-    <Modal
-      isOpen
-      onClose={onClose}
-      title="Удаление производителя"
-      size="sm"
-      footer={(
-        <>
-          <Button variant="secondary" onClick={onClose}>Отмена</Button>
-          <Button
-            variant="danger"
-            onClick={onSubmit}
-            loading={isSubmitting}
-          >
-            Удалить
-          </Button>
-        </>
-      )}
-    >
-      <p className={styles.modalConfirmText}>
-        Вы уверены, что хотите удалить производителя{' '}
-        <strong>{manufacturer.name || `ID: ${manufacturer.id}`}</strong>?
-      </p>
-      <p className={styles.modalConfirmNote}>
-        Это действие нельзя отменить.
-      </p>
-    </Modal>
-  );
-}
-
 export function ManufacturersPage() {
-  const navigate = useNavigate();
-
   const [manufacturerToDelete, setManufacturerToDelete] = useState(null);
 
   const manufacturersCrud = useCrudList({
@@ -70,25 +34,18 @@ export function ManufacturersPage() {
     syncWithUrl: true,
   });
 
+  const actions = useEntityActions({
+    baseUrl: '/catalog/manufacturers',
+    onSuccess: (action) => {
+      if (action === 'delete') {
+        setManufacturerToDelete(null);
+      }
+    },
+  });
+
   const handleDeleteManufacturer = async () => {
     if (!manufacturerToDelete) return;
-
-    const result = await manufacturersCrud.delete(manufacturerToDelete.id);
-    if (result) {
-      setManufacturerToDelete(null);
-    }
-  };
-
-  const handleViewManufacturer = (manufacturer) => {
-    navigate(`/catalog/manufacturers/${manufacturer.id}`);
-  };
-
-  const handleEditManufacturer = (manufacturer) => {
-    navigate(`/catalog/manufacturers/${manufacturer.id}/edit`);
-  };
-
-  const handleCreateManufacturer = () => {
-    navigate('/catalog/manufacturers/create');
+    await actions.remove(manufacturerToDelete.id);
   };
 
   return (
@@ -102,7 +59,7 @@ export function ManufacturersPage() {
                 <Button
                   variant="primary"
                   leftIcon={<FiPlus />}
-                  onClick={handleCreateManufacturer}
+                  onClick={actions.create}
                 >
                   Создать производителя
                 </Button>
@@ -133,73 +90,61 @@ export function ManufacturersPage() {
         <EntityList
           items={manufacturersCrud.items}
           renderItem={(manufacturer) => (
-            <>
-              <div className={entityListStyles.entityItemContent} onClick={() => handleViewManufacturer(manufacturer)}>
-                <div className={entityListStyles.entityItemMain}>
-                  <div className={entityListStyles.entityItemAvatar}>
-                    <FiBox />
-                  </div>
-                  <div className={entityListStyles.entityItemInfo}>
-                    <div className={entityListStyles.entityItemHeader}>
-                      <p className={entityListStyles.entityItemTitle}>
-                        {manufacturer.name || 'Без названия'}
-                      </p>
-                    </div>
-                    <div className={entityListStyles.entityItemMeta}>
-                      <span className={entityListStyles.entityItemMetaItem}>
-                        <span className={entityListStyles.entityItemMetaLabel}>ID:</span> {manufacturer.id}
-                      </span>
-                      {manufacturer.description && (
-                        <>
-                          <span className={entityListStyles.entityItemSeparator}>•</span>
-                          <span className={entityListStyles.entityItemMetaItem}>
-                            {manufacturer.description}
-                          </span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className={entityListStyles.entityActions}>
-                <PermissionGate permission={['manufacturer:update']} fallback={null}>
+            <EntityCard
+              icon={<FiBox />}
+              avatarColor
+              title={manufacturer.name || 'Без названия'}
+              onClick={() => actions.view(manufacturer.id)}
+              meta={(
+                <>
+                  <EntityCardMetaItem>
+                    <span className={styles.metaLabel}>ID:</span> {manufacturer.id}
+                  </EntityCardMetaItem>
+                  {manufacturer.description && (
+                    <EntityCardMetaItem>
+                      {manufacturer.description}
+                    </EntityCardMetaItem>
+                  )}
+                </>
+              )}
+              actions={(
+                <>
+                  <PermissionGate permission={['manufacturer:update']} fallback={null}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<FiEdit2 />}
+                      onClick={() => actions.edit(manufacturer.id)}
+                      aria-label={`Редактировать производителя ${manufacturer.name || manufacturer.id}`}
+                    >
+                      Редактировать
+                    </Button>
+                  </PermissionGate>
+
                   <Button
                     variant="secondary"
                     size="sm"
-                    leftIcon={<FiEdit2 />}
-                    onClick={() => handleEditManufacturer(manufacturer)}
-                    aria-label={`Редактировать производителя ${manufacturer.name || manufacturer.id}`}
-                    className={entityListStyles.btnEdit}
+                    leftIcon={<FiEye />}
+                    onClick={() => actions.view(manufacturer.id)}
+                    aria-label={`Просмотреть производителя ${manufacturer.name || manufacturer.id}`}
                   >
-                    Редактировать
+                    Просмотр
                   </Button>
-                </PermissionGate>
 
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<FiEye />}
-                  onClick={() => handleViewManufacturer(manufacturer)}
-                  aria-label={`Просмотреть производителя ${manufacturer.name || manufacturer.id}`}
-                  className={entityListStyles.btnView}
-                >
-                  Просмотр
-                </Button>
-
-                <PermissionGate permission={['manufacturer:delete']} fallback={null}>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setManufacturerToDelete(manufacturer)}
-                    disabled={manufacturersCrud.isSubmitting}
-                    aria-label="Удалить производителя"
-                    className={entityListStyles.btnDelete}
-                  >
-                    <FiTrash2 />
-                  </Button>
-                </PermissionGate>
-              </div>
-            </>
+                  <PermissionGate permission={['manufacturer:delete']} fallback={null}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setManufacturerToDelete(manufacturer)}
+                      disabled={manufacturersCrud.isSubmitting}
+                      aria-label="Удалить производителя"
+                    >
+                      <FiTrash2 />
+                    </Button>
+                  </PermissionGate>
+                </>
+              )}
+            />
           )}
           emptyMessage={
             manufacturersCrud.isLoading
@@ -213,11 +158,13 @@ export function ManufacturersPage() {
       </CrudListLayout>
 
       {manufacturerToDelete && (
-        <DeleteManufacturerModal
-          manufacturer={manufacturerToDelete}
+        <DeleteConfirmModal
+          isOpen
           onClose={() => setManufacturerToDelete(null)}
           onSubmit={handleDeleteManufacturer}
           isSubmitting={manufacturersCrud.isSubmitting}
+          entityName="производителя"
+          entityTitle={manufacturerToDelete.name || `ID: ${manufacturerToDelete.id}`}
         />
       )}
     </>

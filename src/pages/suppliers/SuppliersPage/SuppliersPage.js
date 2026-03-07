@@ -1,49 +1,22 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { FiBox, FiPlus, FiTrash2, FiEye, FiEdit2, FiMail, FiPhone } from 'react-icons/fi';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
 import { Button } from '../../../shared/ui/Button/Button';
 import { Pagination } from '../../../shared/ui/Pagination/Pagination';
 import { EntityList } from '../../../shared/ui/EntityList/EntityList';
-import { Modal } from '../../../shared/ui/Modal/Modal';
+import { EntityCard, EntityCardMetaItem } from '../../../shared/ui/EntityCard/EntityCard';
+import { DeleteConfirmModal } from '../../../shared/ui/DeleteConfirmModal/DeleteConfirmModal';
 import { CrudListLayout } from '../../../shared/ui/CrudListLayout/CrudListLayout';
-import { useCrudList } from '../../../shared/lib/crud';
+import { useCrudList, useEntityActions } from '../../../shared/lib/crud';
 import {
   getSuppliersRequest,
   deleteSupplierRequest,
-} from '../api/suppliersApi';
+} from '../../../shared/api/modules/suppliersApi';
 import styles from './SuppliersPage.module.css';
-import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
 const PAGE_LIMIT = 20;
 
-function DeleteSupplierModal({ supplier, onClose, onSubmit, isSubmitting }) {
-  if (!supplier) return null;
-
-  return (
-    <Modal
-      isOpen
-      onClose={onClose}
-      title="Удаление поставщика"
-      size="sm"
-      footer={(
-        <>
-          <Button variant="secondary" onClick={onClose}>Отмена</Button>
-          <Button variant="danger" onClick={onSubmit} loading={isSubmitting}>Удалить</Button>
-        </>
-      )}
-    >
-      <p className={styles.modalConfirmText}>
-        Вы уверены, что хотите удалить поставщика{' '}
-        <strong>{supplier.name || `ID: ${supplier.id}`}</strong>?
-      </p>
-      <p className={styles.modalConfirmNote}>Это действие нельзя отменить.</p>
-    </Modal>
-  );
-}
-
 export function SuppliersPage() {
-  const navigate = useNavigate();
   const [supplierToDelete, setSupplierToDelete] = useState(null);
 
   const suppliersCrud = useCrudList({
@@ -57,15 +30,19 @@ export function SuppliersPage() {
     syncWithUrl: true,
   });
 
+  const actions = useEntityActions({
+    baseUrl: '/suppliers',
+    onSuccess: (action) => {
+      if (action === 'delete') {
+        setSupplierToDelete(null);
+      }
+    },
+  });
+
   const handleDeleteSupplier = async () => {
     if (!supplierToDelete) return;
-    const result = await suppliersCrud.delete(supplierToDelete.id);
-    if (result) setSupplierToDelete(null);
+    await actions.remove(supplierToDelete.id);
   };
-
-  const handleViewSupplier = (supplier) => navigate(`/suppliers/${supplier.id}`);
-  const handleEditSupplier = (supplier) => navigate(`/suppliers/${supplier.id}/edit`);
-  const handleCreateSupplier = () => navigate('/suppliers/create');
 
   return (
     <>
@@ -75,7 +52,11 @@ export function SuppliersPage() {
             <h1 className={styles.suppliersPageTitle}>Поставщики</h1>
             <div className={styles.suppliersPageControls}>
               <PermissionGate permission={['supplier:create']} fallback={null}>
-                <Button variant="primary" leftIcon={<FiPlus />} onClick={handleCreateSupplier}>
+                <Button
+                  variant="primary"
+                  leftIcon={<FiPlus />}
+                  onClick={actions.create}
+                >
                   Создать поставщика
                 </Button>
               </PermissionGate>
@@ -103,72 +84,91 @@ export function SuppliersPage() {
         <EntityList
           items={suppliersCrud.items}
           renderItem={(supplier) => (
-            <>
-              <div className={entityListStyles.entityItemContent} onClick={() => handleViewSupplier(supplier)}>
-                <div className={entityListStyles.entityItemMain}>
-                  <div className={entityListStyles.entityItemAvatar}><FiBox /></div>
-                  <div className={entityListStyles.entityItemInfo}>
-                    <div className={entityListStyles.entityItemHeader}>
-                      <p className={entityListStyles.entityItemTitle}>{supplier.name || 'Без названия'}</p>
-                    </div>
-                    <div className={entityListStyles.entityItemMeta}>
-                      <span className={entityListStyles.entityItemMetaItem}>
-                        <span className={entityListStyles.entityItemMetaLabel}>ID:</span> {supplier.id}
-                      </span>
-                      {supplier.description && (
-                        <>
-                          <span className={entityListStyles.entityItemSeparator}>•</span>
-                          <span className={entityListStyles.entityItemMetaItem}>{supplier.description}</span>
-                        </>
-                      )}
-                      {supplier.contact_email && (
-                        <>
-                          <span className={entityListStyles.entityItemSeparator}>•</span>
-                          <span className={entityListStyles.entityItemMetaItem}>
-                            <FiMail className={entityListStyles.entityItemMetaIcon} /> {supplier.contact_email}
-                          </span>
-                        </>
-                      )}
-                      {supplier.contact_phone && (
-                        <>
-                          <span className={entityListStyles.entityItemSeparator}>•</span>
-                          <span className={entityListStyles.entityItemMetaItem}>
-                            <FiPhone className={entityListStyles.entityItemMetaIcon} /> {supplier.contact_phone}
-                          </span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className={entityListStyles.entityActions}>
-                <PermissionGate permission={['supplier:update']} fallback={null}>
-                  <Button variant="secondary" size="sm" leftIcon={<FiEdit2 />} onClick={() => handleEditSupplier(supplier)} className={entityListStyles.btnEdit}>
-                    Редактировать
+            <EntityCard
+              icon={<FiBox />}
+              avatarColor
+              title={supplier.name || 'Без названия'}
+              onClick={() => actions.view(supplier.id)}
+              meta={(
+                <>
+                  <EntityCardMetaItem>
+                    <span className={styles.metaLabel}>ID:</span> {supplier.id}
+                  </EntityCardMetaItem>
+                  {supplier.description && (
+                    <EntityCardMetaItem>
+                      {supplier.description}
+                    </EntityCardMetaItem>
+                  )}
+                  {supplier.contact_email && (
+                    <EntityCardMetaItem icon={<FiMail />}>
+                      {supplier.contact_email}
+                    </EntityCardMetaItem>
+                  )}
+                  {supplier.contact_phone && (
+                    <EntityCardMetaItem icon={<FiPhone />}>
+                      {supplier.contact_phone}
+                    </EntityCardMetaItem>
+                  )}
+                </>
+              )}
+              actions={(
+                <>
+                  <PermissionGate permission={['supplier:update']} fallback={null}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<FiEdit2 />}
+                      onClick={() => actions.edit(supplier.id)}
+                      aria-label={`Редактировать поставщика ${supplier.name || supplier.id}`}
+                    >
+                      Редактировать
+                    </Button>
+                  </PermissionGate>
+
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<FiEye />}
+                    onClick={() => actions.view(supplier.id)}
+                    aria-label={`Просмотреть поставщика ${supplier.name || supplier.id}`}
+                  >
+                    Просмотр
                   </Button>
-                </PermissionGate>
-                <Button variant="secondary" size="sm" leftIcon={<FiEye />} onClick={() => handleViewSupplier(supplier)} className={entityListStyles.btnView}>
-                  Просмотр
-                </Button>
-                <PermissionGate permission={['supplier:delete']} fallback={null}>
-                  <Button variant="ghost" size="icon" onClick={() => setSupplierToDelete(supplier)} disabled={suppliersCrud.isSubmitting} className={entityListStyles.btnDelete}>
-                    <FiTrash2 />
-                  </Button>
-                </PermissionGate>
-              </div>
-            </>
+
+                  <PermissionGate permission={['supplier:delete']} fallback={null}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setSupplierToDelete(supplier)}
+                      disabled={suppliersCrud.isSubmitting}
+                      aria-label="Удалить поставщика"
+                    >
+                      <FiTrash2 />
+                    </Button>
+                  </PermissionGate>
+                </>
+              )}
+            />
           )}
-          emptyMessage={suppliersCrud.isLoading ? 'Загрузка поставщиков...' : suppliersCrud.search ? 'По вашему запросу ничего не найдено.' : 'Поставщики не найдены.'}
+          emptyMessage={
+            suppliersCrud.isLoading
+              ? 'Загрузка поставщиков...'
+              : suppliersCrud.search
+                ? 'По вашему запросу ничего не найдено.'
+                : 'Поставщики не найдены.'
+          }
           loading={suppliersCrud.isLoading}
         />
       </CrudListLayout>
 
       {supplierToDelete && (
-        <DeleteSupplierModal
-          supplier={supplierToDelete}
+        <DeleteConfirmModal
+          isOpen
           onClose={() => setSupplierToDelete(null)}
           onSubmit={handleDeleteSupplier}
           isSubmitting={suppliersCrud.isSubmitting}
+          entityName="поставщика"
+          entityTitle={supplierToDelete.name || `ID: ${supplierToDelete.id}`}
         />
       )}
     </>

@@ -1,58 +1,22 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { FiTag, FiPlus, FiTrash2, FiEye, FiEdit2 } from 'react-icons/fi';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
 import { Button } from '../../../shared/ui/Button/Button';
 import { Pagination } from '../../../shared/ui/Pagination/Pagination';
 import { EntityList } from '../../../shared/ui/EntityList/EntityList';
-import { Modal } from '../../../shared/ui/Modal/Modal';
+import { EntityCard, EntityCardMetaItem } from '../../../shared/ui/EntityCard/EntityCard';
+import { DeleteConfirmModal } from '../../../shared/ui/DeleteConfirmModal/DeleteConfirmModal';
 import { CrudListLayout } from '../../../shared/ui/CrudListLayout/CrudListLayout';
-import { useCrudList } from '../../../shared/lib/crud';
+import { useCrudList, useEntityActions } from '../../../shared/lib/crud';
 import {
   getCategoriesRequest,
   deleteCategoryRequest,
-} from '../api/categoryApi';
+} from '../../../shared/api/modules/categoriesApi';
 import styles from './CategoriesPage.module.css';
-import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
 const PAGE_LIMIT = 20;
 
-function DeleteCategoryModal({ category, onClose, onSubmit, isSubmitting }) {
-  if (!category) return null;
-
-  return (
-    <Modal
-      isOpen
-      onClose={onClose}
-      title="Удаление категории"
-      size="sm"
-      footer={(
-        <>
-          <Button variant="secondary" onClick={onClose}>Отмена</Button>
-          <Button
-            variant="danger"
-            onClick={onSubmit}
-            loading={isSubmitting}
-          >
-            Удалить
-          </Button>
-        </>
-      )}
-    >
-      <p className={styles.modalConfirmText}>
-        Вы уверены, что хотите удалить категорию{' '}
-        <strong>{category.name || `ID: ${category.id}`}</strong>?
-      </p>
-      <p className={styles.modalConfirmNote}>
-        Это действие нельзя отменить.
-      </p>
-    </Modal>
-  );
-}
-
 export function CategoriesPage() {
-  const navigate = useNavigate();
-
   const [categoryToDelete, setCategoryToDelete] = useState(null);
 
   const categoriesCrud = useCrudList({
@@ -70,25 +34,18 @@ export function CategoriesPage() {
     syncWithUrl: true,
   });
 
+  const actions = useEntityActions({
+    baseUrl: '/categories',
+    onSuccess: (action) => {
+      if (action === 'delete') {
+        setCategoryToDelete(null);
+      }
+    },
+  });
+
   const handleDeleteCategory = async () => {
     if (!categoryToDelete) return;
-
-    const result = await categoriesCrud.delete(categoryToDelete.id);
-    if (result) {
-      setCategoryToDelete(null);
-    }
-  };
-
-  const handleViewCategory = (category) => {
-    navigate(`/categories/${category.id}`);
-  };
-
-  const handleEditCategory = (category) => {
-    navigate(`/categories/${category.id}/edit`);
-  };
-
-  const handleCreateCategory = () => {
-    navigate('/categories/create');
+    await actions.remove(categoryToDelete.id);
   };
 
   return (
@@ -102,7 +59,7 @@ export function CategoriesPage() {
                 <Button
                   variant="primary"
                   leftIcon={<FiPlus />}
-                  onClick={handleCreateCategory}
+                  onClick={actions.create}
                 >
                   Создать категорию
                 </Button>
@@ -133,97 +90,76 @@ export function CategoriesPage() {
         <EntityList
           items={categoriesCrud.items}
           renderItem={(category) => (
-            <>
-              <div className={entityListStyles.entityItemContent} onClick={() => handleViewCategory(category)}>
-                <div className={entityListStyles.entityItemMain}>
-                  <div className={entityListStyles.entityItemAvatar}>
-                    <FiTag />
-                  </div>
-                  <div className={entityListStyles.entityItemInfo}>
-                    <div className={entityListStyles.entityItemHeader}>
-                      <p className={entityListStyles.entityItemTitle}>
-                        {category.name || 'Без названия'}
-                      </p>
-                    </div>
-                    <div className={entityListStyles.entityItemMeta}>
-                      <span className={entityListStyles.entityItemMetaItem}>
-                        <span className={entityListStyles.entityItemMetaLabel}>ID:</span> {category.id}
-                      </span>
-                      {category.parent_id && (
-                        <>
-                          <span className={entityListStyles.entityItemSeparator}>•</span>
-                          <span className={entityListStyles.entityItemMetaItem}>
-                            Родитель: ID {category.parent_id}
-                          </span>
-                        </>
-                      )}
-                      {category.manufacturer_id && (
-                        <>
-                          <span className={entityListStyles.entityItemSeparator}>•</span>
-                          <span className={entityListStyles.entityItemMetaItem}>
-                            Производитель: ID {category.manufacturer_id}
-                          </span>
-                        </>
-                      )}
-                      {category.description && (
-                        <>
-                          <span className={entityListStyles.entityItemSeparator}>•</span>
-                          <span className={entityListStyles.entityItemMetaItem}>
-                            {category.description}
-                          </span>
-                        </>
-                      )}
-                      {category.images && category.images.length > 0 && (
-                        <>
-                          <span className={entityListStyles.entityItemSeparator}>•</span>
-                          <span className={entityListStyles.entityItemMetaItem}>
-                            Изображений: {category.images.length}
-                          </span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className={entityListStyles.entityActions}>
-                <PermissionGate permission={['category:update']} fallback={null}>
+            <EntityCard
+              icon={<FiTag />}
+              avatarColor
+              title={category.name || 'Без названия'}
+              onClick={() => actions.view(category.id)}
+              meta={(
+                <>
+                  <EntityCardMetaItem>
+                    <span className={styles.metaLabel}>ID:</span> {category.id}
+                  </EntityCardMetaItem>
+                  {category.parent_id && (
+                    <EntityCardMetaItem>
+                      Родитель: ID {category.parent_id}
+                    </EntityCardMetaItem>
+                  )}
+                  {category.manufacturer_id && (
+                    <EntityCardMetaItem>
+                      Производитель: ID {category.manufacturer_id}
+                    </EntityCardMetaItem>
+                  )}
+                  {category.description && (
+                    <EntityCardMetaItem>
+                      {category.description}
+                    </EntityCardMetaItem>
+                  )}
+                  {category.images && category.images.length > 0 && (
+                    <EntityCardMetaItem>
+                      Изображений: {category.images.length}
+                    </EntityCardMetaItem>
+                  )}
+                </>
+              )}
+              actions={(
+                <>
+                  <PermissionGate permission={['category:update']} fallback={null}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<FiEdit2 />}
+                      onClick={() => actions.edit(category.id)}
+                      aria-label={`Редактировать категорию ${category.name || category.id}`}
+                    >
+                      Редактировать
+                    </Button>
+                  </PermissionGate>
+
                   <Button
                     variant="secondary"
                     size="sm"
-                    leftIcon={<FiEdit2 />}
-                    onClick={() => handleEditCategory(category)}
-                    aria-label={`Редактировать категорию ${category.name || category.id}`}
-                    className={entityListStyles.btnEdit}
+                    leftIcon={<FiEye />}
+                    onClick={() => actions.view(category.id)}
+                    aria-label={`Просмотреть категорию ${category.name || category.id}`}
                   >
-                    Редактировать
+                    Просмотр
                   </Button>
-                </PermissionGate>
 
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<FiEye />}
-                  onClick={() => handleViewCategory(category)}
-                  aria-label={`Просмотреть категорию ${category.name || category.id}`}
-                  className={entityListStyles.btnView}
-                >
-                  Просмотр
-                </Button>
-
-                <PermissionGate permission={['category:delete']} fallback={null}>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setCategoryToDelete(category)}
-                    disabled={categoriesCrud.isSubmitting}
-                    aria-label="Удалить категорию"
-                    className={entityListStyles.btnDelete}
-                  >
-                    <FiTrash2 />
-                  </Button>
-                </PermissionGate>
-              </div>
-            </>
+                  <PermissionGate permission={['category:delete']} fallback={null}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setCategoryToDelete(category)}
+                      disabled={categoriesCrud.isSubmitting}
+                      aria-label="Удалить категорию"
+                    >
+                      <FiTrash2 />
+                    </Button>
+                  </PermissionGate>
+                </>
+              )}
+            />
           )}
           emptyMessage={
             categoriesCrud.isLoading
@@ -237,11 +173,13 @@ export function CategoriesPage() {
       </CrudListLayout>
 
       {categoryToDelete && (
-        <DeleteCategoryModal
-          category={categoryToDelete}
+        <DeleteConfirmModal
+          isOpen
           onClose={() => setCategoryToDelete(null)}
           onSubmit={handleDeleteCategory}
           isSubmitting={categoriesCrud.isSubmitting}
+          entityName="категорию"
+          entityTitle={categoryToDelete.name || `ID: ${categoryToDelete.id}`}
         />
       )}
     </>
