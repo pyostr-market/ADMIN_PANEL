@@ -218,6 +218,31 @@
 }
 
 /* ============================================
+   Планшетные стили (768px - 1024px)
+   ============================================ */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .entityCard {
+    flex-wrap: wrap;
+  }
+
+  .entityCardContent {
+    flex: 1 1 calc(100% - 200px);
+    min-width: 0;
+  }
+
+  .entityCardActions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding-left: var(--space-2);
+  }
+
+  .entityCardActions button {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}
+
+/* ============================================
    Мобильные стили
    ============================================ */
 @media (max-width: 768px) {

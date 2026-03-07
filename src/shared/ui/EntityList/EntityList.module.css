@@ -73,6 +73,31 @@
 }
 
 /* ============================================
+   Планшетные стили (768px - 1024px)
+   ============================================ */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .entityListItem {
+    flex-wrap: wrap;
+  }
+
+  .entityItemContent {
+    flex: 1 1 calc(100% - 200px);
+    min-width: 0;
+  }
+
+  .entityActions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding-left: var(--space-2);
+  }
+
+  .entityActions button {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}
+
+/* ============================================
    Action Buttons - стили для кнопок действий
    ============================================ */
 .entityActions .btnEdit,
