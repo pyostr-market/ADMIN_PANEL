@@ -211,15 +211,6 @@
   animation: uploadingPulse 1.5s ease-in-out infinite;
 }
 
-@keyframes uploadingPulse {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 0 10px rgba(33, 150, 243, 0);
-  }
-}
-
 .imageCarouselUploadOverlay {
   position: absolute;
   top: 0;
@@ -245,15 +236,6 @@
 .imageCarouselSpinnerIcon {
   font-size: 48px;
   animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .imageCarouselUploadProgress {

@@ -29,7 +29,7 @@ import {
   updateGroupRequest,
   deleteGroupRequest,
 } from '../api/permissionsGroupsApi';
-import './PermissionsGroupsPage.css';
+import styles from './PermissionsGroupsPage.module.css';
 
 const TABS = {
   permissions: 'permissions',

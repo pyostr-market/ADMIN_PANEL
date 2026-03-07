@@ -5,7 +5,7 @@ import { useSession } from '../../entities/session/model/SessionProvider';
 import { NAVIGATION_CONFIG } from '../../shared/config/navigation';
 import { Icons } from '../../shared/config/navigation-icons';
 import { hasPermission } from '../../shared/lib/permissions/permissions';
-import './AppSidebar.css';
+import styles from './AppSidebar.module.css';
 
 const SIDEBAR_COLLAPSED_STORAGE_KEY = 'market-admin:sidebar-collapsed';
 const THEME_STORAGE_KEY = 'market-admin:theme';
@@ -37,9 +37,9 @@ function SidebarItemLink({ to, label, Icon, collapsed }) {
     <NavLink
       to={to}
       title={collapsed ? label : undefined}
-      className={({ isActive }) => `sidebar-link${isActive ? ' sidebar-link--active' : ''}`}
+      className={({ isActive }) => `${styles.sidebarLink}${isActive ? ` ${styles.sidebarLinkActive}` : ''}`}
     >
-      <span className="sidebar-link__icon" aria-hidden="true">
+      <span className={styles.sidebarLinkIcon} aria-hidden="true">
         <Icon />
       </span>
       {!collapsed && <span>{label}</span>}
@@ -122,14 +122,14 @@ export function AppSidebar({ collapsed, onCollapse }) {
 
   return (
     <aside
-      className={`sidebar-panel${collapsed ? ' sidebar-panel--collapsed' : ''}`}
+      className={`${styles.sidebarPanel}${collapsed ? ` ${styles.sidebarPanelCollapsed}` : ''}`}
       aria-label="Навигация по разделам"
     >
-      <div className="sidebar-panel__header">
+      <div className={styles.sidebarPanelHeader}>
         {!collapsed && <h2>Разделы</h2>}
         <button
           type="button"
-          className="sidebar-panel__collapse-btn"
+          className={styles.sidebarPanelCollapseBtn}
           aria-label={collapsed ? 'Развернуть сайдбар' : 'Свернуть сайдбар'}
           onClick={handleCollapseToggle}
         >
@@ -137,7 +137,7 @@ export function AppSidebar({ collapsed, onCollapse }) {
         </button>
       </div>
 
-      <nav className="sidebar-panel__nav">
+      <nav className={styles.sidebarPanelNav}>
         {/* Профиль */}
         <SidebarItemLink
           to={NAVIGATION_CONFIG.footer.find((i) => i.icon === 'profile')?.path || '/profile'}
@@ -160,27 +160,27 @@ export function AppSidebar({ collapsed, onCollapse }) {
           const Icon = getIcon(group.icon);
 
           return (
-            <div key={groupKey} className="sidebar-group">
+            <div key={groupKey} className={styles.sidebarGroup}>
               <button
                 type="button"
-                className="sidebar-group__trigger"
+                className={styles.sidebarGroupTrigger}
                 title={collapsed ? group.title : undefined}
                 onClick={() => toggleGroup(groupKey)}
                 aria-expanded={isOpen}
               >
-                <span className="sidebar-link__icon" aria-hidden="true">
+                <span className={styles.sidebarLinkIcon} aria-hidden="true">
                   <Icon />
                 </span>
                 {!collapsed && <span>{group.title}</span>}
                 {!collapsed && (
-                  <span className="sidebar-group__chevron" aria-hidden="true">
+                  <span className={styles.sidebarGroupChevron} aria-hidden="true">
                     {isOpen ? <FiChevronDown /> : <FiChevronRight />}
                   </span>
                 )}
               </button>
 
               {isOpen && !collapsed && (
-                <div className="sidebar-group__items">
+                <div className={styles.sidebarGroupItems}>
                   {group.items.map((item) => (
                     <SidebarItemLink
                       key={item.path}
@@ -197,10 +197,10 @@ export function AppSidebar({ collapsed, onCollapse }) {
         })}
       </nav>
 
-      <div className="sidebar-panel__footer">
+      <div className={styles.sidebarPanelFooter}>
         <button
           type="button"
-          className="sidebar-panel__theme-btn"
+          className={styles.sidebarPanelThemeBtn}
           aria-label={theme === 'light' ? 'Включить тёмную тему' : 'Включить светлую тему'}
           onClick={toggleTheme}
           title={theme === 'light' ? 'Тёмная тема' : 'Светлая тема'}

@@ -1,4 +1,7 @@
-.sidebar-panel {
+/* ============================================
+   App Sidebar
+   ============================================ */
+.sidebarPanel {
   width: var(--sidebar-width);
   background: var(--surface);
   border-right: 1px solid var(--border);
@@ -13,11 +16,11 @@
   overflow-x: hidden;
 }
 
-.sidebar-panel--collapsed {
+.sidebarPanelCollapsed {
   width: var(--sidebar-width-collapsed);
 }
 
-.sidebar-panel__header {
+.sidebarPanelHeader {
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -27,14 +30,14 @@
   border-bottom: 1px solid var(--border);
 }
 
-.sidebar-panel__header h2 {
+.sidebarPanelHeader h2 {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
   color: var(--text);
 }
 
-.sidebar-panel__collapse-btn {
+.sidebarPanelCollapseBtn {
   width: 32px;
   height: 32px;
   padding: 0;
@@ -47,24 +50,24 @@
   transition: background-color 0.15s ease;
 }
 
-.sidebar-panel__collapse-btn:hover {
+.sidebarPanelCollapseBtn:hover {
   background: var(--surface-subtle);
 }
 
-.sidebar-panel__collapse-btn svg {
+.sidebarPanelCollapseBtn svg {
   width: 16px;
   height: 16px;
   color: var(--text-muted);
 }
 
-.sidebar-panel__nav {
+.sidebarPanelNav {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 8px;
 }
 
-.sidebar-panel__footer {
+.sidebarPanelFooter {
   flex-shrink: 0;
   display: flex;
   justify-content: flex-end;
@@ -72,7 +75,7 @@
   border-top: 1px solid var(--border);
 }
 
-.sidebar-panel__theme-btn {
+.sidebarPanelThemeBtn {
   width: 36px;
   height: 36px;
   display: inline-grid;
@@ -86,25 +89,27 @@
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.sidebar-panel__theme-btn:hover {
+.sidebarPanelThemeBtn:hover {
   background: var(--surface-subtle);
   color: var(--text);
 }
 
-.sidebar-panel__theme-btn svg {
+.sidebarPanelThemeBtn svg {
   width: 18px;
   height: 18px;
 }
 
-.sidebar-panel__empty {
+.sidebarPanelEmpty {
   margin: 8px 0 0;
   color: var(--text-muted);
   font-size: 13px;
   padding: 8px;
 }
 
-/* Sidebar link */
-.sidebar-link {
+/* ============================================
+   Sidebar link
+   ============================================ */
+.sidebarLink {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -117,17 +122,17 @@
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.sidebar-link:hover {
+.sidebarLink:hover {
   background: var(--surface-subtle);
   color: var(--text);
 }
 
-.sidebar-link--active {
+.sidebarLinkActive {
   background: var(--info-bg);
   color: var(--info);
 }
 
-.sidebar-link__icon {
+.sidebarLinkIcon {
   width: 20px;
   height: 20px;
   display: inline-grid;
@@ -137,23 +142,25 @@
   color: var(--text-muted);
 }
 
-.sidebar-link--active .sidebar-link__icon {
+.sidebarLinkActive .sidebarLinkIcon {
   color: var(--info);
 }
 
-.sidebar-link__icon svg {
+.sidebarLinkIcon svg {
   width: 18px;
   height: 18px;
 }
 
-/* Sidebar group */
-.sidebar-group {
+/* ============================================
+   Sidebar group
+   ============================================ */
+.sidebarGroup {
   border-radius: var(--radius-md);
   overflow: hidden;
   margin-bottom: 4px;
 }
 
-.sidebar-group__trigger {
+.sidebarGroupTrigger {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -172,29 +179,29 @@
   transition: background-color 0.15s ease;
 }
 
-.sidebar-group__trigger:hover {
+.sidebarGroupTrigger:hover {
   background: var(--surface-subtle);
 }
 
-.sidebar-group__chevron {
+.sidebarGroupChevron {
   margin-left: auto;
   display: inline-grid;
   place-items: center;
   color: var(--text-muted);
 }
 
-.sidebar-group__chevron svg {
+.sidebarGroupChevron svg {
   width: 14px;
   height: 14px;
 }
 
-.sidebar-group__items {
+.sidebarGroupItems {
   padding: 4px;
   display: grid;
   gap: 2px;
 }
 
-.sidebar-group__items .sidebar-link {
+.sidebarGroupItems .sidebarLink {
   background: transparent;
   padding-left: 40px;
   font-weight: 500;
@@ -202,11 +209,20 @@
   text-transform: none;
 }
 
-.sidebar-group__items .sidebar-link:hover {
+.sidebarGroupItems .sidebarLink:hover {
   background: var(--surface-subtle);
 }
 
-.sidebar-group__items .sidebar-link--active {
+.sidebarGroupItems .sidebarLinkActive {
   background: var(--info-bg);
   color: var(--info);
+}
+
+/* ============================================
+   Mobile styles
+   ============================================ */
+@media (max-width: 768px) {
+  .sidebarPanel {
+    display: none;
+  }
 }

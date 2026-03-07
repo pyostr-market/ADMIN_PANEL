@@ -1,5 +1,8 @@
-/* Bottom Navigation - мобильное меню */
-.bottom-nav {
+/* ============================================
+   Bottom Navigation - мобильное меню
+   ============================================ */
+
+.bottomNav {
   display: none;
   position: fixed !important;
   bottom: 0 !important;
@@ -13,7 +16,7 @@
   box-shadow: var(--shadow-sm);
 }
 
-.bottom-nav__list {
+.bottomNavList {
   display: flex;
   height: 100%;
   list-style: none;
@@ -21,7 +24,7 @@
   padding: 0;
 }
 
-.bottom-nav__item {
+.bottomNavItem {
   flex: 1;
   display: flex;
   align-items: center;
@@ -29,7 +32,7 @@
   min-width: 0;
 }
 
-.bottom-nav__button {
+.bottomNavButton {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,30 +50,32 @@
   transition: all 0.2s ease;
 }
 
-.bottom-nav__button svg {
+.bottomNavButton svg {
   width: 20px;
   height: 20px;
   flex-shrink: 0;
 }
 
-.bottom-nav__button:active {
+.bottomNavButton:active {
   background: var(--surface-subtle);
 }
 
-.bottom-nav__button--active {
+.bottomNavButtonActive {
   color: var(--info);
 }
 
-.bottom-nav__button--active svg {
+.bottomNavButtonActive svg {
   color: var(--info);
 }
 
-.bottom-nav__label {
+.bottomNavLabel {
   white-space: nowrap;
 }
 
-/* Mobile Sidebar */
-.mobile-sidebar {
+/* ============================================
+   Mobile Sidebar
+   ============================================ */
+.mobileSidebar {
   display: none;
   position: fixed;
   bottom: 56px;
@@ -90,11 +95,11 @@
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.mobile-sidebar--open {
+.mobileSidebarOpen {
   transform: translateX(0);
 }
 
-.mobile-sidebar__header {
+.mobileSidebarHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -106,14 +111,14 @@
   z-index: 1;
 }
 
-.mobile-sidebar__title {
+.mobileSidebarTitle {
   margin: 0;
   font-size: 14px;
   font-weight: 600;
   color: var(--text);
 }
 
-.mobile-sidebar__close {
+.mobileSidebarClose {
   width: 32px;
   height: 32px;
   display: inline-grid;
@@ -126,25 +131,25 @@
   transition: all 0.15s ease;
 }
 
-.mobile-sidebar__close:active {
+.mobileSidebarClose:active {
   background: var(--surface-muted);
 }
 
-.mobile-sidebar__close:hover {
+.mobileSidebarClose:hover {
   background: var(--surface-muted);
   color: var(--text);
 }
 
-.mobile-sidebar__close svg {
+.mobileSidebarClose svg {
   width: 16px;
   height: 16px;
 }
 
-.mobile-sidebar__nav {
+.mobileSidebarNav {
   padding: var(--space-2);
 }
 
-.mobile-sidebar__link {
+.mobileSidebarLink {
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -162,43 +167,45 @@
   text-decoration: none;
 }
 
-.mobile-sidebar__link:active {
+.mobileSidebarLink:active {
   background: var(--surface-subtle);
 }
 
-.mobile-sidebar__link:hover {
+.mobileSidebarLink:hover {
   background: var(--surface-subtle);
 }
 
-.mobile-sidebar__link--active {
+.mobileSidebarLinkActive {
   background: var(--info-bg);
   color: var(--info);
 }
 
-.mobile-sidebar__link svg {
+.mobileSidebarLink svg {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
   color: var(--text-muted);
 }
 
-.mobile-sidebar__link--active svg {
+.mobileSidebarLinkActive svg {
   color: var(--info);
 }
 
-/* Футер сайдбара - кнопки в ряд */
-.mobile-sidebar__footer {
+/* ============================================
+   Footer сайдбара - кнопки в ряд
+   ============================================ */
+.mobileSidebarFooter {
   border-top: 1px solid var(--border);
   padding: var(--space-2);
   margin-top: auto;
 }
 
-.mobile-sidebar__footer-row {
+.mobileSidebarFooterRow {
   display: flex;
   gap: var(--space-2);
 }
 
-.mobile-sidebar__footer-btn {
+.mobileSidebarFooterBtn {
   flex: 1;
   display: flex;
   align-items: center;
@@ -216,22 +223,22 @@
   min-height: 36px;
 }
 
-.mobile-sidebar__footer-btn:active {
+.mobileSidebarFooterBtn:active {
   background: var(--surface-muted);
   transform: scale(0.98);
 }
 
-.mobile-sidebar__footer-btn:hover {
+.mobileSidebarFooterBtn:hover {
   background: var(--surface-muted);
 }
 
-.mobile-sidebar__footer-btn svg {
+.mobileSidebarFooterBtn svg {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
 }
 
-.mobile-sidebar__footer-link {
+.mobileSidebarFooterLink {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -240,8 +247,10 @@
   text-decoration: none;
 }
 
-/* Mobile Overlay */
-.mobile-overlay {
+/* ============================================
+   Mobile Overlay
+   ============================================ */
+.mobileOverlay {
   display: none;
   position: fixed;
   top: 0;
@@ -254,12 +263,14 @@
   transition: opacity 0.3s ease;
 }
 
-.mobile-overlay--visible {
+.mobileOverlayVisible {
   opacity: 1;
 }
 
-/* Mobile Header */
-.mobile-header {
+/* ============================================
+   Mobile Header
+   ============================================ */
+.mobileHeader {
   display: none;
   position: sticky;
   top: 0;
@@ -269,14 +280,14 @@
   padding: var(--space-3) var(--space-4);
 }
 
-.mobile-header__content {
+.mobileHeaderContent {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
 }
 
-.mobile-header__title {
+.mobileHeaderTitle {
   margin: 0;
   font-size: 15px;
   font-weight: 600;
@@ -285,18 +296,20 @@
   text-align: center;
 }
 
-.mobile-header__actions {
+.mobileHeaderActions {
   display: flex;
   align-items: center;
   gap: var(--space-2);
 }
 
-/* Responsive - показываем мобильные элементы на экранах <= 768px */
+/* ============================================
+   Responsive - показываем мобильные элементы на экранах <= 768px
+   ============================================ */
 @media (max-width: 768px) {
-  .bottom-nav,
-  .mobile-sidebar,
-  .mobile-overlay,
-  .mobile-header {
+  .bottomNav,
+  .mobileSidebar,
+  .mobileOverlay,
+  .mobileHeader {
     display: block;
   }
 
@@ -323,7 +336,9 @@
   }
 }
 
-/* Стили для уведомлений на мобильных */
+/* ============================================
+   Стили для уведомлений на мобильных
+   ============================================ */
 @media (max-width: 768px) {
   .toast-stack {
     top: auto;

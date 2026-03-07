@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { NAVIGATION_CONFIG, isActivePath } from '../../shared/config/navigation';
 import { Icons } from '../../shared/config/navigation-icons';
-import '../../shared/styles/BottomNav.css';
+import styles from '../../shared/styles/BottomNav.module.css';
 
 export function BottomNav({ currentPath }) {
   const [activeMenu, setActiveMenu] = useState(null);
@@ -40,42 +40,42 @@ export function BottomNav({ currentPath }) {
   return (
     <>
       {/* Нижняя навигация */}
-      <nav className="bottom-nav">
-        <ul className="bottom-nav__list">
-          <li className="bottom-nav__item">
+      <nav className={styles.bottomNav}>
+        <ul className={styles.bottomNavList}>
+          <li className={styles.bottomNavItem}>
             <button
-              className={`bottom-nav__button ${activeMenu === 'crm' ? 'bottom-nav__button--active' : ''}`}
+              className={`${styles.bottomNavButton} ${activeMenu === 'crm' ? styles.bottomNavButtonActive : ''}`}
               onClick={() => toggleMenu('crm')}
             >
               {renderIcon('crm', 22)}
-              <span className="bottom-nav__label">{NAVIGATION_CONFIG.crm.title}</span>
+              <span className={styles.bottomNavLabel}>{NAVIGATION_CONFIG.crm.title}</span>
             </button>
           </li>
-          <li className="bottom-nav__item">
+          <li className={styles.bottomNavItem}>
             <button
-              className={`bottom-nav__button ${activeMenu === 'catalog' ? 'bottom-nav__button--active' : ''}`}
+              className={`${styles.bottomNavButton} ${activeMenu === 'catalog' ? styles.bottomNavButtonActive : ''}`}
               onClick={() => toggleMenu('catalog')}
             >
               {renderIcon('catalog', 22)}
-              <span className="bottom-nav__label">{NAVIGATION_CONFIG.catalog.title}</span>
+              <span className={styles.bottomNavLabel}>{NAVIGATION_CONFIG.catalog.title}</span>
             </button>
           </li>
-          <li className="bottom-nav__item">
+          <li className={styles.bottomNavItem}>
             <button
-              className={`bottom-nav__button ${activeMenu === 'warehouse' ? 'bottom-nav__button--active' : ''}`}
+              className={`${styles.bottomNavButton} ${activeMenu === 'warehouse' ? styles.bottomNavButtonActive : ''}`}
               onClick={() => toggleMenu('warehouse')}
             >
               {renderIcon('warehouse', 22)}
-              <span className="bottom-nav__label">{NAVIGATION_CONFIG.warehouse.title}</span>
+              <span className={styles.bottomNavLabel}>{NAVIGATION_CONFIG.warehouse.title}</span>
             </button>
           </li>
-          <li className="bottom-nav__item">
+          <li className={styles.bottomNavItem}>
             <button
-              className={`bottom-nav__button ${activeMenu === 'billing' ? 'bottom-nav__button--active' : ''}`}
+              className={`${styles.bottomNavButton} ${activeMenu === 'billing' ? styles.bottomNavButtonActive : ''}`}
               onClick={() => toggleMenu('billing')}
             >
               {renderIcon('billing', 22)}
-              <span className="bottom-nav__label">{NAVIGATION_CONFIG.billing.title}</span>
+              <span className={styles.bottomNavLabel}>{NAVIGATION_CONFIG.billing.title}</span>
             </button>
           </li>
         </ul>
@@ -87,21 +87,21 @@ export function BottomNav({ currentPath }) {
         return (
           <div
             key={menuKey}
-            className={`mobile-sidebar ${activeMenu === menuKey ? 'mobile-sidebar--open' : ''}`}
+            className={`${styles.mobileSidebar} ${activeMenu === menuKey ? styles.mobileSidebarOpen : ''}`}
           >
-            <div className="mobile-sidebar__header">
-              <h3 className="mobile-sidebar__title">{menu.title}</h3>
-              <button className="mobile-sidebar__close" onClick={closeMenu}>
+            <div className={styles.mobileSidebarHeader}>
+              <h3 className={styles.mobileSidebarTitle}>{menu.title}</h3>
+              <button className={styles.mobileSidebarClose} onClick={closeMenu}>
                 {renderIcon('close', 18)}
               </button>
             </div>
 
-            <nav className="mobile-sidebar__nav">
+            <nav className={styles.mobileSidebarNav}>
               {menu.items.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`mobile-sidebar__link ${isActivePath(currentPath, item.path) ? 'mobile-sidebar__link--active' : ''}`}
+                  className={`${styles.mobileSidebarLink} ${isActivePath(currentPath, item.path) ? styles.mobileSidebarLinkActive : ''}`}
                   onClick={closeMenu}
                 >
                   {renderIcon(item.icon, 20)}
@@ -111,12 +111,12 @@ export function BottomNav({ currentPath }) {
             </nav>
 
             {/* Футер с профилем и темой - кнопки в ряд */}
-            <div className="mobile-sidebar__footer">
-              <div className="mobile-sidebar__footer-row">
+            <div className={styles.mobileSidebarFooter}>
+              <div className={styles.mobileSidebarFooterRow}>
                 {NAVIGATION_CONFIG.footer.map((item) => (
                   <button
                     key={item.label}
-                    className="mobile-sidebar__footer-btn"
+                    className={styles.mobileSidebarFooterBtn}
                     onClick={() => item.action ? handleFooterAction(item) : null}
                   >
                     {item.action ? (
@@ -127,7 +127,7 @@ export function BottomNav({ currentPath }) {
                     ) : (
                       <Link
                         to={item.path}
-                        className="mobile-sidebar__footer-link"
+                        className={styles.mobileSidebarFooterLink}
                         onClick={closeMenu}
                       >
                         {renderIcon('profile', 18)}
@@ -144,7 +144,7 @@ export function BottomNav({ currentPath }) {
 
       {/* Оверлей для закрытия меню */}
       {activeMenu && (
-        <div className="mobile-overlay mobile-overlay--visible" onClick={closeMenu} />
+        <div className={`${styles.mobileOverlay} ${styles.mobileOverlayVisible}`} onClick={closeMenu} />
       )}
     </>
   );

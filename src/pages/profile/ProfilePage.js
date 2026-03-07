@@ -8,7 +8,7 @@ import { getApiErrorMessage } from '../../shared/api/apiError';
 import { useNotifications } from '../../shared/lib/notifications/NotificationProvider';
 import { useSession } from '../../entities/session/model/SessionProvider';
 import { getProfileRequest, updateProfileRequest } from './api/profileApi';
-import './ProfilePage.css';
+import styles from './ProfilePage.module.css';
 
 export function ProfilePage() {
   const navigate = useNavigate();
@@ -75,7 +75,7 @@ export function ProfilePage() {
 
   if (isLoading) {
     return (
-      <section className="profile-page">
+      <section className={styles.profilePage}>
         <LoadingState message="Загрузка профиля..." size="lg" />
       </section>
     );
@@ -83,8 +83,8 @@ export function ProfilePage() {
 
   if (!profile) {
     return (
-      <section className="profile-page">
-        <div className="profile-page__error">
+      <section className={styles.profilePage}>
+        <div className={styles.profilePageError}>
           <h2>Ошибка загрузки профиля</h2>
           <Button variant="primary" onClick={() => navigate('/')}>
             На главную
@@ -95,9 +95,9 @@ export function ProfilePage() {
   }
 
   return (
-    <section className="profile-page">
-      <header className="profile-page__header">
-        <h1 className="profile-page__title">Мой профиль</h1>
+    <section className={styles.profilePage}>
+      <header className={styles.profilePageHeader}>
+        <h1 className={styles.profilePageTitle}>Мой профиль</h1>
         {!isEditing ? (
           <Button
             variant="secondary"
@@ -107,7 +107,7 @@ export function ProfilePage() {
             Редактировать
           </Button>
         ) : (
-          <div className="profile-page__actions">
+          <div className={styles.profilePageActions}>
             <Button
               variant="secondary"
               leftIcon={<FiX />}
@@ -127,16 +127,16 @@ export function ProfilePage() {
         )}
       </header>
 
-      <div className="profile-page__content">
+      <div className={styles.profilePageContent}>
         <Card>
-          <div className="profile-card__avatar">
+          <div className={styles.profileCardAvatar}>
             <FiUser />
           </div>
 
-          <div className="profile-card__info">
-            <div className="profile-card__row">
-              <div className="profile-card__label">
-                <FiUser className="profile-card__icon" />
+          <div className={styles.profileCardInfo}>
+            <div className={styles.profileCardRow}>
+              <div className={styles.profileCardLabel}>
+                <FiUser className={styles.profileCardIcon} />
                 ФИО
               </div>
               {isEditing ? (
@@ -146,56 +146,56 @@ export function ProfilePage() {
                   value={formData.fio}
                   onChange={handleChange}
                   placeholder="Иванов Иван Иванович"
-                  className="profile-card__input"
+                  className={styles.profileCardInput}
                   maxLength={255}
                 />
               ) : (
-                <div className="profile-card__value">
+                <div className={styles.profileCardValue}>
                   {profile.fio || 'Не указано'}
                 </div>
               )}
             </div>
 
-            <div className="profile-card__row">
-              <div className="profile-card__label">
-                <FiPhone className="profile-card__icon" />
+            <div className={styles.profileCardRow}>
+              <div className={styles.profileCardLabel}>
+                <FiPhone className={styles.profileCardIcon} />
                 Телефон
               </div>
-              <div className="profile-card__value">
+              <div className={styles.profileCardValue}>
                 {profile.phones?.[0]?.phone_number || 'Не указан'}
               </div>
             </div>
 
-            <div className="profile-card__row">
-              <div className="profile-card__label">
-                <FiShield className="profile-card__icon" />
+            <div className={styles.profileCardRow}>
+              <div className={styles.profileCardLabel}>
+                <FiShield className={styles.profileCardIcon} />
                 Статус
               </div>
-              <div className="profile-card__value">
-                <span className={`profile-card__status ${profile.is_active ? 'status-active' : 'status-inactive'}`}>
+              <div className={styles.profileCardValue}>
+                <span className={`${styles.profileCardStatus} ${profile.is_active ? styles.profileCardStatusActive : styles.profileCardStatusInactive}`}>
                   {profile.is_active ? 'Активен' : 'Заблокирован'}
                 </span>
               </div>
             </div>
 
-            <div className="profile-card__row">
-              <div className="profile-card__label">
-                <FiCheckCircle className="profile-card__icon" />
+            <div className={styles.profileCardRow}>
+              <div className={styles.profileCardLabel}>
+                <FiCheckCircle className={styles.profileCardIcon} />
                 Верификация
               </div>
-              <div className="profile-card__value">
-                <span className={`profile-card__status ${profile.is_verified ? 'status-active' : 'status-inactive'}`}>
+              <div className={styles.profileCardValue}>
+                <span className={`${styles.profileCardStatus} ${profile.is_verified ? styles.profileCardStatusActive : styles.profileCardStatusInactive}`}>
                   {profile.is_verified ? 'Верифицирован' : 'Не верифицирован'}
                 </span>
               </div>
             </div>
 
-            <div className="profile-card__row">
-              <div className="profile-card__label">
-                <FiCalendar className="profile-card__icon" />
+            <div className={styles.profileCardRow}>
+              <div className={styles.profileCardLabel}>
+                <FiCalendar className={styles.profileCardIcon} />
                 Дата регистрации
               </div>
-              <div className="profile-card__value">
+              <div className={styles.profileCardValue}>
                 {profile.created_at
                   ? new Date(profile.created_at).toLocaleDateString('ru-RU', {
                       year: 'numeric',
@@ -207,12 +207,12 @@ export function ProfilePage() {
             </div>
 
             {profile.updated_at && (
-              <div className="profile-card__row">
-                <div className="profile-card__label">
-                  <FiCalendar className="profile-card__icon" />
+              <div className={styles.profileCardRow}>
+                <div className={styles.profileCardLabel}>
+                  <FiCalendar className={styles.profileCardIcon} />
                   Последнее обновление
                 </div>
-                <div className="profile-card__value">
+                <div className={styles.profileCardValue}>
                   {new Date(profile.updated_at).toLocaleDateString('ru-RU', {
                     year: 'numeric',
                     month: 'long',
@@ -225,22 +225,22 @@ export function ProfilePage() {
         </Card>
 
         <Card variant="secondary">
-          <h2 className="profile-card__subtitle">Дополнительная информация</h2>
+          <h2 className={styles.profileCardSubtitle}>Дополнительная информация</h2>
 
-          <div className="profile-card__row">
-            <div className="profile-card__label">ID пользователя</div>
-            <div className="profile-card__value code">{profile.id}</div>
+          <div className={styles.profileCardRow}>
+            <div className={styles.profileCardLabel}>ID пользователя</div>
+            <div className={`${styles.profileCardValue} ${styles.profileCardValueCode}`}>{profile.id}</div>
           </div>
 
-          <div className="profile-card__row">
-            <div className="profile-card__label">Публичный ID</div>
-            <div className="profile-card__value code">{profile.public_id || '—'}</div>
+          <div className={styles.profileCardRow}>
+            <div className={styles.profileCardLabel}>Публичный ID</div>
+            <div className={`${styles.profileCardValue} ${styles.profileCardValueCode}`}>{profile.public_id || '—'}</div>
           </div>
 
           {profile.last_login_at && (
-            <div className="profile-card__row">
-              <div className="profile-card__label">Последний вход</div>
-              <div className="profile-card__value">
+            <div className={styles.profileCardRow}>
+              <div className={styles.profileCardLabel}>Последний вход</div>
+              <div className={styles.profileCardValue}>
                 {new Date(profile.last_login_at).toLocaleDateString('ru-RU', {
                   year: 'numeric',
                   month: 'long',

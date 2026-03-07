@@ -4,7 +4,7 @@ import { useSession } from '../../entities/session/model/SessionProvider';
 import { NotificationsPanel } from './NotificationsPanel';
 import { AppSidebar } from '../sidebar/AppSidebar';
 import { BottomNav } from './BottomNav';
-import './AppLayout.css';
+import styles from './AppLayout.module.css';
 
 const SIDEBAR_COLLAPSED_STORAGE_KEY = 'market-admin:sidebar-collapsed';
 
@@ -19,13 +19,13 @@ export function AppLayout() {
   });
 
   return (
-    <div className={`app-shell${sidebarCollapsed ? ' app-shell--collapsed' : ''}`}>
+    <div className={`${styles.appShell}${sidebarCollapsed ? ` ${styles.appShellCollapsed}` : ''}`}>
       <AppSidebar collapsed={sidebarCollapsed} onCollapse={setSidebarCollapsed} />
 
-      <div className="app-shell__main">
+      <div className={styles.appShellMain}>
         {/* Десктопная шапка */}
-        <header className="app-shell__header">
-          <nav className="app-shell__nav">
+        <header className={styles.appShellHeader}>
+          <nav className={styles.appShellNav}>
             <Link to="/">Главная</Link>
             <Link to="/support">Поддержка</Link>
           </nav>
@@ -34,7 +34,7 @@ export function AppLayout() {
           </button>
         </header>
 
-        <main className="app-shell__content">
+        <main className={styles.appShellContent}>
           <NotificationsPanel />
           <Outlet />
         </main>

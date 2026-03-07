@@ -9,15 +9,6 @@
   animation: fadeIn 0.15s ease;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 .modal {
   width: min(480px, 100%);
   max-height: calc(100vh - 48px);
@@ -29,17 +20,6 @@
   display: grid;
   grid-template-rows: auto 1fr auto;
   animation: slideIn 0.2s ease;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .modalMd {
@@ -96,17 +76,6 @@
     animation: slideIn 0.2s ease;
     border: 1px solid var(--border);
     max-width: 100%;
-  }
-
-  @keyframes slideIn {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
 
   .modalMd,

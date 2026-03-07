@@ -4,7 +4,7 @@ import { useSession } from '../../../entities/session/model/SessionProvider';
 import { Card } from '../../../shared/ui/Card/Card';
 import { Button } from '../../../shared/ui/Button/Button';
 import { LoadingState } from '../../../shared/ui/LoadingState/LoadingState';
-import './LoginPage.css';
+import styles from './LoginPage.module.css';
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -41,10 +41,10 @@ export function LoginPage() {
   }
 
   return (
-    <section className="auth-card">
+    <section className={styles.authCard}>
       <Card padding="md">
         <h1>Вход в панель управления</h1>
-        <form className="auth-form" onSubmit={onSubmit}>
+        <form className={styles.authForm} onSubmit={onSubmit}>
           <label htmlFor="username">Логин</label>
           <input
             id="username"
@@ -66,14 +66,14 @@ export function LoginPage() {
             required
           />
 
-          {error && <p className="auth-error">{error}</p>}
+          {error && <p className={styles.authError}>{error}</p>}
 
           <Button
             type="submit"
             variant="primary"
             disabled={submitting}
             loading={submitting}
-            className="auth-form__submit"
+            className={styles.authFormSubmit}
           >
             {submitting ? 'Вход...' : 'Войти'}
           </Button>

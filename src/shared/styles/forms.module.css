@@ -1,0 +1,71 @@
+/* ============================================
+   Формы - общие переиспользуемые классы
+   ============================================ */
+
+/*FormField - базовый контейнер */
+.formField {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.formFieldFull {
+  grid-column: 1 / -1;
+}
+
+/* Label */
+.formLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.formRequired {
+  color: var(--danger);
+}
+
+/* Hint */
+.formHint {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Error */
+.formErrorText {
+  font-size: 13px;
+  color: var(--danger);
+}
+
+.formError input,
+.formError textarea,
+.formError select {
+  border-color: var(--danger) !important;
+}
+
+.formError input:focus,
+.formError textarea:focus,
+.formError select:focus {
+  box-shadow: 0 0 0 3px var(--focus-ring-danger) !important;
+}
+
+/* ============================================
+   Мобильные стили для форм
+   ============================================ */
+@media (max-width: 768px) {
+  .formLabel {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .formHint {
+    font-size: 12px;
+  }
+
+  .formErrorText {
+    font-size: 12px;
+    word-break: break-word;
+  }
+}

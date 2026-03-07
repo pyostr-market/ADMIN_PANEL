@@ -23,12 +23,6 @@
   pointer-events: none;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @media (max-width: 768px) {
   .searchInput {
     width: 100%;

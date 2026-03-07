@@ -1,0 +1,576 @@
+/* ============================================
+   Базовые переиспользуемые классы
+   ============================================ */
+
+/* ============================================
+   Page Header
+   ============================================ */
+.pageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.pageHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex: 1;
+  min-width: 0;
+}
+
+.pageHeaderBackButton {
+  flex-shrink: 0;
+  height: 40px;
+  padding: var(--space-2) var(--space-3);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.pageHeaderTitleWrapper {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.pageHeaderTitle {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.pageHeaderSubtitle {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.pageHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* ============================================
+   Page Actions
+   ============================================ */
+.pageActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border);
+}
+
+.pageActionsStart {
+  justify-content: flex-start;
+}
+
+.pageActionsCenter {
+  justify-content: center;
+}
+
+.pageActionsSpaceBetween {
+  justify-content: space-between;
+}
+
+.pageActionsColumn {
+  flex-direction: column;
+}
+
+/* ============================================
+   Card
+   ============================================ */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+
+.cardDefault {
+  background: var(--surface);
+}
+
+.cardSecondary {
+  background: var(--surface-subtle);
+}
+
+.cardMuted {
+  background: var(--surface-muted);
+}
+
+.cardNoShadow {
+  box-shadow: none;
+}
+
+.cardNoBorder {
+  border: none;
+}
+
+.cardPaddingSm {
+  padding: var(--space-3);
+}
+
+.cardPaddingMd {
+  padding: var(--space-5);
+}
+
+.cardPaddingLg {
+  padding: var(--space-6);
+}
+
+.cardPaddingNone {
+  padding: 0;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--space-4);
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.cardSubtitle {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.cardContent {
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+  margin-top: var(--space-4);
+}
+
+/* ============================================
+   Modal
+   ============================================ */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: var(--modal-overlay, rgba(0, 0, 0, 0.5));
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+  z-index: 50;
+  animation: fadeIn 0.15s ease;
+}
+
+.modal {
+  width: min(480px, 100%);
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  animation: slideIn 0.2s ease;
+}
+
+.modalMd {
+  width: min(480px, 100%);
+}
+
+.modalLg {
+  width: min(640px, 100%);
+}
+
+.modalXl {
+  width: min(800px, 100%);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.modalContent {
+  padding: var(--space-4);
+  overflow-y: auto;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-top: 1px solid var(--border);
+}
+
+/* ============================================
+   State Container (Loading/Error/Empty)
+   ============================================ */
+.stateContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  text-align: center;
+}
+
+.stateContainerSm {
+  padding: var(--space-3);
+  gap: var(--space-2);
+}
+
+.stateContainerMd {
+  padding: var(--space-6);
+  min-height: 200px;
+}
+
+.stateContainerLg {
+  padding: var(--space-10);
+  min-height: 400px;
+}
+
+.stateIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.stateIconSm {
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+}
+
+.stateMessage {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-muted);
+  max-width: 400px;
+}
+
+.stateMessageSm {
+  font-size: 13px;
+}
+
+.stateMessageLg {
+  font-size: 16px;
+}
+
+/* ============================================
+   Tabs
+   ============================================ */
+.tabs {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.tabsScrollable {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.tabsScrollable::-webkit-scrollbar {
+  height: 4px;
+}
+
+.tabsScrollable .tab {
+  flex-shrink: 0;
+}
+
+.tab {
+  border: 0;
+  border-right: 1px solid var(--border);
+  border-radius: 0;
+  background: var(--surface-subtle);
+  min-width: 100px;
+  padding: var(--space-2) var(--space-3);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.tab:last-child {
+  border-right: 0;
+}
+
+.tab:hover {
+  background: var(--surface);
+}
+
+.tabActive {
+  background: var(--surface);
+  font-weight: 600;
+}
+
+/* ============================================
+   Pagination
+   ============================================ */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  padding: var(--space-2) var(--space-3);
+}
+
+.paginationInfo {
+  color: var(--text-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* ============================================
+   Loading Spinner
+   ============================================ */
+.loadingSpinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.loadingSpinnerSm {
+  width: 24px;
+  height: 24px;
+  border-width: 2px;
+}
+
+.loadingSpinnerLg {
+  width: 48px;
+  height: 48px;
+  border-width: 4px;
+}
+
+/* ============================================
+   Modal Confirm Text
+   ============================================ */
+.modalConfirmText {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.modalConfirmText strong {
+  color: var(--text);
+}
+
+.modalConfirmNote {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: var(--space-2);
+}
+
+/* ============================================
+   Мобильные стили
+   ============================================ */
+@media (max-width: 768px) {
+  /* Page Header Mobile */
+  .pageHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .pageHeaderLeft {
+    width: 100%;
+  }
+
+  .pageHeaderTitle {
+    font-size: 20px;
+  }
+
+  .pageHeaderActions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  /* Page Actions Mobile */
+  .pageActions {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .pageActions .btn {
+    width: 100%;
+  }
+
+  /* Card Mobile */
+  .card {
+    border-radius: var(--radius-lg);
+  }
+
+  .cardPaddingLg {
+    padding: var(--space-4);
+  }
+
+  /* Modal Mobile */
+  .modalOverlay {
+    padding: var(--space-3);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal {
+    width: 100%;
+    max-height: calc(100vh - 80px);
+    border-radius: var(--radius-md);
+  }
+
+  .modalMd,
+  .modalLg,
+  .modalXl {
+    width: 100%;
+    max-height: calc(100vh - 80px);
+  }
+
+  .modalHeader {
+    padding: var(--space-4);
+    gap: var(--space-2);
+  }
+
+  .modalTitle {
+    font-size: 15px;
+  }
+
+  .modalContent {
+    padding: var(--space-4);
+    max-height: calc(100vh - 180px);
+  }
+
+  .modalFooter {
+    padding: var(--space-3) var(--space-4);
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .modalFooter button {
+    width: 100%;
+    height: 38px;
+    font-size: 13px;
+  }
+
+  /* Tabs Mobile */
+  .tabs {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab {
+    min-width: fit-content;
+    padding: var(--space-2) var(--space-4);
+    font-size: 12px;
+    font-weight: 600;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0;
+  }
+
+  .tab:last-child {
+    border-right: 1px solid var(--border);
+  }
+
+  .tab:active:not(.tabActive) {
+    background: var(--surface-muted);
+  }
+
+  /* Pagination Mobile */
+  .pagination {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    flex-wrap: nowrap;
+  }
+
+  .paginationInfo {
+    font-size: 11px;
+    text-align: center;
+    white-space: nowrap;
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+  }
+
+  .pagination button {
+    flex: 0 0 auto;
+    height: 32px;
+    min-width: auto;
+    padding: 0 8px;
+    font-size: 11px;
+  }
+
+  /* State Container Mobile */
+  .stateContainer {
+    padding: var(--space-4);
+  }
+
+  .stateIcon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .stateMessage {
+    font-size: 13px;
+  }
+}

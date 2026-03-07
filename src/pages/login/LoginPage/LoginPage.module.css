@@ -1,0 +1,83 @@
+/* ============================================
+   LoginPage - специфичные стили страницы
+   ============================================ */
+.authCard {
+  width: min(420px, calc(100vw - 32px));
+  margin: 72px auto;
+}
+
+.authCard h1 {
+  margin: 0 0 var(--space-4);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.authForm {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.authForm label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.authFormSubmit {
+  width: 100%;
+  justify-content: center;
+}
+
+.authError {
+  color: var(--danger);
+  margin: 0;
+  font-size: 13px;
+}
+
+/* ============================================
+   Mobile styles
+   ============================================ */
+@media (max-width: 768px) {
+  .authCard {
+    width: calc(100% - var(--space-6));
+    margin: var(--space-5) auto;
+    padding: var(--space-4);
+    border-radius: var(--radius-xl);
+    box-sizing: border-box;
+  }
+
+  .authCard h1 {
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: var(--space-4);
+  }
+
+  .authForm {
+    gap: var(--space-3);
+  }
+
+  .authForm input {
+    height: 36px;
+    font-size: 13px;
+    padding: 6px 10px;
+    box-sizing: border-box;
+  }
+
+  .authForm button {
+    width: 100%;
+    height: 38px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: var(--space-2);
+  }
+
+  .authError {
+    font-size: 11px;
+    text-align: center;
+    padding: var(--space-2);
+    border-radius: var(--radius-lg);
+    word-break: break-word;
+  }
+}

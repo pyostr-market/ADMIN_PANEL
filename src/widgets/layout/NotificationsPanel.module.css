@@ -1,0 +1,247 @@
+/* ============================================
+   Notifications Panel
+   ============================================ */
+.toastStack {
+  position: fixed;
+  top: var(--space-4);
+  right: var(--space-4);
+  z-index: 100;
+  display: grid;
+  gap: var(--space-2);
+  max-width: 380px;
+  width: calc(100% - var(--space-8));
+  pointer-events: none;
+}
+
+.toast {
+  position: relative;
+  display: grid;
+  gap: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-3);
+  pointer-events: auto;
+  overflow: hidden;
+  animation: toastSlideIn 0.3s ease-out;
+}
+
+@keyframes toastSlideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.toastInfo {
+  border-left: 3px solid var(--info);
+}
+
+.toastError {
+  border-left: 3px solid var(--danger);
+}
+
+.toastWarning {
+  border-left: 3px solid var(--warning);
+}
+
+.toastMail {
+  border-left: 3px solid var(--accent-purple);
+}
+
+.toastEvent {
+  border-left: 3px solid var(--success);
+}
+
+.toastContent {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.toastIcon {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.toastIcon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.toastInfo .toastIcon {
+  color: var(--info);
+}
+
+.toastError .toastIcon {
+  color: var(--danger);
+}
+
+.toastWarning .toastIcon {
+  color: var(--warning);
+}
+
+.toastMail .toastIcon {
+  color: var(--accent-purple);
+}
+
+.toastEvent .toastIcon {
+  color: var(--success);
+}
+
+.toastMessage {
+  flex: 1;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.toastClose {
+  width: 22px;
+  height: 22px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.toastClose:hover {
+  color: var(--text);
+}
+
+.toastProgress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--primary);
+  animation: toastProgress linear forwards;
+  opacity: 0.5;
+}
+
+@keyframes toastProgress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+/* ============================================
+   Mobile styles
+   ============================================ */
+@media (max-width: 768px) {
+  .toastStack {
+    top: auto;
+    bottom: calc(72px + env(safe-area-inset-bottom, 0));
+    right: 12px;
+    left: 12px;
+    max-width: none;
+    width: calc(100% - 24px);
+    max-height: calc(100vh - 80px - env(safe-area-inset-bottom, 0));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    z-index: 10001;
+  }
+
+  .toast {
+    padding: 14px;
+    border-radius: var(--radius-md);
+    border-width: 1.5px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    animation: toastSlideIn 0.3s ease-out;
+  }
+
+  @keyframes toastSlideIn {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .toastContent {
+    gap: var(--space-2);
+  }
+
+  .toastIcon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+  }
+
+  .toastIcon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .toastMessage {
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+
+  .toastClose {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    font-size: 20px;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+  }
+
+  .toastClose:active {
+    background: var(--surface-muted);
+    transform: scale(0.9);
+  }
+
+  .toastProgress {
+    height: 3px;
+    border-radius: 2px;
+  }
+
+  /* Увеличенные тач-зоны для интерактивных элементов */
+  .toast:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+}
+
+/* ============================================
+   Для очень маленьких экранов
+   ============================================ */
+@media (max-width: 360px) {
+  .toastStack {
+    bottom: calc(64px + env(safe-area-inset-bottom, 0));
+    right: 8px;
+    left: 8px;
+    width: calc(100% - 16px);
+  }
+
+  .toast {
+    padding: 12px;
+  }
+
+  .toastMessage {
+    font-size: 13px;
+  }
+}
