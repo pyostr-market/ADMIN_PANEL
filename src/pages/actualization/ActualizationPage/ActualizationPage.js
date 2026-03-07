@@ -1,10 +1,10 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { Tabs, Tab } from '../../../shared/ui/Tabs/Tabs';
 import styles from './ActualizationPage.module.css';
 
 const TABS = [
-  { id: 'actualization', label: 'Актуализация', path: '/actualization' },
+  { id: 'info', label: 'Актуализация', path: '/actualization/info' },
   { id: 'prices', label: 'Прайсы', path: '/actualization/prices' },
   { id: 'colors', label: 'Цвета', path: '/actualization/colors' },
   { id: 'logs', label: 'Логи', path: '/actualization/logs' },
@@ -16,8 +16,20 @@ export function ActualizationPage() {
 
   const activeTab = useCallback(() => {
     const pathname = location.pathname;
-    const tab = TABS.find(t => pathname === t.path);
-    return tab?.id || null;
+    // Определяем активную вкладку по пути
+    if (pathname === '/actualization' || pathname === '/actualization/info' || pathname.startsWith('/actualization/info/')) {
+      return 'info';
+    }
+    if (pathname === '/actualization/prices' || pathname.startsWith('/actualization/prices/')) {
+      return 'prices';
+    }
+    if (pathname === '/actualization/colors' || pathname.startsWith('/actualization/colors/')) {
+      return 'colors';
+    }
+    if (pathname === '/actualization/logs') {
+      return 'logs';
+    }
+    return null;
   }, [location.pathname]);
 
   const handleTabChange = (tabId) => {
@@ -28,19 +40,6 @@ export function ActualizationPage() {
   };
 
   const currentTab = activeTab();
-
-  // Перенаправляем на вкладку прайсов при открытии раздела актуализации
-  useEffect(() => {
-    if (location.pathname === '/actualization') {
-      navigate('/actualization/prices', { replace: true });
-      return;
-    }
-  }, [location.pathname, navigate]);
-
-  // Если мы на главной странице актуализации, не рендерим контент (ждём редиректа)
-  if (location.pathname === '/actualization') {
-    return null;
-  }
 
   // Показываем заглушку только для вкладки логов
   const showPlaceholder = currentTab === 'logs';

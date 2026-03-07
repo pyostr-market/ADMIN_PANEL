@@ -154,7 +154,8 @@ export function AppRouter() {
 
           {/* Actualization Routes */}
           <Route path="/actualization" element={<ActualizationPage />}>
-            <Route index element={null} />
+            <Route index element={<Navigate to="/actualization/info" replace />} />
+            <Route path="info" element={<PricesListPage />} />
             <Route path="prices" element={<PricesListPage />} />
             <Route path="prices/create" element={<PriceFormPage />} />
             <Route path="prices/:priceId/edit" element={<PriceFormPage />} />

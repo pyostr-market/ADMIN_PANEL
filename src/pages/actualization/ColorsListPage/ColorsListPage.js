@@ -156,10 +156,7 @@ export function ColorsListPage() {
                   variant="secondary"
                   size="sm"
                   leftIcon={<FiEdit2 />}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleEditColor(color);
-                  }}
+                  onClick={() => handleEditColor(color)}
                   aria-label={`Редактировать цвет ${color.name}`}
                 >
                   Редактировать
@@ -169,10 +166,7 @@ export function ColorsListPage() {
                   variant="secondary"
                   size="sm"
                   leftIcon={<FiEye />}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleViewColor(color);
-                  }}
+                  onClick={() => handleViewColor(color)}
                   aria-label={`Просмотреть цвет ${color.name}`}
                 >
                   Просмотр
@@ -181,10 +175,7 @@ export function ColorsListPage() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setColorToDelete(color);
-                  }}
+                  onClick={() => setColorToDelete(color)}
                   disabled={colorsCrud.isSubmitting}
                   aria-label="Удалить цвет"
                   className={styles.btnDelete}

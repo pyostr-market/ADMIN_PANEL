@@ -108,14 +108,25 @@
     font-size: 18px;
   }
 
+  /* Переопределяем стили EntityList для мобильной версии */
   .colorsPageItemContent {
     padding: var(--space-3) var(--space-4);
     margin: 0;
     border-radius: 0;
   }
 
+  /* Переопределяем flex-direction для элемента списка */
+  :global(.entityListItem) {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: var(--space-2) !important;
+    padding: var(--space-3) var(--space-4) !important;
+  }
+
   .colorsPageItemMain {
     gap: var(--space-2);
+    flex: 1;
+    min-width: 0;
   }
 
   .colorsPageAvatar {
@@ -140,17 +151,18 @@
     width: 100%;
   }
 
-  /* Item actions - кнопки справа */
+  /* Item actions - кнопки справа как в прайсах */
   .colorsPageItemActions {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-    padding: 8px 12px;
-    border-top: 1px solid var(--border);
-    background: var(--surface-subtle);
-    width: 100%;
-    box-sizing: border-box;
-    justify-content: flex-end;
+    display: flex !important;
+    gap: 4px !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+    width: auto !important;
+    justify-content: flex-end !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    border-top: none !important;
+    background: transparent !important;
   }
 
   .colorsPageItemActions button {
