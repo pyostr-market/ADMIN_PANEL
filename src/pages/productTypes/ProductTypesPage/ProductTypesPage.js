@@ -10,6 +10,7 @@ import { CrudListLayout } from '../../../shared/ui/CrudListLayout/CrudListLayout
 import { useCrudList } from '../../../shared/lib/crud';
 import { getProductTypesRequest, deleteProductTypeRequest } from '../api/productTypesApi';
 import styles from './ProductTypesPage.module.css';
+import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
 const PAGE_LIMIT = 20;
 
@@ -99,25 +100,25 @@ export function ProductTypesPage() {
           items={productTypesCrud.items}
           renderItem={(productType) => (
             <>
-              <div className={styles.productTypesPageItemContent} onClick={() => handleViewProductType(productType)}>
-                <div className={styles.productTypesPageItemMain}>
-                  <div className={styles.productTypesPageAvatar}>
+              <div className={entityListStyles.entityItemContent} onClick={() => handleViewProductType(productType)}>
+                <div className={entityListStyles.entityItemMain}>
+                  <div className={entityListStyles.entityItemAvatar}>
                     <FiBox />
                   </div>
-                  <div className={styles.productTypesPageItemInfo}>
-                    <div className={styles.productTypesPageItemHeader}>
-                      <p className={styles.productTypesPageItemTitle}>
+                  <div className={entityListStyles.entityItemInfo}>
+                    <div className={entityListStyles.entityItemHeader}>
+                      <p className={entityListStyles.entityItemTitle}>
                         {productType.name || 'Без названия'}
                       </p>
                     </div>
-                    <div className={styles.productTypesPageItemMeta}>
-                      <span className={styles.productTypesPageMetaItem}>
-                        <span className={styles.productTypesPageMetaLabel}>ID:</span> {productType.id}
+                    <div className={entityListStyles.entityItemMeta}>
+                      <span className={entityListStyles.entityItemMetaItem}>
+                        <span className={entityListStyles.entityItemMetaLabel}>ID:</span> {productType.id}
                       </span>
                       {productType.description && (
                         <>
-                          <span className={styles.productTypesPageSeparator}>•</span>
-                          <span className={styles.productTypesPageMetaItem}>
+                          <span className={entityListStyles.entityItemSeparator}>•</span>
+                          <span className={entityListStyles.entityItemMetaItem}>
                             {productType.description}
                           </span>
                         </>
@@ -126,17 +127,17 @@ export function ProductTypesPage() {
                   </div>
                 </div>
               </div>
-              <div className={styles.productTypesPageItemActions}>
+              <div className={entityListStyles.entityActions}>
                 <PermissionGate permission={['product_type:update']} fallback={null}>
-                  <Button variant="secondary" size="sm" leftIcon={<FiEdit2 />} onClick={() => handleEditProductType(productType)}>
+                  <Button variant="secondary" size="sm" leftIcon={<FiEdit2 />} onClick={() => handleEditProductType(productType)} className={entityListStyles.btnEdit}>
                     Редактировать
                   </Button>
                 </PermissionGate>
-                <Button variant="secondary" size="sm" leftIcon={<FiEye />} onClick={() => handleViewProductType(productType)}>
+                <Button variant="secondary" size="sm" leftIcon={<FiEye />} onClick={() => handleViewProductType(productType)} className={entityListStyles.btnView}>
                   Просмотр
                 </Button>
                 <PermissionGate permission={['product_type:delete']} fallback={null}>
-                  <Button variant="ghost" size="icon" onClick={() => setProductTypeToDelete(productType)} disabled={productTypesCrud.isSubmitting} className={styles.btnDelete}>
+                  <Button variant="ghost" size="icon" onClick={() => setProductTypeToDelete(productType)} disabled={productTypesCrud.isSubmitting} className={entityListStyles.btnDelete}>
                     <FiTrash2 />
                   </Button>
                 </PermissionGate>

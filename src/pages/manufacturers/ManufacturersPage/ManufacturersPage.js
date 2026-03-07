@@ -13,6 +13,7 @@ import {
   deleteManufacturerRequest,
 } from '../api/manufacturersApi';
 import styles from './ManufacturersPage.module.css';
+import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
 const PAGE_LIMIT = 20;
 
@@ -133,25 +134,25 @@ export function ManufacturersPage() {
           items={manufacturersCrud.items}
           renderItem={(manufacturer) => (
             <>
-              <div className={styles.manufacturersPageItemContent} onClick={() => handleViewManufacturer(manufacturer)}>
-                <div className={styles.manufacturersPageItemMain}>
-                  <div className={styles.manufacturersPageAvatar}>
+              <div className={entityListStyles.entityItemContent} onClick={() => handleViewManufacturer(manufacturer)}>
+                <div className={entityListStyles.entityItemMain}>
+                  <div className={entityListStyles.entityItemAvatar}>
                     <FiBox />
                   </div>
-                  <div className={styles.manufacturersPageItemInfo}>
-                    <div className={styles.manufacturersPageItemHeader}>
-                      <p className={styles.manufacturersPageItemTitle}>
+                  <div className={entityListStyles.entityItemInfo}>
+                    <div className={entityListStyles.entityItemHeader}>
+                      <p className={entityListStyles.entityItemTitle}>
                         {manufacturer.name || 'Без названия'}
                       </p>
                     </div>
-                    <div className={styles.manufacturersPageItemMeta}>
-                      <span className={styles.manufacturersPageMetaItem}>
-                        <span className={styles.manufacturersPageMetaLabel}>ID:</span> {manufacturer.id}
+                    <div className={entityListStyles.entityItemMeta}>
+                      <span className={entityListStyles.entityItemMetaItem}>
+                        <span className={entityListStyles.entityItemMetaLabel}>ID:</span> {manufacturer.id}
                       </span>
                       {manufacturer.description && (
                         <>
-                          <span className={styles.manufacturersPageSeparator}>•</span>
-                          <span className={styles.manufacturersPageMetaItem}>
+                          <span className={entityListStyles.entityItemSeparator}>•</span>
+                          <span className={entityListStyles.entityItemMetaItem}>
                             {manufacturer.description}
                           </span>
                         </>
@@ -160,7 +161,7 @@ export function ManufacturersPage() {
                   </div>
                 </div>
               </div>
-              <div className={styles.manufacturersPageItemActions}>
+              <div className={entityListStyles.entityActions}>
                 <PermissionGate permission={['manufacturer:update']} fallback={null}>
                   <Button
                     variant="secondary"
@@ -168,6 +169,7 @@ export function ManufacturersPage() {
                     leftIcon={<FiEdit2 />}
                     onClick={() => handleEditManufacturer(manufacturer)}
                     aria-label={`Редактировать производителя ${manufacturer.name || manufacturer.id}`}
+                    className={entityListStyles.btnEdit}
                   >
                     Редактировать
                   </Button>
@@ -179,6 +181,7 @@ export function ManufacturersPage() {
                   leftIcon={<FiEye />}
                   onClick={() => handleViewManufacturer(manufacturer)}
                   aria-label={`Просмотреть производителя ${manufacturer.name || manufacturer.id}`}
+                  className={entityListStyles.btnView}
                 >
                   Просмотр
                 </Button>
@@ -190,7 +193,7 @@ export function ManufacturersPage() {
                     onClick={() => setManufacturerToDelete(manufacturer)}
                     disabled={manufacturersCrud.isSubmitting}
                     aria-label="Удалить производителя"
-                    className={styles.btnDelete}
+                    className={entityListStyles.btnDelete}
                   >
                     <FiTrash2 />
                   </Button>

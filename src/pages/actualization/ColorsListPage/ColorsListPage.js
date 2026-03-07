@@ -12,6 +12,7 @@ import {
   deleteColorRequest,
 } from '../api/actualizationApi';
 import styles from './ColorsListPage.module.css';
+import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
 function DeleteColorModal({ color, onClose, onSubmit, isSubmitting }) {
   if (!color) return null;
@@ -137,27 +138,28 @@ export function ColorsListPage() {
           items={colorsCrud.items}
           renderItem={(color) => (
             <>
-              <div className={styles.colorsPageItemContent} onClick={() => handleViewColor(color)}>
-                <div className={styles.colorsPageItemMain}>
-                  <div className={styles.colorsPageAvatar}>
+              <div className={entityListStyles.entityItemContent} onClick={() => handleViewColor(color)}>
+                <div className={entityListStyles.entityItemMain}>
+                  <div className={`${entityListStyles.entityItemAvatar} ${entityListStyles['entityItemAvatar--color']}`}>
                     <FiDisc />
                   </div>
-                  <div className={styles.colorsPageItemInfo}>
-                    <div className={styles.colorsPageItemHeader}>
-                      <p className={styles.colorsPageItemTitle}>
+                  <div className={entityListStyles.entityItemInfo}>
+                    <div className={entityListStyles.entityItemHeader}>
+                      <p className={entityListStyles.entityItemTitle}>
                         {color.name || 'Без названия'}
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className={styles.colorsPageItemActions}>
+              <div className={entityListStyles.entityActions}>
                 <Button
                   variant="secondary"
                   size="sm"
                   leftIcon={<FiEdit2 />}
                   onClick={() => handleEditColor(color)}
                   aria-label={`Редактировать цвет ${color.name}`}
+                  className={entityListStyles.btnEdit}
                 >
                   Редактировать
                 </Button>
@@ -168,6 +170,7 @@ export function ColorsListPage() {
                   leftIcon={<FiEye />}
                   onClick={() => handleViewColor(color)}
                   aria-label={`Просмотреть цвет ${color.name}`}
+                  className={entityListStyles.btnView}
                 >
                   Просмотр
                 </Button>
@@ -178,7 +181,7 @@ export function ColorsListPage() {
                   onClick={() => setColorToDelete(color)}
                   disabled={colorsCrud.isSubmitting}
                   aria-label="Удалить цвет"
-                  className={styles.btnDelete}
+                  className={entityListStyles.btnDelete}
                 >
                   <FiTrash2 />
                 </Button>

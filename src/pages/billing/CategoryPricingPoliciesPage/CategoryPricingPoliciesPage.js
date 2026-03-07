@@ -13,6 +13,7 @@ import {
   deleteCategoryPricingPolicyRequest,
 } from '../api/categoryPricingPolicyApi';
 import styles from './CategoryPricingPoliciesPage.module.css';
+import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
 const PAGE_LIMIT = 20;
 
@@ -142,34 +143,34 @@ export function CategoryPricingPoliciesPage() {
           items={policiesCrud.items}
           renderItem={(policy) => (
             <>
-              <div className={styles.policiesPageItemContent} onClick={() => handleViewPolicy(policy)}>
-                <div className={styles.policiesPageItemMain}>
-                  <div className={styles.policiesPageItemAvatar}>
+              <div className={entityListStyles.entityItemContent} onClick={() => handleViewPolicy(policy)}>
+                <div className={entityListStyles.entityItemMain}>
+                  <div className={entityListStyles.entityItemAvatar}>
                     <FiDollarSign />
                   </div>
-                  <div className={styles.policiesPageItemInfo}>
-                    <div className={styles.policiesPageItemHeader}>
-                      <p className={styles.policiesPageItemTitle}>
+                  <div className={entityListStyles.entityItemInfo}>
+                    <div className={entityListStyles.entityItemHeader}>
+                      <p className={entityListStyles.entityItemTitle}>
                         Категория ID: {policy.category_id}
                       </p>
                     </div>
-                    <div className={styles.policiesPageItemMeta}>
-                      <span className={styles.policiesPageMetaItem}>
-                        <span className={styles.policiesPageMetaLabel}>Наценка:</span> {formatCurrency(policy.markup_fixed)}
+                    <div className={entityListStyles.entityItemMeta}>
+                      <span className={entityListStyles.entityItemMetaItem}>
+                        <span className={entityListStyles.entityItemMetaLabel}>Наценка:</span> {formatCurrency(policy.markup_fixed)}
                       </span>
-                      <span className={styles.policiesPageSeparator}>•</span>
-                      <span className={styles.policiesPageMetaItem}>
-                        <span className={styles.policiesPageMetaLabel}>Наценка %:</span> {formatPercent(policy.markup_percent)}
+                      <span className={entityListStyles.entityItemSeparator}>•</span>
+                      <span className={entityListStyles.entityItemMetaItem}>
+                        <span className={entityListStyles.entityItemMetaLabel}>Наценка %:</span> {formatPercent(policy.markup_percent)}
                       </span>
-                      <span className={styles.policiesPageSeparator}>•</span>
-                      <span className={styles.policiesPageMetaItem}>
-                        <span className={styles.policiesPageMetaLabel}>Комиссия:</span> {formatPercent(policy.commission_percent)}
+                      <span className={entityListStyles.entityItemSeparator}>•</span>
+                      <span className={entityListStyles.entityItemMetaItem}>
+                        <span className={entityListStyles.entityItemMetaLabel}>Комиссия:</span> {formatPercent(policy.commission_percent)}
                       </span>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className={styles.policiesPageItemActions}>
+              <div className={entityListStyles.entityActions}>
                 <PermissionGate permission={['category_pricing_policy:update']} fallback={null}>
                   <Button
                     variant="secondary"
@@ -177,6 +178,7 @@ export function CategoryPricingPoliciesPage() {
                     leftIcon={<FiEdit2 />}
                     onClick={() => handleEditPolicy(policy)}
                     aria-label={`Редактировать тариф категории ${policy.id}`}
+                    className={entityListStyles.btnEdit}
                   >
                     Редактировать
                   </Button>
@@ -188,6 +190,7 @@ export function CategoryPricingPoliciesPage() {
                   leftIcon={<FiEye />}
                   onClick={() => handleViewPolicy(policy)}
                   aria-label={`Просмотреть тариф категории ${policy.id}`}
+                  className={entityListStyles.btnView}
                 >
                   Просмотр
                 </Button>
@@ -199,7 +202,7 @@ export function CategoryPricingPoliciesPage() {
                     onClick={() => setPolicyToDelete(policy)}
                     disabled={policiesCrud.isSubmitting}
                     aria-label="Удалить тариф категории"
-                    className={styles.btnDelete}
+                    className={entityListStyles.btnDelete}
                   >
                     <FiTrash2 />
                   </Button>

@@ -12,6 +12,7 @@ import {
   deletePriceRequest,
 } from '../api/pricesApi';
 import styles from './PricesListPage.module.css';
+import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
 const PAGE_LIMIT = 20;
 
@@ -130,40 +131,41 @@ export function PricesListPage() {
           items={pricesCrud.items}
           renderItem={(price) => (
             <>
-              <div className={styles.pricesPageItemContent} onClick={() => handleViewPrice(price)}>
-                <div className={styles.pricesPageItemMain}>
-                  <div className={styles.pricesPageAvatar}>
+              <div className={entityListStyles.entityItemContent} onClick={() => handleViewPrice(price)}>
+                <div className={entityListStyles.entityItemMain}>
+                  <div className={entityListStyles.entityItemAvatar}>
                     <FiFileText />
                   </div>
-                  <div className={styles.pricesPageItemInfo}>
-                    <div className={styles.pricesPageItemHeader}>
-                      <p className={styles.pricesPageItemTitle}>
+                  <div className={entityListStyles.entityItemInfo}>
+                    <div className={entityListStyles.entityItemHeader}>
+                      <p className={entityListStyles.entityItemTitle}>
                         {price.category || 'Без категории'}
                       </p>
                     </div>
-                    <div className={styles.pricesPageItemMeta}>
-                      <span className={styles.pricesPageMetaItem}>
-                        <span className={styles.pricesPageMetaLabel}>ID:</span> {price.id}
+                    <div className={entityListStyles.entityItemMeta}>
+                      <span className={entityListStyles.entityItemMetaItem}>
+                        <span className={entityListStyles.entityItemMetaLabel}>ID:</span> {price.id}
                       </span>
-                      <span className={styles.pricesPageSeparator}>•</span>
-                      <span className={styles.pricesPageMetaItem}>
-                        <span className={styles.pricesPageMetaLabel}>Поставщик:</span> {price.supplier || '—'}
+                      <span className={entityListStyles.entityItemSeparator}>•</span>
+                      <span className={entityListStyles.entityItemMetaItem}>
+                        <span className={entityListStyles.entityItemMetaLabel}>Поставщик:</span> {price.supplier || '—'}
                       </span>
-                      <span className={styles.pricesPageSeparator}>•</span>
-                      <span className={styles.pricesPageMetaItem}>
-                        <span className={styles.pricesPageMetaLabel}>Регион:</span> {price.region || '—'}
+                      <span className={entityListStyles.entityItemSeparator}>•</span>
+                      <span className={entityListStyles.entityItemMetaItem}>
+                        <span className={entityListStyles.entityItemMetaLabel}>Регион:</span> {price.region || '—'}
                       </span>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className={styles.pricesPageItemActions}>
+              <div className={entityListStyles.entityActions}>
                 <Button
                   variant="secondary"
                   size="sm"
                   leftIcon={<FiEdit2 />}
                   onClick={() => handleEditPrice(price)}
                   aria-label={`Редактировать прайс ${price.category || price.id}`}
+                  className={entityListStyles.btnEdit}
                 >
                   Редактировать
                 </Button>
@@ -174,6 +176,7 @@ export function PricesListPage() {
                   leftIcon={<FiEye />}
                   onClick={() => handleViewPrice(price)}
                   aria-label={`Просмотреть прайс ${price.category || price.id}`}
+                  className={entityListStyles.btnView}
                 >
                   Просмотр
                 </Button>
@@ -184,7 +187,7 @@ export function PricesListPage() {
                   onClick={() => setPriceToDelete(price)}
                   disabled={pricesCrud.isSubmitting}
                   aria-label="Удалить прайс"
-                  className={styles.btnDelete}
+                  className={entityListStyles.btnDelete}
                 >
                   <FiTrash2 />
                 </Button>

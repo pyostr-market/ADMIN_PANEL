@@ -1,3 +1,8 @@
+/* EntityList - стили списка сущностей */
+
+/* ============================================
+   Базовые стили списка
+   ============================================ */
 .entityList {
   display: grid;
   gap: var(--space-2);
@@ -27,6 +32,9 @@
   padding: var(--space-4);
 }
 
+/* ============================================
+   Контент элемента списка
+   ============================================ */
 .entityItem {
   flex: 1;
   min-width: 0;
@@ -54,13 +62,276 @@
   font-size: 12px;
 }
 
+/* ============================================
+   Контейнер действий
+   ============================================ */
 .entityActions {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-1);
   flex-shrink: 0;
 }
 
+/* ============================================
+   Action Buttons - стили для кнопок действий
+   ============================================ */
+.entityActions .btnEdit,
+.entityList__btn-edit {
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.entityActions .btnEdit:hover,
+.entityList__btn-edit:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.entityActions .btnView,
+.entityList__btn-view {
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.entityActions .btnView:hover,
+.entityList__btn-view:hover {
+  color: var(--success);
+  border-color: var(--success);
+}
+
+.entityActions .btnDelete,
+.entityList__btn-delete {
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.entityActions .btnDelete:hover,
+.entityList__btn-delete:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.entityActions .btnBan,
+.entityList__btn-ban {
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.entityActions .btnBan:hover,
+.entityList__btn-ban:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.entityActions .btnUnban,
+.entityList__btn-unban {
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.entityActions .btnUnban:hover,
+.entityList__btn-unban:hover {
+  color: var(--success);
+  border-color: var(--success);
+}
+
+/* ============================================
+   Универсальные стили для контента списка
+   ============================================ */
+/* Контейнер контента с кликом */
+.entityItemContent {
+  display: flex;
+  flex: 1;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: var(--space-2);
+  margin: calc(-1 * var(--space-2));
+  border-radius: var(--radius-md);
+}
+
+.entityItemContent:hover {
+  background: var(--surface-subtle);
+}
+
+/* Основная часть элемента */
+.entityItemMain {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  width: 100%;
+}
+
+/* Аватарка/иконка */
+.entityItemAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  color: white;
+  background: var(--gradient-avatar);
+  transition: transform 0.2s;
+}
+
+.entityItemAvatar--color {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.entityItemAvatarActive {
+  background: var(--gradient-success) !important;
+}
+
+.entityItemAvatarInactive {
+  background: var(--gradient-danger) !important;
+}
+
+.entityItemContent:hover .entityItemAvatar {
+  transform: scale(1.05);
+}
+
+/* Изображение элемента */
+.entityItemImage {
+  flex: 0 0 80px;
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--surface-subtle);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.entityItemImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.entityItemAvatar--image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: white;
+  background: var(--gradient-avatar);
+}
+
+/* Информация об элементе */
+.entityItemInfo {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.entityItemHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.entityItemTitle {
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0;
+  color: var(--text);
+}
+
+/* Бейджи */
+.entityItemBadges {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.entityItemBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.entityItemBadge--verified {
+  background: var(--success);
+  color: white;
+}
+
+.entityItemBadge--inactive {
+  background: var(--danger);
+  color: white;
+}
+
+.entityItemBadge--sm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+}
+
+.entityItemBadge--sm.entityItemBadge--verified {
+  background: var(--success);
+  color: white;
+}
+
+/* Мета-информация */
+.entityItemMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.entityItemMetaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.entityItemMetaLabel {
+  font-weight: 500;
+}
+
+.entityItemMetaIcon {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.entityItemMetaPrice {
+  font-weight: 600;
+  color: var(--success);
+}
+
+.entityItemSeparator {
+  color: var(--border-strong);
+}
+
+.entityItemDescription {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* ============================================
+   Мобильные стили
+   ============================================ */
 @media (max-width: 768px) {
   .entityList {
     gap: 0;
@@ -94,34 +365,185 @@
     background: var(--surface-subtle);
   }
 
-  .entityItem {
+  .entityItemContent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 60px;
+  }
+
+  .entityItemMain {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
     width: 100%;
     min-width: 0;
     flex: 1;
   }
 
+  .entityItemAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    color: white;
+    background: var(--gradient-avatar);
+  }
+
+  .entityItemContent:hover .entityItemAvatar {
+    transform: none;
+  }
+
+  .entityItemImage {
+    flex: 0 0 50px;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    background: var(--surface-subtle);
+    flex-shrink: 0;
+  }
+
+  .entityItemImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .entityItemAvatar--image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: white;
+    background: var(--gradient-avatar);
+    border-radius: 50%;
+  }
+
+  .entityItemInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    flex: 1;
+    width: 100%;
+  }
+
+  .entityItemHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+    height: 24px;
+    width: 100%;
+  }
+
   .entityItemTitle {
     font-size: 14px;
     font-weight: 600;
-    margin: 0 0 var(--space-1);
-    word-break: break-word;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
     width: 100%;
   }
 
-  .entityItemDescription {
+  .entityItemBadges {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .entityItemBadge {
+    padding: 2px 6px;
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  .entityItemBadge--sm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
     font-size: 12px;
-    line-height: 1.4;
-    margin: 0;
-    word-break: break-word;
-    width: 100%;
+    flex-shrink: 0;
   }
 
   .entityItemMeta {
-    font-size: 11px;
-    gap: var(--space-2);
+    display: flex;
+    align-items: center;
+    gap: 6px;
     flex-wrap: wrap;
-    margin-top: var(--space-1);
+    overflow: hidden;
+    font-size: 11px;
+    color: var(--text-muted);
     width: 100%;
+    line-height: 1.4;
+  }
+
+  .entityItemMeta:empty {
+    display: none;
+  }
+
+  .entityItemMetaItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+  }
+
+  .entityItemMetaItem:empty {
+    display: none;
+  }
+
+  .entityItemMetaLabel {
+    display: none;
+  }
+
+  .entityItemMetaIcon {
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  .entityItemMetaPrice {
+    font-weight: 600;
+    color: var(--success);
+  }
+
+  .entityItemSeparator {
+    color: var(--border-strong);
+    flex-shrink: 0;
+  }
+
+  .entityItemDescription {
+    font-size: 11px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-width: 100%;
+    word-break: break-word;
+  }
+
+  .entityItem {
+    width: 100%;
+    min-width: 0;
+    flex: 1;
   }
 
   .entityActions {
@@ -130,14 +552,27 @@
     padding-top: var(--space-2);
     margin-top: 0;
     border-top: 1px solid var(--border);
-    gap: var(--space-2);
+    gap: 4px;
     box-sizing: border-box;
+    padding: 8px 12px;
+    background: var(--surface-subtle);
   }
 
   .entityActions button {
+    height: 32px;
+    font-size: 11px;
+    padding: 6px 8px;
     flex: 0 0 auto;
-    min-width: auto;
-    height: 34px;
-    font-size: 12px;
+  }
+
+  /* Compact action buttons (icon-only) */
+  .entityActions .btnDelete,
+  .entityActions .btnEdit,
+  .entityActions .btnView,
+  .entityActions .btnBan,
+  .entityActions .btnUnban {
+    height: 32px;
+    padding: 6px 8px;
+    min-width: 32px;
   }
 }

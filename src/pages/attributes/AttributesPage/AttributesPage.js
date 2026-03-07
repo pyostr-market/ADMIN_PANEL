@@ -10,6 +10,7 @@ import { CrudListLayout } from '../../../shared/ui/CrudListLayout/CrudListLayout
 import { useCrudList } from '../../../shared/lib/crud';
 import { getAttributesRequest, deleteAttributeRequest } from '../api/attributesApi';
 import styles from './AttributesPage.module.css';
+import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
 const PAGE_LIMIT = 20;
 
@@ -81,29 +82,29 @@ export function AttributesPage() {
           items={attributesCrud.items}
           renderItem={(attribute) => (
             <>
-              <div className={styles.attributesPageItemContent} onClick={() => handleViewAttribute(attribute)}>
-                <div className={styles.attributesPageItemMain}>
-                  <div className={styles.attributesPageAvatar}><FiTag /></div>
-                  <div className={styles.attributesPageItemInfo}>
-                    <div className={styles.attributesPageItemHeader}>
-                      <p className={styles.attributesPageItemTitle}>{attribute.name || 'Без названия'}</p>
+              <div className={entityListStyles.entityItemContent} onClick={() => handleViewAttribute(attribute)}>
+                <div className={entityListStyles.entityItemMain}>
+                  <div className={entityListStyles.entityItemAvatar}><FiTag /></div>
+                  <div className={entityListStyles.entityItemInfo}>
+                    <div className={entityListStyles.entityItemHeader}>
+                      <p className={entityListStyles.entityItemTitle}>{attribute.name || 'Без названия'}</p>
                     </div>
-                    <div className={styles.attributesPageItemMeta}>
-                      <span className={styles.attributesPageMetaItem}><span className={styles.attributesPageMetaLabel}>ID:</span> {attribute.id}</span>
+                    <div className={entityListStyles.entityItemMeta}>
+                      <span className={entityListStyles.entityItemMetaItem}><span className={entityListStyles.entityItemMetaLabel}>ID:</span> {attribute.id}</span>
                       {attribute.description && (
-                        <><span className={styles.attributesPageSeparator}>•</span><span className={styles.attributesPageMetaItem}>{attribute.description}</span></>
+                        <><span className={entityListStyles.entityItemSeparator}>•</span><span className={entityListStyles.entityItemMetaItem}>{attribute.description}</span></>
                       )}
                     </div>
                   </div>
                 </div>
               </div>
-              <div className={styles.attributesPageItemActions}>
+              <div className={entityListStyles.entityActions}>
                 <PermissionGate permission={['attribute:update']} fallback={null}>
-                  <Button variant="secondary" size="sm" leftIcon={<FiEdit2 />} onClick={() => handleEditAttribute(attribute)}>Редактировать</Button>
+                  <Button variant="secondary" size="sm" leftIcon={<FiEdit2 />} onClick={() => handleEditAttribute(attribute)} className={entityListStyles.btnEdit}>Редактировать</Button>
                 </PermissionGate>
-                <Button variant="secondary" size="sm" leftIcon={<FiEye />} onClick={() => handleViewAttribute(attribute)}>Просмотр</Button>
+                <Button variant="secondary" size="sm" leftIcon={<FiEye />} onClick={() => handleViewAttribute(attribute)} className={entityListStyles.btnView}>Просмотр</Button>
                 <PermissionGate permission={['attribute:delete']} fallback={null}>
-                  <Button variant="ghost" size="icon" onClick={() => setAttributeToDelete(attribute)} disabled={attributesCrud.isSubmitting} className={styles.btnDelete}><FiTrash2 /></Button>
+                  <Button variant="ghost" size="icon" onClick={() => setAttributeToDelete(attribute)} disabled={attributesCrud.isSubmitting} className={entityListStyles.btnDelete}><FiTrash2 /></Button>
                 </PermissionGate>
               </div>
             </>

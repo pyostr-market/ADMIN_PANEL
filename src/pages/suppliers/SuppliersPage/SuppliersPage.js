@@ -13,6 +13,7 @@ import {
   deleteSupplierRequest,
 } from '../api/suppliersApi';
 import styles from './SuppliersPage.module.css';
+import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
 const PAGE_LIMIT = 20;
 
@@ -103,36 +104,36 @@ export function SuppliersPage() {
           items={suppliersCrud.items}
           renderItem={(supplier) => (
             <>
-              <div className={styles.suppliersPageItemContent} onClick={() => handleViewSupplier(supplier)}>
-                <div className={styles.suppliersPageItemMain}>
-                  <div className={styles.suppliersPageAvatar}><FiBox /></div>
-                  <div className={styles.suppliersPageItemInfo}>
-                    <div className={styles.suppliersPageItemHeader}>
-                      <p className={styles.suppliersPageItemTitle}>{supplier.name || 'Без названия'}</p>
+              <div className={entityListStyles.entityItemContent} onClick={() => handleViewSupplier(supplier)}>
+                <div className={entityListStyles.entityItemMain}>
+                  <div className={entityListStyles.entityItemAvatar}><FiBox /></div>
+                  <div className={entityListStyles.entityItemInfo}>
+                    <div className={entityListStyles.entityItemHeader}>
+                      <p className={entityListStyles.entityItemTitle}>{supplier.name || 'Без названия'}</p>
                     </div>
-                    <div className={styles.suppliersPageItemMeta}>
-                      <span className={styles.suppliersPageMetaItem}>
-                        <span className={styles.suppliersPageMetaLabel}>ID:</span> {supplier.id}
+                    <div className={entityListStyles.entityItemMeta}>
+                      <span className={entityListStyles.entityItemMetaItem}>
+                        <span className={entityListStyles.entityItemMetaLabel}>ID:</span> {supplier.id}
                       </span>
                       {supplier.description && (
                         <>
-                          <span className={styles.suppliersPageSeparator}>•</span>
-                          <span className={styles.suppliersPageMetaItem}>{supplier.description}</span>
+                          <span className={entityListStyles.entityItemSeparator}>•</span>
+                          <span className={entityListStyles.entityItemMetaItem}>{supplier.description}</span>
                         </>
                       )}
                       {supplier.contact_email && (
                         <>
-                          <span className={styles.suppliersPageSeparator}>•</span>
-                          <span className={styles.suppliersPageMetaItem}>
-                            <FiMail className={styles.suppliersPageMetaIcon} /> {supplier.contact_email}
+                          <span className={entityListStyles.entityItemSeparator}>•</span>
+                          <span className={entityListStyles.entityItemMetaItem}>
+                            <FiMail className={entityListStyles.entityItemMetaIcon} /> {supplier.contact_email}
                           </span>
                         </>
                       )}
                       {supplier.contact_phone && (
                         <>
-                          <span className={styles.suppliersPageSeparator}>•</span>
-                          <span className={styles.suppliersPageMetaItem}>
-                            <FiPhone className={styles.suppliersPageMetaIcon} /> {supplier.contact_phone}
+                          <span className={entityListStyles.entityItemSeparator}>•</span>
+                          <span className={entityListStyles.entityItemMetaItem}>
+                            <FiPhone className={entityListStyles.entityItemMetaIcon} /> {supplier.contact_phone}
                           </span>
                         </>
                       )}
@@ -140,17 +141,17 @@ export function SuppliersPage() {
                   </div>
                 </div>
               </div>
-              <div className={styles.suppliersPageItemActions}>
+              <div className={entityListStyles.entityActions}>
                 <PermissionGate permission={['supplier:update']} fallback={null}>
-                  <Button variant="secondary" size="sm" leftIcon={<FiEdit2 />} onClick={() => handleEditSupplier(supplier)}>
+                  <Button variant="secondary" size="sm" leftIcon={<FiEdit2 />} onClick={() => handleEditSupplier(supplier)} className={entityListStyles.btnEdit}>
                     Редактировать
                   </Button>
                 </PermissionGate>
-                <Button variant="secondary" size="sm" leftIcon={<FiEye />} onClick={() => handleViewSupplier(supplier)}>
+                <Button variant="secondary" size="sm" leftIcon={<FiEye />} onClick={() => handleViewSupplier(supplier)} className={entityListStyles.btnView}>
                   Просмотр
                 </Button>
                 <PermissionGate permission={['supplier:delete']} fallback={null}>
-                  <Button variant="ghost" size="icon" onClick={() => setSupplierToDelete(supplier)} disabled={suppliersCrud.isSubmitting} className={styles.btnDelete}>
+                  <Button variant="ghost" size="icon" onClick={() => setSupplierToDelete(supplier)} disabled={suppliersCrud.isSubmitting} className={entityListStyles.btnDelete}>
                     <FiTrash2 />
                   </Button>
                 </PermissionGate>

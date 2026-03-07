@@ -17,6 +17,7 @@ import {
   getAllGroupsRequest,
 } from '../api/usersApi';
 import styles from './UsersListPage.module.css';
+import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
 const PAGE_LIMIT = 20;
 
@@ -295,56 +296,56 @@ export function UsersListPage() {
           items={usersCrud.items}
           renderItem={(user) => (
             <>
-              <div className={styles.usersListPageItemContent} onClick={() => handleViewUser(user)}>
-                <div className={styles.usersListPageItemMain}>
-                  <div className={`${styles.usersListPageAvatar} ${user.is_active ? styles.usersListPageAvatarActive : styles.usersListPageAvatarInactive}`}>
+              <div className={entityListStyles.entityItemContent} onClick={() => handleViewUser(user)}>
+                <div className={entityListStyles.entityItemMain}>
+                  <div className={`${entityListStyles.entityItemAvatar} ${user.is_active ? entityListStyles.entityItemAvatarActive : entityListStyles.entityItemAvatarInactive}`}>
                     <FiUser />
                   </div>
-                  <div className={styles.usersListPageItemInfo}>
-                    <div className={styles.usersListPageItemHeader}>
-                      <p className={styles.usersListPageItemTitle}>
+                  <div className={entityListStyles.entityItemInfo}>
+                    <div className={entityListStyles.entityItemHeader}>
+                      <p className={entityListStyles.entityItemTitle}>
                         {user.primary_phone?.phone_number || 'Без телефона'}
                       </p>
-                      <div className={styles.usersListPageItemBadges}>
+                      <div className={entityListStyles.entityItemBadges}>
                         {!user.is_active && (
-                          <span className={`${styles.usersListPageBadge} ${styles.usersListPageBadgeInactive}`} title="Заблокирован">
+                          <span className={`${entityListStyles.entityItemBadge} ${entityListStyles.entityItemBadgeInactive}`} title="Заблокирован">
                             <FiUserX />
                           </span>
                         )}
                         {user.is_verified && (
-                          <span className={`${styles.usersListPageBadge} ${styles.usersListPageBadgeVerified}`} title="Верифицирован">
+                          <span className={`${entityListStyles.entityItemBadge} ${entityListStyles.entityItemBadgeVerified}`} title="Верифицирован">
                             <FiCheck />
                           </span>
                         )}
                       </div>
                     </div>
-                    <div className={styles.usersListPageItemMeta}>
-                      <span className={styles.usersListPageMetaItem}>
-                        <span className={styles.usersListPageMetaLabel}>ID:</span> {user.id}
+                    <div className={entityListStyles.entityItemMeta}>
+                      <span className={entityListStyles.entityItemMetaItem}>
+                        <span className={entityListStyles.entityItemMetaLabel}>ID:</span> {user.id}
                       </span>
                       {user.fio && (
                         <>
-                          <span className={styles.usersListPageSeparator}>•</span>
-                          <span className={styles.usersListPageMetaItem}>
-                            <FiUser className={styles.usersListPageMetaIcon} />
+                          <span className={entityListStyles.entityItemSeparator}>•</span>
+                          <span className={entityListStyles.entityItemMetaItem}>
+                            <FiUser className={entityListStyles.entityItemMetaIcon} />
                             {user.fio}
                           </span>
                         </>
                       )}
                       {(user.group || user.created_at) && (
                         <>
-                          <span className={styles.usersListPageSeparator}>•</span>
+                          <span className={entityListStyles.entityItemSeparator}>•</span>
                           {user.group && (
-                            <span className={styles.usersListPageMetaItem}>
-                              <FiUser className={styles.usersListPageMetaIcon} />
+                            <span className={entityListStyles.entityItemMetaItem}>
+                              <FiUser className={entityListStyles.entityItemMetaIcon} />
                               {user.group.name}
                             </span>
                           )}
                           {user.group && user.created_at && (
-                            <span className={styles.usersListPageSeparator}>•</span>
+                            <span className={entityListStyles.entityItemSeparator}>•</span>
                           )}
                           {user.created_at && (
-                            <span className={styles.usersListPageMetaItem}>
+                            <span className={entityListStyles.entityItemMetaItem}>
                               {new Date(user.created_at).toLocaleDateString('ru-RU')}
                             </span>
                           )}
@@ -354,13 +355,14 @@ export function UsersListPage() {
                   </div>
                 </div>
               </div>
-              <div className={styles.usersListPageItemActions}>
+              <div className={entityListStyles.entityActions}>
                 <Button
                   variant="secondary"
                   size="sm"
                   leftIcon={<FiEye />}
                   onClick={() => handleViewUser(user)}
                   aria-label={`Просмотреть пользователя ${user.primary_phone?.phone_number || user.id}`}
+                  className={entityListStyles.btnView}
                 >
                   Просмотр
                 </Button>
@@ -372,7 +374,7 @@ export function UsersListPage() {
                     onClick={() => setUserToBan(user)}
                     disabled={usersCrud.isSubmitting}
                     aria-label={user.is_active ? 'Заблокировать пользователя' : 'Разблокировать пользователя'}
-                    className={user.is_active ? styles.btnBan : styles.btnUnban}
+                    className={user.is_active ? entityListStyles.btnBan : entityListStyles.btnUnban}
                   >
                     {user.is_active ? <FiUserX /> : <FiUserCheck />}
                   </Button>
@@ -385,7 +387,7 @@ export function UsersListPage() {
                     onClick={() => setUserToDelete(user)}
                     disabled={usersCrud.isSubmitting}
                     aria-label="Удалить пользователя"
-                    className={styles.btnDelete}
+                    className={entityListStyles.btnDelete}
                   >
                     <FiTrash2 />
                   </Button>

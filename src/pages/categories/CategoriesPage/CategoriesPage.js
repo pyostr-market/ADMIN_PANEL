@@ -13,6 +13,7 @@ import {
   deleteCategoryRequest,
 } from '../api/categoryApi';
 import styles from './CategoriesPage.module.css';
+import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
 const PAGE_LIMIT = 20;
 
@@ -133,49 +134,49 @@ export function CategoriesPage() {
           items={categoriesCrud.items}
           renderItem={(category) => (
             <>
-              <div className={styles.categoriesPageItemContent} onClick={() => handleViewCategory(category)}>
-                <div className={styles.categoriesPageItemMain}>
-                  <div className={styles.categoriesPageAvatar}>
+              <div className={entityListStyles.entityItemContent} onClick={() => handleViewCategory(category)}>
+                <div className={entityListStyles.entityItemMain}>
+                  <div className={entityListStyles.entityItemAvatar}>
                     <FiTag />
                   </div>
-                  <div className={styles.categoriesPageItemInfo}>
-                    <div className={styles.categoriesPageItemHeader}>
-                      <p className={styles.categoriesPageItemTitle}>
+                  <div className={entityListStyles.entityItemInfo}>
+                    <div className={entityListStyles.entityItemHeader}>
+                      <p className={entityListStyles.entityItemTitle}>
                         {category.name || 'Без названия'}
                       </p>
                     </div>
-                    <div className={styles.categoriesPageItemMeta}>
-                      <span className={styles.categoriesPageMetaItem}>
-                        <span className={styles.categoriesPageMetaLabel}>ID:</span> {category.id}
+                    <div className={entityListStyles.entityItemMeta}>
+                      <span className={entityListStyles.entityItemMetaItem}>
+                        <span className={entityListStyles.entityItemMetaLabel}>ID:</span> {category.id}
                       </span>
                       {category.parent_id && (
                         <>
-                          <span className={styles.categoriesPageSeparator}>•</span>
-                          <span className={styles.categoriesPageMetaItem}>
+                          <span className={entityListStyles.entityItemSeparator}>•</span>
+                          <span className={entityListStyles.entityItemMetaItem}>
                             Родитель: ID {category.parent_id}
                           </span>
                         </>
                       )}
                       {category.manufacturer_id && (
                         <>
-                          <span className={styles.categoriesPageSeparator}>•</span>
-                          <span className={styles.categoriesPageMetaItem}>
+                          <span className={entityListStyles.entityItemSeparator}>•</span>
+                          <span className={entityListStyles.entityItemMetaItem}>
                             Производитель: ID {category.manufacturer_id}
                           </span>
                         </>
                       )}
                       {category.description && (
                         <>
-                          <span className={styles.categoriesPageSeparator}>•</span>
-                          <span className={styles.categoriesPageMetaItem}>
+                          <span className={entityListStyles.entityItemSeparator}>•</span>
+                          <span className={entityListStyles.entityItemMetaItem}>
                             {category.description}
                           </span>
                         </>
                       )}
                       {category.images && category.images.length > 0 && (
                         <>
-                          <span className={styles.categoriesPageSeparator}>•</span>
-                          <span className={styles.categoriesPageMetaItem}>
+                          <span className={entityListStyles.entityItemSeparator}>•</span>
+                          <span className={entityListStyles.entityItemMetaItem}>
                             Изображений: {category.images.length}
                           </span>
                         </>
@@ -184,7 +185,7 @@ export function CategoriesPage() {
                   </div>
                 </div>
               </div>
-              <div className={styles.categoriesPageItemActions}>
+              <div className={entityListStyles.entityActions}>
                 <PermissionGate permission={['category:update']} fallback={null}>
                   <Button
                     variant="secondary"
@@ -192,6 +193,7 @@ export function CategoriesPage() {
                     leftIcon={<FiEdit2 />}
                     onClick={() => handleEditCategory(category)}
                     aria-label={`Редактировать категорию ${category.name || category.id}`}
+                    className={entityListStyles.btnEdit}
                   >
                     Редактировать
                   </Button>
@@ -203,6 +205,7 @@ export function CategoriesPage() {
                   leftIcon={<FiEye />}
                   onClick={() => handleViewCategory(category)}
                   aria-label={`Просмотреть категорию ${category.name || category.id}`}
+                  className={entityListStyles.btnView}
                 >
                   Просмотр
                 </Button>
@@ -214,7 +217,7 @@ export function CategoriesPage() {
                     onClick={() => setCategoryToDelete(category)}
                     disabled={categoriesCrud.isSubmitting}
                     aria-label="Удалить категорию"
-                    className={styles.btnDelete}
+                    className={entityListStyles.btnDelete}
                   >
                     <FiTrash2 />
                   </Button>

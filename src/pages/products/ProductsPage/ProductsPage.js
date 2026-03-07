@@ -15,6 +15,7 @@ import {
   getProductTypesForAutocompleteRequest,
 } from '../api/productsApi';
 import styles from './ProductsPage.module.css';
+import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
 const PAGE_LIMIT = 20;
 
@@ -238,56 +239,56 @@ export function ProductsPage() {
           items={productsCrud.items}
           renderItem={(product) => (
             <>
-              <div className={styles.productsPageItemContent} onClick={() => handleViewProduct(product)}>
-                <div className={styles.productsPageItemMain}>
-                  <div className={styles.productsPageItemImage}>
+              <div className={entityListStyles.entityItemContent} onClick={() => handleViewProduct(product)}>
+                <div className={entityListStyles.entityItemMain}>
+                  <div className={entityListStyles.entityItemImage}>
                     {mainImage(product) ? (
-                      <img src={mainImage(product)} alt={product.name} className={styles.productsPageItemImg} />
+                      <img src={mainImage(product)} alt={product.name} className={entityListStyles.entityItemImg} />
                     ) : (
-                      <div className={styles.productsPageItemAvatar}>
+                      <div className={entityListStyles['entityItemAvatar--image']}>
                         <FiPackage />
                       </div>
                     )}
                   </div>
-                  <div className={styles.productsPageItemInfo}>
-                    <div className={styles.productsPageItemHeader}>
-                      <p className={styles.productsPageItemTitle}>
+                  <div className={entityListStyles.entityItemInfo}>
+                    <div className={entityListStyles.entityItemHeader}>
+                      <p className={entityListStyles.entityItemTitle}>
                         {product.name || 'Без названия'}
                       </p>
                     </div>
-                    <div className={styles.productsPageItemMeta}>
-                      <span className={`${styles.productsPageMetaItem} ${styles.productsPageMetaItemPrice}`}>
+                    <div className={entityListStyles.entityItemMeta}>
+                      <span className={`${entityListStyles.entityItemMetaItem} ${entityListStyles.entityItemMetaPrice}`}>
                         {product.price?.toLocaleString('ru-RU')} ₽
                       </span>
                       {product.category && (
                         <>
-                          <span className={styles.productsPageSeparator}>•</span>
-                          <span className={styles.productsPageMetaItem}>
-                            <FiTag className={styles.productsPageMetaIcon} />
+                          <span className={entityListStyles.entityItemSeparator}>•</span>
+                          <span className={entityListStyles.entityItemMetaItem}>
+                            <FiTag className={entityListStyles.entityItemMetaIcon} />
                             Категория: {product.category.name}
                           </span>
                         </>
                       )}
                       {product.product_type && (
                         <>
-                          <span className={styles.productsPageSeparator}>•</span>
-                          <span className={styles.productsPageMetaItem}>
-                            <FiPackage className={styles.productsPageMetaIcon} />
+                          <span className={entityListStyles.entityItemSeparator}>•</span>
+                          <span className={entityListStyles.entityItemMetaItem}>
+                            <FiPackage className={entityListStyles.entityItemMetaIcon} />
                             Тип: {product.product_type.name}
                           </span>
                         </>
                       )}
                       {product.supplier && (
                         <>
-                          <span className={styles.productsPageSeparator}>•</span>
-                          <span className={styles.productsPageMetaItem}>
+                          <span className={entityListStyles.entityItemSeparator}>•</span>
+                          <span className={entityListStyles.entityItemMetaItem}>
                             Поставщик: {product.supplier.name}
                           </span>
                         </>
                       )}
                     </div>
                     {product.description && (
-                      <p className={styles.productsPageItemDescription}>
+                      <p className={entityListStyles.entityItemDescription}>
                         {product.description.length > 150
                           ? `${product.description.substring(0, 150)}...`
                           : product.description}
@@ -296,7 +297,7 @@ export function ProductsPage() {
                   </div>
                 </div>
               </div>
-              <div className={styles.productsPageItemActions}>
+              <div className={entityListStyles.entityActions}>
                 <PermissionGate permission={['product:update']} fallback={null}>
                   <Button
                     variant="secondary"
@@ -304,6 +305,7 @@ export function ProductsPage() {
                     leftIcon={<FiEdit2 />}
                     onClick={() => handleEditProduct(product)}
                     aria-label={`Редактировать товар ${product.name || product.id}`}
+                    className={entityListStyles.btnEdit}
                   >
                     Редактировать
                   </Button>
@@ -315,6 +317,7 @@ export function ProductsPage() {
                   leftIcon={<FiEye />}
                   onClick={() => handleViewProduct(product)}
                   aria-label={`Просмотреть товар ${product.name || product.id}`}
+                  className={entityListStyles.btnView}
                 >
                   Просмотр
                 </Button>
@@ -326,7 +329,7 @@ export function ProductsPage() {
                     onClick={() => setProductToDelete(product)}
                     disabled={productsCrud.isSubmitting}
                     aria-label="Удалить товар"
-                    className={styles.btnDelete}
+                    className={entityListStyles.btnDelete}
                   >
                     <FiTrash2 />
                   </Button>
