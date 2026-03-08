@@ -22,6 +22,11 @@ import {
   FiCheckSquare,
   FiPercent,
   FiDisc,
+  FiBook,
+  FiHelpCircle,
+  FiSearch,
+  FiMail,
+  FiFlag,
 } from 'react-icons/fi';
 
 export const Icons = {
@@ -30,6 +35,7 @@ export const Icons = {
   warehouse: FiBox,
   billing: FiDollarSign,
   pricing: FiPercent,
+  cms: FiBook,
   users: FiUsers,
   orders: FiFileText,
   customers: FiUsers,
@@ -54,4 +60,9 @@ export const Icons = {
   profile: FiUser,
   theme: FiMoon,
   close: FiX,
+  pages: FiFileText,
+  faq: FiHelpCircle,
+  seo: FiSearch,
+  email: FiMail,
+  flags: FiFlag,
 };

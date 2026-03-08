@@ -29,6 +29,7 @@ export const MENU_PERMISSIONS = {
   ],
   warehouse: ['warehouse', 'warehouse:view'],
   billing: ['billing'],
+  cms: ['cms', 'cms:view', 'cms:create', 'cms:update', 'cms:delete'],
 };
 
 /**

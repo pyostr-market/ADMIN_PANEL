@@ -1,0 +1,98 @@
+.flagDetailPage {
+  min-height: 100vh;
+  background: var(--bg-secondary);
+}
+
+.flagDetailPageLoading,
+.flagDetailPageEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 16px;
+}
+
+.flagDetailPageLoading p,
+.flagDetailPageEmpty p {
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+.flagDetailPageEmpty h1 {
+  font-size: 20px;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
+.flagDetailPageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.backButton {
+  background: transparent;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.backButton:hover {
+  color: var(--text-primary);
+}
+
+.flagDetailPageActions {
+  display: flex;
+  gap: 12px;
+}
+
+.flagDetailPageContent {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.flagDetailPagePanel {
+  background: var(--bg-primary);
+  border-radius: 12px;
+  border: 1px solid var(--border-secondary);
+  overflow: hidden;
+}
+
+.panelHeader {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-secondary);
+  background: var(--bg-tertiary);
+}
+
+.panelHeaderContent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.panelTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.panelContent {
+  padding: 20px;
+}
+
+.flagDescription {
+  font-size: 15px;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.7;
+}

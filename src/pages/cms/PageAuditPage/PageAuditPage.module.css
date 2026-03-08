@@ -1,0 +1,56 @@
+.auditHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.backButton:hover {
+  color: var(--text-primary);
+}
+
+.auditTitle {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.actionBadge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.actionBadgeSuccess {
+  background: rgba(var(--success-rgb), 0.1);
+  color: var(--success);
+}
+
+.actionBadgeInfo {
+  background: rgba(var(--info-rgb), 0.1);
+  color: var(--info);
+}
+
+.actionBadgeDanger {
+  background: rgba(var(--danger-rgb), 0.1);
+  color: var(--danger);
+}
+
+.actionBadgeSecondary {
+  background: rgba(var(--text-secondary-rgb), 0.1);
+  color: var(--text-secondary);
+}

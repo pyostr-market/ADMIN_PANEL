@@ -115,6 +115,39 @@ export const NAVIGATION_CONFIG = {
     ],
   },
 
+  // CMS разделы
+  cms: {
+    title: 'CMS',
+    icon: 'cms',
+    items: [
+      {
+        label: 'Страницы',
+        path: '/cms/pages',
+        icon: 'pages',
+      },
+      {
+        label: 'FAQ',
+        path: '/cms/faq',
+        icon: 'faq',
+      },
+      {
+        label: 'SEO',
+        path: '/cms/seo',
+        icon: 'seo',
+      },
+      {
+        label: 'Email шаблоны',
+        path: '/cms/email-templates',
+        icon: 'email',
+      },
+      {
+        label: 'Feature Flags',
+        path: '/cms/feature-flags',
+        icon: 'flags',
+      },
+    ],
+  },
+
   // Дополнительные разделы (для ПК навигации)
   additional: [
     {

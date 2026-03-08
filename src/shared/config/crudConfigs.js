@@ -17,6 +17,28 @@
 
 import { authorizedApi, productApi } from '../api/http';
 import { API_ENDPOINTS } from './env';
+import {
+  getPagesRequest,
+  createPageRequest,
+  updatePageRequest,
+  deletePageRequest,
+  getFaqsRequest,
+  createFaqRequest,
+  updateFaqRequest,
+  deleteFaqRequest,
+  getSeoListRequest,
+  createSeoRequest,
+  updateSeoRequest,
+  deleteSeoRequest,
+  getEmailTemplatesRequest,
+  createEmailTemplateRequest,
+  updateEmailTemplateRequest,
+  deleteEmailTemplateRequest,
+  getFeatureFlagsRequest,
+  createFeatureFlagRequest,
+  updateFeatureFlagRequest,
+  deleteFeatureFlagRequest,
+} from '../../pages/cms/api/cmsApi';
 
 // === Manufacturers / Производители ===
 export const manufacturersConfig = {
@@ -468,6 +490,310 @@ export const attributesConfig = {
   },
 };
 
+// === CMS Pages / Страницы CMS ===
+export const cmsPagesConfig = {
+  fetchFn: async ({ page = 1, limit = 20, search } = {}) => {
+    const response = await getPagesRequest({ page, limit, title: search });
+    return response;
+  },
+
+  createFn: async (payload) => {
+    const response = await createPageRequest(payload);
+    return response;
+  },
+
+  updateFn: async (id, payload) => {
+    const response = await updatePageRequest(id, payload);
+    return response;
+  },
+
+  deleteFn: async (id) => {
+    const response = await deletePageRequest(id);
+    return response;
+  },
+
+  entityName: 'Страница',
+  entityNamePlural: 'Страницы',
+
+  permissions: {
+    view: ['cms:view'],
+    create: ['cms:create'],
+    update: ['cms:update'],
+    delete: ['cms:delete'],
+  },
+
+  fields: {
+    list: [
+      { key: 'title', label: 'Заголовок', render: (item) => <p className="crud-item__title">{item.title}</p> },
+      { key: 'slug', label: 'Slug', render: (item) => <p className="crud-item__description">{item.slug}</p> },
+      { key: 'is_published', label: 'Статус', render: (item) => (
+        <p className="crud-item__meta">
+          <span>{item.is_published ? 'Опубликована' : 'Черновик'}</span>
+        </p>
+      ) },
+    ],
+    form: [
+      { key: 'slug', label: 'Slug', required: true, placeholder: 'about-us' },
+      { key: 'title', label: 'Заголовок', required: true, placeholder: 'О компании' },
+      { key: 'is_published', label: 'Опубликована', type: 'checkbox' },
+    ],
+  },
+};
+
+// === CMS FAQ / FAQ ===
+export const cmsFaqConfig = {
+  fetchFn: async ({ page = 1, limit = 20, search } = {}) => {
+    const response = await getFaqsRequest({});
+    let items = response.items || [];
+    if (search) {
+      items = items.filter(item =>
+        item.question.toLowerCase().includes(search.toLowerCase()) ||
+        item.answer.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    const total = items.length;
+    const pagination = {
+      page,
+      limit,
+      total,
+      pages: Math.ceil(total / limit),
+    };
+    const start = (page - 1) * limit;
+    const end = start + limit;
+    return { items: items.slice(start, end), pagination };
+  },
+
+  createFn: async (payload) => {
+    const response = await createFaqRequest(payload);
+    return response;
+  },
+
+  updateFn: async (id, payload) => {
+    const response = await updateFaqRequest(id, payload);
+    return response;
+  },
+
+  deleteFn: async (id) => {
+    const response = await deleteFaqRequest(id);
+    return response;
+  },
+
+  entityName: 'FAQ',
+  entityNamePlural: 'FAQ',
+
+  permissions: {
+    view: ['cms:view'],
+    create: ['cms:create'],
+    update: ['cms:update'],
+    delete: ['cms:delete'],
+  },
+
+  fields: {
+    list: [
+      { key: 'question', label: 'Вопрос', render: (item) => <p className="crud-item__title">{item.question}</p> },
+      { key: 'answer', label: 'Ответ', render: (item) => <p className="crud-item__description">{item.answer}</p> },
+      { key: 'category', label: 'Категория', render: (item) => <p className="crud-item__meta">{item.category || '—'}</p> },
+    ],
+    form: [
+      { key: 'question', label: 'Вопрос', required: true, placeholder: 'Как оформить заказ?' },
+      { key: 'answer', label: 'Ответ', required: true, type: 'textarea', placeholder: 'Для оформления заказа...' },
+      { key: 'category', label: 'Категория', placeholder: 'Заказы' },
+      { key: 'order', label: 'Порядок', type: 'number', placeholder: '0' },
+      { key: 'is_active', label: 'Активен', type: 'checkbox' },
+    ],
+  },
+};
+
+// === CMS SEO / SEO данные ===
+export const cmsSeoConfig = {
+  fetchFn: async ({ page = 1, limit = 20, search } = {}) => {
+    const response = await getSeoListRequest({ page, limit });
+    let items = response.items || [];
+    if (search) {
+      items = items.filter(item =>
+        item.page_slug.toLowerCase().includes(search.toLowerCase()) ||
+        (item.title && item.title.toLowerCase().includes(search.toLowerCase()))
+      );
+    }
+    return { items, pagination: response.pagination };
+  },
+
+  createFn: async (payload) => {
+    const response = await createSeoRequest(payload);
+    return response;
+  },
+
+  updateFn: async (id, payload) => {
+    const response = await updateSeoRequest(id, payload);
+    return response;
+  },
+
+  deleteFn: async (id) => {
+    const response = await deleteSeoRequest(id);
+    return response;
+  },
+
+  entityName: 'SEO запись',
+  entityNamePlural: 'SEO записи',
+
+  permissions: {
+    view: ['cms:view'],
+    create: ['cms:create'],
+    update: ['cms:update'],
+    delete: ['cms:delete'],
+  },
+
+  fields: {
+    list: [
+      { key: 'page_slug', label: 'Slug страницы', render: (item) => <p className="crud-item__title">{item.page_slug}</p> },
+      { key: 'title', label: 'SEO заголовок', render: (item) => <p className="crud-item__description">{item.title || '—'}</p> },
+      { key: 'description', label: 'Описание', render: (item) => <p className="crud-item__description">{item.description || '—'}</p> },
+    ],
+    form: [
+      { key: 'page_slug', label: 'Slug страницы', required: true, placeholder: 'about-us' },
+      { key: 'title', label: 'SEO заголовок', placeholder: 'О компании - Название магазина' },
+      { key: 'description', label: 'SEO описание', type: 'textarea', placeholder: 'Информация о нашей компании...' },
+      { key: 'keywords', label: 'Ключевые слова', type: 'textarea', placeholder: 'компания, магазин, о нас' },
+      { key: 'og_image_id', label: 'OG Image ID', type: 'number', placeholder: '1' },
+    ],
+  },
+};
+
+// === CMS Email Templates / Email шаблоны ===
+export const cmsEmailTemplatesConfig = {
+  fetchFn: async ({ page = 1, limit = 20, search } = {}) => {
+    const response = await getEmailTemplatesRequest({});
+    let items = response.items || [];
+    if (search) {
+      items = items.filter(item =>
+        item.key.toLowerCase().includes(search.toLowerCase()) ||
+        item.subject.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    const total = items.length;
+    const pagination = {
+      page,
+      limit,
+      total,
+      pages: Math.ceil(total / limit),
+    };
+    const start = (page - 1) * limit;
+    const end = start + limit;
+    return { items: items.slice(start, end), pagination };
+  },
+
+  createFn: async (payload) => {
+    const response = await createEmailTemplateRequest(payload);
+    return response;
+  },
+
+  updateFn: async (id, payload) => {
+    const response = await updateEmailTemplateRequest(id, payload);
+    return response;
+  },
+
+  deleteFn: async (id) => {
+    const response = await deleteEmailTemplateRequest(id);
+    return response;
+  },
+
+  entityName: 'Email шаблон',
+  entityNamePlural: 'Email шаблоны',
+
+  permissions: {
+    view: ['cms:view'],
+    create: ['cms:create'],
+    update: ['cms:update'],
+    delete: ['cms:delete'],
+  },
+
+  fields: {
+    list: [
+      { key: 'key', label: 'Ключ', render: (item) => <p className="crud-item__title">{item.key}</p> },
+      { key: 'subject', label: 'Тема', render: (item) => <p className="crud-item__description">{item.subject}</p> },
+      { key: 'is_active', label: 'Статус', render: (item) => (
+        <p className="crud-item__meta">
+          <span>{item.is_active ? 'Активен' : 'Неактивен'}</span>
+        </p>
+      ) },
+    ],
+    form: [
+      { key: 'key', label: 'Ключ', required: true, placeholder: 'order_confirmation' },
+      { key: 'subject', label: 'Тема письма', required: true, placeholder: 'Подтверждение заказа' },
+      { key: 'body_html', label: 'HTML тело', required: true, type: 'textarea', placeholder: '<html>...</html>' },
+      { key: 'body_text', label: 'Текстовое тело', type: 'textarea', placeholder: 'Ваш заказ подтверждён...' },
+      { key: 'variables', label: 'Переменные', type: 'textarea', placeholder: 'order_id, customer_name' },
+      { key: 'is_active', label: 'Активен', type: 'checkbox' },
+    ],
+  },
+};
+
+// === CMS Feature Flags / Feature Flags ===
+export const cmsFeatureFlagsConfig = {
+  fetchFn: async ({ page = 1, limit = 20, search } = {}) => {
+    const response = await getFeatureFlagsRequest({});
+    let items = response.items || [];
+    if (search) {
+      items = items.filter(item =>
+        item.key.toLowerCase().includes(search.toLowerCase()) ||
+        (item.description && item.description.toLowerCase().includes(search.toLowerCase()))
+      );
+    }
+    const total = items.length;
+    const pagination = {
+      page,
+      limit,
+      total,
+      pages: Math.ceil(total / limit),
+    };
+    const start = (page - 1) * limit;
+    const end = start + limit;
+    return { items: items.slice(start, end), pagination };
+  },
+
+  createFn: async (payload) => {
+    const response = await createFeatureFlagRequest(payload);
+    return response;
+  },
+
+  updateFn: async (id, payload) => {
+    const response = await updateFeatureFlagRequest(id, payload);
+    return response;
+  },
+
+  deleteFn: async (id) => {
+    const response = await deleteFeatureFlagRequest(id);
+    return response;
+  },
+
+  entityName: 'Feature Flag',
+  entityNamePlural: 'Feature Flags',
+
+  permissions: {
+    view: ['cms:view'],
+    create: ['cms:create'],
+    update: ['cms:update'],
+    delete: ['cms:delete'],
+  },
+
+  fields: {
+    list: [
+      { key: 'key', label: 'Ключ', render: (item) => <p className="crud-item__title">{item.key}</p> },
+      { key: 'description', label: 'Описание', render: (item) => <p className="crud-item__description">{item.description || '—'}</p> },
+      { key: 'enabled', label: 'Статус', render: (item) => (
+        <p className="crud-item__meta">
+          <span>{item.enabled ? 'Включен' : 'Выключен'}</span>
+        </p>
+      ) },
+    ],
+    form: [
+      { key: 'key', label: 'Ключ', required: true, placeholder: 'new_checkout_enabled' },
+      { key: 'description', label: 'Описание', placeholder: 'Включить новый процесс оформления заказа' },
+      { key: 'enabled', label: 'Включен', type: 'checkbox' },
+    ],
+  },
+};
+
 // Экспорт всех конфигураций
 export const CRUD_CONFIGS = {
   manufacturers: manufacturersConfig,
@@ -478,4 +804,9 @@ export const CRUD_CONFIGS = {
   products: productsConfig,
   users: usersConfig,
   attributes: attributesConfig,
+  cmsPages: cmsPagesConfig,
+  cmsFaq: cmsFaqConfig,
+  cmsSeo: cmsSeoConfig,
+  cmsEmailTemplates: cmsEmailTemplatesConfig,
+  cmsFeatureFlags: cmsFeatureFlagsConfig,
 };

@@ -1,0 +1,28 @@
+.modalConfirmText {
+  margin-bottom: 12px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.modalConfirmText strong {
+  display: block;
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+.modalConfirmNote {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.faqPageTitle {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.faqPageControls {
+  display: flex;
+  gap: 12px;
+}
