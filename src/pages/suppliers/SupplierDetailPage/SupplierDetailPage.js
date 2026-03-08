@@ -80,15 +80,15 @@ export function SupplierDetailPage() {
   }, [supplierId]);
 
   const handleEditSupplier = () => {
-    navigate(`/suppliers/${supplierId}/edit`);
+    navigate(`/catalog/suppliers/${supplierId}/edit`);
   };
 
   const handleViewAudit = () => {
-    navigate(`/suppliers/${supplierId}/audit`);
+    navigate(`/catalog/suppliers/${supplierId}/audit`);
   };
 
   const handleBack = () => {
-    navigate('/suppliers');
+    navigate('/catalog/suppliers');
   };
 
   const handleDeleteSupplier = async () => {
@@ -96,7 +96,7 @@ export function SupplierDetailPage() {
     try {
       await deleteSupplierRequest(supplierId);
       notificationsRef.current?.info('Поставщик удален');
-      navigate('/suppliers');
+      navigate('/catalog/suppliers');
     } catch (error) {
       const message = getApiErrorMessage(error);
       notificationsRef.current?.error(message);

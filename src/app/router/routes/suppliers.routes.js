@@ -12,13 +12,13 @@ export function createSuppliersRoutes() {
   return (
     <>
       <Route
-        element={<PrivateRoute permission={['supplier', 'supplier:view']} mode="any" />}
+        element={<PrivateRoute permission={['supplier', 'supplier:view', 'supplier:create']} mode="any" />}
       >
-        <Route path="suppliers" element={<SuppliersPage />} />
-        <Route path="suppliers/create" element={<SupplierFormPage />} />
-        <Route path="suppliers/:supplierId/edit" element={<SupplierFormPage />} />
-        <Route path="suppliers/:supplierId" element={<SupplierDetailPage />} />
-        <Route path="suppliers/:supplierId/audit" element={<SupplierAuditPage />} />
+        <Route path="catalog/suppliers" element={<SuppliersPage />} />
+        <Route path="catalog/suppliers/create" element={<SupplierFormPage />} />
+        <Route path="catalog/suppliers/:supplierId/edit" element={<SupplierFormPage />} />
+        <Route path="catalog/suppliers/:supplierId" element={<SupplierDetailPage />} />
+        <Route path="catalog/suppliers/:supplierId/audit" element={<SupplierAuditPage />} />
       </Route>
     </>
   );

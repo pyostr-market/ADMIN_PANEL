@@ -49,9 +49,9 @@ export function AttributesPage() {
     if (result) setAttributeToDelete(null);
   };
 
-  const handleViewAttribute = (attribute) => navigate(`/attributes/${attribute.id}`);
-  const handleEditAttribute = (attribute) => navigate(`/attributes/${attribute.id}/edit`);
-  const handleCreateAttribute = () => navigate('/attributes/create');
+  const handleViewAttribute = (attribute) => navigate(`/catalog/attributes/${attribute.id}`);
+  const handleEditAttribute = (attribute) => navigate(`/catalog/attributes/${attribute.id}/edit`);
+  const handleCreateAttribute = () => navigate('/catalog/attributes/create');
 
   return (
     <>
@@ -60,7 +60,7 @@ export function AttributesPage() {
           <>
             <h1 className={styles.attributesPageTitle}>Атрибуты</h1>
             <div className={styles.attributesPageControls}>
-              <PermissionGate permission={['attribute:create']} fallback={null}>
+              <PermissionGate permission={['product_attribute:create']} fallback={null}>
                 <Button variant="primary" leftIcon={<FiPlus />} onClick={handleCreateAttribute}>Создать атрибут</Button>
               </PermissionGate>
             </div>

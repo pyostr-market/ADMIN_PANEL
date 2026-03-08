@@ -12,7 +12,7 @@ export function createBillingRoutes() {
   return (
     <>
       <Route
-        element={<PrivateRoute permission={['billing']} mode="any" />}
+        element={<PrivateRoute permission={['billing', 'billing:create']} mode="any" />}
       >
         <Route path="billing/pricing-policies" element={<CategoryPricingPoliciesPage />} />
         <Route path="billing/pricing-policies/create" element={<CategoryPricingPolicyFormPage />} />

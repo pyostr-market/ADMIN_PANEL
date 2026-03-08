@@ -13,7 +13,7 @@ export function createUsersRoutes() {
     <>
       {/* Пользователи */}
       <Route
-        element={<PrivateRoute permission={['users', 'users:view', 'admin:user', 'admin:user:view']} mode="any" />}
+        element={<PrivateRoute permission={['users', 'users:view', 'users:create', 'admin:user', 'admin:user:view']} mode="any" />}
       >
         <Route path="users" element={<UsersListPage />} />
         <Route path="users/create" element={<UserCreatePage />} />

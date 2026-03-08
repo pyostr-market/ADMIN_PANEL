@@ -37,18 +37,18 @@ export function createCatalogRoutes() {
 
       {/* Категории */}
       <Route
-        element={<PrivateRoute permission={['product', 'product:view']} mode="any" />}
+        element={<PrivateRoute permission={['product', 'product:view', 'category:create']} mode="any" />}
       >
-        <Route path="categories" element={<CategoriesPage />} />
-        <Route path="categories/create" element={<CategoryFormPage />} />
-        <Route path="categories/:categoryId/edit" element={<CategoryFormPage />} />
-        <Route path="categories/:categoryId" element={<CategoryDetailPage />} />
-        <Route path="categories/:categoryId/audit" element={<CategoryAuditPage />} />
+        <Route path="catalog/categories" element={<CategoriesPage />} />
+        <Route path="catalog/categories/create" element={<CategoryFormPage />} />
+        <Route path="catalog/categories/:categoryId/edit" element={<CategoryFormPage />} />
+        <Route path="catalog/categories/:categoryId" element={<CategoryDetailPage />} />
+        <Route path="catalog/categories/:categoryId/audit" element={<CategoryAuditPage />} />
       </Route>
 
       {/* Товары */}
       <Route
-        element={<PrivateRoute permission={['product', 'product:view']} mode="any" />}
+        element={<PrivateRoute permission={['product', 'product:view', 'product:create']} mode="any" />}
       >
         <Route path="catalog/products" element={<ProductsPage />} />
         <Route path="catalog/products/create" element={<ProductFormPage />} />
@@ -59,7 +59,7 @@ export function createCatalogRoutes() {
 
       {/* Производители */}
       <Route
-        element={<PrivateRoute permission={['manufacturer', 'manufacturer:view']} mode="any" />}
+        element={<PrivateRoute permission={['manufacturer', 'manufacturer:view', 'manufacturer:create']} mode="any" />}
       >
         <Route path="catalog/manufacturers" element={<ManufacturersPage />} />
         <Route path="catalog/manufacturers/create" element={<ManufacturerFormPage />} />
@@ -70,7 +70,7 @@ export function createCatalogRoutes() {
 
       {/* Типы товаров */}
       <Route
-        element={<PrivateRoute permission={['device_type', 'device_type:view', 'product_type', 'product_type:view']} mode="any" />}
+        element={<PrivateRoute permission={['device_type', 'device_type:view', 'product_type', 'product_type:view', 'device_type:create', 'product_type:create']} mode="any" />}
       >
         <Route path="catalog/device_type" element={<ProductTypesPage />} />
         <Route path="catalog/device_type/create" element={<ProductTypeFormPage />} />
@@ -81,7 +81,7 @@ export function createCatalogRoutes() {
 
       {/* Атрибуты */}
       <Route
-        element={<PrivateRoute permission={['product_attribute', 'product_attribute:view']} mode="any" />}
+        element={<PrivateRoute permission={['product_attribute', 'product_attribute:view', 'product_attribute:create']} mode="any" />}
       >
         <Route path="catalog/attributes" element={<AttributesPage />} />
         <Route path="catalog/attributes/create" element={<AttributeFormPage />} />

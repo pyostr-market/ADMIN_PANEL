@@ -31,7 +31,7 @@ export function SuppliersPage() {
   });
 
   const actions = useEntityActions({
-    baseUrl: '/suppliers',
+    baseUrl: '/catalog/suppliers',
     onSuccess: (action) => {
       if (action === 'delete') {
         setSupplierToDelete(null);

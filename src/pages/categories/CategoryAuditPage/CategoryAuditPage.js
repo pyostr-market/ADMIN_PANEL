@@ -14,7 +14,7 @@ export function CategoryAuditPage() {
   return (
     <AuditPage
       title="История изменений категории"
-      backUrl={`/categories/${categoryId}`}
+      backUrl={`/catalog/categories/${categoryId}`}
       fetchAudit={fetchAudit}
     />
   );

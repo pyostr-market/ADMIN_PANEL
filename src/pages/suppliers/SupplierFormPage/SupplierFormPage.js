@@ -116,13 +116,13 @@ export function SupplierFormPage() {
         if (stayOnPage) {
           const newSupplierId = responseData?.id;
           if (newSupplierId) {
-            navigate(`/suppliers/${newSupplierId}`);
+            navigate(`/catalog/suppliers/${newSupplierId}`);
           }
         }
       }
 
       if (!stayOnPage) {
-        navigate('/suppliers');
+        navigate('/catalog/suppliers');
       }
     } catch (error) {
       const message = getApiErrorMessage(error);
@@ -133,13 +133,13 @@ export function SupplierFormPage() {
   };
 
   const handleBack = () => {
-    navigate(isEditMode ? `/suppliers/${supplierId}` : '/suppliers');
+    navigate(isEditMode ? `/catalog/suppliers/${supplierId}` : '/catalog/suppliers');
   };
 
   return (
     <FormPage
       title={isEditMode ? 'Редактирование поставщика' : 'Создание поставщика'}
-      backUrl={isEditMode ? `/suppliers/${supplierId}` : '/suppliers'}
+      backUrl={isEditMode ? `/catalog/suppliers/${supplierId}` : '/catalog/suppliers'}
       isLoading={isLoading}
       isSubmitting={isSubmitting}
       onBack={handleBack}

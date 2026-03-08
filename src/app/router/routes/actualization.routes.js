@@ -6,24 +6,32 @@ import { ColorDetailPage } from '../../../pages/actualization/ColorDetailPage/Co
 import { PricesListPage } from '../../../pages/actualization/PricesListPage/PricesListPage';
 import { PriceFormPage } from '../../../pages/actualization/PriceFormPage/PriceFormPage';
 import { PriceDetailPage } from '../../../pages/actualization/PriceDetailPage/PriceDetailPage';
+import { PrivateRoute } from '../routeGuards';
 
 /**
  * Маршруты для актуализации
  */
 export function createActualizationRoutes() {
   return (
-    <Route path="actualization" element={<ActualizationPage />}>
-      <Route index element={<Navigate to="/actualization/info" replace />} />
-      <Route path="info" element={<PricesListPage />} />
-      <Route path="prices" element={<PricesListPage />} />
-      <Route path="prices/create" element={<PriceFormPage />} />
-      <Route path="prices/:priceId/edit" element={<PriceFormPage />} />
-      <Route path="prices/:priceId" element={<PriceDetailPage />} />
-      <Route path="colors" element={<ColorsListPage />} />
-      <Route path="colors/create" element={<ColorFormPage />} />
-      <Route path="colors/:colorName/edit" element={<ColorFormPage />} />
-      <Route path="colors/:colorName" element={<ColorDetailPage />} />
-      <Route path="logs" element={null} />
-    </Route>
+    <>
+      <Route
+        element={
+          <PrivateRoute permission={['actualization', 'actualization:view', 'actualization:create']} mode="any" />
+        }
+      >
+        <Route path="actualization" element={<ActualizationPage />}>
+          <Route index element={<Navigate to="/actualization/prices" replace />} />
+          <Route path="prices" element={<PricesListPage />} />
+          <Route path="prices/create" element={<PriceFormPage />} />
+          <Route path="prices/:priceId/edit" element={<PriceFormPage />} />
+          <Route path="prices/:priceId" element={<PriceDetailPage />} />
+          <Route path="colors" element={<ColorsListPage />} />
+          <Route path="colors/create" element={<ColorFormPage />} />
+          <Route path="colors/:colorName/edit" element={<ColorFormPage />} />
+          <Route path="colors/:colorName" element={<ColorDetailPage />} />
+          <Route path="logs" element={<ActualizationPage />} />
+        </Route>
+      </Route>
+    </>
   );
 }

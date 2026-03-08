@@ -193,13 +193,13 @@ export function CategoryFormPage() {
           // После создания перенаправляем на страницу редактирования с новым ID
           const newCategoryId = responseData?.id;
           if (newCategoryId) {
-            navigate(`/categories/${newCategoryId}`);
+            navigate(`/catalog/categories/${newCategoryId}`);
           }
         }
       }
 
       if (!stayOnPage) {
-        navigate('/categories');
+        navigate('/catalog/categories');
       }
     } catch (error) {
       const message = getApiErrorMessage(error);
@@ -210,13 +210,13 @@ export function CategoryFormPage() {
   };
 
   const handleBack = () => {
-    navigate(isEditMode ? `/categories/${categoryId}` : '/categories');
+    navigate(isEditMode ? `/catalog/categories/${categoryId}` : '/catalog/categories');
   };
 
   return (
     <FormPage
       title={isEditMode ? 'Редактирование категории' : 'Создание категории'}
-      backUrl={isEditMode ? `/categories/${categoryId}` : '/categories'}
+      backUrl={isEditMode ? `/catalog/categories/${categoryId}` : '/catalog/categories'}
       isLoading={isLoading}
       isSubmitting={isSubmitting}
       onBack={handleBack}

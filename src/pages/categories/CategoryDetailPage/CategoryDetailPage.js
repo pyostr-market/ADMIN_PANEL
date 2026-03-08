@@ -34,15 +34,15 @@ export function CategoryDetailPage() {
   }, [categoryId]);
 
   const handleEdit = () => {
-    navigate(`/categories/${categoryId}/edit`);
+    navigate(`/catalog/categories/${categoryId}/edit`);
   };
 
   const handleViewAudit = () => {
-    navigate(`/categories/${categoryId}/audit`);
+    navigate(`/catalog/categories/${categoryId}/audit`);
   };
 
   const handleBack = () => {
-    navigate('/categories');
+    navigate('/catalog/categories');
   };
 
   if (isLoading) {

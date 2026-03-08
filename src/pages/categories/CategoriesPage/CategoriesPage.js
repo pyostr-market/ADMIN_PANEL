@@ -35,7 +35,7 @@ export function CategoriesPage() {
   });
 
   const actions = useEntityActions({
-    baseUrl: '/categories',
+    baseUrl: '/catalog/categories',
     onSuccess: (action) => {
       if (action === 'delete') {
         setCategoryToDelete(null);
