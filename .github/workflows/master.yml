@@ -48,7 +48,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          passphrase: ${{ secrets.PASSPHRASE }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             sudo rm -rf /var/www/FRONTEND_MARKET_ADMIN
             sudo mkdir -p /var/www/FRONTEND_MARKET_ADMIN
@@ -64,6 +64,6 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          passphrase: ${{ secrets.PASSPHRASE }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
           source: "build/*"
           target: "/var/www/FRONTEND_MARKET_ADMIN"
