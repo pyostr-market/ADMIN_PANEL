@@ -53,7 +53,7 @@ export const NAVIGATION_CONFIG = {
       },
       {
         label: 'Категории',
-        path: '/categories',
+        path: '/catalog/categories',
         icon: 'categories',
       },
       {
@@ -63,7 +63,7 @@ export const NAVIGATION_CONFIG = {
       },
       {
         label: 'Поставщики',
-        path: '/suppliers',
+        path: '/catalog/suppliers',
         icon: 'suppliers',
       },
       {

@@ -26,10 +26,15 @@ export const MENU_PERMISSIONS = {
     'device-type:view',
     'product_type',
     'product_type:view',
+    'category',
+    'category:view',
+    'supplier',
+    'supplier:view',
   ],
   warehouse: ['warehouse', 'warehouse:view'],
-  billing: ['billing'],
+  billing: ['billing', 'billing:view'],
   cms: ['cms', 'cms:view', 'cms:create', 'cms:update', 'cms:delete'],
+  actualization: ['pricing_engine', 'pricing_engine:start'],
 };
 
 /**
