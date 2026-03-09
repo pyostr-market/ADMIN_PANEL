@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
-import { FiCheck, FiEdit2, FiPlus, FiSearch, FiTrash2, FiX } from 'react-icons/fi';
+import { FiCheck, FiEdit2, FiPlus, FiSearch, FiTrash2 } from 'react-icons/fi';
 import { useCrudList, useCrudModal } from '../../../shared/lib/crud';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
 import { Button } from '../../../shared/ui/Button/Button';
@@ -9,6 +9,7 @@ import { Pagination } from '../../../shared/ui/Pagination/Pagination';
 import { EntityList } from '../../../shared/ui/EntityList/EntityList';
 import { Modal } from '../../../shared/ui/Modal/Modal';
 import { Tabs, Tab } from '../../../shared/ui/Tabs/Tabs';
+import { CrudListLayout } from '../../../shared/ui/CrudListLayout/CrudListLayout';
 import { getApiErrorMessage } from '../../../shared/api/apiError';
 import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import {
@@ -426,17 +427,17 @@ function GroupModal({
         </>
       )}
     >
-      <div className="group-form">
-        <label className="crud-form__field">
-          <span className="crud-form__label">Название группы</span>
+      <div className={styles.groupForm}>
+        <label className={styles.crudFormField}>
+          <span className={styles.crudFormLabel}>Название группы</span>
           <input
             value={name}
             onChange={(event) => setName(event.target.value)}
             required
           />
         </label>
-        <label className="crud-form__field">
-          <span className="crud-form__label">Описание</span>
+        <label className={styles.crudFormField}>
+          <span className={styles.crudFormLabel}>Описание</span>
           <input
             value={description}
             onChange={(event) => setDescription(event.target.value)}
@@ -444,10 +445,10 @@ function GroupModal({
           />
         </label>
 
-        <div className="group-permissions-picker">
-          <div className="group-permissions-picker__header">
-            <p className="group-permissions-picker__title">Права группы</p>
-            <div className="group-permissions-picker__actions">
+        <div className={styles.groupPermissionsPicker}>
+          <div className={styles.groupPermissionsPickerHeader}>
+            <p className={styles.groupPermissionsPickerTitle}>Права группы</p>
+            <div className={styles.groupPermissionsPickerActions}>
               <Button variant="secondary" size="sm" onClick={expandAllSections} disabled={filteredSectionKeys.length === 0}>
                 Развернуть все
               </Button>
@@ -457,9 +458,9 @@ function GroupModal({
             </div>
           </div>
 
-          <div className="group-permissions-filters">
-            <div className="group-permissions-filters__search">
-              <FiSearch className="group-permissions-filters__icon" />
+          <div className={styles.groupPermissionsFilters}>
+            <div className={styles.groupPermissionsFiltersSearch}>
+              <FiSearch className={styles.groupPermissionsFiltersIcon} />
               <input
                 type="text"
                 placeholder="Поиск прав..."
@@ -467,7 +468,7 @@ function GroupModal({
                 onChange={(event) => setSearchQuery(event.target.value)}
               />
             </div>
-            <div className="group-permissions-filters__section">
+            <div className={styles.groupPermissionsFiltersSection}>
               <Select
                 value={selectedSectionFilter}
                 onChange={(event) => setSelectedSectionFilter(event.target.value)}
@@ -480,7 +481,7 @@ function GroupModal({
           </div>
 
           {filteredSectionKeys.length === 0 && (
-            <p className="permissions-groups-page__empty">
+            <p className={styles.permissionsGroupsPageEmpty}>
               {searchQuery || selectedSectionFilter !== 'all'
                 ? 'По вашему запросу ничего не найдено.'
                 : 'Список прав пуст.'}
@@ -492,24 +493,24 @@ function GroupModal({
             const selectedInSection = sectionPermissions.filter((item) => selectedPermissions.includes(item.id)).length;
 
             return (
-              <div key={section} className="group-permissions-section">
+              <div key={section} className={styles.groupPermissionsSection}>
                 <button
                   type="button"
-                  className="group-permissions-section__trigger"
+                  className={styles.groupPermissionsSectionTrigger}
                   onClick={() => toggleSection(section)}
                 >
                   <span>{section}</span>
                   <span>{selectedInSection}/{sectionPermissions.length}</span>
                 </button>
                 {expandedSections[section] && (
-                  <div className="group-permissions-section__items">
+                  <div className={styles.groupPermissionsSectionItems}>
                     {sectionPermissions.map((permission) => {
                       const checkboxState = getPermissionCheckboxState(permission);
 
                       return (
                         <label
                           key={permission.id}
-                          className={`group-permission-item${checkboxState.locked ? ' group-permission-item--locked' : ''}`}
+                          className={`${styles.groupPermissionItem}${checkboxState.locked ? ` ${styles.groupPermissionItemLocked}` : ''}`}
                           title={checkboxState.lockedBy
                             ? `Заблокировано: ${checkboxState.lockedBy === 'dependency' ? 'требуется для других прав' : checkboxState.lockedBy.name}`
                             : ''}
@@ -542,7 +543,6 @@ export function PermissionsGroupsPage() {
   const [activeTab, setActiveTab] = useState(TABS.permissions);
   const [permissionsForModal, setPermissionsForModal] = useState([]);
   const [isPermissionsModalLoading, setPermissionsModalLoading] = useState(false);
-  const [permissionsSectionFilter, setPermissionsSectionFilter] = useState('all');
   const [permissionToDelete, setPermissionToDelete] = useState(null);
 
   const notifications = useNotifications();
@@ -660,25 +660,14 @@ export function PermissionsGroupsPage() {
     setPermissionToDelete(null);
   };
 
-  const filteredPermissions = useMemo(() => {
-    if (permissionsSectionFilter === 'all') {
-      return permissionsCrud.items;
-    }
-
-    return permissionsCrud.items?.filter((permission) => {
-      const permissionSection = permission.name.split(':')[0] || 'other';
-      return permissionSection === permissionsSectionFilter;
-    }) || [];
-  }, [permissionsCrud.items, permissionsSectionFilter]);
-
   const permissionBuckets = useMemo(() => buildPermissionBuckets(permissionsCrud.items || []), [permissionsCrud.items]);
   const permissionSectionKeys = useMemo(() => Object.keys(permissionBuckets).sort((a, b) => a.localeCompare(b)), [permissionBuckets]);
 
   return (
-    <section className="permissions-groups-page">
-      <header className="permissions-groups-page__header">
-        <h1 className="permissions-groups-page__title">Права и группы</h1>
-        <div className="permissions-groups-page__controls">
+    <section className={styles.permissionsGroupsPage}>
+      <header className={styles.permissionsGroupsPageHeader}>
+        <h1 className={styles.permissionsGroupsPageTitle}>Права и группы</h1>
+        <div className={styles.permissionsGroupsPageControls}>
           {activeTab === TABS.groups ? (
             <Button
               variant="primary"
@@ -705,7 +694,7 @@ export function PermissionsGroupsPage() {
         </div>
       </header>
 
-      <Tabs className="permissions-groups-page__tabs">
+      <Tabs className={styles.permissionsGroupsPageTabs}>
         <Tab
           active={activeTab === TABS.permissions}
           onClick={() => setActiveTab(TABS.permissions)}
@@ -721,44 +710,67 @@ export function PermissionsGroupsPage() {
       </Tabs>
 
       {activeTab === TABS.permissions && (
-        <>
-          <div className="permissions-groups-page__filters">
-            <SearchInput
-              value={permissionsCrud.search}
-              onChange={(e) => permissionsCrud.setSearch(e.target.value)}
-              placeholder="Поиск прав..."
-              loading={permissionsCrud.isLoading}
-            />
-            <div className="permissions-groups-page__section-filter">
-              <Select
-                value={permissionsSectionFilter}
-                onChange={(e) => setPermissionsSectionFilter(e.target.value)}
-                options={[
-                  { value: 'all', label: 'Все разделы' },
-                  ...permissionSectionKeys.map((section) => ({ value: section, label: section })),
-                ]}
-                disabled={permissionsCrud.isLoading}
+        <CrudListLayout
+          header={null}
+          showSearch={true}
+          searchValue={permissionsCrud.search}
+          onSearchChange={permissionsCrud.setSearch}
+          searchLoading={permissionsCrud.isLoading}
+          searchPlaceholder="Поиск прав..."
+          showFilters={true}
+          filters={{}}
+          filterConfigs={[
+            {
+              key: 'section',
+              label: 'Раздел',
+              options: [
+                { value: 'all', label: 'Все разделы' },
+                ...permissionSectionKeys.map((section) => ({ value: section, label: section })),
+              ],
+            },
+          ]}
+          onFilterChange={() => {}}
+          onResetFilters={() => {}}
+          hasActiveFilters={false}
+          pagination={
+            !permissionsCrud.isLoading && permissionsCrud.items && permissionsCrud.items.length > 0 ? (
+              <Pagination
+                currentPage={permissionsCrud.page}
+                totalPages={permissionsCrud.pagination.pages}
+                totalItems={permissionsCrud.pagination.total}
+                onPageChange={permissionsCrud.setPage}
+                loading={permissionsCrud.isLoading}
               />
-            </div>
-          </div>
-
+            ) : null
+          }
+        >
           <EntityList
-            items={filteredPermissions}
+            items={permissionsCrud.items}
             renderItem={(permission) => (
               <>
-                <div className="crud-item__content">
-                  <p className="crud-item__title">{permission.name}</p>
-                  <p className="crud-item__description">{permission.description || 'Без описания'}</p>
+                <div className="entity-item__content">
+                  <div className="entity-item__main">
+                    <div className="entity-item__info">
+                      <div className="entity-item__header">
+                        <p className="entity-item__title">{permission.name}</p>
+                      </div>
+                      <div className="entity-item__meta">
+                        <span className="entity-item__description">
+                          {permission.description || 'Без описания'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="crud-item__actions">
+                <div className="entity-item__actions">
                   <PermissionGate permission="permission:update" fallback={null}>
                     <Button
-                      variant="ghost"
-                      size="icon"
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<FiEdit2 />}
                       onClick={() => permissionsModal.openEditModal(permission)}
-                      aria-label={`Изменить право ${permission.name}`}
                     >
-                      <FiEdit2 />
+                      Редактировать
                     </Button>
                   </PermissionGate>
                   <PermissionGate permission="permission:delete" fallback={null}>
@@ -767,7 +779,6 @@ export function PermissionsGroupsPage() {
                       size="icon"
                       onClick={() => handleDeleteClick(permission)}
                       disabled={permissionsCrud.isSubmitting}
-                      aria-label={`Удалить право ${permission.name}`}
                     >
                       <FiTrash2 />
                     </Button>
@@ -777,97 +788,106 @@ export function PermissionsGroupsPage() {
             )}
             emptyMessage={
               permissionsCrud.isLoading
-                ? 'Загрузка...'
-                : filteredPermissions.length === 0 && permissionsCrud.items?.length > 0
-                  ? 'По выбранному разделу ничего не найдено.'
+                ? 'Загрузка прав...'
+                : permissionsCrud.search
+                  ? 'По вашему запросу ничего не найдено.'
                   : 'Права не найдены.'
             }
             loading={permissionsCrud.isLoading}
           />
-
-          {!permissionsCrud.isLoading && filteredPermissions.length > 0 && (
-            <Pagination
-              currentPage={permissionsCrud.page}
-              totalPages={permissionsCrud.pagination.pages}
-              totalItems={permissionsCrud.pagination.total}
-              onPageChange={permissionsCrud.setPage}
-              loading={permissionsCrud.isLoading}
-            />
-          )}
-        </>
+        </CrudListLayout>
       )}
 
       {activeTab === TABS.groups && (
-        <>
-          <div className="permissions-groups-page__filters">
-            <SearchInput
-              value={groupsCrud.search}
-              onChange={(e) => groupsCrud.setSearch(e.target.value)}
-              placeholder="Поиск групп..."
-              loading={groupsCrud.isLoading}
-            />
-            <div className="permissions-groups-page__filters-actions permissions-groups-page__filters-actions--empty" />
-          </div>
-
+        <CrudListLayout
+          header={null}
+          showSearch={true}
+          searchValue={groupsCrud.search}
+          onSearchChange={groupsCrud.setSearch}
+          searchLoading={groupsCrud.isLoading}
+          searchPlaceholder="Поиск групп..."
+          showFilters={false}
+          pagination={
+            !groupsCrud.isLoading && groupsCrud.items && groupsCrud.items.length > 0 ? (
+              <Pagination
+                currentPage={groupsCrud.page}
+                totalPages={groupsCrud.pagination.pages}
+                totalItems={groupsCrud.pagination.total}
+                onPageChange={groupsCrud.setPage}
+                loading={groupsCrud.isLoading}
+              />
+            ) : null
+          }
+        >
           <EntityList
             items={groupsCrud.items}
             renderItem={(group) => (
               <>
-                <div className="crud-item__content">
-                  <p className="crud-item__title">{group.name}</p>
-                  <p className="crud-item__description">{group.description || 'Без описания'}</p>
-                  <p className="crud-item__meta">
-                    <FiCheck aria-hidden="true" /> Прав: {group.permission_ids.length}
-                  </p>
+                <div className="entity-item__content">
+                  <div className="entity-item__main">
+                    <div className="entity-item__info">
+                      <div className="entity-item__header">
+                        <p className="entity-item__title">{group.name}</p>
+                      </div>
+                      <div className="entity-item__meta">
+                        <span className="entity-item__description">
+                          {group.description || 'Без описания'}
+                        </span>
+                        <span className="entity-item__separator">•</span>
+                        <span className="entity-item__meta-item">
+                          <span className="entity-item__meta-label">Прав:</span>{' '}
+                          {Array.isArray(group.permission_ids) ? group.permission_ids.length : 0}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="crud-item__actions">
+                <div className="entity-item__actions">
                   <Button
-                    variant="ghost"
-                    size="icon"
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<FiEdit2 />}
                     onClick={async () => {
                       await loadAllPermissionsForGroupModal();
                       groupsModal.openEditModal(group);
                     }}
                     disabled={isPermissionsModalLoading}
-                    aria-label={`Изменить группу ${group.name}`}
                   >
-                    <FiEdit2 />
+                    Редактировать
                   </Button>
-                  <PermissionGate permission="permissionGroup:delete" fallback={null}>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => groupsCrud.delete(group.id)}
-                      disabled={groupsCrud.isSubmitting}
-                      aria-label={`Удалить группу ${group.name}`}
-                    >
-                      <FiTrash2 />
-                    </Button>
-                  </PermissionGate>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => groupsModal.openEditModal(group)}
+                    disabled={groupsCrud.isSubmitting}
+                  >
+                    <FiTrash2 />
+                  </Button>
                 </div>
               </>
             )}
             emptyMessage={
               groupsCrud.isLoading
-                ? 'Загрузка...'
-                : 'Группы не найдены.'
+                ? 'Загрузка групп...'
+                : groupsCrud.search
+                  ? 'По вашему запросу ничего не найдено.'
+                  : 'Группы не найдены.'
             }
             loading={groupsCrud.isLoading}
           />
-
-          {!groupsCrud.isLoading && groupsCrud.items && groupsCrud.items.length > 0 && (
-            <Pagination
-              currentPage={groupsCrud.page}
-              totalPages={groupsCrud.pagination.pages}
-              totalItems={groupsCrud.pagination.total}
-              onPageChange={groupsCrud.setPage}
-              loading={groupsCrud.isLoading}
-            />
-          )}
-        </>
+        </CrudListLayout>
       )}
 
-      {permissionsModal.isOpen && activeTab === TABS.permissions && (
+      {/* Модальные окна для прав */}
+      {permissionsModal.isCreateModalOpen && (
+        <PermissionCreateModal
+          onClose={permissionsModal.closeCreateModal}
+          onSubmit={handlePermissionCreate}
+          isSubmitting={permissionsCrud.isSubmitting}
+        />
+      )}
+
+      {permissionsModal.isOpen && permissionsModal.editingItem && (
         <PermissionEditModal
           permission={permissionsModal.editingItem}
           onClose={permissionsModal.closeEditModal}
@@ -876,24 +896,18 @@ export function PermissionsGroupsPage() {
         />
       )}
 
-      {permissionsModal.isCreateModalOpen && activeTab === TABS.permissions && (
-        <PermissionCreateModal
-          onClose={permissionsModal.closeCreateModal}
-          onSubmit={handlePermissionCreate}
-          isSubmitting={permissionsCrud.isSubmitting}
-        />
-      )}
-
-      {(groupsModal.isOpen || groupsModal.isCreateModalOpen) && activeTab === TABS.groups && (
+      {/* Модальное окно для групп */}
+      {(groupsModal.isOpen || groupsModal.isCreateModalOpen) && (
         <GroupModal
           group={groupsModal.editingItem}
-          permissions={permissionsForModal.length > 0 ? permissionsForModal : permissionsCrud.items || []}
+          permissions={permissionsForModal}
           onClose={groupsModal.closeModal}
           onSubmit={handleGroupSave}
-          isSubmitting={groupsCrud.isSubmitting}
+          isSubmitting={groupsCrud.isSubmitting || isPermissionsModalLoading}
         />
       )}
 
+      {/* Подтверждение удаления права */}
       {permissionToDelete && (
         <Modal
           isOpen
@@ -902,9 +916,7 @@ export function PermissionsGroupsPage() {
           size="sm"
           footer={(
             <>
-              <Button variant="secondary" onClick={handleCancelDelete}>
-                Отмена
-              </Button>
+              <Button variant="secondary" onClick={handleCancelDelete}>Отмена</Button>
               <Button
                 variant="danger"
                 onClick={handleConfirmDelete}
@@ -915,12 +927,9 @@ export function PermissionsGroupsPage() {
             </>
           )}
         >
-          <p>
+          <p className={styles.permissionsGroupsPageConfirmText}>
             Вы уверены, что хотите удалить право{' '}
             <strong>{permissionToDelete.name}</strong>?
-          </p>
-          <p className="permissions-groups-page__confirm-text">
-            Это действие нельзя отменить.
           </p>
         </Modal>
       )}

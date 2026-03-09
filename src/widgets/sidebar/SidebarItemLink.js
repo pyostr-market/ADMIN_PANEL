@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { useLocation, NavLink } from 'react-router-dom';
 import styles from './AppSidebar.module.css';
 
 /**
@@ -12,11 +12,16 @@ import styles from './AppSidebar.module.css';
  * @param {boolean} props.collapsed - Сайдбар свёрнут
  */
 export function SidebarItemLink({ to, label, Icon, collapsed }) {
+  const location = useLocation();
+  
+  // Точная проверка активного пути
+  const isActive = location.pathname === to || location.pathname === to + '/';
+
   return (
     <NavLink
       to={to}
       title={collapsed ? label : undefined}
-      className={({ isActive }) => `${styles.sidebarLink}${isActive ? ` ${styles.sidebarLinkActive}` : ''}`}
+      className={`${styles.sidebarLink}${isActive ? ` ${styles.sidebarLinkActive}` : ''}`}
     >
       <span className={styles.sidebarLinkIcon} aria-hidden="true">
         <Icon />
