@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FiFileText, FiSave } from 'react-icons/fi';
+import { FiFileText } from 'react-icons/fi';
 import { FormPage } from '../../../shared/ui/FormPage';
 import { FormSection } from '../../../shared/ui/FormSection/FormSection';
 import { FormGrid } from '../../../shared/ui/FormGrid/FormGrid';
@@ -45,29 +45,26 @@ export function PageFormPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const loadPage = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const data = await getPageByIdRequest(pageId);
-      setFormData({
-        slug: data.slug || '',
-        title: data.title || '',
-        is_published: data.is_published || false,
-        blocks_json: data.blocks ? JSON.stringify(data.blocks) : '[]',
-      });
-    } catch (error) {
-      const message = getApiErrorMessage(error);
-      notificationsRef.current?.error(message);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [pageId]);
-
   useEffect(() => {
     if (isEditMode && pageId) {
-      loadPage();
+      getPageByIdRequest(pageId)
+        .then((data) => {
+          setFormData({
+            slug: data.slug || '',
+            title: data.title || '',
+            is_published: data.is_published || false,
+            blocks_json: data.blocks ? JSON.stringify(data.blocks, null, 2) : '[]',
+          });
+        })
+        .catch((error) => {
+          const message = getApiErrorMessage(error);
+          notificationsRef.current?.error(message);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     }
-  }, [pageId, isEditMode, loadPage]);
+  }, [pageId, isEditMode]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -112,7 +109,7 @@ export function PageFormPage() {
         slug: formData.slug,
         title: formData.title,
         is_published: formData.is_published,
-        blocks_json: formData.blocks_json ? JSON.parse(formData.blocks_json) : [],
+        blocks: formData.blocks_json ? JSON.parse(formData.blocks_json) : [],
       };
 
       if (isEditMode) {
@@ -180,7 +177,7 @@ export function PageFormPage() {
               <span className={styles.formError}>{errors.slug}</span>
             )}
             <span className={styles.formHint}>
-              URL идентификатор (латиница, дефис)
+              URL идентификатор (латиница, цифры и дефис)
             </span>
           </div>
 

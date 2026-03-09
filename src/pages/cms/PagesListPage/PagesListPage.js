@@ -15,7 +15,7 @@ import {
 import styles from './PagesListPage.module.css';
 import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
-const PAGE_LIMIT = 20;
+const PAGE_LIMIT = 10;
 
 function DeletePageModal({ page, onClose, onSubmit, isSubmitting }) {
   if (!page) return null;
@@ -57,6 +57,7 @@ export function PagesListPage() {
 
   const pagesCrud = useCrudList({
     fetchFn: async ({ page = 1, limit = PAGE_LIMIT } = {}) => {
+      const offset = (page - 1) * limit;
       const data = await getPagesRequest({
         page,
         limit,

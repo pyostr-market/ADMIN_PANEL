@@ -15,7 +15,7 @@ import {
 import styles from './FeatureFlagsListPage.module.css';
 import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
-const PAGE_LIMIT = 20;
+const PAGE_LIMIT = 10;
 
 function DeleteFeatureFlagModal({ flag, onClose, onSubmit, isSubmitting }) {
   if (!flag) return null;
@@ -57,18 +57,12 @@ export function FeatureFlagsListPage() {
 
   const flagsCrud = useCrudList({
     fetchFn: async ({ page = 1, limit = PAGE_LIMIT } = {}) => {
-      const data = await getFeatureFlagsRequest({});
-      const items = data.items || [];
-      const total = data.total || items.length;
-      const pagination = {
-        page,
+      const offset = (page - 1) * limit;
+      const data = await getFeatureFlagsRequest({
         limit,
-        total,
-        pages: Math.ceil(total / limit),
-      };
-      const start = (page - 1) * limit;
-      const end = start + limit;
-      return { items: items.slice(start, end), pagination };
+        offset,
+      });
+      return data;
     },
     deleteFn: deleteFeatureFlagRequest,
     entityName: 'Feature Flag',

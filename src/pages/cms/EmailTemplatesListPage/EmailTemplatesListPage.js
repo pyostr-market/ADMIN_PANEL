@@ -15,7 +15,7 @@ import {
 import styles from './EmailTemplatesListPage.module.css';
 import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
-const PAGE_LIMIT = 20;
+const PAGE_LIMIT = 10;
 
 function DeleteEmailTemplateModal({ template, onClose, onSubmit, isSubmitting }) {
   if (!template) return null;
@@ -57,18 +57,12 @@ export function EmailTemplatesListPage() {
 
   const templatesCrud = useCrudList({
     fetchFn: async ({ page = 1, limit = PAGE_LIMIT } = {}) => {
-      const data = await getEmailTemplatesRequest({});
-      const items = data.items || [];
-      const total = data.total || items.length;
-      const pagination = {
-        page,
+      const offset = (page - 1) * limit;
+      const data = await getEmailTemplatesRequest({
         limit,
-        total,
-        pages: Math.ceil(total / limit),
-      };
-      const start = (page - 1) * limit;
-      const end = start + limit;
-      return { items: items.slice(start, end), pagination };
+        offset,
+      });
+      return data;
     },
     deleteFn: deleteEmailTemplateRequest,
     entityName: 'Email шаблон',

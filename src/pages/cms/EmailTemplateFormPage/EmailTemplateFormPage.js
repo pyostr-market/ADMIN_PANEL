@@ -1,12 +1,13 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FiMail, FiSave } from 'react-icons/fi';
+import { FiMail } from 'react-icons/fi';
 import { FormPage } from '../../../shared/ui/FormPage';
 import { FormSection } from '../../../shared/ui/FormSection/FormSection';
 import { FormGrid } from '../../../shared/ui/FormGrid/FormGrid';
 import { getApiErrorMessage } from '../../../shared/api/apiError';
 import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import {
+  getEmailTemplateByIdRequest,
   createEmailTemplateRequest,
   updateEmailTemplateRequest,
 } from '../api/cmsApi';
@@ -33,9 +34,60 @@ export function EmailTemplateFormPage() {
     is_active: true,
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (isEditMode && templateId) {
+      getEmailTemplateByIdRequest(templateId)
+        .then((data) => {
+          setFormData({
+            key: data.key || '',
+            subject: data.subject || '',
+            body_html: data.body_html || '',
+            body_text: data.body_text || '',
+            variables: Array.isArray(data.variables) ? data.variables.join(', ') : '',
+            is_active: data.is_active ?? true,
+          });
+        })
+        .catch((error) => {
+          const message = getApiErrorMessage(error);
+          notificationsRef.current?.error(message);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [templateId, isEditMode]);
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.key) {
+      newErrors.key = 'Введите ключ шаблона';
+    } else if (!/^[a-z0-9_]+$/.test(formData.key)) {
+      newErrors.key = 'Ключ должен содержать только латиницу, цифры и подчеркивание';
+    }
+
+    if (!formData.subject) {
+      newErrors.subject = 'Введите тему письма';
+    }
+
+    if (!formData.body_html) {
+      newErrors.body_html = 'Введите HTML тело письма';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: null }));
+    }
+  };
 
   const handleSubmit = async (stayOnPage = false) => {
     if (!validateForm()) {
@@ -75,34 +127,6 @@ export function EmailTemplateFormPage() {
       notificationsRef.current?.error(message);
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.key) {
-      newErrors.key = 'Введите ключ шаблона';
-    } else if (!/^[a-z0-9_]+$/.test(formData.key)) {
-      newErrors.key = 'Ключ должен содержать только латиницу, цифры и подчеркивание';
-    }
-
-    if (!formData.subject) {
-      newErrors.subject = 'Введите тему письма';
-    }
-
-    if (!formData.body_html) {
-      newErrors.body_html = 'Введите HTML тело письма';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: null }));
     }
   };
 

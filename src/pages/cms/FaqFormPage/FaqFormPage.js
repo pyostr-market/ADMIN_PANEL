@@ -1,12 +1,13 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FiHelpCircle, FiSave } from 'react-icons/fi';
+import { FiHelpCircle } from 'react-icons/fi';
 import { FormPage } from '../../../shared/ui/FormPage';
 import { FormSection } from '../../../shared/ui/FormSection/FormSection';
 import { FormGrid } from '../../../shared/ui/FormGrid/FormGrid';
 import { getApiErrorMessage } from '../../../shared/api/apiError';
 import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import {
+  getFaqByIdRequest,
   createFaqRequest,
   updateFaqRequest,
 } from '../api/cmsApi';
@@ -32,9 +33,53 @@ export function FaqFormPage() {
     is_active: true,
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+
+  const loadFaq = useEffect(() => {
+    if (isEditMode && faqId) {
+      getFaqByIdRequest(faqId)
+        .then((data) => {
+          setFormData({
+            question: data.question || '',
+            answer: data.answer || '',
+            category: data.category || '',
+            order: String(data.order || 0),
+            is_active: data.is_active ?? true,
+          });
+        })
+        .catch((error) => {
+          const message = getApiErrorMessage(error);
+          notificationsRef.current?.error(message);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [faqId, isEditMode]);
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.question) {
+      newErrors.question = 'Введите вопрос';
+    }
+
+    if (!formData.answer) {
+      newErrors.answer = 'Введите ответ';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: null }));
+    }
+  };
 
   const handleSubmit = async (stayOnPage = false) => {
     if (!validateForm()) {
@@ -69,28 +114,6 @@ export function FaqFormPage() {
       notificationsRef.current?.error(message);
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.question) {
-      newErrors.question = 'Введите вопрос';
-    }
-
-    if (!formData.answer) {
-      newErrors.answer = 'Введите ответ';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: null }));
     }
   };
 

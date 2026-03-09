@@ -1,4 +1,4 @@
-import { authorizedApi, productApi } from '../../../shared/api/http';
+import { productApi } from '../../../shared/api/http';
 
 function unwrapResponse(response) {
   return response.data?.data ?? response.data;
@@ -18,7 +18,7 @@ function unwrapResponse(response) {
  */
 export async function getPagesRequest({
   page = 1,
-  limit = 20,
+  limit = 10,
   title,
   is_published,
 } = {}) {
@@ -60,27 +60,36 @@ export async function getPageBySlugRequest(slug) {
 }
 
 /**
+ * Поиск страниц по заголовку
+ * @param {Object} params - Параметры поиска
+ * @param {string} params.q - Поисковый запрос
+ * @param {number} params.limit - Лимит
+ * @param {number} params.offset - Смещение
+ */
+export async function searchPagesRequest({
+  q,
+  limit = 10,
+  offset = 0,
+} = {}) {
+  const params = { q, limit, offset };
+  const response = await productApi.get('/cms/pages/search', { params });
+  const data = unwrapResponse(response);
+  const items = Array.isArray(data?.items) ? data.items : [];
+  const total = data?.total ?? items.length;
+
+  return { items, total };
+}
+
+/**
  * Создание страницы
  * @param {Object} payload - Данные страницы
  * @param {string} payload.slug - URL идентификатор
  * @param {string} payload.title - Заголовок страницы
  * @param {boolean} payload.is_published - Статус публикации
- * @param {Array} payload.blocks_json - JSON массив блоков
+ * @param {Array} payload.blocks - Массив блоков
  */
 export async function createPageRequest(payload) {
-  const formData = new FormData();
-  formData.append('slug', payload.slug);
-  formData.append('title', payload.title);
-  if (payload.is_published !== undefined) {
-    formData.append('is_published', payload.is_published ? 'true' : 'false');
-  }
-  if (payload.blocks_json) {
-    formData.append('blocks_json', JSON.stringify(payload.blocks_json));
-  }
-
-  const response = await productApi.post('/cms/pages', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const response = await productApi.post('/cms/admin', payload);
   return unwrapResponse(response);
 }
 
@@ -88,25 +97,9 @@ export async function createPageRequest(payload) {
  * Обновление страницы (PUT)
  * @param {number} pageId - ID страницы
  * @param {Object} payload - Данные для обновления
- * @param {string} payload.slug - URL идентификатор
- * @param {string} payload.title - Заголовок страницы
- * @param {boolean} payload.is_published - Статус публикации
- * @param {Array} payload.blocks_json - JSON операций с блоками
  */
 export async function updatePageRequest(pageId, payload) {
-  const formData = new FormData();
-  if (payload.slug !== undefined) formData.append('slug', payload.slug);
-  if (payload.title !== undefined) formData.append('title', payload.title);
-  if (payload.is_published !== undefined) {
-    formData.append('is_published', payload.is_published ? 'true' : 'false');
-  }
-  if (payload.blocks_json !== undefined) {
-    formData.append('blocks_json', JSON.stringify(payload.blocks_json));
-  }
-
-  const response = await productApi.put(`/cms/pages/${pageId}`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const response = await productApi.put(`/cms/admin/${pageId}`, payload);
   return unwrapResponse(response);
 }
 
@@ -115,7 +108,7 @@ export async function updatePageRequest(pageId, payload) {
  * @param {number} pageId - ID страницы
  */
 export async function deletePageRequest(pageId) {
-  const response = await productApi.delete(`/cms/pages/${pageId}`);
+  const response = await productApi.delete(`/cms/admin/${pageId}`);
   return unwrapResponse(response);
 }
 
@@ -123,34 +116,15 @@ export async function deletePageRequest(pageId) {
  * Добавление блока на страницу
  * @param {number} pageId - ID страницы
  * @param {Object} payload - Данные блока
- * @param {string} payload.block_type - Тип блока
- * @param {Object} payload.data_json - JSON данные блока
- * @param {number} payload.order - Порядок отображения
  */
 export async function addPageBlockRequest(pageId, payload) {
-  const formData = new FormData();
-  formData.append('block_type', payload.block_type);
-  if (payload.data_json) {
-    formData.append('data_json', JSON.stringify(payload.data_json));
-  }
-  if (payload.order !== undefined) {
-    formData.append('order', payload.order);
-  }
-
-  const response = await productApi.post(`/cms/pages/${pageId}/blocks`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const response = await productApi.post(`/cms/admin/${pageId}/blocks`, payload);
   return unwrapResponse(response);
 }
 
 /**
  * Получение аудит-логов страниц
  * @param {Object} params - Параметры запроса
- * @param {number} params.page_id - Фильтр по ID страницы
- * @param {number} params.user_id - Фильтр по ID пользователя
- * @param {string} params.action - Фильтр по действию
- * @param {number} params.limit - Количество элементов
- * @param {number} params.offset - Смещение
  */
 export async function getPageAuditRequest({
   page_id,
@@ -164,7 +138,7 @@ export async function getPageAuditRequest({
   if (user_id !== undefined && user_id !== null) params.user_id = user_id;
   if (action) params.action = action;
 
-  const response = await productApi.get('/cms/pages/audit', { params });
+  const response = await productApi.get('/cms/admin/audit', { params });
   const data = unwrapResponse(response);
   const items = Array.isArray(data?.items) ? data.items : [];
   const total = data?.total ?? items.length;
@@ -177,15 +151,67 @@ export async function getPageAuditRequest({
 // ============================================================================
 
 /**
- * Получение списка FAQ
+ * Получение списка FAQ (public)
  * @param {Object} params - Параметры запроса
  * @param {string} params.category - Фильтр по категории
+ * @param {number} params.limit - Лимит
+ * @param {number} params.offset - Смещение
  */
-export async function getFaqsRequest({ category } = {}) {
-  const params = {};
+export async function getFaqsRequest({ category, limit = 10, offset = 0 } = {}) {
+  const params = { limit, offset };
   if (category) params.category = category;
 
   const response = await productApi.get('/cms/faq', { params });
+  const data = unwrapResponse(response);
+  const items = Array.isArray(data?.items) ? data.items : [];
+  const total = data?.total ?? items.length;
+
+  return { items, total };
+}
+
+/**
+ * Получение списка FAQ (admin)
+ * @param {Object} params - Параметры запроса
+ * @param {number} params.limit - Лимит
+ * @param {number} params.offset - Смещение
+ */
+export async function getFaqsAdminRequest({ limit = 10, offset = 0 } = {}) {
+  const params = { limit, offset };
+  const response = await productApi.get('/cms/faq/admin', { params });
+  const data = unwrapResponse(response);
+  const items = Array.isArray(data?.items) ? data.items : [];
+  const total = data?.total ?? items.length;
+
+  return { items, total };
+}
+
+/**
+ * Получение FAQ по ID
+ * @param {number} faqId - ID FAQ
+ */
+export async function getFaqByIdRequest(faqId) {
+  const response = await productApi.get(`/cms/faq/admin/${faqId}`);
+  return unwrapResponse(response);
+}
+
+/**
+ * Поиск FAQ
+ * @param {Object} params - Параметры поиска
+ * @param {string} params.q - Поисковый запрос
+ * @param {string} params.category - Категория
+ * @param {number} params.limit - Лимит
+ * @param {number} params.offset - Смещение
+ */
+export async function searchFaqsRequest({
+  q,
+  category,
+  limit = 10,
+  offset = 0,
+} = {}) {
+  const params = { q, limit, offset };
+  if (category) params.category = category;
+
+  const response = await productApi.get('/cms/faq/admin/search', { params });
   const data = unwrapResponse(response);
   const items = Array.isArray(data?.items) ? data.items : [];
   const total = data?.total ?? items.length;
@@ -204,11 +230,6 @@ export async function getFaqCategoriesRequest() {
 /**
  * Создание FAQ
  * @param {Object} payload - Данные FAQ
- * @param {string} payload.question - Текст вопроса
- * @param {string} payload.answer - Текст ответа
- * @param {string} payload.category - Категория
- * @param {number} payload.order - Порядок
- * @param {boolean} payload.is_active - Статус активности
  */
 export async function createFaqRequest(payload) {
   const response = await productApi.post('/cms/faq/admin', payload);
@@ -239,7 +260,7 @@ export async function deleteFaqRequest(faqId) {
 // ============================================================================
 
 /**
- * Получение SEO данных по page_slug
+ * Получение SEO данных по page_slug (public)
  * @param {string} pageSlug - Slug страницы
  */
 export async function getSeoDataRequest(pageSlug) {
@@ -248,13 +269,70 @@ export async function getSeoDataRequest(pageSlug) {
 }
 
 /**
+ * Получение SEO данных по ID (admin)
+ * @param {number} seoId - ID SEO записи
+ */
+export async function getSeoByIdRequest(seoId) {
+  const response = await productApi.get(`/cms/seo/admin/${seoId}`);
+  return unwrapResponse(response);
+}
+
+/**
+ * Получение списка всех SEO записей (admin)
+ * @param {Object} params - Параметры запроса
+ * @param {string} params.page_slug - Фильтр по slug
+ * @param {string} params.title - Фильтр по заголовку
+ * @param {number} params.limit - Лимит
+ * @param {number} params.offset - Смещение
+ */
+export async function getSeoListRequest({
+  page_slug,
+  title,
+  limit = 10,
+  offset = 0,
+} = {}) {
+  const params = { limit, offset };
+  if (page_slug) params.page_slug = page_slug;
+  if (title) params.title = title;
+
+  const response = await productApi.get('/cms/seo/admin', { params });
+  const data = unwrapResponse(response);
+  const items = Array.isArray(data?.items) ? data.items : [];
+  const total = data?.total ?? items.length;
+  const pagination = {
+    page: Math.floor(offset / limit) + 1,
+    limit,
+    total,
+    pages: Math.ceil(total / limit),
+  };
+
+  return { items, pagination };
+}
+
+/**
+ * Поиск SEO данных
+ * @param {Object} params - Параметры поиска
+ * @param {string} params.q - Поисковый запрос
+ * @param {number} params.limit - Лимит
+ * @param {number} params.offset - Смещение
+ */
+export async function searchSeoRequest({
+  q,
+  limit = 10,
+  offset = 0,
+} = {}) {
+  const params = { q, limit, offset };
+  const response = await productApi.get('/cms/seo/admin/search', { params });
+  const data = unwrapResponse(response);
+  const items = Array.isArray(data?.items) ? data.items : [];
+  const total = data?.total ?? items.length;
+
+  return { items, total };
+}
+
+/**
  * Создание SEO данных
  * @param {Object} payload - Данные SEO
- * @param {string} payload.page_slug - Slug страницы
- * @param {string} payload.title - SEO заголовок
- * @param {string} payload.description - SEO описание
- * @param {Array} payload.keywords - Ключевые слова
- * @param {number} payload.og_image_id - ID изображения для OG
  */
 export async function createSeoRequest(payload) {
   const response = await productApi.post('/cms/seo/admin', payload);
@@ -280,22 +358,24 @@ export async function deleteSeoRequest(seoId) {
   return unwrapResponse(response);
 }
 
-/**
- * Получение списка всех SEO записей (админ)
- * @param {Object} params - Параметры запроса
- * @param {number} params.page - Номер страницы
- * @param {number} params.limit - Количество элементов
- */
-export async function getSeoListRequest({ page = 1, limit = 20 } = {}) {
-  const offset = (page - 1) * limit;
-  const params = { limit, offset };
+// ============================================================================
+// EMAIL TEMPLATES API
+// ============================================================================
 
-  const response = await productApi.get('/cms/seo/admin', { params });
+/**
+ * Получение списка email шаблонов
+ * @param {Object} params - Параметры запроса
+ * @param {number} params.limit - Лимит
+ * @param {number} params.offset - Смещение
+ */
+export async function getEmailTemplatesRequest({ limit = 10, offset = 0 } = {}) {
+  const params = { limit, offset };
+  const response = await productApi.get('/cms/email-templates/admin', { params });
   const data = unwrapResponse(response);
   const items = Array.isArray(data?.items) ? data.items : [];
   const total = data?.total ?? items.length;
   const pagination = {
-    page,
+    page: Math.floor(offset / limit) + 1,
     limit,
     total,
     pages: Math.ceil(total / limit),
@@ -304,24 +384,8 @@ export async function getSeoListRequest({ page = 1, limit = 20 } = {}) {
   return { items, pagination };
 }
 
-// ============================================================================
-// EMAIL TEMPLATES API
-// ============================================================================
-
 /**
- * Получение списка email шаблонов
- */
-export async function getEmailTemplatesRequest() {
-  const response = await productApi.get('/cms/email-templates');
-  const data = unwrapResponse(response);
-  const items = Array.isArray(data?.items) ? data.items : [];
-  const total = data?.total ?? items.length;
-
-  return { items, total };
-}
-
-/**
- * Получение шаблона по ключу
+ * Получение шаблона по ключу (public)
  * @param {string} key - Ключ шаблона
  */
 export async function getEmailTemplateByKeyRequest(key) {
@@ -330,14 +394,17 @@ export async function getEmailTemplateByKeyRequest(key) {
 }
 
 /**
+ * Получение шаблона по ID (admin)
+ * @param {number} templateId - ID шаблона
+ */
+export async function getEmailTemplateByIdRequest(templateId) {
+  const response = await productApi.get(`/cms/email-templates/admin/${templateId}`);
+  return unwrapResponse(response);
+}
+
+/**
  * Создание email шаблона
  * @param {Object} payload - Данные шаблона
- * @param {string} payload.key - Уникальный ключ шаблона
- * @param {string} payload.subject - Тема письма
- * @param {string} payload.body_html - HTML тело письма
- * @param {string} payload.body_text - Текстовое тело письма
- * @param {Array} payload.variables - Переменные шаблона
- * @param {boolean} payload.is_active - Статус активности
  */
 export async function createEmailTemplateRequest(payload) {
   const response = await productApi.post('/cms/email-templates/admin', payload);
@@ -369,18 +436,28 @@ export async function deleteEmailTemplateRequest(templateId) {
 
 /**
  * Получение списка feature flags
+ * @param {Object} params - Параметры запроса
+ * @param {number} params.limit - Лимит
+ * @param {number} params.offset - Смещение
  */
-export async function getFeatureFlagsRequest() {
-  const response = await productApi.get('/cms/feature-flags');
+export async function getFeatureFlagsRequest({ limit = 10, offset = 0 } = {}) {
+  const params = { limit, offset };
+  const response = await productApi.get('/cms/feature-flags/admin', { params });
   const data = unwrapResponse(response);
   const items = Array.isArray(data?.items) ? data.items : [];
   const total = data?.total ?? items.length;
+  const pagination = {
+    page: Math.floor(offset / limit) + 1,
+    limit,
+    total,
+    pages: Math.ceil(total / limit),
+  };
 
-  return { items, total };
+  return { items, pagination };
 }
 
 /**
- * Получение включенных feature flags (публичный эндпоинт)
+ * Получение включенных feature flags (public)
  */
 export async function getEnabledFeatureFlagsRequest() {
   const response = await productApi.get('/cms/feature-flags/enabled');
@@ -388,11 +465,17 @@ export async function getEnabledFeatureFlagsRequest() {
 }
 
 /**
+ * Получение feature flag по ID
+ * @param {number} flagId - ID флага
+ */
+export async function getFeatureFlagByIdRequest(flagId) {
+  const response = await productApi.get(`/cms/feature-flags/admin/${flagId}`);
+  return unwrapResponse(response);
+}
+
+/**
  * Создание feature flag
  * @param {Object} payload - Данные флага
- * @param {string} payload.key - Уникальный ключ флага
- * @param {boolean} payload.enabled - Статус флага
- * @param {string} payload.description - Описание флага
  */
 export async function createFeatureFlagRequest(payload) {
   const response = await productApi.post('/cms/feature-flags/admin', payload);

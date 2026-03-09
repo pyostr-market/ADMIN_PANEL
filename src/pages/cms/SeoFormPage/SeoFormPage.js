@@ -1,12 +1,13 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FiSearch, FiSave } from 'react-icons/fi';
+import { FiSearch } from 'react-icons/fi';
 import { FormPage } from '../../../shared/ui/FormPage';
 import { FormSection } from '../../../shared/ui/FormSection/FormSection';
 import { FormGrid } from '../../../shared/ui/FormGrid/FormGrid';
 import { getApiErrorMessage } from '../../../shared/api/apiError';
 import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
 import {
+  getSeoByIdRequest,
   createSeoRequest,
   updateSeoRequest,
 } from '../api/cmsApi';
@@ -32,9 +33,49 @@ export function SeoFormPage() {
     og_image_id: '',
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (isEditMode && seoId) {
+      getSeoByIdRequest(seoId)
+        .then((data) => {
+          setFormData({
+            page_slug: data.page_slug || '',
+            title: data.title || '',
+            description: data.description || '',
+            keywords: Array.isArray(data.keywords) ? data.keywords.join(', ') : '',
+            og_image_id: data.og_image_id ? String(data.og_image_id) : '',
+          });
+        })
+        .catch((error) => {
+          const message = getApiErrorMessage(error);
+          notificationsRef.current?.error(message);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [seoId, isEditMode]);
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.page_slug) {
+      newErrors.page_slug = 'Введите slug страницы';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: null }));
+    }
+  };
 
   const handleSubmit = async (stayOnPage = false) => {
     if (!validateForm()) {
@@ -73,24 +114,6 @@ export function SeoFormPage() {
       notificationsRef.current?.error(message);
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.page_slug) {
-      newErrors.page_slug = 'Введите slug страницы';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: null }));
     }
   };
 

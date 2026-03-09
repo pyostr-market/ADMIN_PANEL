@@ -9,13 +9,14 @@ import { Modal } from '../../../shared/ui/Modal/Modal';
 import { CrudListLayout } from '../../../shared/ui/CrudListLayout/CrudListLayout';
 import { useCrudList } from '../../../shared/lib/crud';
 import {
-  getFaqsRequest,
+  getFaqsAdminRequest,
   deleteFaqRequest,
+  searchFaqsRequest,
 } from '../api/cmsApi';
 import styles from './FaqListPage.module.css';
 import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
-const PAGE_LIMIT = 20;
+const PAGE_LIMIT = 10;
 
 function DeleteFaqModal({ faq, onClose, onSubmit, isSubmitting }) {
   if (!faq) return null;
@@ -57,18 +58,18 @@ export function FaqListPage() {
 
   const faqsCrud = useCrudList({
     fetchFn: async ({ page = 1, limit = PAGE_LIMIT } = {}) => {
-      const data = await getFaqsRequest({});
-      const items = data.items || [];
-      const total = data.total || items.length;
+      const offset = (page - 1) * limit;
+      const data = await getFaqsAdminRequest({
+        limit,
+        offset,
+      });
       const pagination = {
         page,
         limit,
-        total,
-        pages: Math.ceil(total / limit),
+        total: data.total,
+        pages: Math.ceil(data.total / limit),
       };
-      const start = (page - 1) * limit;
-      const end = start + limit;
-      return { items: items.slice(start, end), pagination };
+      return { items: data.items, pagination };
     },
     deleteFn: deleteFaqRequest,
     entityName: 'FAQ',

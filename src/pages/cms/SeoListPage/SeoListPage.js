@@ -15,7 +15,7 @@ import {
 import styles from './SeoListPage.module.css';
 import entityListStyles from '../../../shared/ui/EntityList/EntityList.module.css';
 
-const PAGE_LIMIT = 20;
+const PAGE_LIMIT = 10;
 
 function DeleteSeoModal({ seo, onClose, onSubmit, isSubmitting }) {
   if (!seo) return null;
@@ -57,9 +57,10 @@ export function SeoListPage() {
 
   const seoCrud = useCrudList({
     fetchFn: async ({ page = 1, limit = PAGE_LIMIT } = {}) => {
+      const offset = (page - 1) * limit;
       const data = await getSeoListRequest({
-        page,
         limit,
+        offset,
       });
       return data;
     },

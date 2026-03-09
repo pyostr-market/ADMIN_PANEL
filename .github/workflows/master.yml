@@ -1,0 +1,69 @@
+name: Deploy FRONTEND to PRODUCTION
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      #----------------------------------------------
+      # Checkout репозитория
+      #----------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      #----------------------------------------------
+      # Установка Node.js 24
+      #----------------------------------------------
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      #----------------------------------------------
+      # Установка зависимостей
+      #----------------------------------------------
+      - name: Install dependencies
+        run: npm ci
+
+      #----------------------------------------------
+      # Сборка React приложения
+      #----------------------------------------------
+      - name: Build project
+        run: CI=false npm run build
+
+      #----------------------------------------------
+      # Очистка директории на сервере
+      #----------------------------------------------
+      - name: Prepare server directory
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          script: |
+            sudo rm -rf /var/www/FRONTEND_MARKET_ADMIN
+            sudo mkdir -p /var/www/FRONTEND_MARKET_ADMIN
+            sudo chown -R $USER:$USER /var/www/FRONTEND_MARKET_ADMIN
+
+      #----------------------------------------------
+      # Копирование build на сервер
+      #----------------------------------------------
+      - name: Upload build to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          source: "build/*"
+          target: "/var/www/FRONTEND_MARKET_ADMIN"
