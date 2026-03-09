@@ -1,12 +1,15 @@
-export const USER_SERVICE_BASE_URL = 'https://market-user.open-gpt.ru';
-// export const USER_SERVICE_BASE_URL = 'http://0.0.0.0:8000';
 
-// export const PRODUCT_SERVICE_BASE_URL = 'https://market-product.open-gpt.ru';
-export const PRODUCT_SERVICE_BASE_URL = 'http://0.0.0.0:8000';
+const USER_SERVICE_BASE_URL = process.env.REACT_APP_USER_SERVICE_BASE_URL
 
-export const PRICING_ENGINE_BASE_URL = 'https://pricing-engine.demo-market.ru';
-// export const PRICING_ENGINE_BASE_URL = 'http://0.0.0.0:8000';
+const PRODUCT_SERVICE_BASE_URL = process.env.REACT_APP_PRODUCT_SERVICE_BASE_URL
 
+const PRICING_ENGINE_BASE_URL = process.env.REACT_APP_PRICING_ENGINE_BASE_URL
+
+export {
+  USER_SERVICE_BASE_URL,
+  PRODUCT_SERVICE_BASE_URL,
+  PRICING_ENGINE_BASE_URL
+};
 export const API_ENDPOINTS = {
   // User service - Auth
   login: '/auth/login',

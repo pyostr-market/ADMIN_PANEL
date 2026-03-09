@@ -37,7 +37,10 @@ jobs:
       #----------------------------------------------
       - name: Build project
         run: CI=false npm run build
-
+        env:
+          REACT_APP_USER_SERVICE_BASE_URL: ${{ secrets.REACT_APP_USER_SERVICE_BASE_URL }}
+          REACT_APP_PRODUCT_SERVICE_BASE_URL: ${{ secrets.REACT_APP_PRODUCT_SERVICE_BASE_URL }}
+          REACT_APP_PRICING_ENGINE_BASE_URL: ${{ secrets.REACT_APP_PRICING_ENGINE_BASE_URL }}
       #----------------------------------------------
       # Очистка директории на сервере
       #----------------------------------------------
