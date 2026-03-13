@@ -116,6 +116,13 @@ export function CategoryFormPage() {
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: null }));
     }
+    // Очищаем выбранный объект при сбросе значения
+    if (field === 'parent_id' && !value) {
+      setSelectedParent(null);
+    }
+    if (field === 'manufacturer_id' && !value) {
+      setSelectedManufacturer(null);
+    }
   };
 
   // Загрузка файла изображения
@@ -233,25 +240,23 @@ export function CategoryFormPage() {
         if (image.toDelete) {
           // Удаление изображения (только для редактирования)
           if (isEditMode) {
-            payload.images = [{ action: 'delete', upload_id: image.upload_id }];
+            payload.image = { action: 'delete', upload_id: image.upload_id };
           }
         } else if (image.upload_id) {
           // Есть загруженное изображение
           if (image.isNew || image.oldUploadId) {
             // Новое изображение или замена старого
-            payload.images = [{
+            payload.image = {
               action: 'create',
               upload_id: image.upload_id,
-              ordering: image.ordering || 0,
-            }];
+            };
           } else {
             // Существующее изображение без изменений (только для редактирования)
             if (isEditMode) {
-              payload.images = [{
+              payload.image = {
                 action: 'pass',
                 upload_id: image.upload_id,
-                ordering: image.ordering || 0,
-              }];
+              };
             }
           }
         }

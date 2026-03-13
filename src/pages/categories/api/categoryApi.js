@@ -109,7 +109,7 @@ export async function createCategoryRequest(payload) {
  * @param {string | null} payload.description - Описание
  * @param {number | null} payload.parent_id - ID родительской категории
  * @param {number | null} payload.manufacturer_id - ID производителя
- * @param {Array} payload.images - Массив операций с изображениями: [{ action, upload_id, ordering }]
+ * @param {Object} payload.image - Операция с изображением: { action, upload_id }
  */
 export async function updateCategoryRequest(categoryId, payload) {
   const body = {};
@@ -130,13 +130,12 @@ export async function updateCategoryRequest(categoryId, payload) {
     body.manufacturer_id = payload.manufacturer_id;
   }
 
-  // Отправляем images только если есть
-  if (payload.images && payload.images.length > 0) {
-    body.images = payload.images.map(img => ({
-      action: img.action,
-      upload_id: img.upload_id,
-      ordering: img.ordering !== undefined ? img.ordering : 0,
-    }));
+  // Отправляем image только если есть
+  if (payload.image) {
+    body.image = {
+      action: payload.image.action,
+      upload_id: payload.image.upload_id,
+    };
   }
 
   const response = await productApi.put(`${API_ENDPOINTS.categories}/${categoryId}`, body);

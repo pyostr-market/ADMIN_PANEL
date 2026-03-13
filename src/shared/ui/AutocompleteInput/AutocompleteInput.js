@@ -163,12 +163,10 @@ export function AutocompleteInput({
 
   const handleClear = useCallback(() => {
     onChange('');
-    if (propSelectedOption === null) {
-      setSelectedOption(null);
-    }
+    setSelectedOption(null);
     setSearchQuery('');
     inputRef.current?.focus();
-  }, [onChange, propSelectedOption]);
+  }, [onChange]);
 
   const handleInputChange = useCallback((e) => {
     const newValue = e.target.value;

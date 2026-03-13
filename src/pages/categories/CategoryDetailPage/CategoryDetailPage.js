@@ -115,39 +115,25 @@ export function CategoryDetailPage() {
               fullWidth: !!category.description,
             },
           ]}
+          customContent={
+            category.image ? (
+              <div className={styles.imageSection}>
+                <div className={styles.imageLabel}>
+                  <FiImage /> Изображение
+                </div>
+                <div className={styles.imageWrapper}>
+                  <img
+                    src={category.image.image_url}
+                    alt={category.name || 'Изображение категории'}
+                    className={styles.image}
+                  />
+                </div>
+              </div>
+            ) : null
+          }
           auditUrl={`/categories/${categoryId}/audit`}
           onAuditClick={handleViewAudit}
         />
-
-        {category.images && category.images.length > 0 && (
-          <div className={styles.categoryDetailPagePanel}>
-            <div className={styles.panelHeader}>
-              <div className={styles.panelHeaderContent}>
-                <h2 className={styles.panelTitle}>Изображения</h2>
-              </div>
-            </div>
-            <div className={styles.panelContent}>
-              <div className={styles.categoryImagesGrid}>
-                {category.images
-                  .sort((a, b) => a.ordering - b.ordering)
-                  .map((image, index) => (
-                    <div key={index} className={styles.categoryImageCard}>
-                      <img
-                        src={image.image_url}
-                        alt={`Изображение ${index + 1}`}
-                        className={styles.categoryImageCardImage}
-                      />
-                      <div className={styles.categoryImageCardInfo}>
-                        <span className={styles.categoryImageCardOrder}>
-                          Порядок: {image.ordering}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </section>
   );
