@@ -28,11 +28,12 @@ productApi.interceptors.request.use(
     if (config.baseURL?.startsWith('https://')) {
       // URL уже правильный
     }
-    console.log('[productApi] Request:', {
-      url: config.baseURL + config.url,
-      method: config.method,
-      headers: config.headers,
-    });
+    // Не логируем запросы с FormData для избежания ошибок с циклическими ссылками
+    if (config.data instanceof FormData) {
+      console.log('[productApi] Request:', config.method, config.url, '(FormData)');
+    } else {
+      console.log('[productApi] Request:', config.method, config.url, config.data);
+    }
     return config;
   },
   (error) => {
@@ -44,11 +45,12 @@ productApi.interceptors.request.use(
 // Interceptor для pricingApi
 pricingApi.interceptors.request.use(
   (config) => {
-    console.log('[pricingApi] Request:', {
-      url: config.baseURL + config.url,
-      method: config.method,
-      headers: config.headers,
-    });
+    // Не логируем запросы с FormData для избежания ошибок с циклическими ссылками
+    if (config.data instanceof FormData) {
+      console.log('[pricingApi] Request:', config.method, config.url, '(FormData)');
+    } else {
+      console.log('[pricingApi] Request:', config.method, config.url, config.data);
+    }
     return config;
   },
   (error) => {

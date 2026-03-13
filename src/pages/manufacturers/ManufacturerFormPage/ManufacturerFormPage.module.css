@@ -20,3 +20,127 @@
   font-size: 13px;
   color: var(--danger);
 }
+
+/* Стили для секции изображения */
+.imageSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.fileInput {
+  display: none;
+}
+
+.imagePreview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  background-color: var(--bg-secondary);
+}
+
+.uploadOverlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  color: white;
+}
+
+.spinnerIcon {
+  animation: spin 1s linear infinite;
+  width: 32px;
+  height: 32px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.deleteBadge {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  background-color: var(--danger);
+  color: white;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.imageActions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.restoreSection {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-secondary);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.emptyState:hover {
+  border-color: var(--primary);
+  background-color: var(--bg-tertiary);
+}
+
+.emptyHint {
+  font-size: 13px;
+  margin-bottom: var(--space-3);
+}

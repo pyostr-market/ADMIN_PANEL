@@ -41,17 +41,63 @@ export async function getManufacturerByIdRequest(manufacturerId) {
 
 /**
  * Создание производителя
+ * @param {Object} payload - Данные производителя
+ * @param {string} payload.name - Название (обяз.)
+ * @param {string | null} payload.description - Описание
+ * @param {number | null} payload.image_upload_id - ID загруженного изображения
  */
 export async function createManufacturerRequest(payload) {
-  const response = await productApi.post(API_ENDPOINTS.manufacturers, payload);
+  const body = {
+    name: payload.name,
+  };
+
+  if (payload.description !== null && payload.description !== undefined) {
+    body.description = payload.description;
+  }
+
+  // Отправляем image только если есть upload_id
+  if (payload.image_upload_id) {
+    body.image = {
+      upload_id: payload.image_upload_id,
+    };
+  }
+
+  const response = await productApi.post(API_ENDPOINTS.manufacturers, body);
   return unwrapResponse(response);
 }
 
 /**
  * Обновление производителя (PUT)
+ * @param {number} manufacturerId - ID производителя
+ * @param {Object} payload - Данные для обновления
+ * @param {string | null} payload.name - Название
+ * @param {string | null} payload.description - Описание
+ * @param {string | null} payload.image_action - Действие с изображением: 'create', 'update', 'delete', 'pass'
+ * @param {number | null} payload.image_upload_id - ID загруженного изображения
  */
 export async function updateManufacturerRequest(manufacturerId, payload) {
-  const response = await productApi.put(`${API_ENDPOINTS.manufacturers}/${manufacturerId}`, payload);
+  const body = {};
+
+  if (payload.name !== null && payload.name !== undefined) {
+    body.name = payload.name;
+  }
+
+  if (payload.description !== null && payload.description !== undefined) {
+    body.description = payload.description;
+  }
+
+  // Отправляем image только если есть действие
+  if (payload.image_action) {
+    body.image = {
+      action: payload.image_action,
+    };
+    
+    if (payload.image_upload_id) {
+      body.image.upload_id = payload.image_upload_id;
+    }
+  }
+
+  const response = await productApi.put(`${API_ENDPOINTS.manufacturers}/${manufacturerId}`, body);
   return unwrapResponse(response);
 }
 

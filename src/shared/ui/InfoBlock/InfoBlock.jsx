@@ -19,6 +19,7 @@ import styles from './InfoBlock.module.css';
  * @param {string} [props.title] - Заголовок блока (например, "Информация")
  * @param {React.ReactNode} [props.headerIcon] - Иконка в заголовке
  * @param {InfoItem[]} props.items - Массив элементов для отображения
+ * @param {React.ReactNode} [props.customContent] - Пользовательский контент (отображается после сетки)
  * @param {string} [props.auditUrl] - URL для перехода на страницу аудита (если указан, показывается кнопка "История")
  * @param {Function} [props.onAuditClick] - Обработчик клика по кнопке "История" (если указан, используется вместо навигации)
  * @param {string} [props.className] - Дополнительный CSS-класс
@@ -39,6 +40,7 @@ export function InfoBlock({
   title = 'Информация',
   headerIcon,
   items,
+  customContent,
   auditUrl,
   onAuditClick,
   className = '',
@@ -59,8 +61,6 @@ export function InfoBlock({
         return styles.infoCardIconPrimary;
     }
   };
-
-  const DefaultIcon = headerIcon || FiBox;
 
   const handleAuditClick = () => {
     if (onAuditClick) {
@@ -108,6 +108,12 @@ export function InfoBlock({
             </div>
           ))}
         </div>
+
+        {customContent && (
+          <div className={styles.infoBlockCustomContent}>
+            {customContent}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -158,7 +158,7 @@ export function ProductsPage() {
                 <Button
                   variant="primary"
                   leftIcon={<FiPlus />}
-                  onClick={actions.create}
+                  onClick={actions.createHandler}
                 >
                   Создать товар
                 </Button>
@@ -199,7 +199,7 @@ export function ProductsPage() {
               image={mainImage(product)}
               icon={<FiPackage />}
               title={product.name || 'Без названия'}
-              onClick={() => actions.view(product.id)}
+              onClick={(e) => actions.viewHandler(e, product.id)}
               meta={(
                 <>
                   <EntityCardMetaItem className={styles.productPrice}>
@@ -234,7 +234,7 @@ export function ProductsPage() {
                       variant="secondary"
                       size="sm"
                       leftIcon={<FiEdit2 />}
-                      onClick={() => actions.edit(product.id)}
+                      onClick={(e) => actions.editHandler(e, product.id)}
                       aria-label={`Редактировать товар ${product.name || product.id}`}
                     >
                       Редактировать
@@ -245,7 +245,7 @@ export function ProductsPage() {
                     variant="secondary"
                     size="sm"
                     leftIcon={<FiEye />}
-                    onClick={() => actions.view(product.id)}
+                    onClick={(e) => actions.viewHandler(e, product.id)}
                     aria-label={`Просмотреть товар ${product.name || product.id}`}
                   >
                     Просмотр

@@ -59,7 +59,7 @@ export function CategoriesPage() {
                 <Button
                   variant="primary"
                   leftIcon={<FiPlus />}
-                  onClick={actions.create}
+                  onClick={actions.createHandler}
                 >
                   Создать категорию
                 </Button>
@@ -94,7 +94,7 @@ export function CategoriesPage() {
               icon={<FiTag />}
               avatarColor
               title={category.name || 'Без названия'}
-              onClick={() => actions.view(category.id)}
+              onClick={(e) => actions.viewHandler(e, category.id)}
               meta={(
                 <>
                   <EntityCardMetaItem>
@@ -129,7 +129,7 @@ export function CategoriesPage() {
                       variant="secondary"
                       size="sm"
                       leftIcon={<FiEdit2 />}
-                      onClick={() => actions.edit(category.id)}
+                      onClick={(e) => actions.editHandler(e, category.id)}
                       aria-label={`Редактировать категорию ${category.name || category.id}`}
                     >
                       Редактировать
@@ -140,7 +140,7 @@ export function CategoriesPage() {
                     variant="secondary"
                     size="sm"
                     leftIcon={<FiEye />}
-                    onClick={() => actions.view(category.id)}
+                    onClick={(e) => actions.viewHandler(e, category.id)}
                     aria-label={`Просмотреть категорию ${category.name || category.id}`}
                   >
                     Просмотр

@@ -55,7 +55,7 @@ export function SuppliersPage() {
                 <Button
                   variant="primary"
                   leftIcon={<FiPlus />}
-                  onClick={actions.create}
+                  onClick={actions.createHandler}
                 >
                   Создать поставщика
                 </Button>
@@ -88,7 +88,7 @@ export function SuppliersPage() {
               icon={<FiBox />}
               avatarColor
               title={supplier.name || 'Без названия'}
-              onClick={() => actions.view(supplier.id)}
+              onClick={(e) => actions.viewHandler(e, supplier.id)}
               meta={(
                 <>
                   <EntityCardMetaItem>
@@ -118,7 +118,7 @@ export function SuppliersPage() {
                       variant="secondary"
                       size="sm"
                       leftIcon={<FiEdit2 />}
-                      onClick={() => actions.edit(supplier.id)}
+                      onClick={(e) => actions.editHandler(e, supplier.id)}
                       aria-label={`Редактировать поставщика ${supplier.name || supplier.id}`}
                     >
                       Редактировать
@@ -129,7 +129,7 @@ export function SuppliersPage() {
                     variant="secondary"
                     size="sm"
                     leftIcon={<FiEye />}
-                    onClick={() => actions.view(supplier.id)}
+                    onClick={(e) => actions.viewHandler(e, supplier.id)}
                     aria-label={`Просмотреть поставщика ${supplier.name || supplier.id}`}
                   >
                     Просмотр

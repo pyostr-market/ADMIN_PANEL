@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { AuditPage } from '../../../shared/ui/AuditPage';
-import { getManufacturerAuditRequest } from '../api/manufacturersApi';
+import { getManufacturerAuditRequest } from '../../../shared/api/modules/manufacturersApi';
 
 export function ManufacturerAuditPage() {
   const { manufacturerId } = useParams();

@@ -28,6 +28,15 @@ export function useEntityActions({
     navigate(path);
   }, [baseUrl, navigate]);
 
+  const viewHandler = useCallback((e, id, customPath) => {
+    if (e && typeof e.preventDefault === 'function') {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const path = customPath || `${baseUrl}/${id}`;
+    navigate(path);
+  }, [baseUrl, navigate]);
+
   /**
    * Переход к странице редактирования сущности
    * @param {string|number} id - ID сущности
@@ -38,11 +47,29 @@ export function useEntityActions({
     navigate(path);
   }, [baseUrl, navigate]);
 
+  const editHandler = useCallback((e, id, customPath) => {
+    if (e && typeof e.preventDefault === 'function') {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const path = customPath || `${baseUrl}/${id}/edit`;
+    navigate(path);
+  }, [baseUrl, navigate]);
+
   /**
    * Переход к странице создания сущности
    * @param {string} [customPath] - Кастомный путь (опционально)
    */
   const create = useCallback((customPath) => {
+    const path = customPath || `${baseUrl}/create`;
+    navigate(path);
+  }, [baseUrl, navigate]);
+
+  const createHandler = useCallback((e, customPath) => {
+    if (e && typeof e.preventDefault === 'function') {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     const path = customPath || `${baseUrl}/create`;
     navigate(path);
   }, [baseUrl, navigate]);
@@ -57,10 +84,27 @@ export function useEntityActions({
     navigate(path);
   }, [baseUrl, navigate]);
 
+  const auditHandler = useCallback((e, id, customPath) => {
+    if (e && typeof e.preventDefault === 'function') {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const path = customPath || `${baseUrl}/${id}/audit`;
+    navigate(path);
+  }, [baseUrl, navigate]);
+
   /**
    * Переход к списку сущностей
    */
   const backToList = useCallback(() => {
+    navigate(listUrl);
+  }, [listUrl, navigate]);
+
+  const backToListHandler = useCallback((e) => {
+    if (e && typeof e.preventDefault === 'function') {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     navigate(listUrl);
   }, [listUrl, navigate]);
 
@@ -75,7 +119,7 @@ export function useEntityActions({
     }
 
     const result = await onDelete(id);
-    
+
     if (result && onSuccess) {
       onSuccess('delete');
     }
@@ -85,10 +129,15 @@ export function useEntityActions({
 
   return {
     view,
+    viewHandler,
     edit,
+    editHandler,
     create,
+    createHandler,
     audit,
+    auditHandler,
     backToList,
+    backToListHandler,
     remove,
   };
 }

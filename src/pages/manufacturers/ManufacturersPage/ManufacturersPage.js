@@ -59,7 +59,7 @@ export function ManufacturersPage() {
                 <Button
                   variant="primary"
                   leftIcon={<FiPlus />}
-                  onClick={actions.create}
+                  onClick={actions.createHandler}
                 >
                   Создать производителя
                 </Button>
@@ -94,7 +94,7 @@ export function ManufacturersPage() {
               icon={<FiBox />}
               avatarColor
               title={manufacturer.name || 'Без названия'}
-              onClick={() => actions.view(manufacturer.id)}
+              onClick={(e) => actions.viewHandler(e, manufacturer.id)}
               meta={(
                 <>
                   <EntityCardMetaItem>
@@ -114,7 +114,7 @@ export function ManufacturersPage() {
                       variant="secondary"
                       size="sm"
                       leftIcon={<FiEdit2 />}
-                      onClick={() => actions.edit(manufacturer.id)}
+                      onClick={(e) => actions.editHandler(e, manufacturer.id)}
                       aria-label={`Редактировать производителя ${manufacturer.name || manufacturer.id}`}
                     >
                       Редактировать
@@ -125,7 +125,7 @@ export function ManufacturersPage() {
                     variant="secondary"
                     size="sm"
                     leftIcon={<FiEye />}
-                    onClick={() => actions.view(manufacturer.id)}
+                    onClick={(e) => actions.viewHandler(e, manufacturer.id)}
                     aria-label={`Просмотреть производителя ${manufacturer.name || manufacturer.id}`}
                   >
                     Просмотр

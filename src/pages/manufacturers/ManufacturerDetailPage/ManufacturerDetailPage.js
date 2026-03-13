@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FiEdit2, FiTrash2, FiBox, FiClock, FiArrowLeft } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiBox, FiClock, FiArrowLeft, FiImage } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { Modal } from '../../../shared/ui/Modal/Modal';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
@@ -10,7 +10,7 @@ import { useNotifications } from '../../../shared/lib/notifications/Notification
 import {
   getManufacturerByIdRequest,
   deleteManufacturerRequest,
-} from '../api/manufacturersApi';
+} from '../../../shared/api/modules/manufacturersApi';
 import styles from './ManufacturerDetailPage.module.css';
 
 function DeleteManufacturerModal({ manufacturer, onClose, onSubmit, isSubmitting }) {
@@ -180,6 +180,22 @@ export function ManufacturerDetailPage() {
               fullWidth: !!manufacturer.description,
             },
           ]}
+          customContent={
+            manufacturer.image ? (
+              <div className={styles.imageSection}>
+                <div className={styles.imageLabel}>
+                  <FiImage /> Изображение
+                </div>
+                <div className={styles.imageWrapper}>
+                  <img
+                    src={manufacturer.image.image_url}
+                    alt={manufacturer.name || 'Изображение производителя'}
+                    className={styles.image}
+                  />
+                </div>
+              </div>
+            ) : null
+          }
           auditUrl={`/catalog/manufacturers/${manufacturerId}/audit`}
           onAuditClick={handleViewAudit}
         />
