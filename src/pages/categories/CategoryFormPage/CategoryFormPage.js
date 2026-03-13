@@ -1,15 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FiImage } from 'react-icons/fi';
+import { FiImage, FiUpload, FiTrash2, FiLoader } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { FormPage } from '../../../shared/ui/FormPage';
-import { ImageCarousel } from '../../../shared/ui/ImageCarousel/ImageCarousel';
 import { AutocompleteInput } from '../../../shared/ui/AutocompleteInput/AutocompleteInput';
 import { FormSection } from '../../../shared/ui/FormSection/FormSection';
 import { FormGrid } from '../../../shared/ui/FormGrid/FormGrid';
 import { FormTextarea } from '../../../shared/ui/FormTextarea/FormTextarea';
 import { getApiErrorMessage } from '../../../shared/api/apiError';
 import { useNotifications } from '../../../shared/lib/notifications/NotificationProvider';
+import { uploadFileRequest } from '../../../shared/api/uploadApi';
 import {
   getCategoryByIdRequest,
   createCategoryRequest,
@@ -18,6 +18,8 @@ import {
   getManufacturersForAutocompleteRequest,
 } from '../api/categoryApi';
 import styles from './CategoryFormPage.module.css';
+
+const UPLOAD_TIMEOUT = 10000;
 
 export function CategoryFormPage() {
   const navigate = useNavigate();
@@ -42,7 +44,11 @@ export function CategoryFormPage() {
   const [selectedParent, setSelectedParent] = useState(null);
   const [selectedManufacturer, setSelectedManufacturer] = useState(null);
 
-  const [images, setImages] = useState([]);
+  // Состояние для одного изображения категории
+  const [image, setImage] = useState(null);
+  const [uploadingFile, setUploadingFile] = useState(null);
+  const fileInputRef = useRef(null);
+
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
@@ -66,17 +72,18 @@ export function CategoryFormPage() {
         setSelectedManufacturer(data.manufacturer);
       }
 
+      // Загружаем изображение если есть (берём первое из массива)
       if (data.images && data.images.length > 0) {
-        // Существующие изображения уже загружены на сервер
-        setImages(data.images.map(img => ({
-          upload_id: img.upload_id,
-          image_key: img.file_path || img.image_url,
-          image_url: img.image_url,
-          ordering: img.ordering,
-          is_main: false, // Для категорий нет понятия главного изображения
-          isNew: false,
+        const firstImage = data.images[0];
+        setImage({
+          upload_id: firstImage.upload_id,
+          image_url: firstImage.image_url,
+          ordering: firstImage.ordering,
           toDelete: false,
-        })));
+          isNew: false,
+        });
+      } else {
+        setImage(null);
       }
     } catch (error) {
       const message = getApiErrorMessage(error);
@@ -100,11 +107,6 @@ export function CategoryFormPage() {
       newErrors.name = 'Введите название категории';
     }
 
-    // При создании изображения обязательны
-    if (!isEditMode && images.length === 0) {
-      newErrors.images = 'Загрузите хотя бы одно изображение';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -116,12 +118,93 @@ export function CategoryFormPage() {
     }
   };
 
-  const handleImagesChange = useCallback((newImages) => {
-    setImages(newImages);
-    if (errors.images) {
-      setErrors((prev) => ({ ...prev, images: null }));
+  // Загрузка файла изображения
+  const handleImageUpload = useCallback(async (file) => {
+    if (!file) return;
+
+    const startTime = Date.now();
+    setUploadingFile({ progress: 0, startTime, fileName: file.name, fileSize: file.size });
+
+    try {
+      const abortController = new AbortController();
+      const timeoutId = setTimeout(() => {
+        abortController.abort();
+      }, UPLOAD_TIMEOUT);
+
+      const result = await uploadFileRequest(file, 'categories', {
+        originalFilename: file.name,
+        onProgress: (progress) => {
+          setUploadingFile((prev) => ({ ...prev, progress }));
+        },
+        abortSignal: abortController.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      // Если было старое изображение, помечаем его на удаление
+      setImage((prevImage) => {
+        const oldUploadId = prevImage && prevImage.upload_id ? prevImage.upload_id : null;
+        return {
+          upload_id: result.upload_id,
+          image_url: result.public_url || result.file_path,
+          ordering: 0,
+          toDelete: false,
+          oldUploadId,
+          isNew: true,
+        };
+      });
+
+      setUploadingFile(null);
+      notificationsRef.current?.info('Изображение загружено');
+    } catch (error) {
+      console.error('[CategoryForm] Ошибка загрузки изображения:', error);
+      setUploadingFile(null);
+      notificationsRef.current?.error('Ошибка загрузки изображения');
     }
-  }, [errors.images]);
+  }, []);
+
+  // Удаление изображения
+  const handleImageDelete = useCallback(() => {
+    setImage((prevImage) => {
+      if (!prevImage) return null;
+
+      // Если изображение уже было на сервере, помечаем на удаление
+      if (prevImage.upload_id && !prevImage.isNew) {
+        return {
+          ...prevImage,
+          toDelete: true,
+        };
+      }
+
+      // Если новое изображение ещё не было отправлено, просто удаляем
+      return null;
+    });
+  }, []);
+
+  // Восстановление изображения (снятие пометки на удаление)
+  const handleImageRestore = useCallback(() => {
+    setImage((prevImage) => {
+      if (!prevImage) return null;
+      return {
+        ...prevImage,
+        toDelete: false,
+      };
+    });
+  }, []);
+
+  const handleFileSelect = useCallback((e) => {
+    const file = e.target.files[0];
+    if (file) {
+      handleImageUpload(file);
+    }
+    e.target.value = '';
+  }, [handleImageUpload]);
+
+  const triggerFileInput = useCallback(() => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  }, []);
 
   const handleSubmit = async (stayOnPage = false) => {
     if (!validateForm()) {
@@ -129,63 +212,88 @@ export function CategoryFormPage() {
       return;
     }
 
-    // Проверяем, что все изображения загружены (есть upload_id)
-    const uploadingImages = images.filter(img => img.pendingUploadKey || !img.upload_id);
-    if (uploadingImages.length > 0) {
-      notificationsRef.current?.error('Дождитесь завершения загрузки всех изображений');
+    // Проверяем, что загрузка изображения завершена
+    if (uploadingFile) {
+      notificationsRef.current?.error('Дождитесь завершения загрузки изображения');
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      // Формируем images_json для отправки
-      const imagesToSend = images.filter(img => !img.toDelete);
-      const imagesJson = imagesToSend.map((image, idx) => ({
-        action: image.isNew ? 'to_create' : 'pass',
-        upload_id: image.upload_id,
-        orderings: idx,
-      }));
-
       const payload = {
         name: formData.name.trim(),
         description: formData.description.trim() || null,
         parent_id: formData.parent_id ? Number(formData.parent_id) : null,
         manufacturer_id: formData.manufacturer_id ? Number(formData.manufacturer_id) : null,
-        images_json: JSON.stringify(imagesJson),
       };
+
+      // Обработка изображения
+      if (image) {
+        if (image.toDelete) {
+          // Удаление изображения (только для редактирования)
+          if (isEditMode) {
+            payload.images = [{ action: 'delete', upload_id: image.upload_id }];
+          }
+        } else if (image.upload_id) {
+          // Есть загруженное изображение
+          if (image.isNew || image.oldUploadId) {
+            // Новое изображение или замена старого
+            payload.images = [{
+              action: 'create',
+              upload_id: image.upload_id,
+              ordering: image.ordering || 0,
+            }];
+          } else {
+            // Существующее изображение без изменений (только для редактирования)
+            if (isEditMode) {
+              payload.images = [{
+                action: 'pass',
+                upload_id: image.upload_id,
+                ordering: image.ordering || 0,
+              }];
+            }
+          }
+        }
+      }
 
       if (isEditMode) {
         const responseData = await updateCategoryRequest(categoryId, payload);
         notificationsRef.current?.info('Категория обновлена');
 
-        if (stayOnPage) {
-          // Обновляем данные формы из ответа
-          if (responseData) {
-            setFormData({
-              name: responseData.name || formData.name,
-              description: responseData.description || formData.description,
-              parent_id: responseData.parent_id || formData.parent_id,
-              manufacturer_id: responseData.manufacturer_id || formData.manufacturer_id,
+        if (stayOnPage && responseData) {
+          setFormData({
+            name: responseData.name || formData.name,
+            description: responseData.description || formData.description,
+            parent_id: responseData.parent_id || formData.parent_id,
+            manufacturer_id: responseData.manufacturer_id || formData.manufacturer_id,
+          });
+          // Обновляем полные объекты для autocomplete
+          setSelectedParent(responseData.parent || selectedParent);
+          setSelectedManufacturer(responseData.manufacturer || selectedManufacturer);
+          // Обновляем изображение из ответа
+          if (responseData.images && responseData.images.length > 0) {
+            setImage({
+              upload_id: responseData.images[0].upload_id,
+              image_url: responseData.images[0].image_url,
+              ordering: responseData.images[0].ordering,
+              toDelete: false,
+              oldUploadId: null,
+              isNew: false,
             });
-            // Обновляем полные объекты для autocomplete
-            setSelectedParent(responseData.parent || selectedParent);
-            setSelectedManufacturer(responseData.manufacturer || selectedManufacturer);
-            // Обновляем изображения
-            if (responseData.images) {
-              setImages(responseData.images.map(img => ({
-                upload_id: img.upload_id,
-                image_key: img.file_path || img.image_url,
-                image_url: img.image_url,
-                ordering: img.ordering,
-                is_main: false,
-                isNew: false,
-                toDelete: false,
-              })));
-            }
+          } else {
+            setImage(null);
           }
         }
       } else {
+        // Для создания используем простой массив изображений
+        if (image && image.upload_id) {
+          payload.images = [{
+            upload_id: image.upload_id,
+            ordering: image.ordering || 0,
+          }];
+        }
+
         const responseData = await createCategoryRequest(payload);
         notificationsRef.current?.info('Категория создана');
 
@@ -291,21 +399,122 @@ export function CategoryFormPage() {
       <FormSection
         icon={<FiImage />}
         iconVariant="secondary"
-        title="Изображения"
-        description="Загрузите изображения категории"
+        title="Изображение категории"
+        description="Загрузите изображение категории"
       >
-        {errors.images && (
-          <span className={`${styles.categoryFormError} ${styles.categoryFormErrorBlock}`}>{errors.images}</span>
-        )}
+        <div className={styles.imageSection}>
+          {/* Input для выбора файла */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileSelect}
+            className={styles.fileInput}
+            disabled={isSubmitting || !!uploadingFile}
+          />
 
-        <ImageCarousel
-          images={images}
-          onImagesChange={handleImagesChange}
-          multiple
-          showDelete
-          disabled={isSubmitting}
-          folder="categories"
-        />
+          {/* Есть изображение */}
+          {image && !image.toDelete && (
+            <div className={styles.imagePreview}>
+              <div className={styles.imageWrapper}>
+                {image.image_url ? (
+                  <img
+                    src={image.image_url}
+                    alt="Изображение категории"
+                    className={styles.image}
+                  />
+                ) : (
+                  <div className={styles.imagePlaceholder}>
+                    <FiImage size={48} />
+                  </div>
+                )}
+
+                {/* Индикатор загрузки */}
+                {uploadingFile && (
+                  <div className={styles.uploadOverlay}>
+                    <div className={styles.spinner}>
+                      <FiLoader className={styles.spinnerIcon} />
+                      <span>{uploadingFile.progress}%</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Бейдж "Будет удалено" */}
+                {image.toDelete && (
+                  <span className={styles.deleteBadge}>
+                    <FiTrash2 /> Будет удалено
+                  </span>
+                )}
+              </div>
+
+              {!uploadingFile && (
+                <div className={styles.imageActions}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<FiUpload />}
+                    onClick={triggerFileInput}
+                    disabled={isSubmitting}
+                  >
+                    Заменить
+                  </Button>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    leftIcon={<FiTrash2 />}
+                    onClick={handleImageDelete}
+                    disabled={isSubmitting}
+                  >
+                    Удалить
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Изображение помечено на удаление */}
+          {image && image.toDelete && (
+            <div className={styles.restoreSection}>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleImageRestore}
+                disabled={isSubmitting}
+              >
+                Восстановить изображение
+              </Button>
+            </div>
+          )}
+
+          {/* Нет изображения */}
+          {!image && (
+            <div
+              className={styles.emptyState}
+              onClick={!isSubmitting && !uploadingFile ? triggerFileInput : undefined}
+            >
+              <FiImage size={48} />
+              <p>Нет изображения</p>
+              {!isSubmitting && !uploadingFile && (
+                <>
+                  <span className={styles.emptyHint}>
+                    Нажмите кнопку или перетащите файл
+                  </span>
+                  <Button
+                    variant="secondary"
+                    leftIcon={<FiUpload />}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      triggerFileInput();
+                    }}
+                    disabled={isSubmitting || !!uploadingFile}
+                  >
+                    Загрузить изображение
+                  </Button>
+                </>
+              )}
+            </div>
+          )}
+        </div>
       </FormSection>
     </FormPage>
   );

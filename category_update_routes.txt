@@ -14,7 +14,7 @@ POST /category
 ```
 
 ### Описание
-Создаёт новую категорию в справочнике товаров с возможностью привязки изображений.
+Создаёт новую категорию в справочнике товаров с возможностью привязки изображения.
 
 ### Необходимые права
 - Permission: `category:create`
@@ -27,14 +27,13 @@ POST /category
 | `description` | string | Нет | Описание категории | Макс. 255 символов |
 | `parent_id` | integer | Нет | ID родительской категории | Должна существовать |
 | `manufacturer_id` | integer | Нет | ID производителя | Должен существовать |
-| `images` | array | Нет | Массив изображений категории | См. ниже |
+| `image` | object | Нет | Изображение категории | См. ниже |
 
-#### Структура объекта `images` (массив):
+#### Структура объекта `image`:
 
 | Поле | Тип | Обязательное | Описание |
 |------|-----|--------------|----------|
 | `upload_id` | integer | Да | ID загруженного изображения | Из UploadHistory |
-| `ordering` | integer | Нет | Порядок отображения | По умолчанию 0, сортировка по возрастанию |
 
 ### Пример запроса (базовый)
 ```http
@@ -48,7 +47,7 @@ Authorization: Bearer <access_token>
 }
 ```
 
-### Пример запроса (с изображениями)
+### Пример запроса (с изображением)
 ```http
 POST /category HTTP/1.1
 Content-Type: application/json
@@ -59,11 +58,9 @@ Authorization: Bearer <access_token>
   "description": "Мобильные телефоны и аксессуары",
   "parent_id": 10,
   "manufacturer_id": 3,
-  "images": [
-    {"upload_id": 100, "ordering": 0},
-    {"upload_id": 101, "ordering": 1},
-    {"upload_id": 102, "ordering": 2}
-  ]
+  "image": {
+    "upload_id": 100
+  }
 }
 ```
 
@@ -90,18 +87,10 @@ Authorization: Bearer <access_token>
     "id": 101,
     "name": "Смартфоны",
     "description": "Мобильные телефоны и аксессуары",
-    "images": [
-      {
-        "upload_id": 100,
-        "ordering": 0,
-        "image_url": "https://cdn.example.com/category/smartphones-main.jpg"
-      },
-      {
-        "upload_id": 101,
-        "ordering": 1,
-        "image_url": "https://cdn.example.com/category/smartphones-side.jpg"
-      }
-    ],
+    "image": {
+      "upload_id": 100,
+      "image_url": "https://cdn.example.com/category/smartphones-main.jpg"
+    },
     "parent": null,
     "manufacturer": {
       "id": 3,
@@ -163,7 +152,7 @@ GET /category/{category_id}
 ```
 
 ### Описание
-Возвращает данные категории по её идентификатору, включая связанные данные (родитель, производитель, изображения).
+Возвращает данные категории по её идентификатору, включая связанные данные (родитель, производитель, изображение).
 
 ### Необходимые права
 - Не требуются (доступно авторизованным пользователям)
@@ -190,13 +179,10 @@ Authorization: Bearer <access_token>
     "id": 101,
     "name": "Смартфоны",
     "description": "Мобильные телефоны и аксессуары",
-    "images": [
-      {
-        "upload_id": 100,
-        "ordering": 0,
-        "image_url": "https://cdn.example.com/category/smartphones-main.jpg"
-      }
-    ],
+    "image": {
+      "upload_id": 100,
+      "image_url": "https://cdn.example.com/category/smartphones-main.jpg"
+    },
     "parent": null,
     "manufacturer": {
       "id": 3,
@@ -215,7 +201,7 @@ Authorization: Bearer <access_token>
     "id": 102,
     "name": "iPhone",
     "description": "Смартфоны Apple iPhone",
-    "images": [],
+    "image": null,
     "parent": {
       "id": 101,
       "name": "Смартфоны",
@@ -286,13 +272,10 @@ Authorization: Bearer <access_token>
         "id": 101,
         "name": "Смартфоны",
         "description": "Мобильные телефоны и аксессуары",
-        "images": [
-          {
-            "upload_id": 100,
-            "ordering": 0,
-            "image_url": "https://cdn.example.com/category/smartphones-main.jpg"
-          }
-        ],
+        "image": {
+          "upload_id": 100,
+          "image_url": "https://cdn.example.com/category/smartphones-main.jpg"
+        },
         "parent": null,
         "manufacturer": {
           "id": 3,
@@ -304,7 +287,7 @@ Authorization: Bearer <access_token>
         "id": 102,
         "name": "Планшеты",
         "description": null,
-        "images": [],
+        "image": null,
         "parent": null,
         "manufacturer": null
       }
@@ -342,21 +325,20 @@ PUT /category/{category_id}
 | `description` | string | Нет | Новое описание категории | Макс. 255 символов |
 | `parent_id` | integer | Нет | ID родительской категории | Должна существовать |
 | `manufacturer_id` | integer | Нет | ID производителя | Должен существовать |
-| `images` | array | Нет | Операции с изображениями | См. ниже |
+| `image` | object | Нет | Операция с изображением | См. ниже |
 
-#### Структура объекта `images` (операции с изображениями):
+#### Структура объекта `image` (операция с изображением):
 
 | Поле | Тип | Обязательное | Описание |
 |------|-----|--------------|----------|
 | `action` | string | Да | Тип операции: `create`, `update`, `delete`, `pass` |
 | `upload_id` | integer | Нет | ID загруженного изображения | Для create/update/delete |
 | `image_url` | string | Нет | URL изображения | Альтернатива upload_id |
-| `ordering` | integer | Нет | Порядок отображения | Для create/update/pass |
 
 **Действия:**
-- `create` — добавить новое изображение (требуется `upload_id`)
-- `update` — обновить существующее изображение (требуется `upload_id`)
-- `delete` — удалить изображение (требуется `upload_id`)
+- `create` — добавить изображение (требуется `upload_id`)
+- `update` — обновить изображение (требуется `upload_id`)
+- `delete` — удалить изображение
 - `pass` — сохранить существующее изображение без изменений (требуется `upload_id`)
 
 ### Пример запроса (обновление имени)
@@ -404,19 +386,30 @@ Authorization: Bearer <access_token>
 }
 ```
 
-### Пример запроса (операции с изображениями)
+### Пример запроса (операция с изображением)
 ```http
 PUT /category/101 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "images": [
-    {"action": "pass", "upload_id": 100, "ordering": 0},
-    {"action": "update", "upload_id": 101, "ordering": 1},
-    {"action": "delete", "upload_id": 102},
-    {"action": "create", "upload_id": 103, "ordering": 2}
-  ]
+  "image": {
+    "action": "create",
+    "upload_id": 103
+  }
+}
+```
+
+### Пример запроса (удаление изображения)
+```http
+PUT /category/101 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+  "image": {
+    "action": "delete"
+  }
 }
 ```
 
@@ -439,18 +432,10 @@ Authorization: Bearer <access_token>
     "id": 101,
     "name": "Смартфоны и телефоны",
     "description": "Обновлённое описание категории",
-    "images": [
-      {
-        "upload_id": 100,
-        "ordering": 0,
-        "image_url": "https://cdn.example.com/category/smartphones-main.jpg"
-      },
-      {
-        "upload_id": 103,
-        "ordering": 2,
-        "image_url": "https://cdn.example.com/category/smartphones-new.jpg"
-      }
-    ],
+    "image": {
+      "upload_id": 103,
+      "image_url": "https://cdn.example.com/category/smartphones-new.jpg"
+    },
     "parent": null,
     "manufacturer": {
       "id": 3,
@@ -607,7 +592,7 @@ Authorization: Bearer <access_token>
         "id": 1,
         "name": "Электроника",
         "description": "Бытовая электроника",
-        "images": [],
+        "image": null,
         "parent_id": null,
         "manufacturer": null,
         "children": [
@@ -615,13 +600,10 @@ Authorization: Bearer <access_token>
             "id": 2,
             "name": "Смартфоны",
             "description": "Мобильные телефоны",
-            "images": [
-              {
-                "upload_id": 100,
-                "ordering": 0,
-                "image_url": "https://cdn.example.com/category/smartphones.jpg"
-              }
-            ],
+            "image": {
+              "upload_id": 100,
+              "image_url": "https://cdn.example.com/category/smartphones.jpg"
+            },
             "parent_id": 1,
             "manufacturer": null,
             "children": []
@@ -630,7 +612,7 @@ Authorization: Bearer <access_token>
             "id": 3,
             "name": "Планшеты",
             "description": "Планшетные компьютеры",
-            "images": [],
+            "image": null,
             "parent_id": 1,
             "manufacturer": null,
             "children": []
@@ -641,7 +623,7 @@ Authorization: Bearer <access_token>
         "id": 4,
         "name": "Одежда",
         "description": "Одежда и обувь",
-        "images": [],
+        "image": null,
         "parent_id": null,
         "manufacturer": null,
         "children": []
@@ -688,9 +670,9 @@ Authorization: Bearer <access_token>
 - **Тип:** integer или null
 - **Требование:** должен ссылаться на существующего производителя
 
-### Поле `images` (массив)
-- **upload_id:** должен ссылаться на существующую запись в UploadHistory
-- **ordering:** целое число, сортировка по возрастанию
+### Поле `image.upload_id`
+- **Тип:** integer
+- **Требование:** должен ссылаться на существующую запись в UploadHistory
 
 ---
 
@@ -731,7 +713,7 @@ curl -X POST https://api.example.com/category \
   }'
 ```
 
-### Пример 3: Создание категории с изображениями
+### Пример 3: Создание категории с изображением
 ```bash
 curl -X POST https://api.example.com/category \
   -H "Content-Type: application/json" \
@@ -739,10 +721,9 @@ curl -X POST https://api.example.com/category \
   -d '{
     "name": "Смартфоны",
     "description": "Мобильные телефоны",
-    "images": [
-      {"upload_id": 100, "ordering": 0},
-      {"upload_id": 101, "ordering": 1}
-    ]
+    "image": {
+      "upload_id": 100
+    }
   }'
 ```
 
@@ -763,27 +744,38 @@ curl -X PUT https://api.example.com/category/101 \
   }'
 ```
 
-### Пример 6: Обновление изображений категории
+### Пример 6: Обновление изображения категории
 ```bash
 curl -X PUT https://api.example.com/category/101 \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <token>" \
   -d '{
-    "images": [
-      {"action": "pass", "upload_id": 100, "ordering": 0},
-      {"action": "delete", "upload_id": 101},
-      {"action": "create", "upload_id": 102, "ordering": 1}
-    ]
+    "image": {
+      "action": "update",
+      "upload_id": 102
+    }
   }'
 ```
 
-### Пример 7: Удаление категории
+### Пример 7: Удаление изображения категории
+```bash
+curl -X PUT https://api.example.com/category/101 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <token>" \
+  -d '{
+    "image": {
+      "action": "delete"
+    }
+  }'
+```
+
+### Пример 8: Удаление категории
 ```bash
 curl -X DELETE https://api.example.com/category/101 \
   -H "Authorization: Bearer <token>"
 ```
 
-### Пример 8: Получение дерева категорий
+### Пример 9: Получение дерева категорий
 ```bash
 curl -X GET https://api.example.com/category/tree \
   -H "Authorization: Bearer <token>"
@@ -801,9 +793,9 @@ curl -X GET https://api.example.com/category/tree \
 
 4. **Каскадное удаление:** При удалении категории все дочерние категории также удаляются (CASCADE).
 
-5. **Изображения:** 
+5. **Изображения:**
+   - У категории может быть только одно изображение.
    - Перед добавлением изображения к категории, оно должно быть предварительно загружено через API загрузок (UploadHistory).
-   - Изображения сортируются по полю `ordering` (возрастание).
-   - При удалении категории изображения удаляются из S3.
+   - При удалении категории изображение также удаляется из S3.
 
 6. **Связь с производителем:** Категория может быть привязана к производителю через `manufacturer_id`.

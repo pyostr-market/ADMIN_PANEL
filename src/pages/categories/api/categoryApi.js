@@ -70,34 +70,34 @@ export async function getCategoryByIdRequest(categoryId) {
  * @param {string | null} payload.description - Описание
  * @param {number | null} payload.parent_id - ID родительской категории
  * @param {number | null} payload.manufacturer_id - ID производителя
- * @param {string} payload.images_json - JSON-массив операций с изображениями
+ * @param {Array} payload.images - Массив изображений: [{ upload_id, ordering }]
  */
 export async function createCategoryRequest(payload) {
-  const formData = new FormData();
-  formData.append('name', payload.name);
+  const body = {
+    name: payload.name,
+  };
 
   if (payload.description !== null && payload.description !== undefined) {
-    formData.append('description', payload.description);
+    body.description = payload.description;
   }
 
   if (payload.parent_id !== null && payload.parent_id !== undefined) {
-    formData.append('parent_id', payload.parent_id);
+    body.parent_id = payload.parent_id;
   }
 
   if (payload.manufacturer_id !== null && payload.manufacturer_id !== undefined) {
-    formData.append('manufacturer_id', payload.manufacturer_id);
+    body.manufacturer_id = payload.manufacturer_id;
   }
 
-  // Отправляем images_json
-  if (payload.images_json) {
-    formData.append('images_json', payload.images_json);
+  // Отправляем images только если есть
+  if (payload.images && payload.images.length > 0) {
+    body.images = payload.images.map(img => ({
+      upload_id: img.upload_id,
+      ordering: img.ordering !== undefined ? img.ordering : 0,
+    }));
   }
 
-  const response = await productApi.post(API_ENDPOINTS.categories, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
+  const response = await productApi.post(API_ENDPOINTS.categories, body);
   return unwrapResponse(response);
 }
 
@@ -109,37 +109,37 @@ export async function createCategoryRequest(payload) {
  * @param {string | null} payload.description - Описание
  * @param {number | null} payload.parent_id - ID родительской категории
  * @param {number | null} payload.manufacturer_id - ID производителя
- * @param {string} payload.images_json - JSON-массив операций с изображениями
+ * @param {Array} payload.images - Массив операций с изображениями: [{ action, upload_id, ordering }]
  */
 export async function updateCategoryRequest(categoryId, payload) {
-  const formData = new FormData();
+  const body = {};
 
   if (payload.name !== null && payload.name !== undefined) {
-    formData.append('name', payload.name);
+    body.name = payload.name;
   }
 
   if (payload.description !== null && payload.description !== undefined) {
-    formData.append('description', payload.description);
+    body.description = payload.description;
   }
 
   if (payload.parent_id !== null && payload.parent_id !== undefined) {
-    formData.append('parent_id', payload.parent_id);
+    body.parent_id = payload.parent_id;
   }
 
   if (payload.manufacturer_id !== null && payload.manufacturer_id !== undefined) {
-    formData.append('manufacturer_id', payload.manufacturer_id);
+    body.manufacturer_id = payload.manufacturer_id;
   }
 
-  // Отправляем images_json
-  if (payload.images_json) {
-    formData.append('images_json', payload.images_json);
+  // Отправляем images только если есть
+  if (payload.images && payload.images.length > 0) {
+    body.images = payload.images.map(img => ({
+      action: img.action,
+      upload_id: img.upload_id,
+      ordering: img.ordering !== undefined ? img.ordering : 0,
+    }));
   }
 
-  const response = await productApi.put(`${API_ENDPOINTS.categories}/${categoryId}`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
+  const response = await productApi.put(`${API_ENDPOINTS.categories}/${categoryId}`, body);
   return unwrapResponse(response);
 }
 
