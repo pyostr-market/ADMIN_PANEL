@@ -13,14 +13,12 @@ export async function getProductsRequest({
   limit = 20,
   name,
   category_id,
-  product_type_id,
   attributes,
 } = {}) {
   const offset = (page - 1) * limit;
   const queryParams = { limit, offset };
   if (name) queryParams.name = name;
   if (category_id !== undefined && category_id !== null) queryParams.category_id = category_id;
-  if (product_type_id !== undefined && product_type_id !== null) queryParams.product_type_id = product_type_id;
   if (attributes !== undefined && attributes !== null) {
     queryParams.attributes = JSON.stringify(attributes);
   }
@@ -159,22 +157,6 @@ export async function getSuppliersForAutocompleteRequest({
   if (name) queryParams.name = name;
 
   const response = await productApi.get(API_ENDPOINTS.suppliers, { params: queryParams });
-  const data = unwrapResponse(response);
-  return Array.isArray(data?.items) ? data.items : [];
-}
-
-/**
- * Получение списка типов продуктов (для автокомплита)
- */
-export async function getProductTypesForAutocompleteRequest({
-  limit = 100,
-  offset = 0,
-  name,
-} = {}) {
-  const queryParams = { limit, offset };
-  if (name) queryParams.name = name;
-
-  const response = await productApi.get(API_ENDPOINTS.productTypes, { params: queryParams });
   const data = unwrapResponse(response);
   return Array.isArray(data?.items) ? data.items : [];
 }

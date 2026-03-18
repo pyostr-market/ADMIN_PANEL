@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FiEdit2, FiTrash2, FiBox, FiDollarSign, FiTag, FiPackage, FiFileText, FiClock, FiImage, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiBox, FiDollarSign, FiTag, FiPackage, FiFileText, FiImage, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { Modal } from '../../../shared/ui/Modal/Modal';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
@@ -276,8 +276,8 @@ export function ProductDetailPage() {
                   iconVariant: 'accent',
                 },
                 {
-                  label: 'Тип продукта',
-                  value: product.product_type?.name || '—',
+                  label: 'Тип устройства',
+                  value: product.category?.device_type?.name || '—',
                   icon: <FiPackage />,
                   iconVariant: 'info',
                 },

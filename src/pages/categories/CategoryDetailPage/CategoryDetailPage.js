@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FiEdit, FiClock, FiArrowLeft, FiTag, FiFileText, FiBox, FiImage } from 'react-icons/fi';
+import { FiEdit, FiArrowLeft, FiTag, FiImage } from 'react-icons/fi';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
 import { Button } from '../../../shared/ui/Button/Button';
 import { InfoBlock } from '../../../shared/ui/InfoBlock/InfoBlock';
@@ -107,6 +107,11 @@ export function CategoryDetailPage() {
               label: 'Производитель',
               value: category.manufacturer?.name || '—',
               iconVariant: 'accent',
+            },
+            {
+              label: 'Тип устройства',
+              value: category.device_type?.name || '—',
+              iconVariant: 'info',
             },
             {
               label: 'Описание',

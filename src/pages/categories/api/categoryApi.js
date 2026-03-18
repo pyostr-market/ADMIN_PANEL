@@ -24,7 +24,7 @@ export async function getCategoriesRequest({
   const response = await productApi.get(API_ENDPOINTS.categories, { params: requestParams });
   const data = unwrapResponse(response);
   const items = Array.isArray(data?.items) ? data.items : [];
-  // Нормализуем данные: если есть вложенные parent/manufacturer, извлекаем ID
+  // Нормализуем данные: если есть вложенные parent/manufacturer/device_type, извлекаем ID
   const normalizedItems = items.map(item => {
     const normalized = { ...item };
     if (item?.parent && typeof item.parent === 'object') {
@@ -32,6 +32,9 @@ export async function getCategoriesRequest({
     }
     if (item?.manufacturer && typeof item.manufacturer === 'object') {
       normalized.manufacturer_id = item.manufacturer.id;
+    }
+    if (item?.device_type && typeof item.device_type === 'object') {
+      normalized.device_type_id = item.device_type.id;
     }
     return normalized;
   });
@@ -53,12 +56,15 @@ export async function getCategoriesRequest({
 export async function getCategoryByIdRequest(categoryId) {
   const response = await productApi.get(`${API_ENDPOINTS.categories}/${categoryId}`);
   const data = unwrapResponse(response);
-  // Нормализуем данные: если есть вложенные parent/manufacturer, извлекаем ID
+  // Нормализуем данные: если есть вложенные parent/manufacturer/device_type, извлекаем ID
   if (data?.parent && typeof data.parent === 'object') {
     data.parent_id = data.parent.id;
   }
   if (data?.manufacturer && typeof data.manufacturer === 'object') {
     data.manufacturer_id = data.manufacturer.id;
+  }
+  if (data?.device_type && typeof data.device_type === 'object') {
+    data.device_type_id = data.device_type.id;
   }
   return data;
 }
@@ -70,7 +76,9 @@ export async function getCategoryByIdRequest(categoryId) {
  * @param {string | null} payload.description - Описание
  * @param {number | null} payload.parent_id - ID родительской категории
  * @param {number | null} payload.manufacturer_id - ID производителя
- * @param {Array} payload.images - Массив изображений: [{ upload_id, ordering }]
+ * @param {number | null} payload.device_type_id - ID типа устройства
+ * @param {string} payload.image_action - Действие с изображением: 'create'
+ * @param {number} payload.image_upload_id - ID загруженного изображения
  */
 export async function createCategoryRequest(payload) {
   const body = {
@@ -89,12 +97,16 @@ export async function createCategoryRequest(payload) {
     body.manufacturer_id = payload.manufacturer_id;
   }
 
-  // Отправляем images только если есть
-  if (payload.images && payload.images.length > 0) {
-    body.images = payload.images.map(img => ({
-      upload_id: img.upload_id,
-      ordering: img.ordering !== undefined ? img.ordering : 0,
-    }));
+  if (payload.device_type_id !== null && payload.device_type_id !== undefined) {
+    body.device_type_id = payload.device_type_id;
+  }
+
+  // Отправляем image_action и image_upload_id только если есть
+  if (payload.image_action) {
+    body.image_action = payload.image_action;
+  }
+  if (payload.image_upload_id) {
+    body.image_upload_id = payload.image_upload_id;
   }
 
   const response = await productApi.post(API_ENDPOINTS.categories, body);
@@ -109,7 +121,9 @@ export async function createCategoryRequest(payload) {
  * @param {string | null} payload.description - Описание
  * @param {number | null} payload.parent_id - ID родительской категории
  * @param {number | null} payload.manufacturer_id - ID производителя
- * @param {Object} payload.image - Операция с изображением: { action, upload_id }
+ * @param {number | null} payload.device_type_id - ID типа устройства
+ * @param {string} payload.image_action - Действие с изображением: 'create', 'delete', 'pass'
+ * @param {number} payload.image_upload_id - ID загруженного изображения
  */
 export async function updateCategoryRequest(categoryId, payload) {
   const body = {};
@@ -130,12 +144,16 @@ export async function updateCategoryRequest(categoryId, payload) {
     body.manufacturer_id = payload.manufacturer_id;
   }
 
-  // Отправляем image только если есть
-  if (payload.image) {
-    body.image = {
-      action: payload.image.action,
-      upload_id: payload.image.upload_id,
-    };
+  if (payload.device_type_id !== null && payload.device_type_id !== undefined) {
+    body.device_type_id = payload.device_type_id;
+  }
+
+  // Отправляем image_action и image_upload_id только если есть
+  if (payload.image_action) {
+    body.image_action = payload.image_action;
+  }
+  if (payload.image_upload_id) {
+    body.image_upload_id = payload.image_upload_id;
   }
 
   const response = await productApi.put(`${API_ENDPOINTS.categories}/${categoryId}`, body);
@@ -216,6 +234,26 @@ export async function getManufacturersForAutocompleteRequest({
   if (name) queryParams.name = name;
 
   const response = await productApi.get(API_ENDPOINTS.manufacturers, { params: queryParams });
+  const data = unwrapResponse(response);
+  return Array.isArray(data?.items) ? data.items : [];
+}
+
+/**
+ * Получение списка типов устройств (для автокомплита)
+ * @param {Object} params - Параметры запроса
+ * @param {number} params.limit - Количество элементов
+ * @param {number} params.offset - Смещение
+ * @param {string} params.name - Фильтр по названию
+ */
+export async function getProductTypesForAutocompleteRequest({
+  limit = 10,
+  offset = 0,
+  name,
+} = {}) {
+  const queryParams = { limit, offset };
+  if (name) queryParams.name = name;
+
+  const response = await productApi.get(API_ENDPOINTS.productTypes, { params: queryParams });
   const data = unwrapResponse(response);
   return Array.isArray(data?.items) ? data.items : [];
 }

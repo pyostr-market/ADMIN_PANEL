@@ -17,7 +17,6 @@ import {
   updateProductRequest,
   getCategoriesForAutocompleteRequest,
   getSuppliersForAutocompleteRequest,
-  getProductTypesForAutocompleteRequest,
 } from '../api/productsApi';
 import styles from './ProductFormPage.module.css';
 
@@ -47,13 +46,11 @@ export function ProductFormPage() {
     description: '',
     category_id: '',
     supplier_id: '',
-    product_type_id: '',
   });
 
   // Храним полные объекты для autocomplete
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSupplier, setSelectedSupplier] = useState(null);
-  const [selectedProductType, setSelectedProductType] = useState(null);
 
   const [images, setImages] = useState([]);
   const [attributes, setAttributes] = useState([]);
@@ -77,7 +74,6 @@ export function ProductFormPage() {
         description: data.description || '',
         category_id: data.category_id?.toString() || '',
         supplier_id: data.supplier_id?.toString() || '',
-        product_type_id: data.product_type_id?.toString() || '',
       });
       // Сохраняем полные объекты для autocomplete
       if (data.category) {
@@ -85,9 +81,6 @@ export function ProductFormPage() {
       }
       if (data.supplier) {
         setSelectedSupplier(data.supplier);
-      }
-      if (data.product_type) {
-        setSelectedProductType(data.product_type);
       }
       // Сохраняем все данные изображения
       // API возвращает: image_id, image_key (путь к файлу), image_url (полный URL), ordering, upload_id
@@ -236,9 +229,6 @@ export function ProductFormPage() {
       if (formData.supplier_id) {
         formDataToSend.append('supplier_id', parseInt(formData.supplier_id, 10));
       }
-      if (formData.product_type_id) {
-        formDataToSend.append('product_type_id', parseInt(formData.product_type_id, 10));
-      }
 
       // Атрибуты
       if (attributes.length > 0) {
@@ -330,12 +320,10 @@ export function ProductFormPage() {
               description: responseData.description || formData.description,
               category_id: responseData.category_id?.toString() || formData.category_id,
               supplier_id: responseData.supplier_id?.toString() || formData.supplier_id,
-              product_type_id: responseData.product_type_id?.toString() || formData.product_type_id,
             });
             // Обновляем полные объекты для autocomplete
             setSelectedCategory(responseData.category || selectedCategory);
             setSelectedSupplier(responseData.supplier || selectedSupplier);
-            setSelectedProductType(responseData.product_type || selectedProductType);
             // Обновляем атрибуты
             if (responseData.attributes) {
               setAttributes(responseData.attributes.map(attr => ({
@@ -482,17 +470,6 @@ export function ProductFormPage() {
                 fetchOptions={getCategoriesForAutocompleteRequest}
                 placeholder="Начните ввод для поиска категории..."
                 selectedOption={selectedCategory}
-              />
-            </div>
-
-            <div className={styles.productFormField}>
-              <AutocompleteInput
-                label="Тип продукта"
-                value={formData.product_type_id}
-                onChange={(value) => handleChange('product_type_id', value)}
-                fetchOptions={getProductTypesForAutocompleteRequest}
-                placeholder="Начните ввод для поиска типа продукта..."
-                selectedOption={selectedProductType}
               />
             </div>
 

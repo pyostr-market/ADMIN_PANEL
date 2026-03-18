@@ -16,6 +16,7 @@ import {
   updateCategoryRequest,
   getCategoriesForAutocompleteRequest,
   getManufacturersForAutocompleteRequest,
+  getProductTypesForAutocompleteRequest,
 } from '../api/categoryApi';
 import styles from './CategoryFormPage.module.css';
 
@@ -38,11 +39,13 @@ export function CategoryFormPage() {
     description: '',
     parent_id: '',
     manufacturer_id: '',
+    device_type_id: '',
   });
 
   // Храним полные объекты для autocomplete
   const [selectedParent, setSelectedParent] = useState(null);
   const [selectedManufacturer, setSelectedManufacturer] = useState(null);
+  const [selectedProductType, setSelectedProductType] = useState(null);
 
   // Состояние для одного изображения категории
   const [image, setImage] = useState(null);
@@ -62,6 +65,7 @@ export function CategoryFormPage() {
         description: data.description || '',
         parent_id: data.parent_id || '',
         manufacturer_id: data.manufacturer_id || '',
+        device_type_id: data.device_type_id || '',
       });
 
       // Сохраняем полные объекты для autocomplete
@@ -71,14 +75,15 @@ export function CategoryFormPage() {
       if (data.manufacturer) {
         setSelectedManufacturer(data.manufacturer);
       }
+      if (data.device_type) {
+        setSelectedProductType(data.device_type);
+      }
 
-      // Загружаем изображение если есть (берём первое из массива)
-      if (data.images && data.images.length > 0) {
-        const firstImage = data.images[0];
+      // Загружаем изображение если есть
+      if (data.image) {
         setImage({
-          upload_id: firstImage.upload_id,
-          image_url: firstImage.image_url,
-          ordering: firstImage.ordering,
+          upload_id: data.image.upload_id,
+          image_url: data.image.image_url,
           toDelete: false,
           isNew: false,
         });
@@ -122,6 +127,9 @@ export function CategoryFormPage() {
     }
     if (field === 'manufacturer_id' && !value) {
       setSelectedManufacturer(null);
+    }
+    if (field === 'device_type_id' && !value) {
+      setSelectedProductType(null);
     }
   };
 
@@ -233,6 +241,7 @@ export function CategoryFormPage() {
         description: formData.description.trim() || null,
         parent_id: formData.parent_id ? Number(formData.parent_id) : null,
         manufacturer_id: formData.manufacturer_id ? Number(formData.manufacturer_id) : null,
+        device_type_id: formData.device_type_id ? Number(formData.device_type_id) : null,
       };
 
       // Обработка изображения
@@ -240,23 +249,19 @@ export function CategoryFormPage() {
         if (image.toDelete) {
           // Удаление изображения (только для редактирования)
           if (isEditMode) {
-            payload.image = { action: 'delete', upload_id: image.upload_id };
+            payload.image_action = 'delete';
           }
         } else if (image.upload_id) {
           // Есть загруженное изображение
           if (image.isNew || image.oldUploadId) {
             // Новое изображение или замена старого
-            payload.image = {
-              action: 'create',
-              upload_id: image.upload_id,
-            };
+            payload.image_action = 'create';
+            payload.image_upload_id = image.upload_id;
           } else {
             // Существующее изображение без изменений (только для редактирования)
             if (isEditMode) {
-              payload.image = {
-                action: 'pass',
-                upload_id: image.upload_id,
-              };
+              payload.image_action = 'pass';
+              payload.image_upload_id = image.upload_id;
             }
           }
         }
@@ -272,16 +277,17 @@ export function CategoryFormPage() {
             description: responseData.description || formData.description,
             parent_id: responseData.parent_id || formData.parent_id,
             manufacturer_id: responseData.manufacturer_id || formData.manufacturer_id,
+            device_type_id: responseData.device_type_id || formData.device_type_id,
           });
           // Обновляем полные объекты для autocomplete
           setSelectedParent(responseData.parent || selectedParent);
           setSelectedManufacturer(responseData.manufacturer || selectedManufacturer);
+          setSelectedProductType(responseData.device_type || selectedProductType);
           // Обновляем изображение из ответа
-          if (responseData.images && responseData.images.length > 0) {
+          if (responseData.image) {
             setImage({
-              upload_id: responseData.images[0].upload_id,
-              image_url: responseData.images[0].image_url,
-              ordering: responseData.images[0].ordering,
+              upload_id: responseData.image.upload_id,
+              image_url: responseData.image.image_url,
               toDelete: false,
               oldUploadId: null,
               isNew: false,
@@ -291,12 +297,10 @@ export function CategoryFormPage() {
           }
         }
       } else {
-        // Для создания используем простой массив изображений
+        // Для создания используем image_action и image_upload_id
         if (image && image.upload_id) {
-          payload.images = [{
-            upload_id: image.upload_id,
-            ordering: image.ordering || 0,
-          }];
+          payload.image_action = 'create';
+          payload.image_upload_id = image.upload_id;
         }
 
         const responseData = await createCategoryRequest(payload);
@@ -386,6 +390,20 @@ export function CategoryFormPage() {
             />
             <span className={styles.categoryFormHint}>
               Укажите производителя, к которому относится категория
+            </span>
+          </div>
+
+          <div className={styles.categoryFormField}>
+            <AutocompleteInput
+              label="Тип устройства"
+              value={formData.device_type_id}
+              onChange={(value) => handleChange('device_type_id', value)}
+              fetchOptions={getProductTypesForAutocompleteRequest}
+              placeholder="Начните ввод для поиска типа устройства..."
+              selectedOption={selectedProductType}
+            />
+            <span className={styles.categoryFormHint}>
+              Укажите тип устройства для категории
             </span>
           </div>
 

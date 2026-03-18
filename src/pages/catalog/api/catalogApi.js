@@ -273,14 +273,12 @@ export async function getCategoryAuditRequest({
 export async function getProductsRequest({
   name = null,
   category_id = null,
-  product_type_id = null,
   limit = 10,
   offset = 0,
 } = {}) {
   const params = { limit, offset };
   if (name) params.name = name;
   if (category_id !== null) params.category_id = category_id;
-  if (product_type_id !== null) params.product_type_id = product_type_id;
 
   const response = await productApi.get(API_ENDPOINTS.products, { params });
   const data = unwrapResponse(response);

@@ -12,7 +12,6 @@ function unwrapResponse(response) {
  * @param {number} params.limit - Количество элементов на странице
  * @param {string} params.name - Фильтр по названию
  * @param {number | null} params.category_id - Фильтр по категории
- * @param {number | null} params.product_type_id - Фильтр по типу продукта
  * @param {Object | null} params.attributes - Фильтр по атрибутам (JSON-объект)
  */
 export async function getProductsRequest({
@@ -20,14 +19,12 @@ export async function getProductsRequest({
   limit = 20,
   name,
   category_id,
-  product_type_id,
   attributes,
 } = {}) {
   const offset = (page - 1) * limit;
   const queryParams = { limit, offset };
   if (name) queryParams.name = name;
   if (category_id !== undefined && category_id !== null) queryParams.category_id = category_id;
-  if (product_type_id !== undefined && product_type_id !== null) queryParams.product_type_id = product_type_id;
   if (attributes !== undefined && attributes !== null) {
     queryParams.attributes = JSON.stringify(attributes);
   }
@@ -82,7 +79,6 @@ export async function getProductVariantsRequest({
  * @param {string | null} formData.description - Описание
  * @param {number | null} formData.category_id - ID категории
  * @param {number | null} formData.supplier_id - ID поставщика
- * @param {number | null} formData.product_type_id - ID типа продукта
  * @param {File[] | null} formData.images - Массив изображений
  * @param {string[] | null} formData.image_is_main - Массив is_main флагов
  * @param {string | null} formData.attributes_json - JSON атрибутов
@@ -105,7 +101,6 @@ export async function createProductRequest(formData) {
  * @param {string | null} formData.description - Описание
  * @param {number | null} formData.category_id - ID категории
  * @param {number | null} formData.supplier_id - ID поставщика
- * @param {number | null} formData.product_type_id - ID типа продукта
  * @param {string | null} formData.attributes_json - JSON атрибутов
  * @param {string | null} formData.images_json - JSON операций с изображениями
  * @param {File[] | null} formData.images - Массив изображений для to_create
@@ -214,26 +209,6 @@ export async function getSuppliersForAutocompleteRequest({
   if (name) queryParams.name = name;
 
   const response = await productApi.get(API_ENDPOINTS.suppliers, { params: queryParams });
-  const data = unwrapResponse(response);
-  return Array.isArray(data?.items) ? data.items : [];
-}
-
-/**
- * Получение списка типов продуктов (для автокомплита)
- * @param {Object} params - Параметры запроса
- * @param {number} params.limit - Количество элементов
- * @param {number} params.offset - Смещение
- * @param {string} params.name - Фильтр по названию
- */
-export async function getProductTypesForAutocompleteRequest({
-  limit = 100,
-  offset = 0,
-  name,
-} = {}) {
-  const queryParams = { limit, offset };
-  if (name) queryParams.name = name;
-
-  const response = await productApi.get(API_ENDPOINTS.productTypes, { params: queryParams });
   const data = unwrapResponse(response);
   return Array.isArray(data?.items) ? data.items : [];
 }

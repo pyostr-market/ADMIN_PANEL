@@ -12,7 +12,6 @@ import {
   getProductsRequest,
   deleteProductRequest,
   getCategoriesForAutocompleteRequest,
-  getProductTypesForAutocompleteRequest,
 } from '../../../shared/api/modules/productsApi';
 import styles from './ProductsPage.module.css';
 
@@ -22,20 +21,17 @@ export function ProductsPage() {
   const [productToDelete, setProductToDelete] = useState(null);
   const [filters, setFilters] = useState({
     category_id: '',
-    product_type_id: '',
   });
   const [categories, setCategories] = useState([]);
-  const [productTypes, setProductTypes] = useState([]);
   const [isLoadingOptions, setIsLoadingOptions] = useState(false);
 
   const productsCrud = useCrudList({
-    fetchFn: async ({ page = 1, limit = PAGE_LIMIT, search, category_id, product_type_id } = {}) => {
+    fetchFn: async ({ page = 1, limit = PAGE_LIMIT, search, category_id } = {}) => {
       const data = await getProductsRequest({
         page,
         limit,
         name: search,
         category_id: category_id || null,
-        product_type_id: product_type_id || null,
       });
       return data;
     },
@@ -64,20 +60,16 @@ export function ProductsPage() {
   }, [productsCrud.setFilters, productsCrud.setPage]);
 
   const loadFilterOptions = useCallback(async () => {
-    if ((categories.length > 0 && productTypes.length > 0) || isLoadingOptions) return;
+    if (categories.length > 0 || isLoadingOptions) return;
 
     setIsLoadingOptions(true);
     try {
-      const [cats, types] = await Promise.all([
-        getCategoriesForAutocompleteRequest(),
-        getProductTypesForAutocompleteRequest(),
-      ]);
+      const cats = await getCategoriesForAutocompleteRequest();
       setCategories(cats || []);
-      setProductTypes(types || []);
     } finally {
       setIsLoadingOptions(false);
     }
-  }, [categories.length, productTypes.length, isLoadingOptions]);
+  }, [categories.length, isLoadingOptions]);
 
   const handleDeleteProduct = async () => {
     if (!productToDelete) return;
@@ -92,15 +84,12 @@ export function ProductsPage() {
     if (newFilters.category_id && newFilters.category_id !== 'all') {
       apiFilters.category_id = newFilters.category_id;
     }
-    if (newFilters.product_type_id && newFilters.product_type_id !== 'all') {
-      apiFilters.product_type_id = newFilters.product_type_id;
-    }
 
     setFiltersRef.current(apiFilters);
     setPageRef.current(1);
 
     // Загружаем опции при первом изменении фильтра
-    if ((key === 'category_id' || key === 'product_type_id') &&
+    if (key === 'category_id' &&
         categories.length === 0 &&
         !isLoadingOptions) {
       loadFilterOptions();
@@ -108,14 +97,13 @@ export function ProductsPage() {
   }, [filters, categories.length, isLoadingOptions, loadFilterOptions]);
 
   const handleResetFilters = useCallback(() => {
-    setFilters({ category_id: '', product_type_id: '' });
+    setFilters({ category_id: '' });
     setFiltersRef.current({});
     setPageRef.current(1);
   }, []);
 
   const hasActiveFilters = useMemo(() => {
-    return (filters.category_id && filters.category_id !== 'all') ||
-           (filters.product_type_id && filters.product_type_id !== 'all');
+    return (filters.category_id && filters.category_id !== 'all');
   }, [filters]);
 
   // Конфигурация фильтров для CrudListLayout
@@ -130,17 +118,7 @@ export function ProductsPage() {
       onFocus: loadFilterOptions,
       disabled: isLoadingOptions,
     },
-    {
-      key: 'product_type_id',
-      label: 'Тип продукта',
-      options: [
-        { value: 'all', label: 'Все типы продуктов' },
-        ...productTypes.map((type) => ({ value: String(type.id), label: type.name })),
-      ],
-      onFocus: loadFilterOptions,
-      disabled: isLoadingOptions,
-    },
-  ], [categories, productTypes, isLoadingOptions, loadFilterOptions]);
+  ], [categories, isLoadingOptions, loadFilterOptions]);
 
   const mainImage = (product) => {
     const main = product.images?.find(img => img.is_main);
@@ -208,11 +186,6 @@ export function ProductsPage() {
                   {product.category && (
                     <EntityCardMetaItem icon={<FiTag />}>
                       Категория: {product.category.name}
-                    </EntityCardMetaItem>
-                  )}
-                  {product.product_type && (
-                    <EntityCardMetaItem icon={<FiPackage />}>
-                      Тип: {product.product_type.name}
                     </EntityCardMetaItem>
                   )}
                   {product.supplier && (
