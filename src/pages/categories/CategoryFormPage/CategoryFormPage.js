@@ -370,6 +370,7 @@ export function CategoryFormPage() {
               label="Родительская категория"
               value={formData.parent_id}
               onChange={(value) => handleChange('parent_id', value)}
+              onOptionSelect={(option) => setSelectedParent(option)}
               fetchOptions={getCategoriesForAutocompleteRequest}
               placeholder="Начните ввод для поиска родительской категории..."
               selectedOption={selectedParent}
@@ -384,6 +385,7 @@ export function CategoryFormPage() {
               label="Производитель"
               value={formData.manufacturer_id}
               onChange={(value) => handleChange('manufacturer_id', value)}
+              onOptionSelect={(option) => setSelectedManufacturer(option)}
               fetchOptions={getManufacturersForAutocompleteRequest}
               placeholder="Начните ввод для поиска производителя..."
               selectedOption={selectedManufacturer}
@@ -398,6 +400,7 @@ export function CategoryFormPage() {
               label="Тип устройства"
               value={formData.device_type_id}
               onChange={(value) => handleChange('device_type_id', value)}
+              onOptionSelect={(option) => setSelectedProductType(option)}
               fetchOptions={getProductTypesForAutocompleteRequest}
               placeholder="Начните ввод для поиска типа устройства..."
               selectedOption={selectedProductType}

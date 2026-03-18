@@ -16,6 +16,7 @@ export function AutocompleteInput({
   getOptionLabel = (option) => option.name || `ID: ${option.id}`,
   getOptionValue = (option) => option.id,
   selectedOption: propSelectedOption = null,
+  onOptionSelect,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -157,9 +158,12 @@ export function AutocompleteInput({
     const optionValue = getOptionValue(option);
     onChange(optionValue);
     setSelectedOption(option);
+    if (onOptionSelect) {
+      onOptionSelect(option);
+    }
     setIsOpen(false);
     setSearchQuery('');
-  }, [onChange, getOptionValue]);
+  }, [onChange, getOptionValue, onOptionSelect]);
 
   const handleClear = useCallback(() => {
     onChange('');
