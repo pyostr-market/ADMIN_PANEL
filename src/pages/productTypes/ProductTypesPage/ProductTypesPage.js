@@ -103,7 +103,15 @@ export function ProductTypesPage() {
               <div className={entityListStyles.entityItemContent} onClick={() => handleViewProductType(productType)}>
                 <div className={entityListStyles.entityItemMain}>
                   <div className={entityListStyles.entityItemAvatar}>
-                    <FiBox />
+                    {productType.image?.image_url ? (
+                      <img
+                        src={productType.image.image_url}
+                        alt={productType.name}
+                        className={entityListStyles.entityItemImage}
+                      />
+                    ) : (
+                      <FiBox />
+                    )}
                   </div>
                   <div className={entityListStyles.entityItemInfo}>
                     <div className={entityListStyles.entityItemHeader}>

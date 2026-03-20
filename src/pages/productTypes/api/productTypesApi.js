@@ -20,8 +20,6 @@ export async function getProductTypesRequest({
   const offset = (page - 1) * limit;
   const requestParams = { limit, offset };
   if (name) requestParams.name = name;
-  console.log(requestParams);
-  console.log(API_ENDPOINTS.productTypes);
 
   const response = await productApi.get(API_ENDPOINTS.productTypes, { params: requestParams });
   const data = unwrapResponse(response);
@@ -51,9 +49,25 @@ export async function getProductTypeByIdRequest(productTypeId) {
  * @param {Object} payload - Данные типа продукта
  * @param {string} payload.name - Название (обяз.)
  * @param {number | null} payload.parent_id - ID родительского типа
+ * @param {number | null} payload.image_upload_id - ID загруженного изображения
  */
 export async function createProductTypeRequest(payload) {
-  const response = await productApi.post(API_ENDPOINTS.productTypes, payload);
+  const body = {
+    name: payload.name,
+  };
+
+  if (payload.parent_id !== null && payload.parent_id !== undefined) {
+    body.parent_id = payload.parent_id;
+  }
+
+  // Отправляем image только если есть upload_id
+  if (payload.image_upload_id) {
+    body.image = {
+      upload_id: payload.image_upload_id,
+    };
+  }
+
+  const response = await productApi.post(API_ENDPOINTS.productTypes, body);
   return unwrapResponse(response);
 }
 
@@ -63,9 +77,32 @@ export async function createProductTypeRequest(payload) {
  * @param {Object} payload - Данные для обновления
  * @param {string | null} payload.name - Название
  * @param {number | null} payload.parent_id - ID родительского типа
+ * @param {string | null} payload.image_action - Действие с изображением: 'create', 'update', 'delete', 'pass'
+ * @param {number | null} payload.image_upload_id - ID загруженного изображения
  */
 export async function updateProductTypeRequest(productTypeId, payload) {
-  const response = await productApi.put(`${API_ENDPOINTS.productTypes}/${productTypeId}`, payload);
+  const body = {};
+
+  if (payload.name !== null && payload.name !== undefined) {
+    body.name = payload.name;
+  }
+
+  if (payload.parent_id !== null && payload.parent_id !== undefined) {
+    body.parent_id = payload.parent_id;
+  }
+
+  // Отправляем image только если есть действие
+  if (payload.image_action) {
+    body.image = {
+      action: payload.image_action,
+    };
+
+    if (payload.image_upload_id) {
+      body.image.upload_id = payload.image_upload_id;
+    }
+  }
+
+  const response = await productApi.put(`${API_ENDPOINTS.productTypes}/${productTypeId}`, body);
   return unwrapResponse(response);
 }
 

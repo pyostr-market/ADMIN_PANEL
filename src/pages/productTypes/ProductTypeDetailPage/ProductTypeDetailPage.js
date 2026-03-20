@@ -182,6 +182,27 @@ export function ProductTypeDetailPage() {
           auditUrl={`/catalog/device_type/${productTypeId}/audit`}
           onAuditClick={handleViewAudit}
         />
+
+        {/* Изображение типа продукта */}
+        {productType.image && (
+          <div className={styles.imageSection}>
+            <h3 className={styles.imageTitle}>Изображение</h3>
+            <div className={styles.imageContainer}>
+              {productType.image.image_url ? (
+                <img
+                  src={productType.image.image_url}
+                  alt={productType.name}
+                  className={styles.image}
+                />
+              ) : (
+                <div className={styles.imagePlaceholder}>
+                  <FiBox size={48} />
+                  <span>Изображение недоступно</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {isDeleteModalOpen && (

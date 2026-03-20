@@ -1,32 +1,33 @@
-# Спецификация API производителей (Manufacturers API)
+# Спецификация API типов продуктов (Product Types API)
 
 ## Обзор
 
-API для управления справочником производителей (брендов) товаров.
+API для управления справочником типов продуктов (устройств).
 
+**Базовый путь:** `/product/type`
 
 ---
 
-## 1. Создание производителя
+## 1. Создание типа продукта
 
 ### Метод и путь
 ```
-POST /manufacturer
+POST /product/type
 ```
 
 ### Описание
-Создаёт нового производителя в справочнике.
+Создаёт новый тип продукта в справочнике.
 
 ### Необходимые права
-- Permission: `manufacturer:create`
+- Permission: `product_type:create`
 
 ### Входные данные (JSON Body)
 
 | Поле | Тип | Обязательное | Описание | Ограничения |
 |------|-----|--------------|----------|-------------|
-| `name` | string | Да | Название производителя | 2-150 символов, trim пробелов |
-| `description` | string | Нет | Описание производителя | Макс. 255 символов |
-| `image` | object | Нет | Изображение производителя | Объект с upload_id |
+| `name` | string | Да | Название типа продукта | 2-100 символов, trim пробелов |
+| `parent_id` | integer | Нет | ID родительского типа | Должен существовать |
+| `image` | object | Нет | Изображение типа продукта | Объект с upload_id |
 
 #### Структура объекта `image`:
 ```json
@@ -39,13 +40,13 @@ POST /manufacturer
 
 ### Пример запроса
 ```http
-POST /manufacturer HTTP/1.1
+POST /product/type HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "name": "Acme Devices",
-  "description": "Мировой производитель электроники",
+  "name": "Смартфоны",
+  "parent_id": null,
   "image": {
     "upload_id": 4275
   }
@@ -54,13 +55,13 @@ Authorization: Bearer <access_token>
 
 ### Пример запроса без изображения
 ```http
-POST /manufacturer HTTP/1.1
+POST /product/type HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "name": "Simple Brand",
-  "description": "Описание бренда"
+  "name": "Планшеты",
+  "parent_id": null
 }
 ```
 
@@ -71,12 +72,14 @@ Authorization: Bearer <access_token>
 {
   "success": true,
   "data": {
-    "id": 3,
-    "name": "Acme Devices",
-    "description": "Мировой производитель электроники",
+    "id": 5,
+    "name": "Смартфоны",
+    "parent_id": null,
+    "parent": null,
+    "children": [],
     "image": {
       "upload_id": 4275,
-      "image_url": "https://cdn.example.com/manufacturers/acme-main.jpg"
+      "image_url": "https://cdn.example.com/product-types/smartphones.jpg"
     }
   }
 }
@@ -87,15 +90,15 @@ Authorization: Bearer <access_token>
 {
   "success": false,
   "error": {
-    "code": "manufacturer_name_too_short",
-    "message": "Имя слишком короткое",
+    "code": "product_type_invalid_name",
+    "message": "Некорректное имя типа продукта",
     "details": {}
   }
 }
 ```
 
 **Коды ошибок:**
-- `manufacturer_name_too_short` — имя короче 2 символов или пустое
+- `product_type_invalid_name` — имя короче 2 символов или пустое
 
 #### 403 Forbidden — Недостаточно прав
 ```json
@@ -109,42 +112,29 @@ Authorization: Bearer <access_token>
 }
 ```
 
-#### 409 Conflict — Производитель уже существует
+#### 409 Conflict — Тип продукта уже существует
 ```json
 {
   "success": false,
   "error": {
-    "code": "manufacturer_already_exist",
-    "message": "Производитель уже существует",
+    "code": "product_type_already_exist",
+    "message": "Тип продукта уже существует",
     "details": {}
   }
 }
 ```
 
-#### 422 Unprocessable Entity — Ошибка валидации
-```json
-{
-  "detail": [
-    {
-      "loc": ["body", "name"],
-      "msg": "Имя слишком короткое",
-      "type": "value_error"
-    }
-  ]
-}
-```
-
 ---
 
-## 2. Получение производителя по ID
+## 2. Получение типа продукта по ID
 
 ### Метод и путь
 ```
-GET /manufacturer/{manufacturer_id}
+GET /product/type/{product_type_id}
 ```
 
 ### Описание
-Возвращает данные производителя по его идентификатору.
+Возвращает данные типа продукта по его идентификатору.
 
 ### Необходимые права
 - Не требуются (доступно авторизованным пользователям)
@@ -153,39 +143,41 @@ GET /manufacturer/{manufacturer_id}
 
 | Параметр | Тип | Описание |
 |----------|-----|----------|
-| `manufacturer_id` | integer | ID производителя |
+| `product_type_id` | integer | ID типа продукта |
 
 ### Пример запроса
 ```http
-GET /manufacturer/3 HTTP/1.1
+GET /product/type/5 HTTP/1.1
 Authorization: Bearer <access_token>
 ```
 
 ### Возможные ответы
 
-#### 200 OK — Производитель найден
+#### 200 OK — Тип продукта найден
 ```json
 {
   "success": true,
   "data": {
-    "id": 3,
-    "name": "Acme Devices",
-    "description": "Мировой производитель электроники",
+    "id": 5,
+    "name": "Смартфоны",
+    "parent_id": null,
+    "parent": null,
+    "children": [],
     "image": {
       "upload_id": 4275,
-      "image_url": "https://cdn.example.com/manufacturers/acme-main.jpg"
+      "image_url": "https://cdn.example.com/product-types/smartphones.jpg"
     }
   }
 }
 ```
 
-#### 404 Not Found — Производитель не найден
+#### 404 Not Found — Тип продукта не найден
 ```json
 {
   "success": false,
   "error": {
-    "code": "manufacturer_not_found",
-    "message": "Производитель не найден",
+    "code": "product_type_not_found",
+    "message": "Тип продукта не найден",
     "details": {}
   }
 }
@@ -193,15 +185,15 @@ Authorization: Bearer <access_token>
 
 ---
 
-## 3. Получение списка производителей
+## 3. Получение списка типов продуктов
 
 ### Метод и путь
 ```
-GET /manufacturer
+GET /product/type
 ```
 
 ### Описание
-Возвращает список производителей с поддержкой фильтрации и пагинации.
+Возвращает список типов продуктов с поддержкой фильтрации и пагинации.
 
 ### Необходимые права
 - Не требуются (доступно авторизованным пользователям)
@@ -216,13 +208,13 @@ GET /manufacturer
 
 ### Пример запроса
 ```http
-GET /manufacturer?name=apple&limit=5&offset=0 HTTP/1.1
+GET /product/type?name=смартфон&limit=5&offset=0 HTTP/1.1
 Authorization: Bearer <access_token>
 ```
 
 ### Пример запроса без фильтров
 ```http
-GET /manufacturer HTTP/1.1
+GET /product/type HTTP/1.1
 Authorization: Bearer <access_token>
 ```
 
@@ -236,18 +228,25 @@ Authorization: Bearer <access_token>
     "total": 2,
     "items": [
       {
-        "id": 3,
-        "name": "Acme Devices",
-        "description": "Мировой производитель электроники",
+        "id": 5,
+        "name": "Смартфоны",
+        "parent_id": null,
+        "parent": null,
+        "children": [],
         "image": {
           "upload_id": 4275,
-          "image_url": "https://cdn.example.com/manufacturers/acme-main.jpg"
+          "image_url": "https://cdn.example.com/product-types/smartphones.jpg"
         }
       },
       {
-        "id": 4,
-        "name": "Nova Tech",
-        "description": null,
+        "id": 6,
+        "name": "Планшеты",
+        "parent_id": 5,
+        "parent": {
+          "id": 5,
+          "name": "Смартфоны"
+        },
+        "children": [],
         "image": null
       }
     ]
@@ -257,31 +256,94 @@ Authorization: Bearer <access_token>
 
 ---
 
-## 4. Обновление производителя
+## 4. Получение дерева типов продуктов
 
 ### Метод и путь
 ```
-PUT /manufacturer/{manufacturer_id}
+GET /product/type/tree
 ```
 
 ### Описание
-Обновляет существующего производителя. Поддерживает частичное обновление (можно передать только изменяемые поля).
+Возвращает все типы продуктов в виде иерархического дерева.
 
 ### Необходимые права
-- Permission: `manufacturer:update`
+- Не требуются (доступно авторизованным пользователям)
+
+### Пример запроса
+```http
+GET /product/type/tree HTTP/1.1
+Authorization: Bearer <access_token>
+```
+
+### Возможные ответы
+
+#### 200 OK — Дерево успешно получено
+```json
+{
+  "success": true,
+  "data": {
+    "total": 3,
+    "items": [
+      {
+        "id": 5,
+        "name": "Смартфоны",
+        "parent_id": null,
+        "parent": null,
+        "children": [
+          {
+            "id": 6,
+            "name": "Планшеты",
+            "parent_id": 5,
+            "parent": null,
+            "children": [],
+            "image": null
+          }
+        ],
+        "image": {
+          "upload_id": 4275,
+          "image_url": "https://cdn.example.com/product-types/smartphones.jpg"
+        }
+      },
+      {
+        "id": 7,
+        "name": "Наушники",
+        "parent_id": null,
+        "parent": null,
+        "children": [],
+        "image": null
+      }
+    ]
+  }
+}
+```
+
+---
+
+## 5. Обновление типа продукта
+
+### Метод и путь
+```
+PUT /product/type/{product_type_id}
+```
+
+### Описание
+Обновляет существующий тип продукта. Поддерживает частичное обновление (можно передать только изменяемые поля).
+
+### Необходимые права
+- Permission: `product_type:update`
 
 ### Параметры пути
 
 | Параметр | Тип | Описание |
 |----------|-----|----------|
-| `manufacturer_id` | integer | ID производителя |
+| `product_type_id` | integer | ID типа продукта |
 
 ### Входные данные (JSON Body)
 
 | Поле | Тип | Обязательное | Описание | Ограничения |
 |------|-----|--------------|----------|-------------|
-| `name` | string | Нет | Новое название производителя | 2-150 символов, trim пробелов |
-| `description` | string | Нет | Новое описание производителя | Макс. 255 символов |
+| `name` | string | Нет | Новое название типа продукта | 2-100 символов, trim пробелов |
+| `parent_id` | integer | Нет | Новый ID родительского типа | Должен существовать |
 | `image` | object | Нет | Операция с изображением | См. ниже |
 
 #### Структура объекта `image` (операция с изображением):
@@ -300,41 +362,29 @@ PUT /manufacturer/{manufacturer_id}
 
 ### Пример запроса (обновление имени)
 ```http
-PUT /manufacturer/3 HTTP/1.1
+PUT /product/type/5 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "name": "Acme Devices International"
+  "name": "Смартфоны Pro"
 }
 ```
 
-### Пример запроса (обновление описания)
+### Пример запроса (обновление parent_id)
 ```http
-PUT /manufacturer/3 HTTP/1.1
+PUT /product/type/6 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
 {
-  "description": "Обновлённое описание бренда"
-}
-```
-
-### Пример запроса (обновление обоих полей)
-```http
-PUT /manufacturer/3 HTTP/1.1
-Content-Type: application/json
-Authorization: Bearer <access_token>
-
-{
-  "name": "Acme Devices International",
-  "description": "Обновлённое описание бренда"
+  "parent_id": 5
 }
 ```
 
 ### Пример запроса (добавление изображения)
 ```http
-PUT /manufacturer/3 HTTP/1.1
+PUT /product/type/5 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -348,7 +398,7 @@ Authorization: Bearer <access_token>
 
 ### Пример запроса (удаление изображения)
 ```http
-PUT /manufacturer/3 HTTP/1.1
+PUT /product/type/5 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -361,7 +411,7 @@ Authorization: Bearer <access_token>
 
 ### Пример запроса (пустое обновление)
 ```http
-PUT /manufacturer/3 HTTP/1.1
+PUT /product/type/5 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer <access_token>
 
@@ -375,12 +425,14 @@ Authorization: Bearer <access_token>
 {
   "success": true,
   "data": {
-    "id": 3,
-    "name": "Acme Devices International",
-    "description": "Обновлённое описание бренда",
+    "id": 5,
+    "name": "Смартфоны Pro",
+    "parent_id": null,
+    "parent": null,
+    "children": [],
     "image": {
       "upload_id": 4275,
-      "image_url": "https://cdn.example.com/manufacturers/acme-main.jpg"
+      "image_url": "https://cdn.example.com/product-types/smartphones-pro.jpg"
     }
   }
 }
@@ -391,8 +443,8 @@ Authorization: Bearer <access_token>
 {
   "success": false,
   "error": {
-    "code": "manufacturer_name_too_short",
-    "message": "Имя слишком короткое",
+    "code": "product_type_invalid_name",
+    "message": "Некорректное имя типа продукта",
     "details": {}
   }
 }
@@ -410,13 +462,13 @@ Authorization: Bearer <access_token>
 }
 ```
 
-#### 404 Not Found — Производитель не найден
+#### 404 Not Found — Тип продукта не найден
 ```json
 {
   "success": false,
   "error": {
-    "code": "manufacturer_not_found",
-    "message": "Производитель не найден",
+    "code": "product_type_not_found",
+    "message": "Тип продукта не найден",
     "details": {}
   }
 }
@@ -427,50 +479,37 @@ Authorization: Bearer <access_token>
 {
   "success": false,
   "error": {
-    "code": "manufacturer_already_exist",
-    "message": "Производитель уже существует",
+    "code": "product_type_already_exist",
+    "message": "Тип продукта уже существует",
     "details": {}
   }
 }
 ```
 
-#### 422 Unprocessable Entity — Ошибка валидации
-```json
-{
-  "detail": [
-    {
-      "loc": ["body", "name"],
-      "msg": "Имя слишком короткое",
-      "type": "value_error"
-    }
-  ]
-}
-```
-
 ---
 
-## 5. Удаление производителя
+## 6. Удаление типа продукта
 
 ### Метод и путь
 ```
-DELETE /manufacturer/{manufacturer_id}
+DELETE /product/type/{product_type_id}
 ```
 
 ### Описание
-Удаляет производителя по идентификатору.
+Удаляет тип продукта по идентификатору.
 
 ### Необходимые права
-- Permission: `manufacturer:delete`
+- Permission: `product_type:delete`
 
 ### Параметры пути
 
 | Параметр | Тип | Описание |
 |----------|-----|----------|
-| `manufacturer_id` | integer | ID производителя |
+| `product_type_id` | integer | ID типа продукта |
 
 ### Пример запроса
 ```http
-DELETE /manufacturer/3 HTTP/1.1
+DELETE /product/type/5 HTTP/1.1
 Authorization: Bearer <access_token>
 ```
 
@@ -498,13 +537,13 @@ Authorization: Bearer <access_token>
 }
 ```
 
-#### 404 Not Found — Производитель не найден
+#### 404 Not Found — Тип продукта не найден
 ```json
 {
   "success": false,
   "error": {
-    "code": "manufacturer_not_found",
-    "message": "Производитель не найден",
+    "code": "product_type_not_found",
+    "message": "Тип продукта не найден",
     "details": {}
   }
 }
@@ -516,11 +555,12 @@ Authorization: Bearer <access_token>
 
 | Endpoint | Метод | Permission |
 |----------|-------|------------|
-| `/manufacturer` | POST | `manufacturer:create` |
-| `/manufacturer` | GET | — |
-| `/manufacturer/{id}` | GET | — |
-| `/manufacturer/{id}` | PUT | `manufacturer:update` |
-| `/manufacturer/{id}` | DELETE | `manufacturer:delete` |
+| `/product/type` | POST | `product_type:create` |
+| `/product/type` | GET | — |
+| `/product/type/tree` | GET | — |
+| `/product/type/{id}` | GET | — |
+| `/product/type/{id}` | PUT | `product_type:update` |
+| `/product/type/{id}` | DELETE | `product_type:delete` |
 
 ---
 
@@ -528,14 +568,15 @@ Authorization: Bearer <access_token>
 
 ### Поле `name`
 - **Минимальная длина:** 2 символа
-- **Максимальная длина:** 150 символов
+- **Максимальная длина:** 100 символов
 - **Обработка:** автоматический trim пробелов по краям
 - **Уникальность:** имя должно быть уникальным (case-sensitive)
 - **Символы:** разрешены буквы (латиница, кириллица), цифры, специальные символы
 
-### Поле `description`
-- **Максимальная длина:** 255 символов
+### Поле `parent_id`
+- **Тип:** integer
 - **Обязательность:** необязательное поле
+- **Требование:** должен ссылаться на существующий тип продукта
 
 ### Поле `image.upload_id`
 - **Тип:** integer
@@ -547,48 +588,72 @@ Authorization: Bearer <access_token>
 
 | Код HTTP | Код ошибки | Описание |
 |----------|------------|----------|
-| 400 | `manufacturer_name_too_short` | Имя слишком короткое или пустое |
-| 400 | `manufacturer_invalid_payload` | Некорректный payload |
+| 400 | `product_type_invalid_name` | Имя слишком короткое или пустое |
+| 400 | `product_type_invalid_payload` | Некорректный payload |
 | 403 | `forbidden` | Недостаточно прав |
-| 404 | `manufacturer_not_found` | Производитель не найден |
-| 409 | `manufacturer_already_exist` | Производитель с таким именем уже существует |
+| 404 | `product_type_not_found` | Тип продукта не найден |
+| 409 | `product_type_already_exist` | Тип продукта уже существует |
 | 422 | — | Ошибка валидации Pydantic |
 
 ---
 
 ## Примеры использования
 
-### Пример 1: Создание производителя с изображением
+### Пример 1: Создание типа продукта с изображением
 ```bash
-curl -X POST https://api.example.com/manufacturer \
+curl -X POST https://api.example.com/product/type \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <token>" \
   -d '{
-    "name": "Tesla",
-    "description": "Американский производитель электромобилей",
+    "name": "Смартфоны",
     "image": {"upload_id": 1234}
   }'
 ```
 
-### Пример 2: Поиск производителей по названию
+### Пример 2: Поиск типов продуктов по названию
 ```bash
-curl -X GET "https://api.example.com/manufacturer?name=tesla&limit=10" \
+curl -X GET "https://api.example.com/product/type?name=смартфон&limit=10" \
   -H "Authorization: Bearer <token>"
 ```
 
-### Пример 3: Обновление имени производителя
+### Пример 3: Обновление имени типа продукта
 ```bash
-curl -X PUT https://api.example.com/manufacturer/3 \
+curl -X PUT https://api.example.com/product/type/5 \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <token>" \
   -d '{
-    "name": "Tesla Inc."
+    "name": "Смартфоны Pro"
   }'
 ```
 
-### Пример 4: Удаление производителя
+### Пример 4: Добавление изображения к типу продукта
 ```bash
-curl -X DELETE https://api.example.com/manufacturer/3 \
+curl -X PUT https://api.example.com/product/type/5 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <token>" \
+  -d '{
+    "image": {
+      "action": "create",
+      "upload_id": 5678
+    }
+  }'
+```
+
+### Пример 5: Удаление изображения типа продукта
+```bash
+curl -X PUT https://api.example.com/product/type/5 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <token>" \
+  -d '{
+    "image": {
+      "action": "delete"
+    }
+  }'
+```
+
+### Пример 6: Удаление типа продукта
+```bash
+curl -X DELETE https://api.example.com/product/type/5 \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -600,6 +665,8 @@ curl -X DELETE https://api.example.com/manufacturer/3 \
 
 2. **Частичное обновление:** При обновлении можно передавать только те поля, которые нужно изменить.
 
-3. **Каскадное удаление:** При удалении производителя связанные категории могут быть удалены или их поле `manufacturer_id` может быть установлено в NULL (в зависимости от настройки ForeignKey).
+3. **Каскадное удаление:** При удалении типа продукта дочерние типы будут удалены (cascade="all, delete").
 
-4. **Изображения:** Перед добавлением изображения к производителю, оно должно быть предварительно загружено через API загрузок (UploadHistory).
+4. **Изображения:** Перед добавлением изображения к типу продукта, оно должно быть предварительно загружено через API загрузок (UploadHistory).
+
+5. **Древовидная структура:** Типы продуктов поддерживают иерархию через поле `parent_id`. Метод `/tree` возвращает структуру в виде дерева.
