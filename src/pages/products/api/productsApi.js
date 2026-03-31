@@ -212,3 +212,32 @@ export async function getSuppliersForAutocompleteRequest({
   const data = unwrapResponse(response);
   return Array.isArray(data?.items) ? data.items : [];
 }
+
+/**
+ * Получение списка товаров (для автокомплита)
+ * @param {Object} params - Параметры запроса
+ * @param {number} params.limit - Количество элементов
+ * @param {number} params.offset - Смещение
+ * @param {string} params.name - Фильтр по названию
+ * @param {number | null} params.product_id - ID товара для исключения
+ */
+export async function getProductsForAutocompleteRequest({
+  limit = 100,
+  offset = 0,
+  name,
+  product_id,
+} = {}) {
+  const queryParams = { limit, offset };
+  if (name) queryParams.name = name;
+
+  const response = await productApi.get(API_ENDPOINTS.products, { params: queryParams });
+  const data = unwrapResponse(response);
+  let items = Array.isArray(data?.items) ? data.items : [];
+  
+  // Исключаем товар с указанным ID (если нужно)
+  if (product_id !== undefined && product_id !== null) {
+    items = items.filter(item => String(item.id) !== String(product_id));
+  }
+  
+  return items;
+}

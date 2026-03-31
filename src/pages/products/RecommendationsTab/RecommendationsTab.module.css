@@ -1,0 +1,306 @@
+.recommendationsTab {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Форма добавления */
+.recommendationsForm {
+  background: var(--color-bg-secondary, #f8f9fa);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.recommendationsFormRow {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.recommendationsFormField {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.recommendationsFormFieldFull {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.recommendationsFormLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary, #333);
+}
+
+.recommendationsFormSelect {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.recommendationsFormSelect:hover {
+  border-color: var(--color-primary, #4a90d9);
+}
+
+.recommendationsFormSelect:focus {
+  outline: none;
+  border-color: var(--color-primary, #4a90d9);
+}
+
+.recommendationsFormHint {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--color-text-secondary, #666);
+}
+
+/* Фильтры */
+.recommendationsFilters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.recommendationsFilter {
+  padding: 8px 16px;
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 20px;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.recommendationsFilter:hover {
+  background: var(--color-bg-hover, #f0f0f0);
+}
+
+.recommendationsFilterActive {
+  background: var(--color-primary, #4a90d9);
+  color: #fff;
+  border-color: var(--color-primary, #4a90d9);
+}
+
+.recommendationsFilterBlue {
+  background: #dbeafe;
+  color: #1d4ed8;
+  border-color: #3b82f6;
+}
+
+.recommendationsFilterBlue.recommendationsFilterActive {
+  background: #3b82f6;
+  color: #fff;
+  border-color: #3b82f6;
+}
+
+.recommendationsFilterGreen {
+  background: #dcfce7;
+  color: #15803d;
+  border-color: #22c55e;
+}
+
+.recommendationsFilterGreen.recommendationsFilterActive {
+  background: #22c55e;
+  color: #fff;
+  border-color: #22c55e;
+}
+
+.recommendationsFilterPurple {
+  background: #f3e8ff;
+  color: #7e22ce;
+  border-color: #a855f7;
+}
+
+.recommendationsFilterPurple.recommendationsFilterActive {
+  background: #a855f7;
+  color: #fff;
+  border-color: #a855f7;
+}
+
+.recommendationsFilterOrange {
+  background: #ffedd5;
+  color: #c2410c;
+  border-color: #f97316;
+}
+
+.recommendationsFilterOrange.recommendationsFilterActive {
+  background: #f97316;
+  color: #fff;
+  border-color: #f97316;
+}
+
+/* Список */
+.recommendationsList {
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.recommendationsListLoading,
+.recommendationsListEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  color: var(--color-text-secondary, #666);
+  gap: 16px;
+}
+
+.recommendationsListEmpty svg {
+  opacity: 0.5;
+}
+
+.recommendationsListEmptyHint {
+  font-size: 13px;
+  color: var(--color-text-hint, #999);
+}
+
+.recommendationsListBody {
+  display: flex;
+  flex-direction: column;
+}
+
+.recommendationsListHeader {
+  display: grid;
+  grid-template-columns: 1fr 200px 150px 60px;
+  gap: 16px;
+  padding: 12px 16px;
+  background: var(--color-bg-secondary, #f8f9fa);
+  border-bottom: 1px solid var(--color-border, #e0e0e0);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary, #666);
+}
+
+.recommendationsListItem {
+  display: grid;
+  grid-template-columns: 1fr 200px 150px 60px;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border, #e0e0e0);
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.recommendationsListItem:last-child {
+  border-bottom: none;
+}
+
+.recommendationsListItem:hover {
+  background: var(--color-bg-hover, #f8f9fa);
+}
+
+.recommendationsListCell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recommendationsListProductName {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary, #333);
+}
+
+.recommendationsListProductId {
+  font-size: 12px;
+  color: var(--color-text-hint, #999);
+}
+
+.recommendationsListType {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.recommendationsListTypeBlue {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.recommendationsListTypeGreen {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.recommendationsListTypePurple {
+  background: #f3e8ff;
+  color: #7e22ce;
+}
+
+.recommendationsListTypeOrange {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.recommendationsListPrice {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary, #333);
+}
+
+.recommendationsListDelete {
+  color: var(--color-danger, #dc3545);
+}
+
+.recommendationsListDelete:hover {
+  background: var(--color-danger-bg, #fee2e2);
+  color: var(--color-danger, #dc3545);
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+  .recommendationsFormRow {
+    flex-direction: column;
+  }
+
+  .recommendationsFormField,
+  .recommendationsFormFieldFull {
+    flex: 1 1 100%;
+  }
+
+  .recommendationsListHeader,
+  .recommendationsListItem {
+    grid-template-columns: 1fr 60px;
+    gap: 8px;
+  }
+
+  .recommendationsListHeader {
+    display: none;
+  }
+
+  .recommendationsListItem {
+    grid-template-areas:
+      "name delete"
+      "type type"
+      "price price";
+    padding: 16px;
+  }
+
+  .recommendationsListCell:nth-child(1) {
+    grid-area: name;
+  }
+
+  .recommendationsListCell:nth-child(2) {
+    grid-area: type;
+  }
+
+  .recommendationsListCell:nth-child(3) {
+    grid-area: price;
+  }
+
+  .recommendationsListCell:nth-child(4) {
+    grid-area: delete;
+    justify-self: end;
+  }
+}

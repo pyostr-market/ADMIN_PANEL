@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FiImage, FiTag, FiFileText, FiTrash2, FiPlus } from 'react-icons/fi';
+import { FiImage, FiTag, FiFileText, FiTrash2, FiPlus, FiLink } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { FormPage } from '../../../shared/ui/FormPage';
 import { FormSection } from '../../../shared/ui/FormSection/FormSection';
@@ -18,6 +18,7 @@ import {
   getCategoriesForAutocompleteRequest,
   getSuppliersForAutocompleteRequest,
 } from '../api/productsApi';
+import { RecommendationsTab } from '../RecommendationsTab/RecommendationsTab';
 import styles from './ProductFormPage.module.css';
 
 // Вкладки формы
@@ -25,6 +26,7 @@ const TABS = {
   MAIN: 'main',
   IMAGES: 'images',
   ATTRIBUTES: 'attributes',
+  RECOMMENDATIONS: 'recommendations',
 };
 
 export function ProductFormPage() {
@@ -417,6 +419,14 @@ export function ProductFormPage() {
           >
             <FiFileText /> Атрибуты ({attributes.length})
           </Tab>
+          {isEditMode && (
+            <Tab
+              active={activeTab === TABS.RECOMMENDATIONS}
+              onClick={() => setActiveTab(TABS.RECOMMENDATIONS)}
+            >
+              <FiLink /> Рекомендации
+            </Tab>
+          )}
         </Tabs>
       </div>
 
@@ -661,6 +671,17 @@ export function ProductFormPage() {
               </span>
             </div>
           )}
+        </FormSection>
+      )}
+
+      {activeTab === TABS.RECOMMENDATIONS && isEditMode && (
+        <FormSection
+          icon={<FiLink />}
+          iconVariant="accent"
+          title="Рекомендации"
+          description="Добавьте связанные товары: аксессуары, похожие товары, комплекты или альтернативы"
+        >
+          <RecommendationsTab productId={productId} disabled={isSubmitting} />
         </FormSection>
       )}
     </FormPage>
