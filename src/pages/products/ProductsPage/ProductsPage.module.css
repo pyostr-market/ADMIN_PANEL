@@ -16,6 +16,41 @@
   min-width: 180px;
 }
 
+/* Контейнер дерева категорий */
+.categoryTreeContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Кнопка сброса фильтра */
+.resetFilterButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  border: none;
+  background: var(--bg-secondary, #f0f0f0);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-primary, #333);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+  text-align: left;
+}
+
+.resetFilterButton:hover {
+  background: var(--bg-hover, #e0e0e0);
+}
+
+.selectedCategoryName {
+  font-weight: 500;
+  color: var(--primary, #1976d2);
+}
+
 /* Modal confirm text */
 .modalConfirmText {
   font-size: 14px;
@@ -78,5 +113,11 @@
     border-top: 1px solid var(--border);
     width: 100%;
     box-sizing: border-box;
+  }
+
+  /* Кнопка сброса на мобильных */
+  .resetFilterButton {
+    padding: 10px 12px;
+    font-size: 14px;
   }
 }

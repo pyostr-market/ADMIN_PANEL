@@ -7,23 +7,22 @@ import { EntityList } from '../../../shared/ui/EntityList/EntityList';
 import { EntityCard, EntityCardMetaItem } from '../../../shared/ui/EntityCard/EntityCard';
 import { DeleteConfirmModal } from '../../../shared/ui/DeleteConfirmModal/DeleteConfirmModal';
 import { CrudListLayout } from '../../../shared/ui/CrudListLayout/CrudListLayout';
+import { CategoryTree } from '../../../shared/ui/CategoryTree';
 import { useCrudList, useEntityActions } from '../../../shared/lib/crud';
 import {
   getProductsRequest,
   deleteProductRequest,
-  getCategoriesForAutocompleteRequest,
 } from '../../../shared/api/modules/productsApi';
+import { getCategoryTreeRequest } from '../../../shared/api/modules/categoriesApi';
 import styles from './ProductsPage.module.css';
 
 const PAGE_LIMIT = 20;
 
 export function ProductsPage() {
   const [productToDelete, setProductToDelete] = useState(null);
-  const [filters, setFilters] = useState({
-    category_id: '',
-  });
-  const [categories, setCategories] = useState([]);
-  const [isLoadingOptions, setIsLoadingOptions] = useState(false);
+  const [categoryTree, setCategoryTree] = useState([]);
+  const [isLoadingTree, setIsLoadingTree] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
   const productsCrud = useCrudList({
     fetchFn: async ({ page = 1, limit = PAGE_LIMIT, search, category_id } = {}) => {
@@ -59,66 +58,60 @@ export function ProductsPage() {
     setPageRef.current = productsCrud.setPage;
   }, [productsCrud.setFilters, productsCrud.setPage]);
 
-  const loadFilterOptions = useCallback(async () => {
-    if (categories.length > 0 || isLoadingOptions) return;
+  // Загрузка дерева категорий при монтировании
+  useEffect(() => {
+    const loadCategoryTree = async () => {
+      if (categoryTree.length > 0 || isLoadingTree) return;
 
-    setIsLoadingOptions(true);
-    try {
-      const cats = await getCategoriesForAutocompleteRequest();
-      setCategories(cats || []);
-    } finally {
-      setIsLoadingOptions(false);
+      setIsLoadingTree(true);
+      try {
+        const tree = await getCategoryTreeRequest();
+        setCategoryTree(tree || []);
+      } finally {
+        setIsLoadingTree(false);
+      }
+    };
+
+    loadCategoryTree();
+  }, [categoryTree.length, isLoadingTree]);
+
+  // Синхронизация выбранной категории из URL при загрузке
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryIdFromUrl = urlParams.get('category_id');
+    if (categoryIdFromUrl && categoryIdFromUrl !== selectedCategoryId) {
+      setSelectedCategoryId(categoryIdFromUrl);
     }
-  }, [categories.length, isLoadingOptions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleDeleteProduct = async () => {
     if (!productToDelete) return;
     await actions.remove(productToDelete.id);
   };
 
-  const handleFilterChange = useCallback((key, value) => {
-    const newFilters = { ...filters, [key]: value };
-    setFilters(newFilters);
+  const handleCategorySelect = useCallback((categoryId) => {
+    const newCategoryId = categoryId === selectedCategoryId ? null : categoryId;
+    setSelectedCategoryId(newCategoryId);
 
     const apiFilters = {};
-    if (newFilters.category_id && newFilters.category_id !== 'all') {
-      apiFilters.category_id = newFilters.category_id;
+    if (newCategoryId) {
+      apiFilters.category_id = newCategoryId;
     }
 
     setFiltersRef.current(apiFilters);
     setPageRef.current(1);
-
-    // Загружаем опции при первом изменении фильтра
-    if (key === 'category_id' &&
-        categories.length === 0 &&
-        !isLoadingOptions) {
-      loadFilterOptions();
-    }
-  }, [filters, categories.length, isLoadingOptions, loadFilterOptions]);
+  }, [selectedCategoryId]);
 
   const handleResetFilters = useCallback(() => {
-    setFilters({ category_id: '' });
+    setSelectedCategoryId(null);
     setFiltersRef.current({});
     setPageRef.current(1);
   }, []);
 
   const hasActiveFilters = useMemo(() => {
-    return (filters.category_id && filters.category_id !== 'all');
-  }, [filters]);
-
-  // Конфигурация фильтров для CrudListLayout
-  const filterConfigs = useMemo(() => [
-    {
-      key: 'category_id',
-      label: 'Категория',
-      options: [
-        { value: 'all', label: 'Все категории' },
-        ...categories.map((cat) => ({ value: String(cat.id), label: cat.name })),
-      ],
-      onFocus: loadFilterOptions,
-      disabled: isLoadingOptions,
-    },
-  ], [categories, isLoadingOptions, loadFilterOptions]);
+    return !!selectedCategoryId;
+  }, [selectedCategoryId]);
 
   const mainImage = (product) => {
     const main = product.images?.find(img => img.is_main);
@@ -150,13 +143,29 @@ export function ProductsPage() {
         searchLoading={productsCrud.isLoading}
         searchPlaceholder="Поиск по названию..."
 
-        showFilters={true}
-        filters={filters}
-        filterConfigs={filterConfigs}
-        onFilterChange={handleFilterChange}
-        onResetFilters={handleResetFilters}
-        hasActiveFilters={hasActiveFilters}
-        filtersLoading={productsCrud.isLoading || isLoadingOptions}
+        sidebar={(
+          <div className={styles.categoryTreeContainer}>
+            {hasActiveFilters && (
+              <button
+                type="button"
+                className={styles.resetFilterButton}
+                onClick={handleResetFilters}
+                aria-label="Сбросить фильтр категории"
+              >
+                Сбросить: <span className={styles.selectedCategoryName}>
+                  {getCategoryNameById(categoryTree, selectedCategoryId)}
+                </span>
+              </button>
+            )}
+            <CategoryTree
+              categories={categoryTree}
+              selectedId={selectedCategoryId}
+              onSelect={handleCategorySelect}
+              isLoading={isLoadingTree}
+            />
+          </div>
+        )}
+        sidebarTitle="Категории"
 
         pagination={
           !productsCrud.isLoading && productsCrud.items && productsCrud.items.length > 0 ? (
@@ -262,4 +271,22 @@ export function ProductsPage() {
       )}
     </>
   );
+}
+
+/**
+ * Вспомогательная функция для получения названия категории по ID
+ */
+function getCategoryNameById(tree, id) {
+  if (!tree || !id) return 'Категория';
+  
+  for (const category of tree) {
+    if (category.id === id) {
+      return category.name;
+    }
+    if (category.children && category.children.length > 0) {
+      const found = getCategoryNameById(category.children, id);
+      if (found) return found;
+    }
+  }
+  return 'Категория';
 }

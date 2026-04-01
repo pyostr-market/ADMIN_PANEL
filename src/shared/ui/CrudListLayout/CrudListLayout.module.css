@@ -6,13 +6,6 @@
   align-items: start;
 }
 
-/* Основной layout без фильтров (на всю ширину) */
-.crudListLayoutNoFilters {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-4);
-}
-
 /* Header на всю ширину */
 .crudListHeader {
   grid-column: 1 / -1;
@@ -88,93 +81,48 @@
   box-sizing: border-box;
 }
 
-/* Сайдбар с фильтрами (правая колонка) */
-.crudListFiltersSidebar {
+/* Sidebar (правая колонка) */
+.crudListSidebar {
   grid-column: 2 / 3;
   grid-row: 3 / 4;
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-4);
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   position: sticky;
   top: var(--space-4);
-  transition: opacity 0.2s ease;
   height: fit-content;
+  max-height: calc(100vh - var(--space-8));
+  overflow: hidden;
 }
 
-.crudListFiltersSidebarLoading {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-.crudListFiltersSidebarRow {
+.crudListSidebarHeader {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
 }
 
-.crudListFiltersSidebarTitle {
-  margin: 0 0 var(--space-2);
-  font-size: 14px;
+.crudListSidebarTitle {
+  margin: 0;
+  font-size: 15px;
   font-weight: 600;
-  color: var(--text);
+  color: var(--text-primary, #1a1a1a);
 }
 
-.crudListFiltersSidebarGroup {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  width: 100%;
+.crudListSidebarContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
 }
 
-.crudListFiltersSidebarSelect {
-  width: 100%;
-  height: 38px;
-  font-size: 13px;
-}
-
-.crudListFiltersSidebarSelect select {
-  width: 100%;
-}
-
-.crudListFiltersSidebar .btn-ghost {
-  width: 100%;
-  justify-content: center;
-}
-
-.crudListResetFiltersBtn {
-  margin-top: var(--space-2);
-}
-
-/* Модальное окно фильтров */
-.crudFiltersModalContent {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
-.crudFiltersModalGroup {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.crudFiltersModalLabel {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-}
-
-.crudFiltersModalSelect {
-  width: 100%;
-}
-
-.crudFiltersModalSelect select {
-  width: 100%;
+/* Модальное окно для sidebar на мобильных */
+.crudSidebarModalContent {
+  max-height: 60vh;
+  overflow-y: auto;
 }
 
 /* Мобильная версия */
@@ -244,7 +192,6 @@
     box-sizing: border-box;
   }
 
-
   .crudListSearchFiltersBtn:hover {
     background: var(--surface-subtle);
     color: var(--text);
@@ -254,8 +201,8 @@
     font-size: 20px;
   }
 
-  /* Сайдбар скрываем на мобильных */
-  .crudListFiltersSidebar {
+  /* Sidebar скрываем на мобильных - показываем только в модалке */
+  .crudListSidebar {
     display: none;
   }
 

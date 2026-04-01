@@ -188,3 +188,12 @@ export async function getManufacturersForAutocompleteRequest({
   const data = unwrapResponse(response);
   return Array.isArray(data?.items) ? data.items : [];
 }
+
+/**
+ * Получение дерева категорий
+ */
+export async function getCategoryTreeRequest() {
+  const response = await productApi.get(`${API_ENDPOINTS.categories}/tree`);
+  const data = unwrapResponse(response);
+  return Array.isArray(data?.items) ? data.items : [];
+}

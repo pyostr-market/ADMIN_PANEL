@@ -41,17 +41,34 @@ export function useCrudList({
   }, [notifications]);
 
   // Инициализация параметров из URL при включенной синхронизации
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const initialPage = syncWithUrl
     ? parseInt(searchParams.get('page') || '1', 10)
     : 1;
+  const initialSearch = syncWithUrl
+    ? searchParams.get('search') || ''
+    : '';
+  
+  // Собираем только те фильтры, которые были переданы в URL
+  const initialFilters = syncWithUrl ? (() => {
+    const allParams = Object.fromEntries(searchParams.entries());
+    const result = {};
+    // Исключаем служебные параметры
+    const excludedKeys = ['page', 'search', 'limit', 'offset'];
+    Object.keys(allParams).forEach((key) => {
+      if (!excludedKeys.includes(key)) {
+        result[key] = allParams[key];
+      }
+    });
+    return result;
+  })() : {};
 
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(initialPage);
   const [limit] = useState(defaultLimit);
   const [pagination, setPagination] = useState(EMPTY_PAGINATION);
-  const [search, setSearch] = useState('');
-  const [filters, setFilters] = useState({});
+  const [search, setSearch] = useState(initialSearch);
+  const [filters, setFilters] = useState(initialFilters);
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -94,26 +111,39 @@ export function useCrudList({
     normalizeFnRef.current = normalizeFn;
   }, [normalizeFn]);
 
-  // Синхронизация page с URL
+  // Синхронизация параметров с URL
   useEffect(() => {
     if (!syncWithUrl) return;
 
-    const currentParams = new URLSearchParams(window.location.search);
-    const currentPage = currentParams.get('page');
+    setSearchParams((prevParams) => {
+      const newParams = new URLSearchParams(prevParams);
 
-    if (page !== 1) {
-      currentParams.set('page', String(page));
-    } else {
-      currentParams.delete('page');
-    }
+      // Обновляем page
+      if (page !== 1) {
+        newParams.set('page', String(page));
+      } else {
+        newParams.delete('page');
+      }
 
-    const newSearch = currentParams.toString();
-    const newUrl = `${window.location.pathname}${newSearch ? `?${newSearch}` : ''}`;
+      // Обновляем search
+      if (search) {
+        newParams.set('search', search);
+      } else {
+        newParams.delete('search');
+      }
 
-    if (window.location.search !== newSearch) {
-      window.history.replaceState({}, '', newUrl);
-    }
-  }, [page, syncWithUrl]);
+      // Обновляем фильтры
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== '' && value !== null && value !== undefined) {
+          newParams.set(key, String(value));
+        } else {
+          newParams.delete(key);
+        }
+      });
+
+      return newParams;
+    });
+  }, [page, search, filters, syncWithUrl, setSearchParams]);
 
   const getServiceName = useCallback(() => {
     try {
