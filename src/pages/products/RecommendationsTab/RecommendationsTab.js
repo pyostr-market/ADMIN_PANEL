@@ -97,7 +97,6 @@ export function RecommendationsTab({ productId, disabled }) {
       notificationsRef.current?.error(message);
     }
   };
-
   const handleDeleteRelation = async (relationId) => {
     if (isDeleting) return;
 
@@ -227,7 +226,7 @@ export function RecommendationsTab({ productId, disabled }) {
                     {relation.name || `Товар #${relation.id}`}
                   </span>
                   <span className={styles.recommendationsListProductId}>
-                    ID: {relation.id}
+                    ID: {relation.relation_id}
                   </span>
                 </div>
                 <div className={styles.recommendationsListCell}>
@@ -247,7 +246,7 @@ export function RecommendationsTab({ productId, disabled }) {
                     type="button"
                     variant="ghost"
                     size="icon"
-                    onClick={() => handleDeleteRelation(relation.id)}
+                    onClick={() => handleDeleteRelation(relation.relation_id)}
                     disabled={isDeleting || disabled}
                     className={styles.recommendationsListDelete}
                     title="Удалить связь"
