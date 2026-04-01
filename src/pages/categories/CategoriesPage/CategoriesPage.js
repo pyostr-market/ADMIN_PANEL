@@ -36,6 +36,9 @@ export function CategoriesPage() {
 
   const actions = useEntityActions({
     baseUrl: '/catalog/categories',
+    onDelete: async (id) => {
+      return await categoriesCrud.delete(id);
+    },
     onSuccess: (action) => {
       if (action === 'delete') {
         setCategoryToDelete(null);

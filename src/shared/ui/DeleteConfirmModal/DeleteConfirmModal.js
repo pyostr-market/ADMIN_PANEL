@@ -31,13 +31,19 @@ export function DeleteConfirmModal({
 }) {
   if (!isOpen) return null;
 
-  const defaultConfirmationText = `Вы уверены, что хотите удалить ${entityTitle ? <strong>{entityTitle}</strong> : `этот ${entityName}`}?`;
+  const defaultConfirmationText = (
+    <>
+      Вы уверены, что хотите удалить{' '}
+      {entityTitle ? <strong>{entityTitle}</strong> : `этот ${entityName}`}
+      ?
+    </>
+  );
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`Удаление: ${entityTitle || entityName}`}
+      title={entityTitle ? `Удаление: ${entityTitle}` : `Удаление: ${entityName}`}
       size="sm"
       footer={
         <>
