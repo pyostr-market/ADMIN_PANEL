@@ -54,3 +54,12 @@ export async function getActualizationTaskByIdRequest(taskId) {
   const response = await pricingApi.get(`/admin/catalog/actualizations/${taskId}`);
   return unwrapResponse(response);
 }
+
+/**
+ * Удаление задачи актуализации (каскадно удаляет все привязанные товары)
+ * @param {string} taskId - UUID задачи
+ */
+export async function deleteActualizationTaskRequest(taskId) {
+  const response = await pricingApi.delete(`/admin/catalog/actualizations/${taskId}`);
+  return unwrapResponse(response);
+}

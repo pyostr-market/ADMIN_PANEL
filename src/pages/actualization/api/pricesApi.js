@@ -13,6 +13,7 @@ function unwrapResponse(response) {
  * @param {string} params.category - Фильтр по категории
  * @param {string} params.supplier - Фильтр по поставщику
  * @param {string} params.region - Фильтр по региону
+ * @param {string} params.actualization_task_id - Фильтр по задаче актуализации
  */
 export async function getPricesRequest({
   page = 1,
@@ -20,12 +21,14 @@ export async function getPricesRequest({
   category,
   supplier,
   region,
+  actualization_task_id,
 } = {}) {
   const offset = (page - 1) * limit;
   const requestParams = { limit, offset };
   if (category) requestParams.category = category;
   if (supplier) requestParams.supplier = supplier;
   if (region) requestParams.region = region;
+  if (actualization_task_id) requestParams.actualization_task_id = actualization_task_id;
 
   const response = await pricingApi.get('/price/', { params: requestParams });
   const data = unwrapResponse(response);
