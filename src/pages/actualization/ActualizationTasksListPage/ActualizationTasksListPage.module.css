@@ -1,0 +1,102 @@
+.tasksPageTitle {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Sidebar фильтры справа */
+.filtersSidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.filterLabel {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.filterSelect {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.filterSelect:hover {
+  border-color: var(--border-color-hover);
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-color-alpha);
+}
+
+.resetFilterButton {
+  align-self: flex-start;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.resetFilterButton:hover {
+  color: var(--text-primary);
+  background: transparent;
+}
+
+/* Статус бейджи */
+.statusContainer {
+  margin-top: 0.375rem;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.statusBadgeInfo {
+  background: var(--info-bg);
+  color: var(--info);
+}
+
+.statusBadgeSuccess {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.statusBadgeWarning {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.statusBadgeDanger {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.statusBadgeSecondary {
+  background: var(--surface-muted);
+  color: var(--text-secondary);
+}

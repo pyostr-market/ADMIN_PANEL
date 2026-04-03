@@ -4,6 +4,7 @@ import { Tabs, Tab } from '../../../shared/ui/Tabs/Tabs';
 import styles from './ActualizationPage.module.css';
 
 const TABS = [
+  { id: 'actualization', label: 'Актуализация', path: '/actualization/actualization' },
   { id: 'prices', label: 'Прайсы', path: '/actualization/prices' },
   { id: 'colors', label: 'Цвета', path: '/actualization/colors' },
   { id: 'logs', label: 'Логи', path: '/actualization/logs' },
@@ -16,7 +17,10 @@ export function ActualizationPage() {
   const activeTab = useCallback(() => {
     const pathname = location.pathname;
     // Определяем активную вкладку по пути
-    if (pathname === '/actualization' || pathname === '/actualization/prices' || pathname.startsWith('/actualization/prices/')) {
+    if (pathname === '/actualization' || pathname === '/actualization/actualization' || pathname.startsWith('/actualization/actualization/')) {
+      return 'actualization';
+    }
+    if (pathname === '/actualization/prices' || pathname.startsWith('/actualization/prices/')) {
       return 'prices';
     }
     if (pathname === '/actualization/colors' || pathname.startsWith('/actualization/colors/')) {

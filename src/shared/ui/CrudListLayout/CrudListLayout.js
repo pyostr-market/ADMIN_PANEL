@@ -33,6 +33,7 @@ export function CrudListLayout({
   onSearchChange,
   searchLoading = false,
   searchPlaceholder = 'Поиск...',
+  searchDisabled = false,
 
   // Sidebar
   sidebar,
@@ -52,9 +53,12 @@ export function CrudListLayout({
     setIsSidebarOpen(false);
   }, []);
 
+  const hasSidebar = Boolean(sidebar);
+  const hasSearch = showSearch;
+
   return (
     <>
-      <section className={styles.crudListLayout}>
+      <section className={`${styles.crudListLayout} ${hasSidebar ? styles.crudListLayoutWithSidebar : ''} ${hasSearch ? styles.crudListLayoutWithSearch : ''}`}>
         {/* Header */}
         {header && (
           <header className={styles.crudListHeader}>
@@ -70,9 +74,10 @@ export function CrudListLayout({
               onChange={(e) => onSearchChange?.(e.target.value)}
               placeholder={searchPlaceholder}
               loading={searchLoading}
+              disabled={searchDisabled}
               className={styles.crudListSearchInput}
             />
-            {sidebar && (
+            {hasSidebar && (
               <button
                 type="button"
                 className={styles.crudListSearchFiltersBtn}
@@ -100,7 +105,7 @@ export function CrudListLayout({
         </div>
 
         {/* Sidebar (Desktop) */}
-        {sidebar && (
+        {hasSidebar && (
           <aside className={styles.crudListSidebar}>
             <div className={styles.crudListSidebarHeader}>
               <h3 className={styles.crudListSidebarTitle}>{sidebarTitle}</h3>
@@ -113,7 +118,7 @@ export function CrudListLayout({
       </section>
 
       {/* Sidebar Modal (Mobile) */}
-      {sidebar && (
+      {hasSidebar && (
         <Modal
           isOpen={isSidebarOpen}
           onClose={handleCloseSidebar}

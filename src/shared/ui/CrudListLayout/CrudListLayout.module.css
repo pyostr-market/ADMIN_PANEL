@@ -1,14 +1,20 @@
-/* Основной layout */
+/* Основной layout - по умолчанию одна колонка */
 .crudListLayout {
   display: grid;
-  grid-template-columns: 1fr 280px;
+  grid-template-columns: 1fr;
   gap: var(--space-4);
   align-items: start;
+}
+
+/* С sidebar - две колонки */
+.crudListLayoutWithSidebar {
+  grid-template-columns: 1fr 280px;
 }
 
 /* Header на всю ширину */
 .crudListHeader {
   grid-column: 1 / -1;
+  grid-row: 1 / 2;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -19,11 +25,33 @@
 /* Поиск на всю ширину */
 .crudListSearch {
   grid-column: 1 / -1;
-  margin-bottom: var(--space-3);
   display: flex;
   gap: var(--space-2);
   align-items: center;
   width: 100%;
+}
+
+/* Когда есть поиск — он во втором ряду */
+.crudListLayoutWithSearch .crudListSearch {
+  grid-row: 2 / 3;
+  margin-bottom: var(--space-3);
+}
+
+/* Когда нет поиска — контент во втором ряду */
+.crudListContent {
+  grid-column: 1 / 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.crudListLayoutWithSearch .crudListContent {
+  grid-row: 3 / 4;
+}
+
+.crudListLayout:not(.crudListLayoutWithSearch) .crudListContent {
+  grid-row: 2 / 3;
 }
 
 .crudListSearch input {
@@ -58,6 +86,7 @@
 /* Контейнер для списка и пагинации (левая колонка) */
 .crudListContent {
   grid-column: 1 / 2;
+  grid-row: 2 / 3;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -84,7 +113,6 @@
 /* Sidebar (правая колонка) */
 .crudListSidebar {
   grid-column: 2 / 3;
-  grid-row: 3 / 4;
   display: flex;
   flex-direction: column;
   background: var(--surface);
@@ -95,6 +123,14 @@
   height: fit-content;
   max-height: calc(100vh - var(--space-8));
   overflow: hidden;
+}
+
+.crudListLayoutWithSearch .crudListSidebar {
+  grid-row: 3 / 4;
+}
+
+.crudListLayout:not(.crudListLayoutWithSearch) .crudListSidebar {
+  grid-row: 2 / 3;
 }
 
 .crudListSidebarHeader {
