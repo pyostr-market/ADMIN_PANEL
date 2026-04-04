@@ -56,7 +56,7 @@ export function ProductFormPage() {
 
   const [images, setImages] = useState([]);
   const [attributes, setAttributes] = useState([]);
-  const [newAttribute, setNewAttribute] = useState({ name: '', value: '', is_filterable: false });
+  const [newAttribute, setNewAttribute] = useState({ name: '', value: '', is_filterable: false, is_groupable: false });
 
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -121,6 +121,7 @@ export function ProductFormPage() {
         name: attr.name,
         value: attr.value,
         is_filterable: attr.is_filterable,
+        is_groupable: attr.is_groupable,
       })) || []);
     } catch (error) {
       const message = getApiErrorMessage(error);
@@ -178,10 +179,11 @@ export function ProductFormPage() {
         name: newAttribute.name.trim(),
         value: newAttribute.value,
         is_filterable: newAttribute.is_filterable,
+        is_groupable: newAttribute.is_groupable,
         isNew: true,
       },
     ]);
-    setNewAttribute({ name: '', value: '', is_filterable: false });
+    setNewAttribute({ name: '', value: '', is_filterable: false, is_groupable: false });
   }, [newAttribute]);
 
   const handleRemoveAttribute = useCallback((index) => {
@@ -235,11 +237,12 @@ export function ProductFormPage() {
       // Атрибуты
       if (attributes.length > 0) {
         const attributesJson = JSON.stringify(
-          attributes.map(({ id, name, value, is_filterable }) => ({
+          attributes.map(({ id, name, value, is_filterable, is_groupable }) => ({
             id,
             name,
             value,
             is_filterable,
+            is_groupable,
           }))
         );
         formDataToSend.append('attributes_json', attributesJson);
@@ -333,6 +336,7 @@ export function ProductFormPage() {
                 name: attr.name,
                 value: attr.value,
                 is_filterable: attr.is_filterable,
+                is_groupable: attr.is_groupable,
               })));
             }
           }
@@ -585,6 +589,20 @@ export function ProductFormPage() {
                     Показывать в фильтрах
                   </span>
                 </div>
+                <div className={styles.attributesFormField}>
+                  <label className={styles.attributesFormLabel}>
+                    <input
+                      type="checkbox"
+                      checked={newAttribute.is_groupable}
+                      onChange={(e) => setNewAttribute((prev) => ({ ...prev, is_groupable: e.target.checked }))}
+                      className={styles.attributesFormCheckboxInput}
+                    />
+                    Группируемый
+                  </label>
+                  <span className={styles.attributesFormHint}>
+                    Доступен для группировки
+                  </span>
+                </div>
                 <div className={styles.attributesFormButtonWrapper}>
                   <Button
                     type="button"
@@ -608,6 +626,7 @@ export function ProductFormPage() {
                 <span className={`${styles.attributesListCol} ${styles.attributesListColName}`}>Название</span>
                 <span className={`${styles.attributesListCol} ${styles.attributesListColValue}`}>Значение</span>
                 <span className={`${styles.attributesListCol} ${styles.attributesListColFilter}`}>В фильтрах</span>
+                <span className={`${styles.attributesListCol} ${styles.attributesListColGroup}`}>Групп.</span>
                 <span className={`${styles.attributesListCol} ${styles.attributesListColActions}`}></span>
               </div>
               <div className={styles.attributesListBody}>
@@ -641,6 +660,19 @@ export function ProductFormPage() {
                         />
                         <span className={styles.attributesListCheckboxText}>
                           {attr.is_filterable ? 'Да' : 'Нет'}
+                        </span>
+                      </label>
+                    </div>
+                    <div className={styles.attributesListCell}>
+                      <label className={styles.attributesListCheckbox}>
+                        <input
+                          type="checkbox"
+                          checked={attr.is_groupable}
+                          onChange={(e) => handleAttributeChange(index, 'is_groupable', e.target.checked)}
+                          className={styles.attributesListCheckboxInput}
+                        />
+                        <span className={styles.attributesListCheckboxText}>
+                          {attr.is_groupable ? 'Да' : 'Нет'}
                         </span>
                       </label>
                     </div>

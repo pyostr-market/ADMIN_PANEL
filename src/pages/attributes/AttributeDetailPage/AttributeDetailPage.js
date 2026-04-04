@@ -183,6 +183,11 @@ export function AttributeDetailPage() {
               value: attribute.is_filterable ? 'Да' : 'Нет',
               iconVariant: 'success',
             },
+            {
+              label: 'Группируемый',
+              value: attribute.is_groupable ? 'Да' : 'Нет',
+              iconVariant: 'warning',
+            },
           ]}
           auditUrl={`/catalog/attributes/${attributeId}/audit`}
           onAuditClick={handleViewAudit}

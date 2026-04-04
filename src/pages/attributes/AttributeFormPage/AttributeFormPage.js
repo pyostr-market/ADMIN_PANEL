@@ -28,6 +28,7 @@ export function AttributeFormPage() {
     name: '',
     value: '',
     is_filterable: false,
+    is_groupable: false,
   });
 
   const [isLoading, setIsLoading] = useState(isEditMode);
@@ -42,6 +43,7 @@ export function AttributeFormPage() {
         name: data.name || '',
         value: data.value || '',
         is_filterable: data.is_filterable || false,
+        is_groupable: data.is_groupable || false,
       });
     } catch (error) {
       const message = getApiErrorMessage(error);
@@ -99,6 +101,7 @@ export function AttributeFormPage() {
         name: formData.name.trim(),
         value: formData.value.trim(),
         is_filterable: formData.is_filterable,
+        is_groupable: formData.is_groupable,
       };
 
       if (isEditMode) {
@@ -112,6 +115,9 @@ export function AttributeFormPage() {
             is_filterable: responseData.is_filterable !== undefined
               ? responseData.is_filterable
               : formData.is_filterable,
+            is_groupable: responseData.is_groupable !== undefined
+              ? responseData.is_groupable
+              : formData.is_groupable,
           });
         }
       } else {
@@ -203,6 +209,20 @@ export function AttributeFormPage() {
             </label>
             <span className={styles.attributeFormHint}>
               Атрибуты с этой опцией будут доступны в фильтрах каталога
+            </span>
+          </div>
+
+          <div className={`${styles.attributeFormField} ${styles.attributeFormFieldFull}`}>
+            <label className={styles.attributeFormCheckboxLabel}>
+              <input
+                type="checkbox"
+                checked={formData.is_groupable}
+                onChange={() => handleCheckboxChange('is_groupable')}
+              />
+              <span>Группировать</span>
+            </label>
+            <span className={styles.attributeFormHint}>
+              Атрибуты с этой опцией будут доступны для группировки в каталоге
             </span>
           </div>
         </FormGrid>

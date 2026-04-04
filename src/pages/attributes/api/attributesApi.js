@@ -50,6 +50,7 @@ export async function getAttributeByIdRequest(attributeId) {
  * @param {string} payload.name - Название (обяз.)
  * @param {string} payload.value - Значение (обяз.)
  * @param {boolean} payload.is_filterable - Возможность фильтрации
+ * @param {boolean} payload.is_groupable - Возможность группировки
  */
 export async function createAttributeRequest(payload) {
   const response = await productApi.post(API_ENDPOINTS.attributes, payload);
@@ -63,6 +64,7 @@ export async function createAttributeRequest(payload) {
  * @param {string | null} payload.name - Название
  * @param {string | null} payload.value - Значение
  * @param {boolean | null} payload.is_filterable - Возможность фильтрации
+ * @param {boolean | null} payload.is_groupable - Возможность группировки
  */
 export async function updateAttributeRequest(attributeId, payload) {
   const response = await productApi.put(`${API_ENDPOINTS.attributes}/${attributeId}`, payload);
