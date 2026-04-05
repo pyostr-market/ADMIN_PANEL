@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { FiImage, FiUpload, FiTrash2, FiLoader, FiBox } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { FormPage } from '../../../shared/ui/FormPage';
@@ -20,6 +20,7 @@ const UPLOAD_TIMEOUT = 10000;
 
 export function ManufacturerFormPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const notifications = useNotifications();
   const notificationsRef = useRef(notifications);
   const { manufacturerId } = useParams();
@@ -43,6 +44,15 @@ export function ManufacturerFormPage() {
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+
+  /**
+   * Вспомогательная функция для навигации с сохранением URL-параметров
+   */
+  const navigateWithParams = useCallback((path) => {
+    const paramsString = searchParams.toString();
+    const fullPath = paramsString ? `${path}?${paramsString}` : path;
+    navigate(fullPath);
+  }, [navigate, searchParams]);
 
   const loadManufacturer = useCallback(async () => {
     setIsLoading(true);
@@ -254,13 +264,13 @@ export function ManufacturerFormPage() {
         if (stayOnPage) {
           const newManufacturerId = responseData?.id;
           if (newManufacturerId) {
-            navigate(`/catalog/manufacturers/${newManufacturerId}`);
+            navigateWithParams(`/catalog/manufacturers/${newManufacturerId}`);
           }
         }
       }
 
       if (!stayOnPage) {
-        navigate('/catalog/manufacturers');
+        navigateWithParams('/catalog/manufacturers');
       }
     } catch (error) {
       const message = getApiErrorMessage(error);
@@ -271,7 +281,8 @@ export function ManufacturerFormPage() {
   };
 
   const handleBack = () => {
-    navigate(isEditMode ? `/catalog/manufacturers/${manufacturerId}` : '/catalog/manufacturers');
+    const backUrl = isEditMode ? `/catalog/manufacturers/${manufacturerId}` : '/catalog/manufacturers';
+    navigateWithParams(backUrl);
   };
 
   return (

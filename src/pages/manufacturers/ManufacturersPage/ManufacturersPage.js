@@ -41,6 +41,7 @@ export function ManufacturersPage() {
         setManufacturerToDelete(null);
       }
     },
+    syncWithUrl: true,
   });
 
   const handleDeleteManufacturer = async () => {

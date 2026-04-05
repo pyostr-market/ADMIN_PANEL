@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { FormPage } from '../../../shared/ui/FormPage';
 import { FormSection } from '../../../shared/ui/FormSection/FormSection';
 import { FormGrid } from '../../../shared/ui/FormGrid/FormGrid';
@@ -14,6 +14,7 @@ import styles from './AttributeFormPage.module.css';
 
 export function AttributeFormPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const notifications = useNotifications();
   const notificationsRef = useRef(notifications);
   const { attributeId } = useParams();
@@ -34,6 +35,12 @@ export function AttributeFormPage() {
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+
+  const navigateWithParams = useCallback((path) => {
+    const paramsString = searchParams.toString();
+    const fullPath = paramsString ? `${path}?${paramsString}` : path;
+    navigate(fullPath);
+  }, [navigate, searchParams]);
 
   const loadAttribute = useCallback(async () => {
     setIsLoading(true);
@@ -127,13 +134,13 @@ export function AttributeFormPage() {
         if (stayOnPage) {
           const newAttributeId = responseData?.id;
           if (newAttributeId) {
-            navigate(`/catalog/attributes/${newAttributeId}`);
+            navigateWithParams(`/catalog/attributes/${newAttributeId}`);
           }
         }
       }
 
       if (!stayOnPage) {
-        navigate('/catalog/attributes');
+        navigateWithParams('/catalog/attributes');
       }
     } catch (error) {
       const message = getApiErrorMessage(error);
@@ -144,7 +151,8 @@ export function AttributeFormPage() {
   };
 
   const handleBack = () => {
-    navigate(isEditMode ? `/catalog/attributes/${attributeId}` : '/catalog/attributes');
+    const backUrl = isEditMode ? `/catalog/attributes/${attributeId}` : '/catalog/attributes';
+    navigateWithParams(backUrl);
   };
 
   return (

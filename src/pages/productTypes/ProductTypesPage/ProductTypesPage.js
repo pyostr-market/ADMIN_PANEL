@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FiPlus, FiTrash2, FiEye, FiEdit2, FiBox } from 'react-icons/fi';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
 import { Button } from '../../../shared/ui/Button/Button';
@@ -40,6 +40,7 @@ function DeleteProductTypeModal({ productType, onClose, onSubmit, isSubmitting }
 
 export function ProductTypesPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [productTypeToDelete, setProductTypeToDelete] = useState(null);
 
   const productTypesCrud = useCrudList({
@@ -59,9 +60,15 @@ export function ProductTypesPage() {
     if (result) setProductTypeToDelete(null);
   };
 
-  const handleViewProductType = (productType) => navigate(`/catalog/device_type/${productType.id}`);
-  const handleEditProductType = (productType) => navigate(`/catalog/device_type/${productType.id}/edit`);
-  const handleCreateProductType = () => navigate('/catalog/device_type/create');
+  const navigateWithParams = (path) => {
+    const paramsString = searchParams.toString();
+    const fullPath = paramsString ? `${path}?${paramsString}` : path;
+    navigate(fullPath);
+  };
+
+  const handleViewProductType = (productType) => navigateWithParams(`/catalog/device_type/${productType.id}`);
+  const handleEditProductType = (productType) => navigateWithParams(`/catalog/device_type/${productType.id}/edit`);
+  const handleCreateProductType = () => navigateWithParams('/catalog/device_type/create');
 
   return (
     <>

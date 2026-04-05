@@ -44,6 +44,7 @@ export function CategoriesPage() {
         setCategoryToDelete(null);
       }
     },
+    syncWithUrl: true,
   });
 
   const handleDeleteCategory = async () => {

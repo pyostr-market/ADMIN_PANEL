@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FiPlus, FiTrash2, FiEye, FiEdit2, FiTag } from 'react-icons/fi';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
 import { Button } from '../../../shared/ui/Button/Button';
@@ -31,6 +31,7 @@ function DeleteAttributeModal({ attribute, onClose, onSubmit, isSubmitting }) {
 
 export function AttributesPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [attributeToDelete, setAttributeToDelete] = useState(null);
   const attributesCrud = useCrudList({
     fetchFn: async ({ page = 1, limit = PAGE_LIMIT, search } = {}) => {
@@ -49,9 +50,15 @@ export function AttributesPage() {
     if (result) setAttributeToDelete(null);
   };
 
-  const handleViewAttribute = (attribute) => navigate(`/catalog/attributes/${attribute.id}`);
-  const handleEditAttribute = (attribute) => navigate(`/catalog/attributes/${attribute.id}/edit`);
-  const handleCreateAttribute = () => navigate('/catalog/attributes/create');
+  const navigateWithParams = (path) => {
+    const paramsString = searchParams.toString();
+    const fullPath = paramsString ? `${path}?${paramsString}` : path;
+    navigate(fullPath);
+  };
+
+  const handleViewAttribute = (attribute) => navigateWithParams(`/catalog/attributes/${attribute.id}`);
+  const handleEditAttribute = (attribute) => navigateWithParams(`/catalog/attributes/${attribute.id}/edit`);
+  const handleCreateAttribute = () => navigateWithParams('/catalog/attributes/create');
 
   return (
     <>

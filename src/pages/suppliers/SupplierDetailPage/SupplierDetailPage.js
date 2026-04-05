@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { FiEdit2, FiTrash2, FiMail, FiPhone, FiBox, FiClock, FiArrowLeft } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { Modal } from '../../../shared/ui/Modal/Modal';
@@ -49,6 +49,7 @@ function DeleteSupplierModal({ supplier, onClose, onSubmit, isSubmitting }) {
 export function SupplierDetailPage() {
   const { supplierId } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const notifications = useNotifications();
   const notificationsRef = useRef(notifications);
 
@@ -60,6 +61,15 @@ export function SupplierDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  /**
+   * Вспомогательная функция для навигации с сохранением URL-параметров
+   */
+  const navigateWithParams = useCallback((path) => {
+    const paramsString = searchParams.toString();
+    const fullPath = paramsString ? `${path}?${paramsString}` : path;
+    navigate(fullPath);
+  }, [navigate, searchParams]);
 
   const loadSupplier = useCallback(async () => {
     setIsLoading(true);
@@ -80,15 +90,15 @@ export function SupplierDetailPage() {
   }, [supplierId]);
 
   const handleEditSupplier = () => {
-    navigate(`/catalog/suppliers/${supplierId}/edit`);
+    navigateWithParams(`/catalog/suppliers/${supplierId}/edit`);
   };
 
   const handleViewAudit = () => {
-    navigate(`/catalog/suppliers/${supplierId}/audit`);
+    navigateWithParams(`/catalog/suppliers/${supplierId}/audit`);
   };
 
   const handleBack = () => {
-    navigate('/catalog/suppliers');
+    navigateWithParams('/catalog/suppliers');
   };
 
   const handleDeleteSupplier = async () => {
@@ -96,7 +106,7 @@ export function SupplierDetailPage() {
     try {
       await deleteSupplierRequest(supplierId);
       notificationsRef.current?.info('Поставщик удален');
-      navigate('/catalog/suppliers');
+      navigateWithParams('/catalog/suppliers');
     } catch (error) {
       const message = getApiErrorMessage(error);
       notificationsRef.current?.error(message);

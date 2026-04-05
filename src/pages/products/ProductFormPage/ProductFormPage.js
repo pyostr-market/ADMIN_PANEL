@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { FiImage, FiTag, FiFileText, FiTrash2, FiPlus, FiLink } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { FormPage } from '../../../shared/ui/FormPage';
@@ -31,6 +31,7 @@ const TABS = {
 
 export function ProductFormPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const notifications = useNotifications();
   const notificationsRef = useRef(notifications);
   const { productId } = useParams();
@@ -61,6 +62,15 @@ export function ProductFormPage() {
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+
+  /**
+   * Вспомогательная функция для навигации с сохранением URL-параметров
+   */
+  const navigateWithParams = useCallback((path) => {
+    const paramsString = searchParams.toString();
+    const fullPath = paramsString ? `${path}?${paramsString}` : path;
+    navigate(fullPath);
+  }, [navigate, searchParams]);
 
   const loadProduct = useCallback(async () => {
     if (!productId) return;
@@ -351,13 +361,13 @@ export function ProductFormPage() {
           // После создания перенаправляем на страницу редактирования с новым ID
           const newProductId = responseData?.id || responseData?.product_id;
           if (newProductId) {
-            navigate(`/catalog/products/${newProductId}`);
+            navigateWithParams(`/catalog/products/${newProductId}`);
           }
         }
       }
 
       if (!stayOnPage) {
-        navigate('/catalog/products');
+        navigateWithParams('/catalog/products');
       }
     } catch (error) {
       const message = getApiErrorMessage(error);
@@ -388,7 +398,8 @@ export function ProductFormPage() {
   }, []);
 
   const handleBack = () => {
-    navigate(isEditMode ? `/catalog/products/${productId}` : '/catalog/products');
+    const backUrl = isEditMode ? `/catalog/products/${productId}` : '/catalog/products';
+    navigateWithParams(backUrl);
   };
 
   return (

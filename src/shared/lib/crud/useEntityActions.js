@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useCallback } from 'react';
 
 /**
@@ -8,6 +8,7 @@ import { useCallback } from 'react';
  * @param {string} options.listUrl - URL списка (по умолчанию baseUrl)
  * @param {Function} options.onDelete - Функция удаления (опционально)
  * @param {Function} options.onSuccess - Callback после успешного действия
+ * @param {boolean} options.syncWithUrl - Сохранять URL-параметры при навигации (по умолчанию false)
  * @returns {Object} Методы для управления сущностью
  */
 export function useEntityActions({
@@ -15,8 +16,19 @@ export function useEntityActions({
   listUrl = baseUrl,
   onDelete,
   onSuccess,
+  syncWithUrl = false,
 } = {}) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  /**
+   * Вспомогательная функция для получения URL с сохранением searchParams
+   */
+  const getUrlWithParams = useCallback((path) => {
+    if (!syncWithUrl || !searchParams) return path;
+    const paramsString = searchParams.toString();
+    return paramsString ? `${path}?${paramsString}` : path;
+  }, [syncWithUrl, searchParams]);
 
   /**
    * Переход к странице просмотра сущности
@@ -25,8 +37,8 @@ export function useEntityActions({
    */
   const view = useCallback((id, customPath) => {
     const path = customPath || `${baseUrl}/${id}`;
-    navigate(path);
-  }, [baseUrl, navigate]);
+    navigate(getUrlWithParams(path));
+  }, [baseUrl, navigate, getUrlWithParams]);
 
   const viewHandler = useCallback((e, id, customPath) => {
     if (e && typeof e.preventDefault === 'function') {
@@ -34,8 +46,8 @@ export function useEntityActions({
       e.stopPropagation();
     }
     const path = customPath || `${baseUrl}/${id}`;
-    navigate(path);
-  }, [baseUrl, navigate]);
+    navigate(getUrlWithParams(path));
+  }, [baseUrl, navigate, getUrlWithParams]);
 
   /**
    * Переход к странице редактирования сущности
@@ -44,8 +56,8 @@ export function useEntityActions({
    */
   const edit = useCallback((id, customPath) => {
     const path = customPath || `${baseUrl}/${id}/edit`;
-    navigate(path);
-  }, [baseUrl, navigate]);
+    navigate(getUrlWithParams(path));
+  }, [baseUrl, navigate, getUrlWithParams]);
 
   const editHandler = useCallback((e, id, customPath) => {
     if (e && typeof e.preventDefault === 'function') {
@@ -53,8 +65,8 @@ export function useEntityActions({
       e.stopPropagation();
     }
     const path = customPath || `${baseUrl}/${id}/edit`;
-    navigate(path);
-  }, [baseUrl, navigate]);
+    navigate(getUrlWithParams(path));
+  }, [baseUrl, navigate, getUrlWithParams]);
 
   /**
    * Переход к странице создания сущности
@@ -62,8 +74,8 @@ export function useEntityActions({
    */
   const create = useCallback((customPath) => {
     const path = customPath || `${baseUrl}/create`;
-    navigate(path);
-  }, [baseUrl, navigate]);
+    navigate(getUrlWithParams(path));
+  }, [baseUrl, navigate, getUrlWithParams]);
 
   const createHandler = useCallback((e, customPath) => {
     if (e && typeof e.preventDefault === 'function') {
@@ -71,8 +83,8 @@ export function useEntityActions({
       e.stopPropagation();
     }
     const path = customPath || `${baseUrl}/create`;
-    navigate(path);
-  }, [baseUrl, navigate]);
+    navigate(getUrlWithParams(path));
+  }, [baseUrl, navigate, getUrlWithParams]);
 
   /**
    * Переход к странице аудита сущности
@@ -81,8 +93,8 @@ export function useEntityActions({
    */
   const audit = useCallback((id, customPath) => {
     const path = customPath || `${baseUrl}/${id}/audit`;
-    navigate(path);
-  }, [baseUrl, navigate]);
+    navigate(getUrlWithParams(path));
+  }, [baseUrl, navigate, getUrlWithParams]);
 
   const auditHandler = useCallback((e, id, customPath) => {
     if (e && typeof e.preventDefault === 'function') {
@@ -90,23 +102,23 @@ export function useEntityActions({
       e.stopPropagation();
     }
     const path = customPath || `${baseUrl}/${id}/audit`;
-    navigate(path);
-  }, [baseUrl, navigate]);
+    navigate(getUrlWithParams(path));
+  }, [baseUrl, navigate, getUrlWithParams]);
 
   /**
    * Переход к списку сущностей
    */
   const backToList = useCallback(() => {
-    navigate(listUrl);
-  }, [listUrl, navigate]);
+    navigate(getUrlWithParams(listUrl));
+  }, [listUrl, navigate, getUrlWithParams]);
 
   const backToListHandler = useCallback((e) => {
     if (e && typeof e.preventDefault === 'function') {
       e.preventDefault();
       e.stopPropagation();
     }
-    navigate(listUrl);
-  }, [listUrl, navigate]);
+    navigate(getUrlWithParams(listUrl));
+  }, [listUrl, navigate, getUrlWithParams]);
 
   /**
    * Удаление сущности

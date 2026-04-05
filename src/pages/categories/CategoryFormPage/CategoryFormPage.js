@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { FiImage, FiUpload, FiTrash2, FiLoader } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { FormPage } from '../../../shared/ui/FormPage';
@@ -24,6 +24,7 @@ const UPLOAD_TIMEOUT = 10000;
 
 export function CategoryFormPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const notifications = useNotifications();
   const notificationsRef = useRef(notifications);
   const { categoryId } = useParams();
@@ -55,6 +56,15 @@ export function CategoryFormPage() {
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+
+  /**
+   * Вспомогательная функция для навигации с сохранением URL-параметров
+   */
+  const navigateWithParams = useCallback((path) => {
+    const paramsString = searchParams.toString();
+    const fullPath = paramsString ? `${path}?${paramsString}` : path;
+    navigate(fullPath);
+  }, [navigate, searchParams]);
 
   const loadCategory = useCallback(async () => {
     setIsLoading(true);
@@ -310,13 +320,13 @@ export function CategoryFormPage() {
           // После создания перенаправляем на страницу редактирования с новым ID
           const newCategoryId = responseData?.id;
           if (newCategoryId) {
-            navigate(`/catalog/categories/${newCategoryId}`);
+            navigateWithParams(`/catalog/categories/${newCategoryId}`);
           }
         }
       }
 
       if (!stayOnPage) {
-        navigate('/catalog/categories');
+        navigateWithParams('/catalog/categories');
       }
     } catch (error) {
       const message = getApiErrorMessage(error);
@@ -327,7 +337,8 @@ export function CategoryFormPage() {
   };
 
   const handleBack = () => {
-    navigate(isEditMode ? `/catalog/categories/${categoryId}` : '/catalog/categories');
+    const backUrl = isEditMode ? `/catalog/categories/${categoryId}` : '/catalog/categories';
+    navigateWithParams(backUrl);
   };
 
   return (

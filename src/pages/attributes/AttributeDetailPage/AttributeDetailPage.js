@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { FiEdit2, FiTrash2, FiTag, FiClock, FiArrowLeft } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { Modal } from '../../../shared/ui/Modal/Modal';
@@ -49,6 +49,7 @@ function DeleteAttributeModal({ attribute, onClose, onSubmit, isSubmitting }) {
 export function AttributeDetailPage() {
   const { attributeId } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const notifications = useNotifications();
   const notificationsRef = useRef(notifications);
 
@@ -60,6 +61,12 @@ export function AttributeDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const navigateWithParams = useCallback((path) => {
+    const paramsString = searchParams.toString();
+    const fullPath = paramsString ? `${path}?${paramsString}` : path;
+    navigate(fullPath);
+  }, [navigate, searchParams]);
 
   const loadAttribute = useCallback(async () => {
     setIsLoading(true);
@@ -80,15 +87,15 @@ export function AttributeDetailPage() {
   }, [attributeId]);
 
   const handleEditAttribute = () => {
-    navigate(`/catalog/attributes/${attributeId}/edit`);
+    navigateWithParams(`/catalog/attributes/${attributeId}/edit`);
   };
 
   const handleViewAudit = () => {
-    navigate(`/catalog/attributes/${attributeId}/audit`);
+    navigateWithParams(`/catalog/attributes/${attributeId}/audit`);
   };
 
   const handleBack = () => {
-    navigate('/catalog/attributes');
+    navigateWithParams('/catalog/attributes');
   };
 
   const handleDeleteAttribute = async () => {
@@ -96,7 +103,7 @@ export function AttributeDetailPage() {
     try {
       await deleteAttributeRequest(attributeId);
       notificationsRef.current?.info('Атрибут удален');
-      navigate('/catalog/attributes');
+      navigateWithParams('/catalog/attributes');
     } catch (error) {
       const message = getApiErrorMessage(error);
       notificationsRef.current?.error(message);

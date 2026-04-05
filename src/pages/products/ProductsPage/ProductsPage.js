@@ -47,6 +47,7 @@ export function ProductsPage() {
         setProductToDelete(null);
       }
     },
+    syncWithUrl: true,
   });
 
   // Ref для хранения актуального setFilters и setPage

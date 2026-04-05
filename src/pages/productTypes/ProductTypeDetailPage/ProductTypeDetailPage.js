@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { FiEdit2, FiTrash2, FiBox, FiClock, FiArrowLeft } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { Modal } from '../../../shared/ui/Modal/Modal';
@@ -49,6 +49,7 @@ function DeleteProductTypeModal({ productType, onClose, onSubmit, isSubmitting }
 export function ProductTypeDetailPage() {
   const { productTypeId } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const notifications = useNotifications();
   const notificationsRef = useRef(notifications);
   const [productType, setProductType] = useState(null);
@@ -58,6 +59,12 @@ export function ProductTypeDetailPage() {
   useEffect(() => {
     notificationsRef.current = notifications;
   }, [notifications]);
+
+  const navigateWithParams = useCallback((path) => {
+    const paramsString = searchParams.toString();
+    const fullPath = paramsString ? `${path}?${paramsString}` : path;
+    navigate(fullPath);
+  }, [navigate, searchParams]);
 
   const loadProductType = useCallback(async () => {
     setIsLoading(true);
@@ -77,22 +84,22 @@ export function ProductTypeDetailPage() {
   }, [loadProductType]);
 
   const handleEditProductType = () => {
-    navigate(`/catalog/device_type/${productTypeId}/edit`);
+    navigateWithParams(`/catalog/device_type/${productTypeId}/edit`);
   };
 
   const handleViewAudit = () => {
-    navigate(`/catalog/device_type/${productTypeId}/audit`);
+    navigateWithParams(`/catalog/device_type/${productTypeId}/audit`);
   };
 
   const handleBack = () => {
-    navigate('/catalog/device_type');
+    navigateWithParams('/catalog/device_type');
   };
 
   const handleDeleteProductType = async () => {
     try {
       await deleteProductTypeRequest(productTypeId);
       notificationsRef.current?.info('Тип продукта удален');
-      navigate('/catalog/device_type');
+      navigateWithParams('/catalog/device_type');
     } catch (error) {
       const message = getApiErrorMessage(error);
       notificationsRef.current?.error(message);

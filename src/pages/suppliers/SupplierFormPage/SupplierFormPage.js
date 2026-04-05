@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { FormPage } from '../../../shared/ui/FormPage';
 import { FormSection } from '../../../shared/ui/FormSection/FormSection';
 import { FormGrid } from '../../../shared/ui/FormGrid/FormGrid';
@@ -14,6 +14,7 @@ import styles from './SupplierFormPage.module.css';
 
 export function SupplierFormPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const notifications = useNotifications();
   const notificationsRef = useRef(notifications);
   const { supplierId } = useParams();
@@ -33,6 +34,15 @@ export function SupplierFormPage() {
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+
+  /**
+   * Вспомогательная функция для навигации с сохранением URL-параметров
+   */
+  const navigateWithParams = useCallback((path) => {
+    const paramsString = searchParams.toString();
+    const fullPath = paramsString ? `${path}?${paramsString}` : path;
+    navigate(fullPath);
+  }, [navigate, searchParams]);
 
   const loadSupplier = useCallback(async () => {
     setIsLoading(true);
@@ -116,13 +126,13 @@ export function SupplierFormPage() {
         if (stayOnPage) {
           const newSupplierId = responseData?.id;
           if (newSupplierId) {
-            navigate(`/catalog/suppliers/${newSupplierId}`);
+            navigateWithParams(`/catalog/suppliers/${newSupplierId}`);
           }
         }
       }
 
       if (!stayOnPage) {
-        navigate('/catalog/suppliers');
+        navigateWithParams('/catalog/suppliers');
       }
     } catch (error) {
       const message = getApiErrorMessage(error);
@@ -133,7 +143,8 @@ export function SupplierFormPage() {
   };
 
   const handleBack = () => {
-    navigate(isEditMode ? `/catalog/suppliers/${supplierId}` : '/catalog/suppliers');
+    const backUrl = isEditMode ? `/catalog/suppliers/${supplierId}` : '/catalog/suppliers';
+    navigateWithParams(backUrl);
   };
 
   return (

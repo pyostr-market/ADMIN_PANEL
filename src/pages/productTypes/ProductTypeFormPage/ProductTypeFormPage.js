@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { FiImage, FiUpload, FiTrash2, FiLoader } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { FormPage } from '../../../shared/ui/FormPage';
@@ -21,6 +21,7 @@ const UPLOAD_TIMEOUT = 10000;
 
 export function ProductTypeFormPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const notifications = useNotifications();
   const notificationsRef = useRef(notifications);
   const { productTypeId } = useParams();
@@ -47,6 +48,12 @@ export function ProductTypeFormPage() {
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+
+  const navigateWithParams = useCallback((path) => {
+    const paramsString = searchParams.toString();
+    const fullPath = paramsString ? `${path}?${paramsString}` : path;
+    navigate(fullPath);
+  }, [navigate, searchParams]);
 
   const loadProductType = useCallback(async () => {
     setIsLoading(true);
@@ -263,13 +270,13 @@ export function ProductTypeFormPage() {
         if (stayOnPage) {
           const newProductTypeId = responseData?.id;
           if (newProductTypeId) {
-            navigate(`/catalog/device_type/${newProductTypeId}`);
+            navigateWithParams(`/catalog/device_type/${newProductTypeId}`);
           }
         }
       }
 
       if (!stayOnPage) {
-        navigate('/catalog/device_type');
+        navigateWithParams('/catalog/device_type');
       }
     } catch (error) {
       const message = getApiErrorMessage(error);
@@ -280,7 +287,8 @@ export function ProductTypeFormPage() {
   };
 
   const handleBack = () => {
-    navigate(isEditMode ? `/catalog/device_type/${productTypeId}` : '/catalog/device_type');
+    const backUrl = isEditMode ? `/catalog/device_type/${productTypeId}` : '/catalog/device_type';
+    navigateWithParams(backUrl);
   };
 
   return (

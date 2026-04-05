@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { FiEdit, FiArrowLeft, FiTag, FiImage } from 'react-icons/fi';
 import { PermissionGate } from '../../../shared/ui/PermissionGate/PermissionGate';
 import { Button } from '../../../shared/ui/Button/Button';
@@ -11,9 +11,19 @@ import styles from './CategoryDetailPage.module.css';
 export function CategoryDetailPage() {
   const { categoryId } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const [category, setCategory] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  /**
+   * Вспомогательная функция для навигации с сохранением URL-параметров
+   */
+  const navigateWithParams = useCallback((path) => {
+    const paramsString = searchParams.toString();
+    const fullPath = paramsString ? `${path}?${paramsString}` : path;
+    navigate(fullPath);
+  }, [navigate, searchParams]);
 
   const loadCategory = useCallback(async () => {
     setIsLoading(true);
@@ -34,15 +44,15 @@ export function CategoryDetailPage() {
   }, [categoryId]);
 
   const handleEdit = () => {
-    navigate(`/catalog/categories/${categoryId}/edit`);
+    navigateWithParams(`/catalog/categories/${categoryId}/edit`);
   };
 
   const handleViewAudit = () => {
-    navigate(`/catalog/categories/${categoryId}/audit`);
+    navigateWithParams(`/catalog/categories/${categoryId}/audit`);
   };
 
   const handleBack = () => {
-    navigate('/catalog/categories');
+    navigateWithParams('/catalog/categories');
   };
 
   if (isLoading) {

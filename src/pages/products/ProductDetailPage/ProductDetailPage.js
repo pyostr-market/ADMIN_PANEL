@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { FiEdit2, FiTrash2, FiBox, FiDollarSign, FiTag, FiPackage, FiFileText, FiImage, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { Modal } from '../../../shared/ui/Modal/Modal';
@@ -125,6 +125,7 @@ function ImageGallery({ images }) {
 export function ProductDetailPage() {
   const { productId } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const notifications = useNotifications();
   const notificationsRef = useRef(notifications);
 
@@ -136,6 +137,15 @@ export function ProductDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  /**
+   * Вспомогательная функция для навигации с сохранением URL-параметров
+   */
+  const navigateWithParams = useCallback((path) => {
+    const paramsString = searchParams.toString();
+    const fullPath = paramsString ? `${path}?${paramsString}` : path;
+    navigate(fullPath);
+  }, [navigate, searchParams]);
 
   const loadProduct = useCallback(async () => {
     setIsLoading(true);
@@ -156,15 +166,15 @@ export function ProductDetailPage() {
   }, [productId]);
 
   const handleEditProduct = () => {
-    navigate(`/catalog/products/${productId}/edit`);
+    navigateWithParams(`/catalog/products/${productId}/edit`);
   };
 
   const handleViewAudit = () => {
-    navigate(`/catalog/products/${productId}/audit`);
+    navigateWithParams(`/catalog/products/${productId}/audit`);
   };
 
   const handleBack = () => {
-    navigate('/catalog/products');
+    navigateWithParams('/catalog/products');
   };
 
   const handleDeleteProduct = async () => {
@@ -172,7 +182,7 @@ export function ProductDetailPage() {
     try {
       await deleteProductRequest(productId);
       notificationsRef.current?.info('Товар удален');
-      navigate('/catalog/products');
+      navigateWithParams('/catalog/products');
     } catch (error) {
       const message = getApiErrorMessage(error);
       notificationsRef.current?.error(message);

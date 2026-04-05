@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { FiEdit2, FiTrash2, FiBox, FiClock, FiArrowLeft, FiImage } from 'react-icons/fi';
 import { Button } from '../../../shared/ui/Button/Button';
 import { Modal } from '../../../shared/ui/Modal/Modal';
@@ -49,6 +49,7 @@ function DeleteManufacturerModal({ manufacturer, onClose, onSubmit, isSubmitting
 export function ManufacturerDetailPage() {
   const { manufacturerId } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const notifications = useNotifications();
   const notificationsRef = useRef(notifications);
 
@@ -60,6 +61,15 @@ export function ManufacturerDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  /**
+   * Вспомогательная функция для навигации с сохранением URL-параметров
+   */
+  const navigateWithParams = useCallback((path) => {
+    const paramsString = searchParams.toString();
+    const fullPath = paramsString ? `${path}?${paramsString}` : path;
+    navigate(fullPath);
+  }, [navigate, searchParams]);
 
   const loadManufacturer = useCallback(async () => {
     setIsLoading(true);
@@ -80,15 +90,15 @@ export function ManufacturerDetailPage() {
   }, [manufacturerId]);
 
   const handleEditManufacturer = () => {
-    navigate(`/catalog/manufacturers/${manufacturerId}/edit`);
+    navigateWithParams(`/catalog/manufacturers/${manufacturerId}/edit`);
   };
 
   const handleViewAudit = () => {
-    navigate(`/catalog/manufacturers/${manufacturerId}/audit`);
+    navigateWithParams(`/catalog/manufacturers/${manufacturerId}/audit`);
   };
 
   const handleBack = () => {
-    navigate('/catalog/manufacturers');
+    navigateWithParams('/catalog/manufacturers');
   };
 
   const handleDeleteManufacturer = async () => {
@@ -96,7 +106,7 @@ export function ManufacturerDetailPage() {
     try {
       await deleteManufacturerRequest(manufacturerId);
       notificationsRef.current?.info('Производитель удален');
-      navigate('/catalog/manufacturers');
+      navigateWithParams('/catalog/manufacturers');
     } catch (error) {
       const message = getApiErrorMessage(error);
       notificationsRef.current?.error(message);
