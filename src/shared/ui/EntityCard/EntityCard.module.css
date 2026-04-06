@@ -70,6 +70,14 @@
   color: white;
   background: var(--gradient-avatar);
   transition: transform 0.2s;
+  overflow: hidden;
+  position: relative;
+}
+
+.entityCardAvatar svg {
+  width: 20px;
+  height: 20px;
+  display: block;
 }
 
 .entityCardContentClickable:hover .entityCardAvatar {
@@ -83,7 +91,8 @@
 .entityCardImage {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
+  display: block;
   border-radius: 50%;
 }
 
@@ -282,8 +291,8 @@
   }
 
   .entityCardImage {
-    width: 50px;
-    height: 50px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     border-radius: 50%;
   }
