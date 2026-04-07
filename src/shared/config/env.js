@@ -38,4 +38,6 @@ export const API_ENDPOINTS = {
   products: '/product',
   productTypes: '/product/type',
   attributes: '/product/attribute',
+  productTags: '/product/tags',
+  productTagsRelations: '/product/tags/product-tags',
 };

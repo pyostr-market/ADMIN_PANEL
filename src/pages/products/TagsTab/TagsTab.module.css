@@ -1,0 +1,205 @@
+.tagsTab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6, 24px);
+}
+
+/* Секции */
+.tagsSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4, 16px);
+}
+
+.tagsSectionTitle {
+  font-size: var(--space-4, 16px);
+  font-weight: 600;
+  color: var(--text, #333);
+  margin: 0;
+}
+
+/* Разделитель */
+.tagsDivider {
+  height: 1px;
+  background: var(--border, #e0e0e0);
+}
+
+/* Загрузка */
+.tagsLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8, 32px) var(--space-6, 24px);
+  color: var(--text-secondary, #666);
+  gap: var(--space-3, 12px);
+}
+
+/* Пустое состояние */
+.tagsEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8, 32px) var(--space-6, 24px);
+  color: var(--text-secondary, #666);
+  gap: var(--space-3, 12px);
+}
+
+.tagsEmpty svg {
+  opacity: 0.4;
+}
+
+.tagsEmpty p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tagsEmptyHint {
+  font-size: 13px;
+  color: var(--text-muted, #999);
+}
+
+/* Список назначенных тегов */
+.assignedTagsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3, 12px);
+}
+
+.assignedTagItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 8px);
+  padding: var(--space-2, 8px) var(--space-3, 12px);
+  background: var(--bg-secondary, var(--surface-subtle, #f8f9fa));
+  border: 1px solid var(--border, #e0e0e0);
+  border-radius: var(--radius-lg, 8px);
+  transition: all 0.2s;
+}
+
+.assignedTagItem:hover {
+  background: var(--surface-muted, var(--surface-subtle, #f0f0f0));
+}
+
+.assignedTagName {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text, #333);
+}
+
+.assignedTagIcon {
+  color: var(--accent-blue, #1976d2);
+  flex-shrink: 0;
+}
+
+.assignedTagDelete {
+  color: var(--danger, #dc3545);
+  padding: 4px;
+}
+
+.assignedTagDelete:hover {
+  background: var(--danger-bg, #fee2e2);
+  color: var(--danger, #dc3545);
+}
+
+/* Сетка доступных тегов */
+.tagsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-3, 12px);
+}
+
+.tagChip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--space-3, 10px) var(--space-4, 14px);
+  border: 1px solid var(--border, #e0e0e0);
+  border-radius: var(--radius-lg, 8px);
+  background: var(--surface, #fff);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text, #333);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.tagChip:hover:not(:disabled) {
+  background: var(--surface-subtle, #f0f0f0);
+  border-color: var(--accent-blue, #1976d2);
+}
+
+.tagChip:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.tagChipIcon {
+  color: var(--success, #22c55e);
+  flex-shrink: 0;
+}
+
+/* Состояние: выбран */
+.tagChipSelected {
+  background: var(--info-bg, #dbeafe);
+  color: var(--info, #2563eb);
+  border-color: var(--info, #3b82f6);
+}
+
+.tagChipSelected:hover:not(:disabled) {
+  background: var(--info-bg, #bfdbfe);
+  border-color: var(--info, #2563eb);
+}
+
+/* Состояние: уже назначен */
+.tagChipAssigned {
+  background: var(--success-bg, #dcfce7);
+  color: var(--success, #15803d);
+  border-color: var(--success, #22c55e);
+  cursor: not-allowed;
+}
+
+.tagChipAssigned:hover {
+  background: var(--success-bg, #dcfce7);
+  border-color: var(--success, #22c55e);
+}
+
+.tagChipName {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Кнопка добавления */
+.tagsAddButtonWrapper {
+  display: flex;
+  justify-content: flex-start;
+  padding-top: var(--space-2, 8px);
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+  .tagsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+
+  .tagChip {
+    padding: var(--space-2, 8px) var(--space-3, 10px);
+    font-size: 13px;
+  }
+
+  .assignedTagItem {
+    padding: 6px 10px;
+  }
+
+  .assignedTagName {
+    font-size: 13px;
+  }
+}

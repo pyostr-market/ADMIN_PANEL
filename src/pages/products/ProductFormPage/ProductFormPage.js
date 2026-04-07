@@ -19,6 +19,7 @@ import {
   getSuppliersForAutocompleteRequest,
 } from '../api/productsApi';
 import { RecommendationsTab } from '../RecommendationsTab/RecommendationsTab';
+import { TagsTab } from '../TagsTab/TagsTab';
 import styles from './ProductFormPage.module.css';
 
 // Вкладки формы
@@ -27,6 +28,7 @@ const TABS = {
   IMAGES: 'images',
   ATTRIBUTES: 'attributes',
   RECOMMENDATIONS: 'recommendations',
+  TAGS: 'tags',
 };
 
 export function ProductFormPage() {
@@ -442,6 +444,14 @@ export function ProductFormPage() {
               <FiLink /> Рекомендации
             </Tab>
           )}
+          {isEditMode && (
+            <Tab
+              active={activeTab === TABS.TAGS}
+              onClick={() => setActiveTab(TABS.TAGS)}
+            >
+              <FiTag /> Теги
+            </Tab>
+          )}
         </Tabs>
       </div>
 
@@ -725,6 +735,17 @@ export function ProductFormPage() {
           description="Добавьте связанные товары: аксессуары, похожие товары, комплекты или альтернативы"
         >
           <RecommendationsTab productId={productId} disabled={isSubmitting} />
+        </FormSection>
+      )}
+
+      {activeTab === TABS.TAGS && isEditMode && (
+        <FormSection
+          icon={<FiTag />}
+          iconVariant="info"
+          title="Теги товара"
+          description="Добавьте метки к товару: скидки, популярность, акции и другие теги"
+        >
+          <TagsTab productId={productId} disabled={isSubmitting} />
         </FormSection>
       )}
     </FormPage>
