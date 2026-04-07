@@ -11,6 +11,7 @@ import {
   getProductByIdRequest,
   deleteProductRequest,
 } from '../api/productsApi';
+import { getProductTagsRequest } from '../api/productTagsApi';
 import styles from './ProductDetailPage.module.css';
 
 function DeleteProductModal({ product, onClose, onSubmit, isSubmitting }) {
@@ -46,7 +47,7 @@ function DeleteProductModal({ product, onClose, onSubmit, isSubmitting }) {
   );
 }
 
-function ImageGallery({ images }) {
+function ImageGallery({ images, tags }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   if (!images || images.length === 0) {
@@ -95,6 +96,16 @@ function ImageGallery({ images }) {
         {images[currentIndex]?.is_main && (
           <span className={styles.productImagesMainBadge}>Главное</span>
         )}
+        {/* Теги в левом нижнем углу */}
+        {tags && tags.length > 0 && (
+          <div className={styles.productImagesTags}>
+            {tags.map((pt) => (
+              <span key={pt.id} className={styles.productImageTag}>
+                {pt.tag?.name || `Тег #${pt.tag_id}`}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       {images.length > 1 && (
@@ -134,6 +145,7 @@ export function ProductDetailPage() {
   }, [notifications]);
 
   const [product, setProduct] = useState(null);
+  const [productTags, setProductTags] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -152,6 +164,15 @@ export function ProductDetailPage() {
     try {
       const data = await getProductByIdRequest(productId);
       setProduct(data);
+
+      // Загружаем теги товара
+      try {
+        const { items } = await getProductTagsRequest(productId, { limit: 100 });
+        setProductTags(items);
+      } catch {
+        // Теги не критичны, ошибка не блокирует
+        setProductTags([]);
+      }
     } catch (error) {
       const message = getApiErrorMessage(error);
       notificationsRef.current?.error(message);
@@ -257,7 +278,7 @@ export function ProductDetailPage() {
               </div>
             </div>
             <div className={styles.panelContent}>
-              <ImageGallery images={product.images} />
+              <ImageGallery images={product.images} tags={productTags} />
             </div>
           </div>
 
@@ -267,6 +288,12 @@ export function ProductDetailPage() {
               title="Информация"
               headerIcon={<FiBox />}
               items={[
+                {
+                  label: 'Название',
+                  value: product.name,
+                  icon: <FiTag />,
+                  iconVariant: 'accent',
+                },
                 {
                   label: 'Цена',
                   value: `${product.price?.toLocaleString('ru-RU')} ₽`,
