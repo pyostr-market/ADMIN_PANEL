@@ -1,0 +1,21 @@
+.regionsPageTitle {
+  margin: 0 0 1rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.regionsPageControls {
+  margin-bottom: 1rem;
+}
+
+.modalConfirmText {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.modalConfirmNote {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}

@@ -87,11 +87,20 @@ export function BottomNav({ currentPath }) {
               <span className={styles.bottomNavLabel}>{NAVIGATION_CONFIG.cms.title}</span>
             </button>
           </li>
+          <li className={styles.bottomNavItem}>
+            <button
+              className={`${styles.bottomNavButton} ${activeMenu === 'settings' ? styles.bottomNavButtonActive : ''}`}
+              onClick={() => toggleMenu('settings')}
+            >
+              {renderIcon('settings', 22)}
+              <span className={styles.bottomNavLabel}>{NAVIGATION_CONFIG.settings.title}</span>
+            </button>
+          </li>
         </ul>
       </nav>
 
       {/* Мобильные сайдбары */}
-      {['crm', 'catalog', 'warehouse', 'billing', 'cms'].map((menuKey) => {
+      {['crm', 'catalog', 'warehouse', 'billing', 'cms', 'settings'].map((menuKey) => {
         const menu = NAVIGATION_CONFIG[menuKey];
         return (
           <div

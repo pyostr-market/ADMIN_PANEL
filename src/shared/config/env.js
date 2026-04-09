@@ -40,4 +40,5 @@ export const API_ENDPOINTS = {
   attributes: '/product/attribute',
   productTags: '/product/tags',
   productTagsRelations: '/product/tags/product-tags',
+  regions: '/region',
 };

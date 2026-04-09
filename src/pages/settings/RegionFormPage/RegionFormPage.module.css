@@ -1,0 +1,21 @@
+.regionFormField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.regionFormLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.regionFormError {
+  font-size: 0.75rem;
+  color: var(--color-danger);
+}
+
+.regionFormHint {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}

@@ -16,6 +16,7 @@ import { createWarehouseRoutes } from './routes/warehouse.routes';
 import { createBillingRoutes } from './routes/billing.routes';
 import { createActualizationRoutes } from './routes/actualization.routes';
 import { createCmsRoutes } from './routes/cms.routes';
+import { createSettingsRoutes } from './routes/settings.routes';
 
 function ErrorPageByCode() {
   const { code } = useParams();
@@ -66,6 +67,9 @@ export function AppRouter() {
 
           {/* CMS */}
           {createCmsRoutes()}
+
+          {/* Настройки */}
+          {createSettingsRoutes()}
         </Route>
       </Route>
 

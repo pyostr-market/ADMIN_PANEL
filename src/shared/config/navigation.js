@@ -148,6 +148,19 @@ export const NAVIGATION_CONFIG = {
     ],
   },
 
+  // Настройки разделы
+  settings: {
+    title: 'Настройки',
+    icon: 'settings',
+    items: [
+      {
+        label: 'Регионы',
+        path: '/settings/regions',
+        icon: 'regions',
+      },
+    ],
+  },
+
   // Дополнительные разделы (для ПК навигации)
   additional: [
     {

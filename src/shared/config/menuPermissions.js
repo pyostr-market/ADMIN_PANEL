@@ -34,6 +34,7 @@ export const MENU_PERMISSIONS = {
   warehouse: ['warehouse', 'warehouse:view'],
   billing: ['billing', 'billing:view'],
   cms: ['cms', 'cms:view', 'cms:create', 'cms:update', 'cms:delete'],
+  settings: ['region', 'region:view', 'region:create', 'region:update', 'region:delete'],
   actualization: ['pricing_engine', 'pricing_engine:start'],
 };
 

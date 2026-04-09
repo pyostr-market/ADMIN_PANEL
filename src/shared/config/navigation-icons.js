@@ -27,6 +27,7 @@ import {
   FiSearch,
   FiMail,
   FiFlag,
+  FiMapPin,
 } from 'react-icons/fi';
 
 export const Icons = {
@@ -65,4 +66,5 @@ export const Icons = {
   seo: FiSearch,
   email: FiMail,
   flags: FiFlag,
+  regions: FiMapPin,
 };

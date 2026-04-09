@@ -1,0 +1,68 @@
+.regionDetailPage {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.regionDetailPageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.backButton {
+  padding: 0.5rem 1rem;
+}
+
+.regionDetailPageActions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.regionDetailPageContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.loadingState,
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  gap: 1rem;
+}
+
+.loadingState p {
+  color: var(--text-secondary);
+}
+
+.errorState h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+
+.errorState p {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.modalConfirmText {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.modalConfirmNote {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}

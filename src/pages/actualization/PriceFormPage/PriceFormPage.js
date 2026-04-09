@@ -13,6 +13,7 @@ import {
   createPriceRequest,
   updatePriceRequest,
   getCategoriesForAutocompleteRequest,
+  getSuppliersForAutocompleteRequest,
 } from '../api/pricesApi';
 import styles from './PriceFormPage.module.css';
 
@@ -30,13 +31,14 @@ export function PriceFormPage() {
 
   const [formData, setFormData] = useState({
     category_name: '',
-    supplier: 'тест',
+    supplier_name: '',
     region: 'тест',
     price_text: '',
   });
 
-  // Храним полный объект категории для autocomplete
+  // Храним полные объекты для autocomplete
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedSupplier, setSelectedSupplier] = useState(null);
 
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,17 +52,24 @@ export function PriceFormPage() {
       const data = await getPriceByIdRequest(priceId);
       setFormData({
         category_name: data.category || '',
-        supplier: data.supplier || 'тест',
+        supplier_name: data.supplier || '',
         region: data.region || 'тест',
         price_text: data.price_text || '',
       });
 
-      // Сохраняем полный объект категории для autocomplete
-      // API возвращает category как строку (название)
+      // Сохраняем полные объекты для autocomplete
       if (data.category) {
         setSelectedCategory({
           id: data.category,
           name: data.category,
+        });
+      }
+      
+      // Сохраняем полный объект поставщика для autocomplete
+      if (data.supplier) {
+        setSelectedSupplier({
+          id: data.supplier,
+          name: data.supplier,
         });
       }
     } catch (error) {
@@ -85,7 +94,7 @@ export function PriceFormPage() {
       newErrors.category = 'Введите категорию';
     }
 
-    if (!formData.supplier.trim()) {
+    if (!formData.supplier_name.trim()) {
       newErrors.supplier = 'Введите поставщика';
     }
 
@@ -119,7 +128,7 @@ export function PriceFormPage() {
     try {
       const payload = {
         category: formData.category_name.trim(),
-        supplier: formData.supplier.trim(),
+        supplier: formData.supplier_name.trim(),
         region: formData.region.trim(),
         price_text: formData.price_text.trim(),
       };
@@ -139,11 +148,12 @@ export function PriceFormPage() {
           // Очищаем форму для создания нового прайса
           setFormData({
             category_name: '',
-            supplier: 'тест',
+            supplier_name: '',
             region: 'тест',
             price_text: '',
           });
           setSelectedCategory(null);
+          setSelectedSupplier(null);
         }
       }
 
@@ -198,16 +208,15 @@ export function PriceFormPage() {
           </div>
 
           <div className={styles.priceFormField}>
-            <label className={styles.priceFormLabel}>
-              Поставщик <span className="required">*</span>
-            </label>
-            <input
-              type="text"
-              value={formData.supplier}
-              onChange={(e) => handleChange('supplier', e.target.value)}
-              placeholder="Введите поставщика"
-              className={errors.supplier ? 'input-error' : ''}
-              disabled={isSubmitting}
+            <AutocompleteInput
+              label="Поставщик"
+              value={formData.supplier_name}
+              onChange={(value) => handleChange('supplier_name', value)}
+              fetchOptions={getSuppliersForAutocompleteRequest}
+              placeholder="Начните ввод для поиска поставщика..."
+              selectedOption={selectedSupplier}
+              error={errors.supplier}
+              getOptionValue={(option) => option.name}
             />
             {errors.supplier && (
               <span className={styles.priceFormError}>{errors.supplier}</span>
